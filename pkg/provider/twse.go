@@ -1,0 +1,1424 @@
+package provider
+
+// TWSE Adapter（T008）：TWSE-API（openapi.twse.com.tw）與 TWSE-WEB
+// （www.twse.com.tw）之盤後資料來源，實作 SourceContract（§2.2）。
+//
+// 資料集對應 §2 登錄表：
+//
+//	TWSE-API：個股日收盤、外資持股、權證、指數、ESG、公司治理
+//	TWSE-WEB：個股日 K、月均價、融資融券、三大法人買賣超（上市）、
+//	          全市場收盤行情、加權指數歷史、鉅額交易、異常成交量
+//
+// 單位換算（§5.1）：TWSE 原生「仟元」「張」一律於本檔 Normalize 換算
+// （model.ThousandToYuan / model.LotsToShares），對外欄位統一 元/股/%。
+//
+// 端點實測（2026-07-31）：STOCK_DAY 之 adjust 參數已被官方移除（2025/2026
+// 均驗證無效），URL 仍保留 adjust 傳遞通路，官方恢復時自動生效。
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"math"
+	"net/url"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
+
+	"tw-quant-mcp/pkg/model"
+)
+
+// TWSEWebDataset 為 TWSE-WEB（www.twse.com.tw）資料集 ID。
+type TWSEWebDataset string
+
+// TWSE-WEB 資料集（§2 登錄表 TWSE-WEB 內容範圍）。
+const (
+	TWSEWDDailyK        TWSEWebDataset = "daily_k"         // 個股日 K（日/週/月，adjust 參數）
+	TWSEWDMonthlyAvg    TWSEWebDataset = "monthly_avg"     // 月均價（日收盤價及月平均收盤價）
+	TWSEWDMargin        TWSEWebDataset = "margin"          // 融資融券
+	TWSEWDInstitutional TWSEWebDataset = "institutional"   // 三大法人買賣超（上市，金額+股數）
+	TWSEWDMarketClose   TWSEWebDataset = "market_close"    // 全市場收盤行情
+	TWSEWDIndexHistory  TWSEWebDataset = "index_history"   // 加權指數歷史
+	TWSEWDBlockTrades   TWSEWebDataset = "block_trades"    // 鉅額交易
+	TWSEWDAbnormal      TWSEWebDataset = "abnormal_volume" // 異常成交量（當日公布注意股票）
+)
+
+// TWSEAPIDataset 為 TWSE-API（openapi.twse.com.tw）資料集 ID。
+type TWSEAPIDataset string
+
+// TWSE-API 資料集（§2 登錄表 TWSE-API 內容範圍）。
+const (
+	TWSEAPIDailyClose      TWSEAPIDataset = "daily_close"        // 個股日收盤（全市場，含 ETF）
+	TWSEAPIForeignHoldings TWSEAPIDataset = "foreign_holdings"   // 外資持股（類股持股比率）
+	TWSEAPIWarrants        TWSEAPIDataset = "warrants"           // 權證每日成交
+	TWSEAPIIndices         TWSEAPIDataset = "indices"            // 每日各指數行情
+	TWSEAPIESG             TWSEAPIDataset = "esg"                // ESG 資訊揭露（topic 1..21）
+	TWSEAPIGovernance      TWSEAPIDataset = "company_governance" // 公司治理
+)
+
+// 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
+// 加權指數歷史（indicesReport）與 openapi 仍用舊路徑前綴。
+var (
+	twseWebBase  = "https://www.twse.com.tw"
+	twseAPIBase  = "https://openapi.twse.com.tw/v1"
+	twseWebPaths = map[TWSEWebDataset]string{
+		TWSEWDDailyK:        "/rwd/afterTrading/STOCK_DAY",
+		TWSEWDMonthlyAvg:    "/rwd/afterTrading/STOCK_DAY_AVG",
+		TWSEWDMargin:        "/rwd/afterTrading/MI_MARGN",
+		TWSEWDInstitutional: "/rwd/fund/T86",
+		TWSEWDMarketClose:   "/rwd/afterTrading/MI_INDEX",
+		TWSEWDIndexHistory:  "/indicesReport/MI_5MINS_HIST",
+		TWSEWDBlockTrades:   "/rwd/block/BFIAUU_d",
+		TWSEWDAbnormal:      "/rwd/announcement/notice",
+	}
+	twseAPIPaths = map[TWSEAPIDataset]string{
+		TWSEAPIDailyClose:      "/exchangeReport/STOCK_DAY_ALL",
+		TWSEAPIForeignHoldings: "/fund/MI_QFIIS_cat",
+		TWSEAPIWarrants:        "/opendata/t187ap42_L",
+		TWSEAPIIndices:         "/exchangeReport/MI_INDEX",
+		TWSEAPIESG:             "/opendata/t187ap46_L_%s", // topic 1..21
+		TWSEAPIGovernance:      "/opendata/t187ap32_L",
+	}
+)
+
+// NewTWSEWebSource 建立 TWSE-WEB 來源（Rate Limit 1 req/2s，§4.4）。
+func NewTWSEWebSource(opts ...Option) *TWSEWebSource {
+	return &TWSEWebSource{client: NewBaseClient("www.twse.com.tw", opts...)}
+}
+
+// TWSEWebSource 實作 SourceContract（§2.2），ID = TWSE_WEB。
+type TWSEWebSource struct{ client *BaseClient }
+
+var _ SourceContract = (*TWSEWebSource)(nil)
+
+func (s *TWSEWebSource) ID() string { return model.SourceTWSEWeb }
+
+// URL 建立資料集之官方請求 URL（params 為官方 query 參數，如 date/stockNo）。
+func (s *TWSEWebSource) URL(ds TWSEWebDataset, params url.Values) string {
+	return twseWebBase + twseWebPaths[ds] + "?response=json&" + params.Encode()
+}
+
+func (s *TWSEWebSource) Fetch(ctx context.Context, req RawRequest) (*RawResponse, error) {
+	return s.client.Do(ctx, req)
+}
+
+func (s *TWSEWebSource) Validate(raw *RawResponse) error {
+	return validateTWSE(raw, s.ID())
+}
+
+func (s *TWSEWebSource) Normalize(raw *RawResponse) ([]byte, error) {
+	return normalizeTWSE(raw, s.ID())
+}
+
+// NewTWSEAPISource 建立 TWSE-API 來源（Rate Limit 1 req/s，§4.4）。
+func NewTWSEAPISource(opts ...Option) *TWSEAPISource {
+	return &TWSEAPISource{client: NewBaseClient("openapi.twse.com.tw", opts...)}
+}
+
+// TWSEAPISource 實作 SourceContract（§2.2），ID = TWSE_API。
+type TWSEAPISource struct{ client *BaseClient }
+
+var _ SourceContract = (*TWSEAPISource)(nil)
+
+func (s *TWSEAPISource) ID() string { return model.SourceTWSEAPI }
+
+// URL 建立資料集之官方請求 URL。esg 資料集以 params["topic"] 指定
+// t187ap46_L_<topic>（1..21，預設 1 = 溫室氣體排放）；topic 為路徑參數，
+// 不會出現於 query。
+func (s *TWSEAPISource) URL(ds TWSEAPIDataset, params url.Values) string {
+	path := twseAPIPaths[ds]
+	if ds == TWSEAPIESG {
+		topic := params.Get("topic")
+		if topic == "" {
+			topic = "1"
+		}
+		path = fmt.Sprintf(path, topic)
+		params = url.Values{}
+	}
+	u := twseAPIBase + path
+	if params.Encode() != "" {
+		u += "?" + params.Encode()
+	}
+	return u
+}
+
+func (s *TWSEAPISource) Fetch(ctx context.Context, req RawRequest) (*RawResponse, error) {
+	return s.client.Do(ctx, req)
+}
+
+func (s *TWSEAPISource) Validate(raw *RawResponse) error {
+	return validateTWSE(raw, s.ID())
+}
+
+func (s *TWSEAPISource) Normalize(raw *RawResponse) ([]byte, error) {
+	return normalizeTWSE(raw, s.ID())
+}
+
+// twseDatasetOf 依 SourceURL 之 path 判斷資料集（供 Validate/Normalize 分派）。
+func twseDatasetOf(raw *RawResponse) (string, error) {
+	u, err := url.Parse(raw.SourceURL)
+	if err != nil {
+		return "", fmt.Errorf("provider: 無法解析來源 URL %q: %w", raw.SourceURL, err)
+	}
+	p := u.Path
+	for ds, path := range twseWebPaths {
+		if strings.HasSuffix(p, path) {
+			return string(ds), nil
+		}
+	}
+	for ds, path := range twseAPIPaths {
+		if ds == TWSEAPIESG {
+			if strings.Contains(p, "/t187ap46_L_") {
+				return string(ds), nil
+			}
+			continue
+		}
+		if strings.HasSuffix(p, path) {
+			return string(ds), nil
+		}
+	}
+	return "", fmt.Errorf("provider: 未知 TWSE 資料集路徑 %q", p)
+}
+
+// ---------------------------------------------------------------------------
+// Validate：schema 檢查（欄位存在性、數值範圍、日期一致性，§2.2）
+
+// validateTWSE 依資料集執行 schema 檢查。非 2xx 已由 BaseClient 擋下；
+// 官方「查無資料」回應（stat 含「沒有符合條件」）視為合法空資料。
+func validateTWSE(raw *RawResponse, sourceID string) error {
+	ds, err := twseDatasetOf(raw)
+	if err != nil {
+		return err
+	}
+	body := raw.Body
+	if len(body) == 0 {
+		return fmt.Errorf("provider: %s 空 body", ds)
+	}
+	// openapi 資料集為頂層 JSON 陣列
+	if isJSONArray(body) {
+		var rows []json.RawMessage
+		if err := json.Unmarshal(body, &rows); err != nil {
+			return fmt.Errorf("provider: %s 回應 JSON 解析失敗: %w", ds, err)
+		}
+		return validateOpenAPIList(raw, rows)
+	}
+	var envelope struct {
+		Stat  string `json:"stat"`
+		Total int    `json:"total"`
+		Date  string `json:"date"`
+	}
+	if err := json.Unmarshal(body, &envelope); err != nil {
+		return fmt.Errorf("provider: %s 回應 JSON 解析失敗: %w", ds, err)
+	}
+	// 官方「查無資料」回應
+	if envelope.Stat != "OK" && strings.Contains(envelope.Stat, "沒有符合條件") {
+		return nil
+	}
+	if envelope.Stat != "OK" {
+		return fmt.Errorf("provider: %s 官方回應異常 stat=%q", ds, envelope.Stat)
+	}
+	if isTablesDataset(ds) {
+		if err := validateDateConsistency(ds, raw.SourceURL, envelope.Date); err != nil {
+			return err
+		}
+		return validateTables(ds, body)
+	}
+	// 日期一致性：請求日期（URL query）與回應日期須一致（部分資料集為同月）
+	if err := validateDateConsistency(ds, raw.SourceURL, envelope.Date); err != nil {
+		return err
+	}
+	var fld struct {
+		Fields  []string        `json:"fields"`
+		DataRaw json.RawMessage `json:"data"`
+	}
+	if err := json.Unmarshal(body, &fld); err != nil {
+		return fmt.Errorf("provider: %s fields/data 解析失敗: %w", ds, err)
+	}
+	if err := validateRequiredFields(ds, fld.Fields); err != nil {
+		return err
+	}
+	rows, err := rawRows(fld.DataRaw)
+	if err != nil {
+		return fmt.Errorf("provider: %s data 非列式陣列: %w", ds, err)
+	}
+	for i, row := range rows {
+		if len(row) != len(fld.Fields) {
+			return fmt.Errorf("provider: %s 第 %d 列欄位數 %d ≠ fields %d",
+				ds, i, len(row), len(fld.Fields))
+		}
+	}
+	return nil
+}
+
+// isJSONArray 判斷 body 首個非空白字元是否為 '['。
+func isJSONArray(body []byte) bool {
+	trimmed := bytes.TrimSpace(body)
+	return len(trimmed) > 0 && trimmed[0] == '['
+}
+
+// rawRows 將 data（JSON 陣列之陣列）轉為 [][]string；
+// 官方少數欄位為 JSON number（如 notice 之「編號」），一律轉字串。
+func rawRows(data json.RawMessage) ([][]string, error) {
+	var cells [][]json.RawMessage
+	if err := json.Unmarshal(data, &cells); err != nil {
+		return nil, err
+	}
+	out := make([][]string, len(cells))
+	for i, row := range cells {
+		out[i] = make([]string, len(row))
+		for j, c := range row {
+			var s string
+			if json.Unmarshal(c, &s) != nil {
+				s = strings.Trim(string(c), `"`)
+			}
+			out[i][j] = s
+		}
+	}
+	return out, nil
+}
+
+// isTablesDataset 判斷資料集是否為「tables」結構（margin/market_close/block_trades）。
+func isTablesDataset(ds string) bool {
+	switch ds {
+	case "margin", "market_close", "block_trades":
+		return true
+	}
+	return false
+}
+
+// validateTables 檢查 tables 結構資料集：所有表格之列欄位數一致性 +
+// 目標表格（title 過濾）之必備欄位。
+func validateTables(ds string, body []byte) error {
+	var t struct {
+		Tables []struct {
+			Title   string          `json:"title"`
+			Fields  []string        `json:"fields"`
+			DataRaw json.RawMessage `json:"data"`
+		} `json:"tables"`
+	}
+	if err := json.Unmarshal(body, &t); err != nil {
+		return fmt.Errorf("provider: %s tables 解析失敗: %w", ds, err)
+	}
+	if len(t.Tables) == 0 {
+		return fmt.Errorf("provider: %s 無 tables", ds)
+	}
+	required := map[string]struct {
+		title  string
+		fields []string
+	}{
+		"margin":       {"融資融券彙總", []string{"代號", "名稱", "買進", "前日餘額", "今日餘額"}},
+		"market_close": {"每日收盤行情", []string{"證券代號", "證券名稱", "成交股數", "成交金額", "收盤價"}},
+		"block_trades": {"鉅額交易", []string{"日期", "交易別", "類別", "成交股數", "成交金額"}},
+	}
+	for _, table := range t.Tables {
+		rows, err := rawRows(table.DataRaw)
+		if err != nil {
+			return fmt.Errorf("provider: %s 表格 %q data 非列式陣列: %w", ds, table.Title, err)
+		}
+		for i, row := range rows {
+			if len(row) != len(table.Fields) {
+				return fmt.Errorf("provider: %s 表格 %q 第 %d 列欄位數 %d ≠ fields %d",
+					ds, table.Title, i, len(row), len(table.Fields))
+			}
+		}
+	}
+	want := required[ds]
+	found := false
+	for _, table := range t.Tables {
+		if !strings.Contains(table.Title, want.title) {
+			continue
+		}
+		found = true
+		for _, f := range want.fields {
+			if !containsString(table.Fields, f) {
+				return fmt.Errorf("provider: %s 目標表格 %q 缺少必備欄位 %q（官方格式可能變更）",
+					ds, table.Title, f)
+			}
+		}
+	}
+	if !found {
+		return fmt.Errorf("provider: %s 找不到目標表格 %q（官方格式可能變更）", ds, want.title)
+	}
+	return nil
+}
+
+// validateOpenAPIList 檢查頂層陣列資料集之列結構（欄位存在性由各
+// Normalize 實作以 rowToMap 嚴格把關；此處只檢查列為物件）。
+func validateOpenAPIList(raw *RawResponse, rows []json.RawMessage) error {
+	for i, r := range rows {
+		var m map[string]json.RawMessage
+		if err := json.Unmarshal(r, &m); err != nil {
+			return fmt.Errorf("provider: 第 %d 列非物件: %w", i, err)
+		}
+		if len(m) == 0 {
+			return fmt.Errorf("provider: 第 %d 列為空物件", i)
+		}
+	}
+	return nil
+}
+
+// validateRequiredFields 檢查 www envelope 資料集之必備欄位（2026-07 實測）。
+func validateRequiredFields(ds string, fields []string) error {
+	required := map[string][]string{
+		"daily_k":         {"日期", "成交股數", "成交金額", "開盤價", "最高價", "最低價", "收盤價"},
+		"monthly_avg":     {"日期", "收盤價"},
+		"margin":          {"代號", "名稱", "買進", "前日餘額", "今日餘額"},
+		"institutional":   {"證券代號", "證券名稱", "三大法人買賣超股數"},
+		"market_close":    {"證券代號", "證券名稱", "成交股數", "成交金額", "收盤價"},
+		"index_history":   {"日期", "開盤指數", "最高指數", "最低指數", "收盤指數"},
+		"block_trades":    {"日期", "交易別", "類別", "成交股數", "成交金額"},
+		"abnormal_volume": {"編號", "證券代號", "證券名稱", "累計次數"},
+	}
+	for _, f := range required[ds] {
+		if !containsString(fields, f) {
+			return fmt.Errorf("provider: %s 缺少必備欄位 %q（官方格式可能變更）", ds, f)
+		}
+	}
+	return nil
+}
+
+// validateDateConsistency 檢查回應日期與請求日期一致性：
+// 每日資料集須同日；整月資料集（index_history/block_trades）須同月。
+func validateDateConsistency(ds, sourceURL, respDate string) error {
+	reqDate := queryDate(sourceURL)
+	if reqDate == "" || respDate == "" || len(reqDate) != 8 || len(respDate) != 8 {
+		return nil // 無日期可比對（openapi 全量資料集等）
+	}
+	if ds == "index_history" || ds == "block_trades" {
+		if reqDate[:6] != respDate[:6] {
+			return fmt.Errorf("provider: %s 回應月份 %s 與請求 %s 不符", ds, respDate, reqDate)
+		}
+		return nil
+	}
+	if reqDate != respDate {
+		return fmt.Errorf("provider: %s 回應日期 %s 與請求 %s 不符", ds, respDate, reqDate)
+	}
+	return nil
+}
+
+// queryDate 取 URL query 之 date 參數（YYYYMMDD）。
+func queryDate(sourceURL string) string {
+	u, err := url.Parse(sourceURL)
+	if err != nil {
+		return ""
+	}
+	return u.Query().Get("date")
+}
+
+func containsString(ss []string, s string) bool {
+	for _, x := range ss {
+		if x == s {
+			return true
+		}
+	}
+	return false
+}
+
+// ---------------------------------------------------------------------------
+// Normalize：依資料集將 raw 轉為 Normalized Model（JSON），單位 元/股/%
+
+func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
+	ds, err := twseDatasetOf(raw)
+	if err != nil {
+		return nil, err
+	}
+	var out interface{}
+	switch ds {
+	case "daily_k":
+		out, err = normalizeDailyK(raw)
+	case "monthly_avg":
+		out, err = normalizeMonthlyAvg(raw)
+	case "margin":
+		out, err = normalizeMargin(raw)
+	case "institutional":
+		out, err = normalizeInstitutional(raw)
+	case "market_close":
+		out, err = normalizeMarketClose(raw)
+	case "index_history":
+		out, err = normalizeIndexHistory(raw)
+	case "block_trades":
+		out, err = normalizeBlockTrades(raw)
+	case "abnormal_volume":
+		out, err = normalizeAbnormalVolume(raw)
+	case "daily_close":
+		out, err = normalizeDailyClose(raw)
+	case "foreign_holdings":
+		out, err = normalizeForeignHoldings(raw)
+	case "warrants":
+		out, err = normalizeWarrants(raw)
+	case "indices":
+		out, err = normalizeIndices(raw)
+	case "esg":
+		out, err = normalizeESG(raw)
+	case "company_governance":
+		out, err = normalizeGovernance(raw)
+	default:
+		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(out)
+}
+
+// parseRow 依 fields 將資料列轉為欄位名 → 值 map。
+func parseRow(fields, row []string) map[string]string {
+	m := make(map[string]string, len(fields))
+	for i, f := range fields {
+		if i < len(row) {
+			m[f] = row[i]
+		}
+	}
+	return m
+}
+
+// rowsOf 取 www envelope 之 data（列式）。「查無資料」時回傳 nil。
+func rowsOf(raw *RawResponse) (fields []string, rows [][]string, err error) {
+	var envelope struct {
+		Stat    string          `json:"stat"`
+		Total   int             `json:"total"`
+		Fields  []string        `json:"fields"`
+		DataRaw json.RawMessage `json:"data"`
+	}
+	if err := json.Unmarshal(raw.Body, &envelope); err != nil {
+		return nil, nil, fmt.Errorf("provider: envelope JSON 解析失敗: %w", err)
+	}
+	if envelope.Stat != "OK" {
+		if strings.Contains(envelope.Stat, "沒有符合條件") {
+			return nil, nil, nil
+		}
+		return nil, nil, fmt.Errorf("provider: 官方回應異常 stat=%q", envelope.Stat)
+	}
+	rows, err = rawRows(envelope.DataRaw)
+	if err != nil {
+		return nil, nil, fmt.Errorf("provider: envelope data 非列式陣列: %w", err)
+	}
+	return envelope.Fields, rows, nil
+}
+
+// tablesOf 取 www tables 結構資料集（margin/market_close/block_trades）
+// 之第一個符合 titleContains 之表格；「查無資料」時回傳 nil。
+func tablesOf(raw *RawResponse, titleContains string) (title string, fields []string, rows [][]string, err error) {
+	var envelope struct {
+		Stat   string `json:"stat"`
+		Total  int    `json:"total"`
+		Tables []struct {
+			Title   string          `json:"title"`
+			Fields  []string        `json:"fields"`
+			DataRaw json.RawMessage `json:"data"`
+		} `json:"tables"`
+	}
+	if err := json.Unmarshal(raw.Body, &envelope); err != nil {
+		return "", nil, nil, fmt.Errorf("provider: tables JSON 解析失敗: %w", err)
+	}
+	if envelope.Stat != "OK" {
+		if strings.Contains(envelope.Stat, "沒有符合條件") {
+			return "", nil, nil, nil
+		}
+		return "", nil, nil, fmt.Errorf("provider: 官方回應異常 stat=%q", envelope.Stat)
+	}
+	for _, t := range envelope.Tables {
+		if titleContains == "" || strings.Contains(t.Title, titleContains) {
+			r, err := rawRows(t.DataRaw)
+			if err != nil {
+				return "", nil, nil, fmt.Errorf("provider: 表格 %q data 非列式陣列: %w", t.Title, err)
+			}
+			return t.Title, t.Fields, r, nil
+		}
+	}
+	return "", nil, nil, fmt.Errorf("provider: 找不到表格 %q", titleContains)
+}
+
+// rowToMap 將 openapi 列式資料轉為欄位名 → 值 map。
+func rowToMap(row map[string]json.RawMessage) map[string]string {
+	m := make(map[string]string, len(row))
+	for k, v := range row {
+		var s string
+		if json.Unmarshal(v, &s) == nil {
+			m[k] = s
+		}
+	}
+	return m
+}
+
+// parseROCDate 解析民國年日期：支援 "115/07/01"、"115.07.31"、"1150730"。
+func parseROCDate(s string) (time.Time, error) {
+	t := strings.TrimSpace(s)
+	var y, m, d int
+	switch {
+	case strings.Contains(t, "/"):
+		if _, err := fmt.Sscanf(t, "%d/%d/%d", &y, &m, &d); err != nil {
+			return time.Time{}, fmt.Errorf("provider: 民國日期 %q 解析失敗: %w", s, err)
+		}
+	case strings.Contains(t, "."):
+		if _, err := fmt.Sscanf(t, "%d.%d.%d", &y, &m, &d); err != nil {
+			return time.Time{}, fmt.Errorf("provider: 民國日期 %q 解析失敗: %w", s, err)
+		}
+	case len(t) == 7:
+		if _, err := fmt.Sscanf(t, "%3d%2d%2d", &y, &m, &d); err != nil {
+			return time.Time{}, fmt.Errorf("provider: 民國日期 %q 解析失敗: %w", s, err)
+		}
+	default:
+		return time.Time{}, fmt.Errorf("provider: 民國日期 %q 格式未知", s)
+	}
+	if y < 100 || m < 1 || m > 12 || d < 1 || d > 31 {
+		return time.Time{}, fmt.Errorf("provider: 民國日期 %q 範圍異常", s)
+	}
+	return time.Date(y+1911, time.Month(m), d, 0, 0, 0, 0, model.Taipei()), nil
+}
+
+// parseCommaInt 解析含千分位之整數；空字串/"-" 回傳 ok=false。
+func parseCommaInt(s string) (int64, bool) {
+	t := strings.TrimSpace(s)
+	if t == "" || t == "-" || t == "-----" {
+		return 0, false
+	}
+	v, err := strconv.ParseInt(strings.ReplaceAll(t, ",", ""), 10, 64)
+	if err != nil {
+		return 0, false
+	}
+	return v, true
+}
+
+// parseCommaFloat 解析含千分位之浮點數；空字串/"-" 回傳 ok=false。
+func parseCommaFloat(s string) (float64, bool) {
+	t := strings.TrimSpace(s)
+	if t == "" || t == "-" || t == "-----" {
+		return 0, false
+	}
+	f, err := strconv.ParseFloat(strings.ReplaceAll(t, ",", ""), 64)
+	if err != nil {
+		return 0, false
+	}
+	return math.Round(f*100) / 100, true
+}
+
+func commaIntOrZero(s string) int64 {
+	v, ok := parseCommaInt(s)
+	if !ok {
+		return 0
+	}
+	return v
+}
+
+func commaFloatOrZero(s string) float64 {
+	v, ok := parseCommaFloat(s)
+	if !ok {
+		return 0
+	}
+	return v
+}
+
+// commaDecimalToInt 解析含小數之整數欄位（如權證成交金額 "400.00"）。
+func commaDecimalToInt(s string) int64 {
+	f, ok := parseCommaFloat(s)
+	if !ok {
+		return 0
+	}
+	return int64(math.Round(f))
+}
+
+// ---------------------------------------------------------------------------
+// 個股日 K（TWSE-WEB）：Normalize 回傳 []model.Candle（元/股/元）。
+// period=day|week|month 由 URL query 指定（週/月由日線聚合）。
+// adjust=true 時 URL 附 adjust=Y（官方現行端點已忽略，見檔頭說明）。
+
+func normalizeDailyK(raw *RawResponse) ([]model.Candle, error) {
+	fields, rows, err := rowsOf(raw)
+	if err != nil {
+		return nil, err
+	}
+	q, _ := url.Parse(raw.SourceURL)
+	params := q.Query()
+	period := params.Get("period")
+	if period == "" {
+		period = "day"
+	}
+	candles := make([]model.Candle, 0, len(rows))
+	for _, row := range rows {
+		m := parseRow(fields, row)
+		ts, err := parseROCDate(m["日期"])
+		if err != nil {
+			continue // 個別列容錯（§12.4 官方格式雜訊）
+		}
+		c := model.Candle{
+			Timestamp: model.FormatDate(ts),
+			Open:      commaFloatOrZero(m["開盤價"]),
+			High:      commaFloatOrZero(m["最高價"]),
+			Low:       commaFloatOrZero(m["最低價"]),
+			Close:     commaFloatOrZero(m["收盤價"]),
+			Volume:    commaIntOrZero(m["成交股數"]), // 已為「股」（2026-07 實測）
+			Amount:    commaIntOrZero(m["成交金額"]), // 已為「元」（2026-07 實測）
+		}
+		if c.Timestamp == "" || c.Close <= 0 {
+			continue
+		}
+		candles = append(candles, c)
+	}
+	switch period {
+	case "week":
+		candles = aggregateCandles(candles, "week")
+	case "month":
+		candles = aggregateCandles(candles, "month")
+	case "day":
+	default:
+		return nil, fmt.Errorf("provider: 不支援 period=%q（day/week/month）", period)
+	}
+	if len(candles) == 0 {
+		return nil, fmt.Errorf("provider: daily_k 無有效資料列")
+	}
+	return candles, nil
+}
+
+// aggregateCandles 將日線聚合為週/月 K（§5.3：O/H/L/C/量/值）。
+func aggregateCandles(daily []model.Candle, kind string) []model.Candle {
+	type key string
+	keyOf := func(ts string) key {
+		if kind == "week" {
+			t, err := model.ParseDate(ts)
+			if err != nil {
+				return key(ts)
+			}
+			// 週一起始之 ISO 週
+			wd := int(t.Weekday())
+			if wd == 0 {
+				wd = 7
+			}
+			start := t.AddDate(0, 0, -(wd - 1))
+			return key("wk:" + model.FormatDate(start))
+		}
+		return key(ts[:7])
+	}
+	var (
+		ks    []key
+		byKey = map[key]*model.Candle{}
+	)
+	for _, c := range daily {
+		k := keyOf(c.Timestamp)
+		if _, ok := byKey[k]; !ok {
+			ks = append(ks, k)
+			cc := c
+			byKey[k] = &cc
+			continue
+		}
+		g := byKey[k]
+		if c.High > g.High {
+			g.High = c.High
+		}
+		if c.Low < g.Low {
+			g.Low = c.Low
+		}
+		g.Close = c.Close
+		g.Volume += c.Volume
+		g.Amount += c.Amount
+	}
+	out := make([]model.Candle, 0, len(ks))
+	for _, k := range ks {
+		g := byKey[k]
+		if kind == "week" {
+			g.Timestamp = strings.TrimPrefix(string(k), "wk:")
+		} else {
+			g.Timestamp = string(k) + "-01" // 月份首日代表月 K
+		}
+		out = append(out, *g)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Timestamp < out[j].Timestamp })
+	return out
+}
+
+// ---------------------------------------------------------------------------
+// 月均價（TWSE-WEB）：Normalize 回傳 []MonthlyAvgRow。
+// 官方 STOCK_DAY_AVG 目前僅回傳 日期/收盤價（title 為「日收盤價及月平均
+// 收盤價」，2026-07 實測無月平均欄位），月平均收盤價由本檔計算輸出。
+
+// MonthlyAvgRow 為個股日收盤價及月平均收盤價。
+type MonthlyAvgRow struct {
+	Date     string  `json:"date"`      // YYYY-MM-DD
+	Close    float64 `json:"close"`     // 收盤價（元）
+	MonthAvg float64 `json:"month_avg"` // 當月平均收盤價（元）
+}
+
+func normalizeMonthlyAvg(raw *RawResponse) ([]MonthlyAvgRow, error) {
+	fields, rows, err := rowsOf(raw)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]MonthlyAvgRow, 0, len(rows))
+	var sum float64
+	officialAvg := 0.0
+	for _, row := range rows {
+		m := parseRow(fields, row)
+		// 官方末列為「月平均收盤價」彙總列（實測 2026-07-31）
+		if strings.TrimSpace(m["日期"]) == "月平均收盤價" {
+			if v, ok := parseCommaFloat(m["收盤價"]); ok {
+				officialAvg = v
+			}
+			continue
+		}
+		ts, err := parseROCDate(m["日期"])
+		if err != nil {
+			continue
+		}
+		close_, ok := parseCommaFloat(m["收盤價"])
+		if !ok {
+			continue
+		}
+		sum += close_
+		out = append(out, MonthlyAvgRow{
+			Date:  model.FormatDate(ts),
+			Close: close_,
+		})
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: monthly_avg 無有效資料列")
+	}
+	avg := math.Round(sum/float64(len(out))*100) / 100
+	if officialAvg > 0 {
+		avg = officialAvg // 官方彙總列優先
+	}
+	for i := range out {
+		out[i].MonthAvg = avg
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 融資融券（TWSE-WEB）：MI_MARGN 彙總表。官方欄位以「張」計（實測：
+// 「信用交易統計」表之「融資(交易單位)」即為張），一律 ×1000 → 股。
+
+// MarginRow 為單一股票之融資融券餘額（§5.1：股）。
+type MarginRow struct {
+	Code              string `json:"code"`
+	Name              string `json:"name"`
+	MarginBuy         int64  `json:"margin_buy"`          // 融資買進（股）
+	MarginSell        int64  `json:"margin_sell"`         // 融資賣出（股）
+	MarginCashRedeem  int64  `json:"margin_cash_redeem"`  // 融資現金償還（股）
+	MarginPrevBalance int64  `json:"margin_prev_balance"` // 融資前日餘額（股）
+	MarginBalance     int64  `json:"margin_balance"`      // 融資今日餘額（股）
+	MarginLimit       int64  `json:"margin_limit"`        // 融資限額（股）
+	ShortBuy          int64  `json:"short_buy"`           // 融券買進（股）
+	ShortSell         int64  `json:"short_sell"`          // 融券賣出（股）
+	ShortCashRedeem   int64  `json:"short_cash_redeem"`   // 融券現券償還（股）
+	ShortPrevBalance  int64  `json:"short_prev_balance"`  // 融券前日餘額（股）
+	ShortBalance      int64  `json:"short_balance"`       // 融券今日餘額（股）
+	ShortLimit        int64  `json:"short_limit"`         // 融券限額（股）
+	Offset            int64  `json:"offset"`              // 資券互抵（股）
+	Note              string `json:"note,omitempty"`
+}
+
+func normalizeMargin(raw *RawResponse) ([]MarginRow, error) {
+	_, fields, rows, err := tablesOf(raw, "融資融券彙總")
+	if err != nil {
+		return nil, err
+	}
+	if rows == nil {
+		return []MarginRow{}, nil // 官方查無資料
+	}
+	// 官方欄位含重複名稱（融資組 6 欄 + 融券組 6 欄）：以首次/第二次出現位置區分
+	first := map[string]int{}
+	second := map[string]int{}
+	counts := map[string]int{}
+	for i, f := range fields {
+		counts[f]++
+		if counts[f] == 1 {
+			first[f] = i
+		} else if counts[f] == 2 {
+			second[f] = i
+		}
+	}
+	out := make([]MarginRow, 0, len(rows))
+	for _, row := range rows {
+		get := func(idx map[string]int, f string) string {
+			if i, ok := idx[f]; ok && i < len(row) {
+				return row[i]
+			}
+			return ""
+		}
+		r := MarginRow{
+			Code: strings.TrimSpace(get(first, "代號")),
+			Name: strings.TrimSpace(get(first, "名稱")),
+			Note: strings.TrimSpace(get(first, "註記")),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		r.MarginBuy = model.LotsToShares(commaIntOrZero(get(first, "買進")))
+		r.MarginSell = model.LotsToShares(commaIntOrZero(get(first, "賣出")))
+		r.MarginCashRedeem = model.LotsToShares(commaIntOrZero(get(first, "現金償還")))
+		r.MarginPrevBalance = model.LotsToShares(commaIntOrZero(get(first, "前日餘額")))
+		r.MarginBalance = model.LotsToShares(commaIntOrZero(get(first, "今日餘額")))
+		r.MarginLimit = model.LotsToShares(commaIntOrZero(get(first, "次一營業日限額")))
+		r.ShortBuy = model.LotsToShares(commaIntOrZero(get(second, "買進")))
+		r.ShortSell = model.LotsToShares(commaIntOrZero(get(second, "賣出")))
+		r.ShortCashRedeem = model.LotsToShares(commaIntOrZero(get(second, "現券償還")))
+		r.ShortPrevBalance = model.LotsToShares(commaIntOrZero(get(second, "前日餘額")))
+		r.ShortBalance = model.LotsToShares(commaIntOrZero(get(second, "今日餘額")))
+		r.ShortLimit = model.LotsToShares(commaIntOrZero(get(second, "次一營業日限額")))
+		r.Offset = model.LotsToShares(commaIntOrZero(get(first, "資券互抵")))
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: margin 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 三大法人買賣超（TWSE-WEB）：T86 日報。官方全部欄位皆為「股數」
+// （2026-07 實測 title 明示「單位：股」），無需換算。
+
+// InstitutionalRow 為單一股票之三大法人買賣超（股）。
+type InstitutionalRow struct {
+	Code              string `json:"code"`
+	Name              string `json:"name"`
+	ForeignBuy        int64  `json:"foreign_buy"`         // 外陸資買進股數（不含外資自營商）
+	ForeignSell       int64  `json:"foreign_sell"`        // 外陸資賣出股數（不含外資自營商）
+	ForeignNet        int64  `json:"foreign_net"`         // 外陸資買賣超股數
+	ForeignDealerBuy  int64  `json:"foreign_dealer_buy"`  // 外資自營商買進股數
+	ForeignDealerSell int64  `json:"foreign_dealer_sell"` // 外資自營商賣出股數
+	ForeignDealerNet  int64  `json:"foreign_dealer_net"`  // 外資自營商買賣超股數
+	InvestmentBuy     int64  `json:"investment_buy"`      // 投信買進股數
+	InvestmentSell    int64  `json:"investment_sell"`     // 投信賣出股數
+	InvestmentNet     int64  `json:"investment_net"`      // 投信買賣超股數
+	DealerNet         int64  `json:"dealer_net"`          // 自營商買賣超股數
+	DealerSelfBuy     int64  `json:"dealer_self_buy"`     // 自營商買進股數（自行買賣）
+	DealerSelfSell    int64  `json:"dealer_self_sell"`    // 自營商賣出股數（自行買賣）
+	DealerSelfNet     int64  `json:"dealer_self_net"`     // 自營商買賣超股數（自行買賣）
+	DealerHedgeBuy    int64  `json:"dealer_hedge_buy"`    // 自營商買進股數（避險）
+	DealerHedgeSell   int64  `json:"dealer_hedge_sell"`   // 自營商賣出股數（避險）
+	DealerHedgeNet    int64  `json:"dealer_hedge_net"`    // 自營商買賣超股數（避險）
+	TotalNet          int64  `json:"total_net"`           // 三大法人買賣超股數
+}
+
+func normalizeInstitutional(raw *RawResponse) ([]InstitutionalRow, error) {
+	fields, rows, err := rowsOf(raw)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]InstitutionalRow, 0, len(rows))
+	for _, row := range rows {
+		m := parseRow(fields, row)
+		r := InstitutionalRow{
+			Code: strings.TrimSpace(m["證券代號"]),
+			Name: strings.TrimSpace(m["證券名稱"]),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		r.ForeignBuy = commaIntOrZero(m["外陸資買進股數(不含外資自營商)"])
+		r.ForeignSell = commaIntOrZero(m["外陸資賣出股數(不含外資自營商)"])
+		r.ForeignNet = commaIntOrZero(m["外陸資買賣超股數(不含外資自營商)"])
+		r.ForeignDealerBuy = commaIntOrZero(m["外資自營商買進股數"])
+		r.ForeignDealerSell = commaIntOrZero(m["外資自營商賣出股數"])
+		r.ForeignDealerNet = commaIntOrZero(m["外資自營商買賣超股數"])
+		r.InvestmentBuy = commaIntOrZero(m["投信買進股數"])
+		r.InvestmentSell = commaIntOrZero(m["投信賣出股數"])
+		r.InvestmentNet = commaIntOrZero(m["投信買賣超股數"])
+		r.DealerNet = commaIntOrZero(m["自營商買賣超股數"])
+		r.DealerSelfBuy = commaIntOrZero(m["自營商買進股數(自行買賣)"])
+		r.DealerSelfSell = commaIntOrZero(m["自營商賣出股數(自行買賣)"])
+		r.DealerSelfNet = commaIntOrZero(m["自營商買賣超股數(自行買賣)"])
+		r.DealerHedgeBuy = commaIntOrZero(m["自營商買進股數(避險)"])
+		r.DealerHedgeSell = commaIntOrZero(m["自營商賣出股數(避險)"])
+		r.DealerHedgeNet = commaIntOrZero(m["自營商買賣超股數(避險)"])
+		r.TotalNet = commaIntOrZero(m["三大法人買賣超股數"])
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: institutional 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 全市場收盤行情（TWSE-WEB）：MI_INDEX type=ALL 大型 payload（2026-07 實測
+// 4.2MB / 31,267 列）。Normalize 僅取「每日收盤行情」表並輸出精簡欄位
+// （§12 JSON 最小化：省略最後揭示買賣價量之冗餘）。
+
+// MarketCloseRow 為單一股票之收盤行情（股/元）。
+type MarketCloseRow struct {
+	Code        string  `json:"code"`
+	Name        string  `json:"name"`
+	Volume      int64   `json:"volume"`               // 成交股數（股）
+	Transaction int64   `json:"transaction"`          // 成交筆數
+	Amount      int64   `json:"amount"`               // 成交金額（元）
+	Open        float64 `json:"open"`                 // 開盤價（元）
+	High        float64 `json:"high"`                 // 最高價（元）
+	Low         float64 `json:"low"`                  // 最低價（元）
+	Close       float64 `json:"close"`                // 收盤價（元）
+	ChangeDir   string  `json:"change_dir,omitempty"` // 漲跌(+/-)
+	Change      float64 `json:"change"`               // 漲跌價差（元）
+	PE          float64 `json:"pe"`                   // 本益比
+}
+
+func normalizeMarketClose(raw *RawResponse) ([]MarketCloseRow, error) {
+	_, fields, rows, err := tablesOf(raw, "每日收盤行情")
+	if err != nil {
+		return nil, err
+	}
+	if rows == nil {
+		return []MarketCloseRow{}, nil
+	}
+	var out []MarketCloseRow
+	for _, row := range rows {
+		m := parseRow(fields, row)
+		r := MarketCloseRow{
+			Code:        strings.TrimSpace(m["證券代號"]),
+			Name:        strings.TrimSpace(m["證券名稱"]),
+			Volume:      commaIntOrZero(m["成交股數"]), // 股
+			Transaction: commaIntOrZero(m["成交筆數"]),
+			Amount:      commaIntOrZero(m["成交金額"]), // 元
+			Open:        commaFloatOrZero(m["開盤價"]),
+			High:        commaFloatOrZero(m["最高價"]),
+			Low:         commaFloatOrZero(m["最低價"]),
+			Close:       commaFloatOrZero(m["收盤價"]),
+			ChangeDir:   strings.TrimSpace(m["漲跌(+/-)"]),
+			Change:      commaFloatOrZero(m["漲跌價差"]),
+			PE:          commaFloatOrZero(m["本益比"]),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: market_close 無「每日收盤行情」表或無有效列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 加權指數歷史（TWSE-WEB）：MI_5MINS_HIST 回傳請求月份之每日
+// 發行量加權股價指數 OHLC（2026-07 實測：date=YYYYMMDD → 該月全部交易日）。
+
+// IndexRow 為加權指數歷史之一日 OHLC。
+type IndexRow struct {
+	Date  string  `json:"date"`  // YYYY-MM-DD
+	Open  float64 `json:"open"`  // 開盤指數
+	High  float64 `json:"high"`  // 最高指數
+	Low   float64 `json:"low"`   // 最低指數
+	Close float64 `json:"close"` // 收盤指數
+}
+
+func normalizeIndexHistory(raw *RawResponse) ([]IndexRow, error) {
+	fields, rows, err := rowsOf(raw)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]IndexRow, 0, len(rows))
+	for _, row := range rows {
+		m := parseRow(fields, row)
+		ts, err := parseROCDate(m["日期"])
+		if err != nil {
+			continue
+		}
+		r := IndexRow{
+			Date:  model.FormatDate(ts),
+			Open:  commaFloatOrZero(m["開盤指數"]),
+			High:  commaFloatOrZero(m["最高指數"]),
+			Low:   commaFloatOrZero(m["最低指數"]),
+			Close: commaFloatOrZero(m["收盤指數"]),
+		}
+		if r.Close <= 0 {
+			continue
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: index_history 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 鉅額交易（TWSE-WEB）：BFIAUU_d 回傳請求月份之鉅額交易日成交量值
+// （2026-07 實測：date=YYYYMMDD → 該月全部鉅額交易）。單位為股/元。
+
+// BlockTradeRow 為一筆鉅額交易統計。
+type BlockTradeRow struct {
+	Date        string  `json:"date"`         // YYYY-MM-DD
+	TradeType   string  `json:"trade_type"`   // 交易別（逐筆交易/配對交易/盤後定價）
+	Class       string  `json:"class"`        // 類別（單一證券/股票組合）
+	Volume      int64   `json:"volume"`       // 成交股數（股）
+	VolumeShare float64 `json:"volume_share"` // 成交股數占市場比重（%）
+	Amount      int64   `json:"amount"`       // 成交金額（元）
+	AmountShare float64 `json:"amount_share"` // 成交金額占市場比重（%）
+}
+
+func normalizeBlockTrades(raw *RawResponse) ([]BlockTradeRow, error) {
+	_, fields, rows, err := tablesOf(raw, "鉅額交易")
+	if err != nil {
+		return nil, err
+	}
+	if rows == nil {
+		return []BlockTradeRow{}, nil
+	}
+	out := make([]BlockTradeRow, 0, len(rows))
+	for _, row := range rows {
+		m := parseRow(fields, row)
+		ts, err := parseROCDate(m["日期"])
+		if err != nil {
+			continue
+		}
+		r := BlockTradeRow{
+			Date:        model.FormatDate(ts),
+			TradeType:   strings.TrimSpace(m["交易別"]),
+			Class:       strings.TrimSpace(m["類別"]),
+			Volume:      commaIntOrZero(m["成交股數"]),
+			VolumeShare: commaFloatOrZero(m["成交股數占市場比重%"]),
+			Amount:      commaIntOrZero(m["成交金額"]),
+			AmountShare: commaFloatOrZero(m["成交金額占市場比重%"]),
+		}
+		if r.TradeType == "" && r.Class == "" {
+			continue
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: block_trades 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 異常成交量（TWSE-WEB）：當日公布注意股票（成交量/價量異常警示）。
+// 官方欄位：編號/證券代號/證券名稱/累計次數/注意交易資訊/日期/收盤價/本益比。
+
+// AbnormalVolumeRow 為一檔當日異常成交量（注意）股票。
+type AbnormalVolumeRow struct {
+	Code        string  `json:"code"`
+	Name        string  `json:"name"`
+	NoticeCount int     `json:"notice_count"` // 累計次數
+	Info        string  `json:"info"`         // 注意交易資訊
+	Date        string  `json:"date"`         // YYYY-MM-DD
+	Close       float64 `json:"close"`        // 收盤價（元）
+	PE          float64 `json:"pe"`           // 本益比
+}
+
+func normalizeAbnormalVolume(raw *RawResponse) ([]AbnormalVolumeRow, error) {
+	fields, rows, err := rowsOf(raw)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]AbnormalVolumeRow, 0, len(rows))
+	for _, row := range rows {
+		m := parseRow(fields, row)
+		r := AbnormalVolumeRow{
+			Code:        strings.TrimSpace(m["證券代號"]),
+			Name:        strings.TrimSpace(m["證券名稱"]),
+			NoticeCount: int(commaIntOrZero(m["累計次數"])),
+			Info:        strings.TrimSpace(m["注意交易資訊"]),
+			Close:       commaFloatOrZero(m["收盤價"]),
+			PE:          commaFloatOrZero(m["本益比"]),
+		}
+		if ts, err := parseROCDate(m["日期"]); err == nil {
+			r.Date = model.FormatDate(ts)
+		}
+		if r.Code == "" {
+			continue
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: abnormal_volume 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 個股日收盤（TWSE-API）：STOCK_DAY_ALL 全市場（含 ETF）日成交。
+// 官方回傳前一交易日（2026-07 實測 date 請求無效、恆為 T-1），
+// 日期以資料列之 Date 欄為準。單位：股/元。
+
+// DailyCloseRow 為單一股票之日收盤。
+type DailyCloseRow struct {
+	Date        string  `json:"date"` // YYYY-MM-DD（官方 T-1）
+	Code        string  `json:"code"`
+	Name        string  `json:"name"`
+	Volume      int64   `json:"volume"`      // 成交股數（股）
+	Amount      int64   `json:"amount"`      // 成交金額（元）
+	Open        float64 `json:"open"`        // 開盤價（元）
+	High        float64 `json:"high"`        // 最高價（元）
+	Low         float64 `json:"low"`         // 最低價（元）
+	Close       float64 `json:"close"`       // 收盤價（元）
+	Change      float64 `json:"change"`      // 漲跌（元）
+	Transaction int64   `json:"transaction"` // 成交筆數
+}
+
+func normalizeDailyClose(raw *RawResponse) ([]DailyCloseRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: STOCK_DAY_ALL JSON 解析失敗: %w", err)
+	}
+	out := make([]DailyCloseRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := DailyCloseRow{
+			Code:        strings.TrimSpace(m["Code"]),
+			Name:        strings.TrimSpace(m["Name"]),
+			Volume:      commaIntOrZero(m["TradeVolume"]),
+			Amount:      commaIntOrZero(m["TradeValue"]),
+			Open:        commaFloatOrZero(m["OpeningPrice"]),
+			High:        commaFloatOrZero(m["HighestPrice"]),
+			Low:         commaFloatOrZero(m["LowestPrice"]),
+			Close:       commaFloatOrZero(m["ClosingPrice"]),
+			Change:      commaFloatOrZero(m["Change"]),
+			Transaction: commaIntOrZero(m["Transaction"]),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		if ts, err := parseROCDate(m["Date"]); err == nil {
+			r.Date = model.FormatDate(ts)
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: daily_close 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 外資持股（TWSE-API）：MI_QFIIS_cat 外資及陸資投資類股持股比率表。
+// 單位：股/%。
+
+// ForeignHoldingRow 為一類股之外資持股比率。
+type ForeignHoldingRow struct {
+	Industry     string  `json:"industry"`      // 類股（如 水泥工業/ETF）
+	CompanyCount int64   `json:"company_count"` // 家數
+	ShareNumber  int64   `json:"share_number"`  // 發行股數（股）
+	ForeignShare int64   `json:"foreign_share"` // 外資及陸資持有股數（股）
+	Percentage   float64 `json:"percentage"`    // 持股比率（%）
+}
+
+func normalizeForeignHoldings(raw *RawResponse) ([]ForeignHoldingRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: MI_QFIIS_cat JSON 解析失敗: %w", err)
+	}
+	out := make([]ForeignHoldingRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := ForeignHoldingRow{
+			Industry:     strings.TrimSpace(m["IndustryCat"]),
+			CompanyCount: commaIntOrZero(m["Numbers"]),
+			ShareNumber:  commaIntOrZero(m["ShareNumber"]),
+			ForeignShare: commaIntOrZero(m["ForeignMainlandAreaShare"]),
+			Percentage:   commaFloatOrZero(m["Percentage"]),
+		}
+		if r.Industry == "" {
+			continue
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: foreign_holdings 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 權證每日成交（TWSE-API）：t187ap42_L。官方單位：成交金額=仟元、
+// 成交張數=張（2026-07 實測以 0.02 元/股權證核對）→ 換算為 元/股。
+
+// WarrantRow 為一檔權證之每日成交統計。
+type WarrantRow struct {
+	TradeDate string `json:"trade_date"` // YYYY-MM-DD
+	Code      string `json:"code"`
+	Name      string `json:"name"`
+	Amount    int64  `json:"amount"` // 成交金額（元）
+	Volume    int64  `json:"volume"` // 成交張數（股）
+}
+
+func normalizeWarrants(raw *RawResponse) ([]WarrantRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: t187ap42_L JSON 解析失敗: %w", err)
+	}
+	out := make([]WarrantRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := WarrantRow{
+			Code:   strings.TrimSpace(m["權證代號"]),
+			Name:   strings.TrimSpace(m["權證名稱"]),
+			Amount: model.ThousandToYuan(commaDecimalToInt(m["成交金額"])),
+			Volume: model.LotsToShares(commaIntOrZero(m["成交張數"])),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		if ts, err := parseROCDate(m["交易日期"]); err == nil {
+			r.TradeDate = model.FormatDate(ts)
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: warrants 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 指數（TWSE-API）：MI_INDEX 每日各指數行情（加權/寶島/跨市場/報酬…）。
+
+// IndexQuoteRow 為單一指數之收盤行情。
+type IndexQuoteRow struct {
+	Date          string  `json:"date"` // YYYY-MM-DD（官方 T-1）
+	IndexName     string  `json:"index_name"`
+	Close         float64 `json:"close"`                // 收盤指數
+	ChangeDir     string  `json:"change_dir,omitempty"` // 漲跌(+/-)
+	Change        float64 `json:"change"`               // 漲跌點數
+	ChangePercent float64 `json:"change_percent"`       // 漲跌百分比（%）
+	Note          string  `json:"note,omitempty"`
+}
+
+func normalizeIndices(raw *RawResponse) ([]IndexQuoteRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: MI_INDEX(API) JSON 解析失敗: %w", err)
+	}
+	out := make([]IndexQuoteRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := IndexQuoteRow{
+			IndexName:     strings.TrimSpace(m["指數"]),
+			Close:         commaFloatOrZero(m["收盤指數"]),
+			ChangeDir:     strings.TrimSpace(m["漲跌"]),
+			Change:        commaFloatOrZero(m["漲跌點數"]),
+			ChangePercent: commaFloatOrZero(m["漲跌百分比"]),
+			Note:          strings.TrimSpace(m["特殊處理註記"]),
+		}
+		if r.IndexName == "" || r.Close <= 0 {
+			continue
+		}
+		if ts, err := parseROCDate(m["日期"]); err == nil {
+			r.Date = model.FormatDate(ts)
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: indices 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// ESG（TWSE-API）：t187ap46_L_<topic> 上市公司企業 ESG 資訊揭露彙總資料。
+// 欄位依 topic 不同（如 L_1 溫室氣體排放：範疇一/二/三排放量等）；
+// Normalize 輸出通用結構，題材名與數值原樣保留（單位依官方欄位）。
+
+// ESG 資料集 topic 對照（2026-07 swagger 實測）。
+const (
+	TWSEESGEmissions      = "1"  // 溫室氣體排放
+	TWSEESGEnergy         = "2"  // 能源管理
+	TWSEESGWater          = "3"  // 水資源管理
+	TWSEESGWaste          = "4"  // 廢棄物管理
+	TWSEESGHumanResource  = "5"  // 人力發展
+	TWSEESGBoard          = "6"  // 董事會
+	TWSEESGInvestorComm   = "7"  // 投資人溝通
+	TWSEESGClimate        = "8"  // 氣候相關議題管理
+	TWSEESGCommittee      = "9"  // 功能性委員會
+	TWSEESGFuel           = "10" // 燃料管理
+	TWSEESGProductCycle   = "11" // 產品生命週期
+	TWSEESGFoodSafety     = "12" // 食品安全
+	TWSEESGSupplyChain    = "13" // 供應鏈管理
+	TWSEESGProductQuality = "14" // 產品品質與安全
+	TWSEESGCommunity      = "15" // 社區關係
+	TWSEESGInfoSecurity   = "16" // 資訊安全
+	TWSEESGInclusiveFin   = "17" // 普惠金融
+	TWSEESGControl        = "18" // 持股及控制力
+	TWSEESGRiskPolicy     = "19" // 風險管理政策
+	TWSEESGAntiCompet     = "20" // 反競爭行為法律訴訟
+	TWSEESGOccupSafety    = "21" // 職業安全衛生
+)
+
+// ESGRow 為單一公司之 ESG 揭露列（欄位依 topic）。
+type ESGRow struct {
+	ReportDate string            `json:"report_date"` // 出表日期 YYYY-MM-DD
+	Year       string            `json:"year"`        // 報告年度
+	Code       string            `json:"code"`
+	Name       string            `json:"name"`
+	Fields     map[string]string `json:"fields"` // 該 topic 之其餘欄位（原值）
+}
+
+func normalizeESG(raw *RawResponse) ([]ESGRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: t187ap46_L JSON 解析失敗: %w", err)
+	}
+	out := make([]ESGRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := ESGRow{
+			Year:   strings.TrimSpace(m["報告年度"]),
+			Code:   strings.TrimSpace(m["公司代號"]),
+			Name:   strings.TrimSpace(m["公司名稱"]),
+			Fields: make(map[string]string, len(m)),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		if ts, err := parseROCDate(m["出表日期"]); err == nil {
+			r.ReportDate = model.FormatDate(ts)
+		}
+		for k, v := range m {
+			switch k {
+			case "出表日期", "報告年度", "公司代號", "公司名稱":
+				continue
+			}
+			r.Fields[k] = v
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: esg 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 公司治理（TWSE-API）：t187ap32_L 上市公司公司治理之相關規程規則。
+
+// GovernanceRow 為單一公司之公司治理規程規則。
+type GovernanceRow struct {
+	ReportDate string `json:"report_date"` // 出表日期 YYYY-MM-DD
+	Code       string `json:"code"`
+	Name       string `json:"name"`
+	Rules      string `json:"rules"` // 公司治理之相關規程規則
+}
+
+func normalizeGovernance(raw *RawResponse) ([]GovernanceRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: t187ap32_L JSON 解析失敗: %w", err)
+	}
+	out := make([]GovernanceRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := GovernanceRow{
+			Code:  strings.TrimSpace(m["公司代號"]),
+			Name:  strings.TrimSpace(m["公司名稱"]),
+			Rules: strings.TrimSpace(m["公司治理之相關規程規則"]),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		if ts, err := parseROCDate(m["出表日期"]); err == nil {
+			r.ReportDate = model.FormatDate(ts)
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: company_governance 無有效資料列")
+	}
+	return out, nil
+}
+
+// Client 回傳底層 BaseClient（供 handler 共用連線池/限流/熔斷）。
+func (s *TWSEWebSource) Client() *BaseClient { return s.client }
+
+// Client 回傳底層 BaseClient（供 handler 共用連線池/限流/熔斷）。
+func (s *TWSEAPISource) Client() *BaseClient { return s.client }
