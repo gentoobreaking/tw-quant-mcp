@@ -2,7 +2,10 @@ module tw-quant-mcp
 
 go 1.26.1
 
-require github.com/modelcontextprotocol/go-sdk v1.7.0
+require (
+	github.com/modelcontextprotocol/go-sdk v1.7.0
+	golang.org/x/time v0.15.0
+)
 
 require (
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
