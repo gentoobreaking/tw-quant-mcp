@@ -152,7 +152,7 @@ func registerBCTools(r *Registry) {
 	r.Register(ToolDef{
 		Symbol:      "get_major_announcements",
 		Name:        "get_major_announcements",
-		Description: "查詢上市/上櫃重大訊息（MOPS）。資料源屬 T012 範圍，未接線時回傳明確錯誤。",
+		Description: "查詢上市/上櫃重大訊息（MOPS 公開資訊觀測站 Open Data，T012）。支援依日期、股票代號、關鍵字過濾。資料來源：mopsfin.twse.com.tw",
 		Schema: map[string]any{
 			"type": "object",
 			"properties": map[string]any{

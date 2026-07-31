@@ -2,9 +2,11 @@ package mcp
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"sort"
+	"strings"
 	"time"
 
 	"tw-quant-mcp/pkg/cache"
@@ -521,9 +523,97 @@ func handlerGetWarrantActivity(a *App, args map[string]any) (HandlerResult, erro
 // ************** C. 重大訊息與風險 **************
 
 // handlerGetMajorAnnouncements：MOPS 重大訊息（§10.C）。
-// 資料源（MOPS-API）屬 T012 範圍，尚未接線時回傳明確錯誤。
 func handlerGetMajorAnnouncements(a *App, args map[string]any) (HandlerResult, error) {
-	return HandlerResult{}, fmt.Errorf("重大訊息資料源（MOPS-API）尚未接線（屬 T012 範圍），請先完成 T012")
+	ctx := context.Background()
+	date, _ := args["date"].(string)
+	symbol, _ := args["symbol"].(string)
+	keyword, _ := args["keyword"].(string)
+
+	if a.mops == nil {
+		return HandlerResult{}, fmt.Errorf("重大訊息資料源（MOPS）尚未接線")
+	}
+
+	// 建立 filterFn：先將全量 CSV raw-normalize 為 []MajorAnnouncement，
+	// 再依 date/symbol/keyword 過濾
+	mopsSrc := a.mops
+	mopsSrcWithFilter := &mopsSourceWrapper{
+		base:    mopsSrc,
+		date:    date,
+		symbol:  symbol,
+		keyword: keyword,
+	}
+
+	dataset := string(provider.MOPSAnnouncements)
+	// 重大訊息預設取最新交易日（無 date 時以今日為 data_date，CSV 本身為全量）
+	dataDate := date
+	if dataDate == "" {
+		dataDate = a.now().Format("2006-01-02")
+	}
+
+	key := cache.KeyString(model.SourceMOPS, dataset, dataDate, symbol, nil)
+
+	cached, raw, err := a.fetchRaw(ctx, dataset, dataDate, key, func() ([]byte, error) {
+		req := provider.RawRequest{
+			URL: mopsSrc.URL(provider.MOPSAnnouncements, nil),
+		}
+		resp, fetchErr := mopsSrc.Fetch(ctx, req)
+		if fetchErr != nil {
+			return nil, fetchErr
+		}
+		if valErr := mopsSrc.Validate(resp); valErr != nil {
+			return nil, valErr
+		}
+		// 正常 normalize + filter 合成一步
+		return mopsSrcWithFilter.Normalize(resp)
+	})
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("MOPS 重大訊息取得失敗: %w", err)
+	}
+
+	var announcements []model.MajorAnnouncement
+	if err := json.Unmarshal(raw, &announcements); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: 重大訊息解析失敗: %w", err)
+	}
+
+	ttl, _ := a.ttlOf(dataset)
+	return HandlerResult{
+		Data:    announcements,
+		Lineage: postLineage(model.SourceMOPS, dataDate, cached, ttl),
+	}, nil
+}
+
+// mopsSourceWrapper 封裝 MOPS filterFn 注入，避免改寫 provider 層 export 型別
+type mopsSourceWrapper struct {
+	base            MOPSFetcher
+	date, symbol, keyword string
+}
+
+func (w *mopsSourceWrapper) Normalize(raw *provider.RawResponse) ([]byte, error) {
+	// 先取得全量歸一化結果
+	all, err := w.base.RawNormalize(raw)
+	if err != nil {
+		return nil, err
+	}
+	var rows []model.MajorAnnouncement
+	if err := json.Unmarshal(all, &rows); err != nil {
+		return nil, err
+	}
+	// 過濾
+	filtered := make([]model.MajorAnnouncement, 0, len(rows))
+	for _, r := range rows {
+		if w.date != "" && r.AnnounceDate != w.date {
+			continue
+		}
+		if w.symbol != "" && r.Code != w.symbol {
+			continue
+		}
+		if w.keyword != "" && !strings.Contains(r.Subject, w.keyword) &&
+			!strings.Contains(r.Description, w.keyword) {
+			continue
+		}
+		filtered = append(filtered, r)
+	}
+	return json.Marshal(filtered)
 }
 
 // handlerGetAttentionDispositionStocks：注意股/處置股清單（§10.C）。

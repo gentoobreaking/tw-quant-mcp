@@ -80,6 +80,21 @@ func (w fakeTPEx) Fetch(ctx context.Context, req provider.RawRequest) (*provider
 func (w fakeTPEx) Validate(raw *provider.RawResponse) error            { return w.f.Validate(raw) }
 func (w fakeTPEx) Normalize(raw *provider.RawResponse) ([]byte, error) { return w.f.Normalize(raw) }
 
+// fakeMOPS 為 MOPSFetcher 之測試替身（T012）。
+type fakeMOPS struct{ f *fakeFetch }
+
+func (w fakeMOPS) URL(ds provider.MOPSDataset, params url.Values) string {
+	return fakeKey(fmt.Sprint(ds), params)
+}
+func (w fakeMOPS) Fetch(ctx context.Context, req provider.RawRequest) (*provider.RawResponse, error) {
+	return w.f.Fetch(ctx, req)
+}
+func (w fakeMOPS) Validate(raw *provider.RawResponse) error            { return w.f.Validate(raw) }
+func (w fakeMOPS) Normalize(raw *provider.RawResponse) ([]byte, error) { return w.f.Normalize(raw) }
+func (w fakeMOPS) RawNormalize(raw *provider.RawResponse) ([]byte, error) {
+	return w.f.Normalize(raw)
+}
+
 func (f *fakeFetch) Fetch(ctx context.Context, req provider.RawRequest) (*provider.RawResponse, error) {
 	key := req.URL
 	f.calls[key]++
@@ -125,6 +140,7 @@ func bcApp(t *testing.T, f *fakeFetch) *App {
 		WithAppClock(func() time.Time { return now }),
 		WithAppSymbols(symbols),
 		WithAppSources(fakeWeb{f}, fakeAPI{f}, fakeTPEx{f}),
+		WithAppMOPS(fakeMOPS{f}),
 	)
 	if err != nil {
 		t.Fatalf("NewApp 失敗: %v", err)
@@ -338,12 +354,46 @@ func TestBCGetWarrantActivity(t *testing.T) {
 	}
 }
 
-func TestBCGetMajorAnnouncementsNotWired(t *testing.T) {
+func TestBCGetMajorAnnouncementsWired(t *testing.T) {
 	f := newFake(t)
+	// 模擬 MOPS 回傳已歸一化的重大訊息 JSON（full spectrum 過濾後）
+	announcements := `[
+{"table_date":"2026-07-30","announce_date":"2026-07-30","announce_time":"18:30:00",
+"code":"2330","name":"台積電","subject":"本公司董事會決議配發現金股利",
+"clause":"第14款","fact_date":"2026-07-30","description":"每股配發新台幣8元"},
+{"table_date":"2026-07-30","announce_date":"2026-07-29","announce_time":"09:15:00",
+"code":"2885","name":"元大金控","subject":"公告金管會核准本公司合併元大投信",
+"clause":"第11款","fact_date":"2026-07-29","description":"以股份轉換方式納為100%持股子公司"}
+]`
+	f.stub("announcements", nil, announcements)
 	app := bcApp(t, f)
-	if _, err := app.core.Call(context.Background(), "get_major_announcements",
-		map[string]any{"date": "2026-07-30"}); err == nil {
-		t.Fatal("MOPS 未接線應回明確錯誤")
+
+	// 查詢全量（不含過濾參數）
+	env := callEnv(t, app, "get_major_announcements", map[string]any{})
+	rows, ok := env.Data.([]model.MajorAnnouncement)
+	if !ok {
+		t.Fatalf("Data 應為 []any，實際 %T", env.Data)
+	}
+	if len(rows) != 2 {
+		t.Fatalf("應回 2 筆重大訊息，實際 %d 筆", len(rows))
+	}
+	// 驗證 lineage
+	if env.Lineage.Source != model.SourceMOPS {
+		t.Errorf("lineage 來源應為 MOPS，實際 %s", env.Lineage.Source)
+	}
+
+	// 查詢依 symbol 過濾（模擬：filterFn 穿透後只剩 2330）
+	f2330 := newFake(t)
+	f2330.stub("announcements", nil, `[
+{"table_date":"2026-07-30","announce_date":"2026-07-30","announce_time":"18:30:00",
+"code":"2330","name":"台積電","subject":"本公司董事會決議配發現金股利",
+"clause":"第14款","fact_date":"2026-07-30","description":"每股配發新台幣8元"}
+]`)
+	app2 := bcApp(t, f2330)
+	env2 := callEnv(t, app2, "get_major_announcements", map[string]any{"symbol": "2330"})
+	rows2, _ := env2.Data.([]model.MajorAnnouncement)
+	if len(rows2) != 1 {
+		t.Fatalf("依 symbol 過濾後應為 1 筆，實際 %d 筆", len(rows2))
 	}
 }
 

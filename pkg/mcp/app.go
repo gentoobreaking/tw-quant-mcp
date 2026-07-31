@@ -42,6 +42,15 @@ type TPExFetcher interface {
 	Normalize(raw *provider.RawResponse) ([]byte, error)
 }
 
+// MOPSFetcher 為 MOPS Open Data 資料源之 handler 視界（T012）。
+type MOPSFetcher interface {
+	URL(ds provider.MOPSDataset, params url.Values) string
+	Fetch(ctx context.Context, req provider.RawRequest) (*provider.RawResponse, error)
+	Validate(raw *provider.RawResponse) error
+	Normalize(raw *provider.RawResponse) ([]byte, error)
+	RawNormalize(raw *provider.RawResponse) ([]byte, error)
+}
+
 // App 是 MCP Engine Layer 之組裝根（§6）：
 // Symbol Registry / 交易日曆 / 盤中引擎（Watchlist + RingStore +
 // Aggregator + IntradayStore）/ 風險掃描器 / 盤後資料源（TWSE-WEB /
@@ -58,6 +67,7 @@ type App struct {
 	twseWeb   WebFetcher
 	twseAPI   APIFetcher
 	tpex      TPExFetcher
+	mops      MOPSFetcher
 	cache     *cache.Cache
 	core      *Core
 	registry  *Registry
@@ -107,6 +117,11 @@ func WithAppSources(web WebFetcher, api APIFetcher, tpex TPExFetcher) AppOption 
 	}
 }
 
+// WithAppMOPS 注入 MOPS 資料源（測試用；預設建立真實 MOPS source）。
+func WithAppMOPS(m MOPSFetcher) AppOption {
+	return func(a *App) { a.mops = m }
+}
+
 // WithAppCache 注入快取層（測試用；預設 L1-only 快取）。
 func WithAppCache(c *cache.Cache) AppOption {
 	return func(a *App) { a.cache = c }
@@ -133,6 +148,7 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 		twseWeb:   provider.NewTWSEWebSource(),
 		twseAPI:   provider.NewTWSEAPISource(),
 		tpex:      provider.NewTPExSource(),
+		mops:      provider.NewMOPSSource(),
 		now:       func() time.Time { return model.Now().Time },
 		logger:    slog.New(slog.NewTextHandler(discard, nil)),
 	}
