@@ -1,0 +1,21 @@
+# 執行檔與 build 產物
+/bin/
+/tw-quant-mcp
+*.exe
+
+# L2 資料（DATA_DIR，預設 ~/.tw-quant-mcp/data）
+/data/
+data/
+*.db
+*.db-wal
+*.db-shm
+
+# 環境與本機設定
+.env
+.env.*
+
+# 編輯器 / OS
+.DS_Store
+.idea/
+.vscode/
+*.log
