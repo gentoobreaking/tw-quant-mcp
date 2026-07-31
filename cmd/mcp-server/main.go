@@ -17,6 +17,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"tw-quant-mcp/pkg/config"
+	mcpapp "tw-quant-mcp/pkg/mcp"
 )
 
 // version 於 build 時以 -ldflags "-X main.version=..." 覆寫。
@@ -32,6 +33,15 @@ func main() {
 	logger := newLogger(cfg.LogLevel)
 
 	srv := newServer(version)
+
+	// T010：MCP Engine Layer 組裝（Tool Registry / Envelope 注入）並註冊
+	// §10.A 盤中工具至 Server。
+	app, err := mcpapp.NewApp(cfg, mcpapp.WithAppLogger(logger))
+	if err != nil {
+		slog.Error("MCP App 初始化失敗", "err", err)
+		os.Exit(1)
+	}
+	app.Wire(srv)
 
 	ctx := context.Background()
 	switch cfg.Transport {
@@ -65,8 +75,8 @@ func main() {
 	}
 }
 
-// newServer 建立 MCP Server 骨架。T001 驗收：tools/list 回傳空清單；
-// 後續任務（T010 起）依規格書 §10 在此註冊 Tool 目錄。
+// newServer 建立 MCP Server 骨架；工具目錄依規格書 §10 由
+// pkg/mcp（T010）註冊（見 main 內 app.Wire(srv)）。
 func newServer(ver string) *mcp.Server {
 	return mcp.NewServer(&mcp.Implementation{
 		Name:        "tw-quant-mcp",

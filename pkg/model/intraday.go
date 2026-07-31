@@ -36,3 +36,49 @@ type VolumeSurge struct {
 	Open            float64 `json:"open"`              // 近 N 分鐘首根開盤（元）
 	Close           float64 `json:"close"`             // 最後一根收盤（元）
 }
+
+// PriceLevel 為一檔買/賣價量（五檔）。
+type PriceLevel struct {
+	Price  float64 `json:"price"`  // 價格（元）
+	Volume int64   `json:"volume"` // 數量（股）
+}
+
+// IntradayQuote 對應 §10.A get_intraday_quote 之 data：
+// 最新快照之即時報價 + 五檔（純記憶體讀取，零 HTTP）。
+type IntradayQuote struct {
+	Symbol    string       `json:"symbol"`         // 代碼 "2330"
+	Date      string       `json:"date"`           // 資料日期 YYYY-MM-DD
+	Time      string       `json:"time"`           // 快照時刻 "HH:MM:SS"
+	TradeTime string       `json:"trade_time"`     // 最近成交時刻 "HH:MM:SS"
+	Last      float64      `json:"last"`           // 最新成交價（元）
+	Change    float64      `json:"change"`         // 漲跌（元）
+	ChangePct float64      `json:"change_pct"`     // 漲跌（%）
+	Open      float64      `json:"open"`           // 開盤價（元）
+	High      float64      `json:"high"`           // 最高價（元）
+	Low       float64      `json:"low"`            // 最低價（元）
+	PrevClose float64      `json:"prev_close"`     // 昨收（元）
+	Volume    int64        `json:"volume"`         // 當日累積量（股）
+	MinuteVol int64        `json:"minute_vol"`     // 當分鐘量（股）
+	Bids      []PriceLevel `json:"bids,omitempty"` // 五檔買價量
+	Asks      []PriceLevel `json:"asks,omitempty"` // 五檔賣價量
+}
+
+// DaytradeScan 對應 §10.A scan_daytrade_eligibility 之 data：
+// 買前風險掃描（當沖資格/處置/注意/停資停券，來源 TWSE-WEB/TPEx 盤後名單）。
+type DaytradeScan struct {
+	Symbol            string   `json:"symbol"` // 代碼 "2330"
+	Name              string   `json:"name"`
+	Market            string   `json:"market"`                   // tse | otc
+	Date              string   `json:"date"`                     // 名單日期 YYYY-MM-DD
+	IsAttention       bool     `json:"is_attention"`             // 是否為注意股票
+	AttentionInfo     string   `json:"attention_info,omitempty"` // 注意交易資訊
+	IsDisposition     bool     `json:"is_disposition"`           // 是否為處置股票
+	DispositionPeriod string   `json:"disposition_period,omitempty"`
+	DispositionInfo   string   `json:"disposition_info,omitempty"`
+	DaytradeAllowed   bool     `json:"daytrade_allowed"` // 當日沖銷允許與否
+	DaytradeNote      string   `json:"daytrade_note,omitempty"`
+	MarginSuspended   bool     `json:"margin_suspended"`      // 停資
+	ShortSuspended    bool     `json:"short_suspended"`       // 停券
+	MarginNote        string   `json:"margin_note,omitempty"` // 融資融券註記（原文）
+	Summary           []string `json:"summary"`               // 風險摘要（供 LLM 直接引用）
+}

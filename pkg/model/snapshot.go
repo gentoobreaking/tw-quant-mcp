@@ -9,6 +9,7 @@ package model
 //   - tv = 當分鐘內累積成交量（張，每分鐘重置）→ MinuteVol ×1000 為股；
 //     重採樣規則「桶末 tv − 桶初 tv」即分鐘量（§8.4）
 //   - c  = 股票代號（非漲跌）；漲跌 = z − y
+//   - p/q/a/w = 五檔買價/買量/賣價/賣量（張）→ Book（T010 起解析）
 type Snapshot struct {
 	Code          string     `json:"code"`           // 代碼 "2330"
 	Exch          string     `json:"exch"`           // MIS ex_ch "tse_2330.tw"
@@ -22,4 +23,12 @@ type Snapshot struct {
 	Change        float64    `json:"change"`         // 漲跌（元）= z − y
 	MinuteVol     int64      `json:"minute_vol"`     // tv 當分鐘內累積量（股）
 	CumulativeVol int64      `json:"cumulative_vol"` // v 當日累積量（股）
+	Book          *LevelBook `json:"book,omitempty"` // 五檔買賣價量（p/q/a/w）
+}
+
+// LevelBook 為五檔買賣價量（MIS 原生 p/q/a/w，T010 起解析；
+// 缺檔或官方未提供時為 nil/空，價格 元、數量 股）。
+type LevelBook struct {
+	Bids []PriceLevel `json:"bids,omitempty"` // 買價由高至低（最佳買價在前）
+	Asks []PriceLevel `json:"asks,omitempty"` // 賣價由低至高（最佳賣價在前）
 }

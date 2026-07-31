@@ -5,12 +5,20 @@ import (
 	"testing"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+
+	mcpapp "tw-quant-mcp/pkg/mcp"
 )
 
-// TestServerListToolsEmpty 驗證 T001 驗收：tools/list 回傳空清單不報錯。
-func TestServerListToolsEmpty(t *testing.T) {
+// TestServerListTools 驗證 T010 驗收：tools/list 回傳 §10.A 之 6 個
+// 盤中工具，且每個工具皆含 name/description/inputSchema。
+func TestServerListTools(t *testing.T) {
 	ctx := context.Background()
 	srv := newServer("test")
+	app, err := mcpapp.NewApp(nil)
+	if err != nil {
+		t.Fatalf("NewApp 失敗: %v", err)
+	}
+	app.Wire(srv)
 
 	clientT, serverT := mcp.NewInMemoryTransports()
 	serverSession, err := srv.Connect(ctx, serverT, nil)
@@ -30,8 +38,30 @@ func TestServerListToolsEmpty(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ListTools 不應失敗: %v", err)
 	}
-	if len(res.Tools) != 0 {
-		t.Fatalf("tools/list 應為空清單，實際回傳 %d 個: %v", len(res.Tools), res.Tools)
+	if len(res.Tools) != 6 {
+		t.Fatalf("tools/list 應回傳 6 個 §10.A 工具，實際 %d 個", len(res.Tools))
+	}
+	seen := map[string]bool{}
+	for _, tool := range res.Tools {
+		if tool.Name == "" || tool.Description == "" {
+			t.Errorf("工具 %+v 缺 name/description", tool.Name)
+		}
+		if tool.InputSchema == nil {
+			t.Errorf("工具 %s 缺 inputSchema", tool.Name)
+		}
+		seen[tool.Name] = true
+	}
+	for _, want := range []string{
+		"set_active_watchlist",
+		"get_intraday_kline",
+		"get_intraday_quote",
+		"get_intraday_vwap",
+		"detect_volume_surge",
+		"scan_daytrade_eligibility",
+	} {
+		if !seen[want] {
+			t.Errorf("tools/list 缺工具 %s", want)
+		}
 	}
 }
 
@@ -39,6 +69,11 @@ func TestServerListToolsEmpty(t *testing.T) {
 func TestServerPing(t *testing.T) {
 	ctx := context.Background()
 	srv := newServer("test")
+	app, err := mcpapp.NewApp(nil)
+	if err != nil {
+		t.Fatalf("NewApp 失敗: %v", err)
+	}
+	app.Wire(srv)
 
 	clientT, serverT := mcp.NewInMemoryTransports()
 	serverSession, err := srv.Connect(ctx, serverT, nil)

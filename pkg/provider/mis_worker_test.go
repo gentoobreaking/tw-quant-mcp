@@ -61,6 +61,56 @@ func TestParseMISReal(t *testing.T) {
 	}
 }
 
+// 五檔轉換（§8.3/T010）：b/g=買價/買量、a/f=賣價/賣量，"_" 分隔字串、
+// 單位張→股；2330 漲停無賣單（a="-"）應為空。
+func TestParseMISBook(t *testing.T) {
+	snaps, err := parseMIS([]byte(misFixture))
+	if err != nil {
+		t.Fatalf("parseMIS 失敗: %v", err)
+	}
+	byCode := map[string]model.Snapshot{}
+	for _, s := range snaps {
+		byCode[s.Code] = s
+	}
+
+	a := byCode["2330"]
+	if a.Book == nil {
+		t.Fatalf("2330 應有五檔買盤")
+	}
+	if len(a.Book.Bids) != 5 || len(a.Book.Asks) != 0 {
+		t.Fatalf("2330 漲停應 5 買 0 賣，實際 %d 買 %d 賣", len(a.Book.Bids), len(a.Book.Asks))
+	}
+	if a.Book.Bids[0].Price != 2425 || a.Book.Bids[0].Volume != 1989000 {
+		t.Errorf("最佳買價/量錯誤: %.2f/%d", a.Book.Bids[0].Price, a.Book.Bids[0].Volume)
+	}
+	if a.Book.Bids[4].Price != 2405 || a.Book.Bids[4].Volume != 307000 {
+		t.Errorf("第五檔買價/量錯誤: %.2f/%d", a.Book.Bids[4].Price, a.Book.Bids[4].Volume)
+	}
+
+	b := byCode["6547"]
+	if b.Book == nil {
+		t.Fatalf("6547 應有五檔買賣盤")
+	}
+	if len(b.Book.Bids) != 5 || len(b.Book.Asks) != 5 {
+		t.Fatalf("6547 應 5 買 5 賣，實際 %d 買 %d 賣", len(b.Book.Bids), len(b.Book.Asks))
+	}
+	if b.Book.Bids[0].Price != 45.75 || b.Book.Bids[0].Volume != 5000 {
+		t.Errorf("6547 最佳買價/量錯誤: %.2f/%d", b.Book.Bids[0].Price, b.Book.Bids[0].Volume)
+	}
+	if b.Book.Asks[0].Price != 45.8 || b.Book.Asks[0].Volume != 3000 {
+		t.Errorf("6547 最佳賣價/量錯誤: %.2f/%d", b.Book.Asks[0].Price, b.Book.Asks[0].Volume)
+	}
+}
+
+func TestParseMISBookNil(t *testing.T) {
+	if book := parseBook("-", "-", "-", "-"); book != nil {
+		t.Errorf("全部無報價應回 nil，實際 %+v", book)
+	}
+	if book := parseBook("10.00_", "5_", "-", "-"); book == nil || len(book.Bids) != 1 {
+		t.Errorf("單檔買盤解析錯誤: %+v", book)
+	}
+}
+
 func TestParseMISErrors(t *testing.T) {
 	if _, err := parseMIS([]byte("{bad json")); err == nil {
 		t.Error("非法 JSON 應回傳錯誤")

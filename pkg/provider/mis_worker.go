@@ -249,7 +249,7 @@ type misResponse struct {
 	MsgArray []misEntry `json:"msgArray"`
 }
 
-// misEntry 僅宣告 T006 所需原生欄位（§8.3）。
+// misEntry 僅宣告 T006/T010 所需原生欄位（§8.3）。
 type misEntry struct {
 	Code  string `json:"c"`  // 代碼（注意：MIS 之 c 為代號，非漲跌）
 	Ch    string `json:"ch"` // "2330.tw"
@@ -263,6 +263,12 @@ type misEntry struct {
 	Tv    string `json:"tv"` // 當分鐘內累積成交量（張，每分鐘重置）
 	Tlong string `json:"tlong"`
 	T     string `json:"t"` // 最近成交時刻 "HH:MM:SS"
+
+	// T010：五檔買賣價量（MIS 原生為 "_" 分隔字串，缺檔或無報價為 "-"）
+	B string `json:"b"` // 五檔買價（由高至低）
+	G string `json:"g"` // 五檔買量（張）
+	A string `json:"a"` // 五檔賣價（由低至高）
+	F string `json:"f"` // 五檔賣量（張）
 }
 
 // parseMIS 解析並正規化 MIS 回應為 []model.Snapshot。
@@ -334,7 +340,54 @@ func normalizeMIS(e misEntry) (model.Snapshot, bool) {
 		s.PrevClose = v
 	}
 	s.Change = math.Round((s.Last-s.PrevClose)*100) / 100
+	if book := parseBook(e.B, e.G, e.A, e.F); book != nil {
+		s.Book = book
+	}
 	return s, true
+}
+
+// parseBook 將 MIS 五檔字串（b/g/a/f，"_" 分隔，單位 張）轉為
+// model.LevelBook（股）。任一側全部無效時該側為空；兩側皆空回傳 nil。
+func parseBook(b, g, a, f string) *model.LevelBook {
+	bidPrices, bidVols := splitLevels(b), splitLevels(g)
+	askPrices, askVols := splitLevels(a), splitLevels(f)
+	bid := make([]model.PriceLevel, 0, len(bidPrices))
+	for i, p := range bidPrices {
+		price, ok := parsePrice(p)
+		if !ok {
+			continue
+		}
+		bid = append(bid, model.PriceLevel{Price: price, Volume: parseVolOrZero(at(bidVols, i))})
+	}
+	ask := make([]model.PriceLevel, 0, len(askPrices))
+	for i, p := range askPrices {
+		price, ok := parsePrice(p)
+		if !ok {
+			continue
+		}
+		ask = append(ask, model.PriceLevel{Price: price, Volume: parseVolOrZero(at(askVols, i))})
+	}
+	if len(bid) == 0 && len(ask) == 0 {
+		return nil
+	}
+	return &model.LevelBook{Bids: bid, Asks: ask}
+}
+
+// splitLevels 將 MIS "_" 分隔之五檔字串切為 slice；"-"/空字串回傳 nil。
+func splitLevels(s string) []string {
+	t := strings.TrimSpace(s)
+	if t == "" || t == "-" {
+		return nil
+	}
+	return strings.Split(t, "_")
+}
+
+// at 安全取陣列元素；越界回傳空字串。
+func at(ss []string, i int) string {
+	if i < 0 || i >= len(ss) {
+		return ""
+	}
+	return ss[i]
 }
 
 // parsePrice 解析價格字串為「元」（2 位小數）；"-"/空字串/非法回傳 ok=false。
