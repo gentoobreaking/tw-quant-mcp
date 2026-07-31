@@ -38,10 +38,13 @@ const (
 //     儲存/回送）；index.jsp 改版 404 時僅記錄、不阻斷
 //   - 403/429 指數退避由 BaseClient（§4.4）處理
 //   - 連續 5 tick 失敗 → Watchlist 狀態轉 DEGRADED，改為 30s 重試並記錄 Log
+//   - 選用：盤中衍生計算（§8.5 VWAP/爆量）於寫入 RingBuffer 後以 best-effort
+//     增量更新 IntradayStore（純記憶體、零 HTTP，不影響 Poller 寫入）
 type MISWorker struct {
 	client    *BaseClient
 	watchlist *engine.Watchlist
 	rings     *engine.RingStore
+	intraday  *engine.IntradayStore
 	indexURL  string
 	quoteURL  string
 	now       func() time.Time
@@ -94,6 +97,11 @@ func WithMISSleep(fn sleepFunc) MISOption {
 // WithMISLogger 注入 slog logger（預設 discard）。
 func WithMISLogger(l *slog.Logger) MISOption {
 	return func(w *MISWorker) { w.logger = l }
+}
+
+// WithMISIntraday 注入盤中衍生計算登錄（§8.5）；未注入時跳過衍生計算。
+func WithMISIntraday(s *engine.IntradayStore) MISOption {
+	return func(w *MISWorker) { w.intraday = s }
 }
 
 // NewMISWorker 建立 MIS Poller。client 須以主機 "mis.twse.com.tw" 建立
@@ -212,6 +220,10 @@ func (w *MISWorker) pollAndStore(ctx context.Context) ([]model.Snapshot, error) 
 	}
 	for _, s := range snaps {
 		w.rings.Append(s)
+	}
+	// 盤中衍生計算（§8.5）：純記憶體增量更新；計算失敗不影響 Poller 寫入
+	if w.intraday != nil {
+		w.intraday.UpdateAll(snaps)
 	}
 	return snaps, nil
 }

@@ -209,3 +209,53 @@ func TestMISToKlineEndToEnd(t *testing.T) {
 		t.Errorf("單筆桶 Volume 應為 tv=4,512,000 股，實際 %d", bars[0].Volume)
 	}
 }
+
+// 盤中衍生計算（§8.5）：pollAndStore 後 IntradayStore 應有增量 VWAP；
+// 計算失敗不影響 Poller 寫入。
+func TestMISIntradayCompute(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(misFixture))
+	}))
+	defer srv.Close()
+
+	client := NewBaseClient("mis.twse.com.tw",
+		WithRateInterval(time.Microsecond), WithJitterRatio(0))
+	rings := engine.NewRingStore()
+	intraday := engine.NewIntradayStore()
+	wk := NewMISWorker(client, testWatchlist(), rings,
+		WithMISURLs(srv.URL, srv.URL),
+		WithMISIntraday(intraday))
+
+	if _, err := wk.pollAndStore(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+
+	// 單筆快照：VWAP = z = 2425、累計量 = v × 1000 = 56,896,000 股
+	v, err := intraday.VWAP("2330")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if v.VWAP != 2425 || v.Volume != 56896000 {
+		t.Errorf("2330 VWAP/累計量應 2425/56896000，實際 %.2f/%d", v.VWAP, v.Volume)
+	}
+	if v.High != 2425 || v.Low != 2425 || v.PrevClose != 2205 {
+		t.Errorf("高低點/昨收應自 fixture 轉換，實際 %+v", v)
+	}
+
+	v65, err := intraday.VWAP("6547")
+	if err != nil || v65.VWAP != 45.8 {
+		t.Errorf("6547 VWAP 應 45.8，實際 %v（err=%v）", v65.VWAP, err)
+	}
+
+	if _, err := intraday.VWAP("9999"); err == nil {
+		t.Error("未知代碼應回傳錯誤")
+	}
+
+	// 未注入 IntradayStore 時不影響採樣寫入
+	wk2 := NewMISWorker(client, testWatchlist(), engine.NewRingStore(),
+		WithMISURLs(srv.URL, srv.URL))
+	if _, err := wk2.pollAndStore(context.Background()); err != nil {
+		t.Fatalf("未注入衍生計算仍應正常採樣: %v", err)
+	}
+}
