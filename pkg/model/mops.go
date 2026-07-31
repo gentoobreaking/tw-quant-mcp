@@ -98,15 +98,43 @@ type IncomeStatementRow struct {
 }
 
 // FinancialStatements 為 get_financial_statements（§10.D）之完整 data。
-// 目前提供損益表摘要（t187ap14_L）與獲利能力指標（t187ap17_L）。
-// 完整資產負債表/現金流量表需透過 MOPS AJAX 端點（參見 T012 備註）。
 type FinancialStatements struct {
 	Symbol       string                 `json:"symbol"`
 	Name         string                 `json:"name"`
-	Period       string                 `json:"period"`   // 查詢期間描述
-	Income       []IncomeStatementRow   `json:"income"`   // 損益表
-	ProfitRatios []ProfitabilityRatio   `json:"profit_ratios,omitempty"` // 獲利能力指標
-	Note         string                 `json:"note,omitempty"` // 資料來源說明
+	Year         int                    `json:"year"`
+	Quarter      int                    `json:"quarter"`
+	Income       []IncomeStatementRow   `json:"income"`
+	BalanceSheet *BalanceSheet          `json:"balance_sheet,omitempty"`
+	CashFlow     *CashFlowStatement     `json:"cash_flow,omitempty"`
+	ProfitRatios []ProfitabilityRatio   `json:"profit_ratios,omitempty"`
+	Note         string                 `json:"note,omitempty"`
+}
+
+// BalanceSheet 為資產負債表（合併，IFRS）。
+// 單位：百萬元（依 IFRS 合併報表慣例），consumers 可自行 ×1e6 換算為元。
+type BalanceSheet struct {
+	TableDate       string `json:"table_date"`        // 出表日期
+	Year            int    `json:"year"`              // 年度
+	Quarter         int    `json:"quarter"`           // 季別（1-4）
+	TotalAssets     int64  `json:"total_assets"`      // 資產總額（百萬元）
+	CurrentAssets   int64  `json:"current_assets"`    // 流動資產
+	NonCurrentAssets int64 `json:"non_current_assets"` // 非流動資產
+	TotalLiabilities int64 `json:"total_liabilities"`  // 負債總額
+	CurrentLiabilities   int64 `json:"current_liabilities"`    // 流動負債
+	NonCurrentLiabilities int64 `json:"non_current_liabilities"` // 非流動負債
+	TotalEquity     int64  `json:"total_equity"`      // 權益總額（股東權益）
+}
+
+// CashFlowStatement 為現金流量表（合併，IFRS）。
+// 單位：百萬元（依 IFRS 合併報表慣例）。
+type CashFlowStatement struct {
+	TableDate          string `json:"table_date"`           // 出表日期
+	Year               int    `json:"year"`                 // 年度
+	Quarter            int    `json:"quarter"`              // 季別（1-4）
+	OperatingCashFlow  int64  `json:"operating_cash_flow"`  // 營業活動淨現金流入（百萬元）
+	InvestingCashFlow  int64  `json:"investing_cash_flow"`  // 投資活動淨現金流出（百萬元）
+	FinancingCashFlow  int64  `json:"financing_cash_flow"`  // 籌資活動淨現金流出（百萬元）
+	EndingCashBalance  int64  `json:"ending_cash_balance"`  // 期末現金及約當現金（百萬元）
 }
 
 // ProfitabilityRatio 為一筆獲利能力指標（t187ap17_L）。
