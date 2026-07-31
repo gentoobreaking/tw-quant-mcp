@@ -91,6 +91,11 @@ func WithLogger(l *slog.Logger) Option {
 	return func(c *BaseClient) { c.logger = l }
 }
 
+// WithBreakerNow 注入熔斷器時鐘（僅測試用）。
+func WithBreakerNow(fn func() time.Time) Option {
+	return func(c *BaseClient) { c.breaker.SetNowFn(fn) }
+}
+
 // NewBaseClient 建立主機之 Resilient Client。
 // host 需為登錄於 §4.4 之主機（如 "www.twse.com.tw"），
 // rate interval 未指定時採用 §4.4 預設（可被 RATE_LIMIT_*_EVERY 環境變數覆寫）。
@@ -104,6 +109,7 @@ func NewBaseClient(host string, opts ...Option) *BaseClient {
 		sleep:      sleepCtx,
 		logger:     slog.New(slog.NewTextHandler(io.Discard, nil)),
 	}
+	c.breaker = NewCircuitBreaker()
 	for _, o := range opts {
 		o(c)
 	}
@@ -113,7 +119,6 @@ func NewBaseClient(host string, opts ...Option) *BaseClient {
 		interval = d
 	}
 	c.limiter = NewHostLimiter(host, interval, c.jitterRatio)
-	c.breaker = NewCircuitBreaker()
 	c.http = &http.Client{
 		// 每主機獨立 Transport（§12.3）：Keep-Alive、MaxIdleConnsPerHost=8、HTTP/2、gzip 自動解壓
 		Transport: &http.Transport{
