@@ -55,6 +55,18 @@ func NewCore(app *App, reg *Registry, opts ...CoreOption) *Core {
 	return c
 }
 
+// HandlerResult 為 Handler 回傳契約：業務資料 + 選用之 lineage 覆寫。
+// Handler 不得直接回傳 Envelope；lineage 統一由 Core 注入（機制欄位
+// FetchedAt/LatencyMS 僅 Core 可填）。Handler 僅可指定來源/角色/
+// 新鮮度/資料日期等語意欄位（§3.2）。
+type HandlerResult struct {
+	Data any
+	// Lineage 非 nil 時覆寫 ToolDef.Response 之 lineage 語意欄位
+	//（source/source_role/derived_from/freshness/data_date/sampling_sec）。
+	// 空欄位由 Core 以 ToolDef.Response（或盤中預設）補齊。
+	Lineage *model.Lineage
+}
+
 // Call 執行單一工具呼叫，回傳 §3.3 Envelope（以 interface{} 承載，
 // 由 Wire 層序列化至 StructuredContent）。錯誤一律為明確訊息：
 // 未知工具 / schema 驗證失敗 / 業務錯誤（IsError 標記由 Wire 層處理）。
@@ -75,29 +87,67 @@ func (c *Core) Call(ctx context.Context, name string, args map[string]any) (inte
 	}
 
 	started := c.now()
-	data, err := def.Handler(c.app, args)
+	hr, err := def.Handler(c.app, args)
 	if err != nil {
 		return nil, err
 	}
 
-	env := &model.Envelope{
-		Data: data,
-		Lineage: model.Lineage{
-			Source:      model.SourceTWSEMIS,
-			SourceRole:  model.SourceRoleCanonical,
-			FetchedAt:   model.NewTaipeiTime(started),
-			DataDate:    model.FormatDate(started),
-			Freshness:   model.FreshnessRealtimeIntraday,
-			SamplingSec: 8,
-			LatencyMS:   time.Since(started).Milliseconds(),
-		},
+	lg := lineageFor(def, hr)
+	lg.FetchedAt = model.NewTaipeiTime(started)
+	if lg.DataDate == "" {
+		lg.DataDate = model.FormatDate(started)
 	}
+	lg.LatencyMS = time.Since(started).Milliseconds()
+
+	env := &model.Envelope{Data: hr.Data, Lineage: lg}
 	if opt.Chart && c.chart != nil {
-		if err := c.chart.UpdateEnvelope(env, def, opt, data); err != nil {
+		if err := c.chart.UpdateEnvelope(env, def, opt, hr.Data); err != nil {
 			return nil, fmt.Errorf("mcp: 工具 %s chart 注入失敗: %w", name, err)
 		}
 	}
 	return env, nil
+}
+
+// lineageFor 合併 ToolDef.Response 與 HandlerResult.Lineage：
+//   - HandlerResult.Lineage 優先（欄位級覆寫）；
+//   - 其餘由 ToolDef.Response 補齊；
+//   - 兩者皆無 → 盤中預設（§10.A：TWSE_MIS / REALTIME_INTRADAY / 8s 採樣）。
+func lineageFor(def *ToolDef, hr HandlerResult) model.Lineage {
+	if def.Response == nil && hr.Lineage == nil {
+		return model.Lineage{
+			Source:      model.SourceTWSEMIS,
+			SourceRole:  model.SourceRoleCanonical,
+			Freshness:   model.FreshnessRealtimeIntraday,
+			SamplingSec: 8,
+		}
+	}
+	var lg model.Lineage
+	if def.Response != nil {
+		lg = *def.Response
+	}
+	if hr.Lineage != nil {
+		o := hr.Lineage
+		if o.Source != "" {
+			lg.Source = o.Source
+		}
+		if o.SourceRole != "" {
+			lg.SourceRole = o.SourceRole
+		}
+		if o.Freshness != "" {
+			lg.Freshness = o.Freshness
+		}
+		if o.DataDate != "" {
+			lg.DataDate = o.DataDate
+		}
+		if o.SamplingSec != 0 {
+			lg.SamplingSec = o.SamplingSec
+		}
+		lg.DerivedFrom = o.DerivedFrom
+		lg.IsCached = o.IsCached
+		lg.CacheTTL = o.CacheTTL
+		lg.SourceURL = o.SourceURL
+	}
+	return lg
 }
 
 // validateArgs 以登錄時編譯之 JSON Schema 驗證參數。

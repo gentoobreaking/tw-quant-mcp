@@ -38,8 +38,8 @@ func TestServerListTools(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ListTools 不應失敗: %v", err)
 	}
-	if len(res.Tools) != 6 {
-		t.Fatalf("tools/list 應回傳 6 個 §10.A 工具，實際 %d 個", len(res.Tools))
+	if len(res.Tools) != 17 {
+		t.Fatalf("tools/list 應回傳 17 個工具（§10.A 6 + B/C 11），實際 %d 個", len(res.Tools))
 	}
 	seen := map[string]bool{}
 	for _, tool := range res.Tools {

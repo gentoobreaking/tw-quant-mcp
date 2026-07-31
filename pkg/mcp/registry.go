@@ -12,11 +12,13 @@ import (
 
 	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+
+	"tw-quant-mcp/pkg/model"
 )
 
 // ToolDef 為單一 Tool 之登錄定義。Handler 收到已通過 schema 驗證的 args，
-// 回傳業務資料（data，即 §3.3 Envelope.Data）；lineage/_chart_meta 由
-// response shaping 階段統一注入，Handler 不得自行偽造。
+// 回傳 HandlerResult（業務資料 + 選用之 lineage 覆寫）；lineage/_chart_meta
+// 由 response shaping 階段統一注入，Handler 不得自行偽造。
 type ToolDef struct {
 	// Symbol 為 §10 工具目錄之唯一識別（如 "set_active_watchlist"）。
 	Symbol string
@@ -28,8 +30,12 @@ type ToolDef struct {
 	Schema map[string]any
 	// ReadOnly 為 true 時輸出 annotations.readOnlyHint=true（唯讀查詢）。
 	ReadOnly bool
+	// Response 為本工具之預設 lineage（§3.2）。nil 時套用盤中預設
+	//（TWSE_MIS / REALTIME_INTRADAY / 8s 採樣）；HandlerResult.Lineage
+	// 可欄位級覆寫。
+	Response *model.Lineage
 	// Handler 執行業務邏輯；args 已通過 schema 驗證。
-	Handler func(*App, map[string]any) (any, error)
+	Handler func(*App, map[string]any) (HandlerResult, error)
 }
 
 // Registry 是 Tool 登錄表（§6 MCP Engine Layer）。

@@ -43,6 +43,7 @@ const (
 	TWSEWDIndexHistory  TWSEWebDataset = "index_history"   // 加權指數歷史
 	TWSEWDBlockTrades   TWSEWebDataset = "block_trades"    // 鉅額交易
 	TWSEWDAbnormal      TWSEWebDataset = "abnormal_volume" // 異常成交量（當日公布注意股票）
+	TWSEWDForeignQFIIS  TWSEWebDataset = "qfiis"           // 外資及陸資投資持股統計（個股每日，T011）
 )
 
 // TWSEAPIDataset 為 TWSE-API（openapi.twse.com.tw）資料集 ID。
@@ -56,6 +57,7 @@ const (
 	TWSEAPIIndices         TWSEAPIDataset = "indices"            // 每日各指數行情
 	TWSEAPIESG             TWSEAPIDataset = "esg"                // ESG 資訊揭露（topic 1..21）
 	TWSEAPIGovernance      TWSEAPIDataset = "company_governance" // 公司治理
+	TWSEAPIPunish          TWSEAPIDataset = "punish"             // 集中市場公布處置股票（T011）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -72,6 +74,7 @@ var (
 		TWSEWDIndexHistory:  "/indicesReport/MI_5MINS_HIST",
 		TWSEWDBlockTrades:   "/rwd/block/BFIAUU_d",
 		TWSEWDAbnormal:      "/rwd/announcement/notice",
+		TWSEWDForeignQFIIS:  "/rwd/fund/MI_QFIIS",
 	}
 	twseAPIPaths = map[TWSEAPIDataset]string{
 		TWSEAPIDailyClose:      "/exchangeReport/STOCK_DAY_ALL",
@@ -80,6 +83,7 @@ var (
 		TWSEAPIIndices:         "/exchangeReport/MI_INDEX",
 		TWSEAPIESG:             "/opendata/t187ap46_L_%s", // topic 1..21
 		TWSEAPIGovernance:      "/opendata/t187ap32_L",
+		TWSEAPIPunish:          "/announcement/punish",
 	}
 )
 
@@ -370,6 +374,7 @@ func validateRequiredFields(ds string, fields []string) error {
 		"index_history":   {"日期", "開盤指數", "最高指數", "最低指數", "收盤指數"},
 		"block_trades":    {"日期", "交易別", "類別", "成交股數", "成交金額"},
 		"abnormal_volume": {"編號", "證券代號", "證券名稱", "累計次數"},
+		"qfiis":           {"證券代號", "證券名稱", "發行股數", "全體外資及陸資持有股數", "全體外資及陸資持股比率"},
 	}
 	for _, f := range required[ds] {
 		if !containsString(fields, f) {
@@ -442,6 +447,10 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizeBlockTrades(raw)
 	case "abnormal_volume":
 		out, err = normalizeAbnormalVolume(raw)
+	case "qfiis":
+		out, err = normalizeQFIIS(raw)
+	case "punish":
+		out, err = normalizePunish(raw)
 	case "daily_close":
 		out, err = normalizeDailyClose(raw)
 	case "foreign_holdings":
@@ -1422,3 +1431,113 @@ func (s *TWSEWebSource) Client() *BaseClient { return s.client }
 
 // Client 回傳底層 BaseClient（供 handler 共用連線池/限流/熔斷）。
 func (s *TWSEAPISource) Client() *BaseClient { return s.client }
+
+// ---------------------------------------------------------------------------
+// 外資及陸資投資持股統計（TWSE-WEB）：MI_QFIIS 每日全市場個股快照
+// （2026-07 實測：dayDate 請求日之資料於翌日釋出，等同 T-1；欄位單位
+// 股/% 官方已明示）。get_foreign_shareholding_history 資料源（T011）。
+
+// ForeignHoldingPointRow 為單一股票之一日外資持股快照。
+type ForeignHoldingPointRow struct {
+	Date            string  `json:"date"` // YYYY-MM-DD（官方 T-1）
+	Code            string  `json:"code"`
+	Name            string  `json:"name"`
+	IssueShares     int64   `json:"issue_shares"`    // 發行股數（股）
+	ForeignShares   int64   `json:"foreign_shares"`  // 全體外資及陸資持有股數（股）
+	ForeignPercent  float64 `json:"foreign_percent"` // 全體外資及陸資持股比率（%）
+	UpperLimitPct   float64 `json:"upper_limit_pct"` // 共用法令投資上限比率（%）
+	ChangeReason    string  `json:"change_reason,omitempty"`
+	LastChangedDate string  `json:"last_changed_date,omitempty"` // 最近一次持股異動申報日期
+}
+
+func normalizeQFIIS(raw *RawResponse) ([]ForeignHoldingPointRow, error) {
+	var env struct {
+		Date string `json:"date"` // YYYYMMDD
+	}
+	if err := json.Unmarshal(raw.Body, &env); err != nil {
+		return nil, fmt.Errorf("provider: qfiis 回應解析失敗: %w", err)
+	}
+	fields, rows, err := rowsOf(raw)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]ForeignHoldingPointRow, 0, len(rows))
+	for _, row := range rows {
+		m := parseRow(fields, row)
+		r := ForeignHoldingPointRow{
+			Code:           strings.TrimSpace(m["證券代號"]),
+			Name:           strings.TrimSpace(m["證券名稱"]),
+			IssueShares:    commaIntOrZero(m["發行股數"]),
+			ForeignShares:  commaIntOrZero(m["全體外資及陸資持有股數"]),
+			ForeignPercent: commaFloatOrZero(m["全體外資及陸資持股比率"]),
+			UpperLimitPct:  commaFloatOrZero(m["外資及陸資共用法令投資上限比率"]),
+			ChangeReason:   strings.TrimSpace(m["與前日異動原因(註)"]),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		if env.Date != "" {
+			if ts, err := time.Parse("20060102", env.Date); err == nil {
+				r.Date = model.FormatDate(ts)
+			}
+		}
+		if ts, err := parseROCDate(m["最近一次上市公司申報外資及陸資持股異動日期"]); err == nil {
+			r.LastChangedDate = model.FormatDate(ts)
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: qfiis 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 集中市場公布處置股票（TWSE-API）：announcement/punish 處置公告清單
+// （2026-07 實測：不含 date 參數，回傳最近處置名單）。
+// get_attention_disposition_stocks 之上市處置資料源（T011）。
+
+// PunishRow 為一筆處置公告。
+type PunishRow struct {
+	Number             string `json:"number"` // 編號
+	Date               string `json:"date"`   // 公布日期 YYYY-MM-DD
+	Code               string `json:"code"`
+	Name               string `json:"name"`
+	NoticeCount        int64  `json:"notice_count"`        // 累計（公布注意資訊次數）
+	Reasons            string `json:"reasons"`             // 處置條件（如 連續三次）
+	DispositionPeriod  string `json:"disposition_period"`  // 處置起迄時間（官方原文）
+	DispositionMeasure string `json:"disposition_measure"` // 處置措施（如 第一次處置）
+	Detail             string `json:"detail"`              // 處置內容（原文）
+}
+
+func normalizePunish(raw *RawResponse) ([]PunishRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: announcement/punish JSON 解析失敗: %w", err)
+	}
+	out := make([]PunishRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := PunishRow{
+			Number:             strings.TrimSpace(m["Number"]),
+			Code:               strings.TrimSpace(m["Code"]),
+			Name:               strings.TrimSpace(m["Name"]),
+			NoticeCount:        commaIntOrZero(m["NumberOfAnnouncement"]),
+			Reasons:            strings.TrimSpace(m["ReasonsOfDisposition"]),
+			DispositionPeriod:  strings.TrimSpace(m["DispositionPeriod"]),
+			DispositionMeasure: strings.TrimSpace(m["DispositionMeasures"]),
+			Detail:             strings.TrimSpace(m["Detail"]),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		if ts, err := parseROCDate(m["Date"]); err == nil {
+			r.Date = model.FormatDate(ts)
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: punish 無有效資料列")
+	}
+	return out, nil
+}

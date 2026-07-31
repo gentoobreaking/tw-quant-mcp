@@ -684,3 +684,77 @@ func TestTWSEFetchContract(t *testing.T) {
 		t.Errorf("API 契約結果錯誤: n=%d", len(rows))
 	}
 }
+
+// TestTWSEWebQFIIS 外資及陸資投資持股統計（T011）：每日全市場快照。
+func TestTWSEWebQFIIS(t *testing.T) {
+	src := sourceOf("qfiis")
+	raw := fixtureRaw(t, urlOf("/rwd/fund/MI_QFIIS?response=json&dayDate=20260730"),
+		loadFixture(t, "qfiis.json"))
+	if err := src.Validate(raw); err != nil {
+		t.Fatalf("Validate 失敗: %v", err)
+	}
+	out, err := src.Normalize(raw)
+	if err != nil {
+		t.Fatalf("Normalize 失敗: %v", err)
+	}
+	var rows []ForeignHoldingPointRow
+	if err := json.Unmarshal(out, &rows); err != nil {
+		t.Fatal(err)
+	}
+	if len(rows) != 8 {
+		t.Fatalf("應有 8 列，實際 %d", len(rows))
+	}
+	r := rows[0]
+	if r.Code != "1101" || r.Name != "台泥" {
+		t.Errorf("代號/名稱錯誤: %s/%s", r.Code, r.Name)
+	}
+	if r.IssueShares != 7523181742 || r.ForeignShares != 1093274618 {
+		t.Errorf("股數轉換錯誤: %d/%d", r.IssueShares, r.ForeignShares)
+	}
+	// 比率保留官方小數（85.46 / 14.53）
+	if r.ForeignPercent != 14.53 || r.UpperLimitPct != 100 {
+		t.Errorf("比率轉換錯誤: %v/%v", r.ForeignPercent, r.UpperLimitPct)
+	}
+	// 官方 115年07月30日 → 2026-07-30
+	if r.Date != "2026-07-30" {
+		t.Errorf("日期應為 2026-07-30，實際 %s", r.Date)
+	}
+}
+
+// TestTWSEAPIPunish 集中市場公布處置股票（T011）：最近處置名單。
+func TestTWSEAPIPunish(t *testing.T) {
+	src := sourceOf("punish")
+	raw := fixtureRaw(t, "https://openapi.twse.com.tw/v1/announcement/punish",
+		loadFixture(t, "punish.json"))
+	if err := src.Validate(raw); err != nil {
+		t.Fatalf("Validate 失敗: %v", err)
+	}
+	out, err := src.Normalize(raw)
+	if err != nil {
+		t.Fatalf("Normalize 失敗: %v", err)
+	}
+	var rows []PunishRow
+	if err := json.Unmarshal(out, &rows); err != nil {
+		t.Fatal(err)
+	}
+	if len(rows) == 0 {
+		t.Fatal("應有處置公告列")
+	}
+	r := rows[0]
+	if r.Code != "050307" || r.Name != "亞航國泰57購01" {
+		t.Errorf("代號/名稱錯誤: %s/%s", r.Code, r.Name)
+	}
+	if r.Reasons != "連續三次" || r.DispositionMeasure != "第一次處置" {
+		t.Errorf("處置條件/措施錯誤: %s/%s", r.Reasons, r.DispositionMeasure)
+	}
+	if r.NoticeCount != 1 {
+		t.Errorf("累計次數應為 1，實際 %d", r.NoticeCount)
+	}
+	// 官方 1150722 → 2026-07-22
+	if r.Date != "2026-07-22" {
+		t.Errorf("日期應為 2026-07-22，實際 %s", r.Date)
+	}
+	if r.DispositionPeriod == "" || r.Detail == "" {
+		t.Errorf("處置期間/內容不應為空")
+	}
+}

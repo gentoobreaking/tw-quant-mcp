@@ -17,6 +17,8 @@ const (
 	DatasetMaterialNews   = "material_news"   // 重大訊息
 	DatasetCalendar       = "calendar"        // 交易日曆 / 公司代碼表
 	DatasetTAIFEXHistory  = "taifex_history"  // TAIFEX 歷史回溯（download 解析結果）
+	DatasetForeignHold    = "foreign_holding" // 外資持股（個股歷史/類股，T011）
+	DatasetWarrants       = "warrants"        // 權證每日成交（T011）
 )
 
 // 特殊 TTL 值（§4.2）。
@@ -50,6 +52,8 @@ var policies = map[string]Policy{
 	DatasetMaterialNews:   {Intraday: 5 * time.Minute, Post: 5 * time.Minute, AllowL2: true},
 	DatasetCalendar:       {Intraday: 24 * time.Hour, Post: 24 * time.Hour, AllowL2: true},
 	DatasetTAIFEXHistory:  {Intraday: ForeverTTL, Post: ForeverTTL, AllowL2: true},
+	DatasetForeignHold:    {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
+	DatasetWarrants:       {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
 }
 
 // TTLFor 依 §4.2 政策表與目前時間回傳資料類別之有效期間。

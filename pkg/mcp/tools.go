@@ -39,47 +39,47 @@ func (a *App) requireWatchlist(code string) error {
 }
 
 // handlerSetActiveWatchlist：設定盤中監控清單（§8.2，1..15 檔）。
-func handlerSetActiveWatchlist(a *App, args map[string]any) (any, error) {
+func handlerSetActiveWatchlist(a *App, args map[string]any) (HandlerResult, error) {
 	if err := a.intradayGate(a.now()); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	raw, _ := args["symbols"].([]any)
 	symbols := make([]model.Symbol, 0, len(raw))
 	for _, v := range raw {
 		code, ok := v.(string)
 		if !ok {
-			return nil, fmt.Errorf("參數 symbols 每個元素必須為字串")
+			return HandlerResult{}, fmt.Errorf("參數 symbols 每個元素必須為字串")
 		}
 		sym, ok := a.symbols.Lookup(code)
 		if !ok {
-			return nil, fmt.Errorf("非法代號 %q（未註冊於 Symbol Registry）", code)
+			return HandlerResult{}, fmt.Errorf("非法代號 %q（未註冊於 Symbol Registry）", code)
 		}
 		symbols = append(symbols, sym)
 	}
 	if err := a.watchlist.Set(symbols); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	codes := make([]string, 0, len(symbols))
 	for _, s := range symbols {
 		codes = append(codes, s.Code)
 	}
 	sort.Strings(codes)
-	return map[string]any{
+	return HandlerResult{Data: map[string]any{
 		"status":       "ok",
 		"symbols":      codes,
 		"count":        len(codes),
 		"sampling_sec": 8,
-	}, nil
+	}}, nil
 }
 
 // handlerGetIntradayKline：純記憶體 1m/5m K 線重採樣（§8.4）。
-func handlerGetIntradayKline(a *App, args map[string]any) (any, error) {
+func handlerGetIntradayKline(a *App, args map[string]any) (HandlerResult, error) {
 	if err := a.intradayGate(a.now()); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	code, _ := args["symbol"].(string)
 	if err := a.requireWatchlist(code); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	tf, _ := args["timeframe"].(string)
 	if tf == "" {
@@ -93,23 +93,23 @@ func handlerGetIntradayKline(a *App, args map[string]any) (any, error) {
 	}
 	candles, err := a.agg.Klines(code, tf, limit)
 	if err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
-	return candles, nil
+	return HandlerResult{Data: candles}, nil
 }
 
 // handlerGetIntradayQuote：最新快照報價 + 五檔（記憶體讀取）。
-func handlerGetIntradayQuote(a *App, args map[string]any) (any, error) {
+func handlerGetIntradayQuote(a *App, args map[string]any) (HandlerResult, error) {
 	if err := a.intradayGate(a.now()); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	code, _ := args["symbol"].(string)
 	if err := a.requireWatchlist(code); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	snaps := a.rings.Snapshots(code)
 	if len(snaps) == 0 {
-		return nil, fmt.Errorf("代碼 %s 目前無盤中快照（請先加入 watchlist 並等待採樣）", code)
+		return HandlerResult{}, fmt.Errorf("代碼 %s 目前無盤中快照（請先加入 watchlist 並等待採樣）", code)
 	}
 	s := snaps[len(snaps)-1]
 	q := model.IntradayQuote{
@@ -133,33 +133,33 @@ func handlerGetIntradayQuote(a *App, args map[string]any) (any, error) {
 		q.Bids = s.Book.Bids
 		q.Asks = s.Book.Asks
 	}
-	return q, nil
+	return HandlerResult{Data: q}, nil
 }
 
 // handlerGetIntradayVWAP：當日 VWAP / 高低點 / 支撐壓力（§8.5）。
-func handlerGetIntradayVWAP(a *App, args map[string]any) (any, error) {
+func handlerGetIntradayVWAP(a *App, args map[string]any) (HandlerResult, error) {
 	if err := a.intradayGate(a.now()); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	code, _ := args["symbol"].(string)
 	if err := a.requireWatchlist(code); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	vwap, err := a.intraday.VWAP(code)
 	if err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
-	return vwap, nil
+	return HandlerResult{Data: vwap}, nil
 }
 
 // handlerDetectVolumeSurge：近 N 分鐘爆量偵測（§8.5）。
-func handlerDetectVolumeSurge(a *App, args map[string]any) (any, error) {
+func handlerDetectVolumeSurge(a *App, args map[string]any) (HandlerResult, error) {
 	if err := a.intradayGate(a.now()); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	code, _ := args["symbol"].(string)
 	if err := a.requireWatchlist(code); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	minutes := 5
 	if v, ok := args["minutes"]; ok {
@@ -169,20 +169,20 @@ func handlerDetectVolumeSurge(a *App, args map[string]any) (any, error) {
 	}
 	surge, err := a.agg.Surge(code, minutes)
 	if err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
-	return surge, nil
+	return HandlerResult{Data: surge}, nil
 }
 
 // handlerScanDaytradeEligibility：買前風險掃描（注意/處置/停資停券）。
-func handlerScanDaytradeEligibility(a *App, args map[string]any) (any, error) {
+func handlerScanDaytradeEligibility(a *App, args map[string]any) (HandlerResult, error) {
 	if err := a.intradayGate(a.now()); err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
 	code, _ := args["symbol"].(string)
 	scan, err := a.risk.Scan(code)
 	if err != nil {
-		return nil, err
+		return HandlerResult{}, err
 	}
-	return scan, nil
+	return HandlerResult{Data: scan}, nil
 }

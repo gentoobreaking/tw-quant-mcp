@@ -4,19 +4,48 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"net/url"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
+	"tw-quant-mcp/pkg/cache"
 	"tw-quant-mcp/pkg/calendar"
 	"tw-quant-mcp/pkg/config"
 	"tw-quant-mcp/pkg/engine"
 	"tw-quant-mcp/pkg/model"
+	"tw-quant-mcp/pkg/provider"
 )
+
+// WebFetcher 為 TWSE-WEB 資料源之 handler 視界（URL 建構 + 請求 +
+// Validate + Normalize）。測試可注入 fake 實作（回傳 fixture），免真實 HTTP。
+type WebFetcher interface {
+	URL(ds provider.TWSEWebDataset, params url.Values) string
+	Fetch(ctx context.Context, req provider.RawRequest) (*provider.RawResponse, error)
+	Validate(raw *provider.RawResponse) error
+	Normalize(raw *provider.RawResponse) ([]byte, error)
+}
+
+// APIFetcher 為 TWSE-API（openapi.twse.com.tw）資料源之 handler 視界。
+type APIFetcher interface {
+	URL(ds provider.TWSEAPIDataset, params url.Values) string
+	Fetch(ctx context.Context, req provider.RawRequest) (*provider.RawResponse, error)
+	Validate(raw *provider.RawResponse) error
+	Normalize(raw *provider.RawResponse) ([]byte, error)
+}
+
+// TPExFetcher 為 TPEx-API 資料源之 handler 視界。
+type TPExFetcher interface {
+	URL(ds provider.TPExDataset, params url.Values) string
+	Fetch(ctx context.Context, req provider.RawRequest) (*provider.RawResponse, error)
+	Validate(raw *provider.RawResponse) error
+	Normalize(raw *provider.RawResponse) ([]byte, error)
+}
 
 // App 是 MCP Engine Layer 之組裝根（§6）：
 // Symbol Registry / 交易日曆 / 盤中引擎（Watchlist + RingStore +
-// Aggregator + IntradayStore）/ 風險掃描器 / Tool Registry。
+// Aggregator + IntradayStore）/ 風險掃描器 / 盤後資料源（TWSE-WEB /
+// TWSE-API / TPEx-API，T011）/ 快取層 / Tool Registry。
 type App struct {
 	cfg       *config.Config
 	symbols   *model.Registry
@@ -26,6 +55,10 @@ type App struct {
 	agg       *engine.Aggregator
 	intraday  *engine.IntradayStore
 	risk      *DaytradeScanner
+	twseWeb   WebFetcher
+	twseAPI   APIFetcher
+	tpex      TPExFetcher
+	cache     *cache.Cache
 	core      *Core
 	registry  *Registry
 	now       func() time.Time
@@ -65,6 +98,20 @@ func WithAppScanner(s *DaytradeScanner) AppOption {
 	return func(a *App) { a.risk = s }
 }
 
+// WithAppSources 注入盤後資料源（測試用；預設建立真實 TWSE/TPEx sources）。
+func WithAppSources(web WebFetcher, api APIFetcher, tpex TPExFetcher) AppOption {
+	return func(a *App) {
+		a.twseWeb = web
+		a.twseAPI = api
+		a.tpex = tpex
+	}
+}
+
+// WithAppCache 注入快取層（測試用；預設 L1-only 快取）。
+func WithAppCache(c *cache.Cache) AppOption {
+	return func(a *App) { a.cache = c }
+}
+
 // WithAppLogger 注入 slog logger（預設 discard）。
 func WithAppLogger(l *slog.Logger) AppOption {
 	return func(a *App) { a.logger = l }
@@ -83,11 +130,20 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 		rings:     engine.NewRingStore(),
 		agg:       nil, // 見下
 		intraday:  engine.NewIntradayStore(),
+		twseWeb:   provider.NewTWSEWebSource(),
+		twseAPI:   provider.NewTWSEAPISource(),
+		tpex:      provider.NewTPExSource(),
 		now:       func() time.Time { return model.Now().Time },
 		logger:    slog.New(slog.NewTextHandler(discard, nil)),
 	}
 	for _, o := range opts {
 		o(a)
+	}
+	if a.cache == nil {
+		var err error
+		if a.cache, err = cache.New(); err != nil {
+			return nil, fmt.Errorf("mcp: 快取層初始化失敗: %w", err)
+		}
 	}
 	if a.watchlist == nil {
 		a.watchlist = engine.NewWatchlist(a.calendar.IsTradingDay)
@@ -104,6 +160,14 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 		WithCoreLogger(a.logger),
 	)
 	return a, nil
+}
+
+// Close 釋放 App 資源（快取層 L2 連線）。
+func (a *App) Close() error {
+	if a.cache != nil {
+		return a.cache.Close()
+	}
+	return nil
 }
 
 // Registry 回傳 Tool 登錄表。
@@ -252,5 +316,6 @@ func buildRegistry() *Registry {
 		ReadOnly: true,
 		Handler:  handlerScanDaytradeEligibility,
 	})
+	registerBCTools(r)
 	return r
 }

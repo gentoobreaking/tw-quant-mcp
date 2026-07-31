@@ -86,14 +86,105 @@ func KlineChartMeta(limit int) map[string]any {
 // defaultChartUpdater 提供 §11 內建之圖表描述。
 type defaultChartUpdater struct{}
 
-// UpdateEnvelope 依工具型別注入：
-//   - kline：candlestick 描述（limit 依 ChartOption.Limit，handler 已於
+// UpdateEnvelope 依工具型別注入（§11.3）：
+//   - 盤中 K 線：candlestick（limit 依 ChartOption.Limit，handler 已於
 //     data 上套用同一限制）
-//   - 其餘（報價/指標/掃描）：非時間序列，依 §11.1 原則不注入。
+//   - 盤後日 K：candlestick（datetime 為 YYYY-MM-DD）
+//   - 報價/指標：line（單日值亦提供，x=date）
+//   - 法人/籌碼：bar（正負分色）
+//   - 外資產業配置：pie
+//   - 外資持股歷史：line（時間趨勢）
+//   - 權證活躍度：bar
+//   - 市場彙總：bar（漲跌家數）
+//   - 其餘（掃描/清單）：非時間序列，依 §11.1 原則不注入。
 func (defaultChartUpdater) UpdateEnvelope(env *model.Envelope, def *ToolDef, opt ChartOption, data any) error {
 	switch def.Name {
 	case "get_intraday_kline":
 		env.ChartMeta = KlineChartMeta(opt.Limit)
+	case "get_stock_daily_kline":
+		env.ChartMeta = DailyKlineChartMeta()
+	case "get_stock_daily_quote":
+		env.ChartMeta = lineChart("收盤價 (元)", "date", "close")
+	case "get_institutional_investors":
+		env.ChartMeta = barChart("三大法人買賣超 (股)", "code", "foreign_net")
+	case "get_margin_trading":
+		env.ChartMeta = barChart("融資融券餘額", "code", "margin_balance")
+	case "get_foreign_industry_holdings":
+		env.ChartMeta = pieChart("外資產業配置", "industry", "foreign_share")
+	case "get_foreign_shareholding_history":
+		env.ChartMeta = lineChart("外資持股比率 (%)", "date", "foreign_percent")
+	case "get_warrant_activity":
+		env.ChartMeta = barChart("權證成交金額 (元)", "code", "amount")
+	case "get_market_summary":
+		env.ChartMeta = barChart("漲跌家數", "tse|otc", "advancers")
 	}
 	return nil
+}
+
+// DailyKlineChartMeta 產出盤後日 K 之 §11.2 標準描述（candlestick）。
+func DailyKlineChartMeta() map[string]any {
+	return map[string]any{
+		"recommended_type": "candlestick",
+		"x_axis": map[string]any{
+			"key":    "timestamp",
+			"type":   "datetime",
+			"format": "YYYY-MM-DD",
+		},
+		"y_axis": map[string]any{
+			"keys":       []string{"open", "high", "low", "close"},
+			"title":      "價格 (元)",
+			"right_axis": []string{"volume"},
+		},
+		"series": []map[string]any{
+			{"key": "volume", "type": "bar", "style": "volume"},
+		},
+		"annotations": []any{},
+		"note":        "Candle[] 之 timestamp 格式 YYYY-MM-DD（盤後日/週/月 K）",
+	}
+}
+
+// lineChart 產出線圖之 §11.2 標準描述。
+func lineChart(title, xKey, yKey string) map[string]any {
+	return map[string]any{
+		"recommended_type": "line",
+		"x_axis": map[string]any{
+			"key":  xKey,
+			"type": "category",
+		},
+		"y_axis": map[string]any{
+			"keys":  []string{yKey},
+			"title": title,
+		},
+		"annotations": []any{},
+	}
+}
+
+// barChart 產出長條圖之 §11.2 標準描述。
+func barChart(title, xKey, yKey string) map[string]any {
+	return map[string]any{
+		"recommended_type": "bar",
+		"x_axis": map[string]any{
+			"key":  xKey,
+			"type": "category",
+		},
+		"y_axis": map[string]any{
+			"keys":  []string{yKey},
+			"title": title,
+		},
+		"annotations": []any{},
+	}
+}
+
+// pieChart 產出圓餅圖之 §11.2 標準描述。
+func pieChart(title, nameKey, valueKey string) map[string]any {
+	return map[string]any{
+		"recommended_type": "pie",
+		"series": map[string]any{
+			"name_key":  nameKey,
+			"value_key": valueKey,
+			"title":     title,
+			"aggregate": "sum",
+		},
+		"annotations": []any{},
+	}
 }
