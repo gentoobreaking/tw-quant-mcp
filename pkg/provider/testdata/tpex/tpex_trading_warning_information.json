@@ -1,0 +1,50 @@
+[
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "2061",
+  "CompanyName": "風青",
+  "TradingInformation": "最近六個營業日(自當日之前一個營業日起)之當日沖銷成交量占總成交量比率達64.51%，當日之前一個營業日當日沖銷成交量占總成交量達69.14%（第十三款)",
+  "ClosePrice": "55.50",
+  "PriceEarningRatio": "N/A"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "3211",
+  "CompanyName": "順達",
+  "TradingInformation": "最近六個營業日(含當日)累積之最後成交價跌幅達28.03%且最近六個營業日(含當日)起迄兩個營業日之最後成交價價差達新臺幣90元(第一款)當日週轉率達5.79%(第四款)",
+  "ClosePrice": "292.00",
+  "PriceEarningRatio": "39.35"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "3236",
+  "CompanyName": "千如",
+  "TradingInformation": "最近六個營業日(自當日之前一個營業日起)之當日沖銷成交量占總成交量比率達65.66%，當日之前一個營業日當日沖銷成交量占總成交量達66.25%（第十三款)",
+  "ClosePrice": "38.75",
+  "PriceEarningRatio": "92.26"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "3260",
+  "CompanyName": "威剛",
+  "TradingInformation": "最近六個營業日(自當日之前一個營業日起)之當日沖銷成交量占總成交量比率達62.1%，當日之前一個營業日當日沖銷成交量占總成交量達68.07%（第十三款)",
+  "ClosePrice": "398.50",
+  "PriceEarningRatio": "7.96"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "3362",
+  "CompanyName": "先進光",
+  "TradingInformation": "當日本益比為N/A、股價淨值比為6.72且為其所屬產業類別股價淨值比之2.93倍、當日週轉率達6.49%(第六款)",
+  "ClosePrice": "172.00",
+  "PriceEarningRatio": "N/A"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "3374",
+  "CompanyName": "精材",
+  "TradingInformation": "最近六個營業日(含當日)累積之最後成交價跌幅達34.78%(第一款)",
+  "ClosePrice": "277.00",
+  "PriceEarningRatio": "53.89"
+ }
+]

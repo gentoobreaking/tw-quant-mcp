@@ -1,0 +1,93 @@
+[
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "6147",
+  "CompanyName": "頎邦",
+  "TradeVolume": "1455",
+  "NumberOfTransactions": "24",
+  "TradeAmount": "189150",
+  "Price": "130.00",
+  "LastBestBidPrice": "130.00",
+  "LastBestBidVolume": "235091",
+  "LastBestAskPrice": "0.00",
+  "LastBestAskVolume": "0"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "006201",
+  "CompanyName": "元大富櫃50",
+  "TradeVolume": "100",
+  "NumberOfTransactions": "3",
+  "TradeAmount": "3812",
+  "Price": "38.13",
+  "LastBestBidPrice": "38.13",
+  "LastBestBidVolume": "3759",
+  "LastBestAskPrice": "38.14",
+  "LastBestAskVolume": "1187"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "00679B",
+  "CompanyName": "元大美債20年",
+  "TradeVolume": "2066",
+  "NumberOfTransactions": "12",
+  "TradeAmount": "55138",
+  "Price": "26.69",
+  "LastBestBidPrice": "26.67",
+  "LastBestBidVolume": "8632",
+  "LastBestAskPrice": "26.69",
+  "LastBestAskVolume": "3748"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "00687B",
+  "CompanyName": "國泰20年美債",
+  "TradeVolume": "554",
+  "NumberOfTransactions": "6",
+  "TradeAmount": "15361",
+  "Price": "27.73",
+  "LastBestBidPrice": "27.72",
+  "LastBestBidVolume": "5784",
+  "LastBestAskPrice": "27.73",
+  "LastBestAskVolume": "2789"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "00687C",
+  "CompanyName": "國泰20年美債+櫃U",
+  "TradeVolume": "0",
+  "NumberOfTransactions": "0",
+  "TradeAmount": "0",
+  "Price": "0.00",
+  "LastBestBidPrice": "0.00",
+  "LastBestBidVolume": "0",
+  "LastBestAskPrice": "0.00",
+  "LastBestAskVolume": "0"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "00694B",
+  "CompanyName": "富邦美債1-3",
+  "TradeVolume": "100",
+  "NumberOfTransactions": "1",
+  "TradeAmount": "4250",
+  "Price": "42.50",
+  "LastBestBidPrice": "42.50",
+  "LastBestBidVolume": "5881",
+  "LastBestAskPrice": "42.53",
+  "LastBestAskVolume": "431"
+ },
+ {
+  "Date": "1150731",
+  "SecuritiesCompanyCode": "00695B",
+  "CompanyName": "富邦美債7-10",
+  "TradeVolume": "0",
+  "NumberOfTransactions": "0",
+  "TradeAmount": "0",
+  "Price": "0.00",
+  "LastBestBidPrice": "35.31",
+  "LastBestBidVolume": "3942",
+  "LastBestAskPrice": "35.55",
+  "LastBestAskVolume": "696"
+ }
+]
