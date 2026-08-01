@@ -584,7 +584,7 @@ func handlerGetMajorAnnouncements(a *App, args map[string]any) (HandlerResult, e
 
 // mopsSourceWrapper 封裝 MOPS filterFn 注入，避免改寫 provider 層 export 型別
 type mopsSourceWrapper struct {
-	base            MOPSFetcher
+	base                  MOPSFetcher
 	date, symbol, keyword string
 }
 

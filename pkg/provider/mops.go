@@ -30,6 +30,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"net/http"
 	"net/url"
 	"sort"
 	"strconv"
@@ -42,29 +43,48 @@ import (
 type MOPSDataset string
 
 const (
-	MOPSCompanyProfile   MOPSDataset = "company_profile"   // t187ap03_L：公司基本資料
-	MOPSAnnouncements    MOPSDataset = "announcements"     // t187ap04_L：重大訊息
-	MOPSMonthlyRevenue   MOPSDataset = "monthly_revenue"   // t187ap05_L：月營收
-	MOPSIncomeSummary    MOPSDataset = "income_summary"    // t187ap14_L：損益表摘要
-	MOPSProfitRatios     MOPSDataset = "profit_ratios"     // t187ap17_L：獲利能力指標
+	MOPSCompanyProfile  MOPSDataset = "company_profile"  // t187ap03_L：公司基本資料
+	MOPSAnnouncements   MOPSDataset = "announcements"    // t187ap04_L：重大訊息
+	MOPSMonthlyRevenue  MOPSDataset = "monthly_revenue"  // t187ap05_L：月營收
+	MOPSIncomeSummary   MOPSDataset = "income_summary"   // t187ap14_L：損益表摘要
+	MOPSProfitRatios    MOPSDataset = "profit_ratios"    // t187ap17_L：獲利能力指標
+	MOPSBalanceSheet    MOPSDataset = "balance_sheet"    // ajax_t164sb03：合併資產負債表
+	MOPSCashFlow        MOPSDataset = "cash_flow"        // ajax_t164sb05：合併現金流量表
+	MOPSIncomeStatement MOPSDataset = "income_statement" // ajax_t164sb04：合併綜合損益表
 )
 
-// MOPS Open Data 基礎 URL（2026-07 實測）。
+// MOPS Open Data CSV 端點（2026-07 實測）。
 const mopsOpenDataBase = "https://mopsfin.twse.com.tw/opendata"
 
+// MOPS 舊版 AJAX 端點（mopsov.twse.com.tw，不需 CSRF cookie）。
+const mopsAJAXBase = "https://mopsov.twse.com.tw/mops/web"
+
 var mopsPaths = map[MOPSDataset]string{
-	MOPSCompanyProfile: "/t187ap03_L.csv",
-	MOPSAnnouncements:  "/t187ap04_L.csv",
-	MOPSMonthlyRevenue: "/t187ap05_L.csv",
-	MOPSIncomeSummary:  "/t187ap14_L.csv",
-	MOPSProfitRatios:   "/t187ap17_L.csv",
+	MOPSCompanyProfile:  "/t187ap03_L.csv",
+	MOPSAnnouncements:   "/t187ap04_L.csv",
+	MOPSMonthlyRevenue:  "/t187ap05_L.csv",
+	MOPSIncomeSummary:   "/t187ap14_L.csv",
+	MOPSProfitRatios:    "/t187ap17_L.csv",
+	MOPSBalanceSheet:    "/ajax_t164sb03",
+	MOPSCashFlow:        "/ajax_t164sb05",
+	MOPSIncomeStatement: "/ajax_t164sb04",
+}
+
+// mopsOpenDataDatasets 為透過 Open Data CSV（mopsfin）取得之資料集。
+// 其餘為 AJAX HTML table（mopsov）。
+var mopsOpenDataDatasets = map[MOPSDataset]bool{
+	MOPSCompanyProfile: true,
+	MOPSAnnouncements:  true,
+	MOPSMonthlyRevenue: true,
+	MOPSIncomeSummary:  true,
+	MOPSProfitRatios:   true,
 }
 
 // mopsNormalizeFilter 為 Normalize 階段之請求參數（從查詢工具傳入）。
 // 因為 CSV 為全量資料，需於客戶端過濾 (symbol, date, keyword 等)。
 type MOPSSource struct {
-	client    *BaseClient
-	filterFn  func(*RawResponse) ([]byte, error) // 測試可注入之過濾函式
+	client   *BaseClient
+	filterFn func(*RawResponse) ([]byte, error) // 測試可注入之過濾函式
 }
 
 var _ SourceContract = (*MOPSSource)(nil)
@@ -76,30 +96,52 @@ func NewMOPSSource(opts ...Option) *MOPSSource {
 
 func (s *MOPSSource) ID() string { return model.SourceMOPS }
 
-// URL 建立 MOPS Open Data CSV 請求 URL。
+// URL 建立 MOPS 請求 URL。
 // params 支援：
 //   - dataset: MOPSDataset 值（必要，供路由用）
-//   - 其餘參數僅供 ExtractMeta 解析用，CSV 端點無 query 參數
+//   - co_id: 公司代號（AJAX 財報端點用）
+//   - year: 年度（AJAX 財報端點用）
+//   - season: 季別 1-4（AJAX 財報端點用）
+//   - 其餘參數僅供標記用
 func (s *MOPSSource) URL(ds MOPSDataset, params url.Values) string {
 	path, ok := mopsPaths[ds]
 	if !ok {
 		path = "/" + string(ds)
 	}
-	return mopsOpenDataBase + path
+	if mopsOpenDataDatasets[ds] {
+		return mopsOpenDataBase + path
+	}
+	return mopsAJAXBase + path
 }
 
-// Fetch 執行 MOPS HTTP GET 請求。
+// Fetch 執行 MOPS HTTP 請求（Open Data 為 GET；AJAX 財報為 POST）。
 func (s *MOPSSource) Fetch(ctx context.Context, req RawRequest) (*RawResponse, error) {
+	if req.Method == "" {
+		req.Method = http.MethodGet
+		// AJAX 財報端點強制 POST
+		if !mopsOpenDataDatasets[mopsDatasetOf(req.URL)] {
+			req.Method = http.MethodPost
+		}
+	}
 	return s.client.Do(ctx, req)
 }
 
 // Validate 執行 MOPS 回應結構檢查。
+// AJAX 財報回應為含 HTML table 之完整 HTML page。
 func (s *MOPSSource) Validate(raw *RawResponse) error {
 	if raw.StatusCode != 200 {
 		return fmt.Errorf("mops: 非預期 HTTP 狀態 %d", raw.StatusCode)
 	}
 	if len(raw.Body) == 0 {
 		return fmt.Errorf("mops: 回應本體為空")
+	}
+	// AJAX 財報回應檢查：需含 <table> 標籤
+	ds := mopsDatasetOf(raw.SourceURL)
+	if ds != "" && !mopsOpenDataDatasets[ds] {
+		body := string(raw.Body)
+		if !strings.Contains(body, "<table") {
+			return fmt.Errorf("mops: AJAX 回應不含 <table>")
+		}
 	}
 	return nil
 }
@@ -123,6 +165,31 @@ func (s *MOPSSource) RawNormalize(raw *RawResponse) ([]byte, error) {
 
 // normalizeMOPSRaw 依 raw.SourceURL 分派至各資料集之 Normalize 函式。
 func normalizeMOPSRaw(raw *RawResponse) ([]byte, error) {
+	ds := mopsDatasetOf(raw.SourceURL)
+
+	// AJAX HTML table 資料集（財報三表）
+	switch ds {
+	case MOPSBalanceSheet:
+		v, err := parseBalanceSheetHTML(raw.Body)
+		if err != nil {
+			return nil, err
+		}
+		return json.Marshal(v)
+	case MOPSCashFlow:
+		v, err := parseCashFlowHTML(raw.Body)
+		if err != nil {
+			return nil, err
+		}
+		return json.Marshal(v)
+	case MOPSIncomeStatement:
+		v, err := parseIncomeStatementHTML(raw.Body)
+		if err != nil {
+			return nil, err
+		}
+		return json.Marshal(v)
+	}
+
+	// Open Data CSV 資料集
 	body := trimBOM(raw.Body)
 	rc := newMOPSReader(body)
 	defer rc.Close()
@@ -133,7 +200,6 @@ func normalizeMOPSRaw(raw *RawResponse) ([]byte, error) {
 	}
 
 	var v any
-	ds := mopsDatasetOf(raw.SourceURL)
 	switch ds {
 	case MOPSCompanyProfile:
 		v, err = parseCompanyProfiles(rc, header)
@@ -337,39 +403,39 @@ func parseCompanyProfiles(r *mopsCSVReader, header []string) ([]model.CompanyPro
 			return nil, fmt.Errorf("mops: CSV 列解析失敗: %w", err)
 		}
 		rows = append(rows, model.CompanyProfile{
-			TableDate:      mustDate(parseMOPSDateSimple(get(rec, m, "出表日期"))),
-			Code:           parseMOPSQuoted(get(rec, m, "公司代號")),
-			Name:           parseMOPSQuoted(get(rec, m, "公司名稱")),
-			ShortName:      parseMOPSQuoted(get(rec, m, "公司簡稱")),
-			ForeignReg:     parseMOPSQuoted(get(rec, m, "外國企業註冊地國")),
-			Industry:       parseMOPSQuoted(get(rec, m, "產業別")),
-			Address:        parseMOPSQuoted(get(rec, m, "住址")),
-			TaxID:          parseMOPSQuoted(get(rec, m, "營利事業統一編號")),
-			Chairman:       parseMOPSQuoted(get(rec, m, "董事長")),
-			President:      parseMOPSQuoted(get(rec, m, "總經理")),
-			Spokesman:      parseMOPSQuoted(get(rec, m, "發言人")),
-			SpokesTitle:    parseMOPSQuoted(get(rec, m, "發言人職稱")),
-			DepSpokes:      parseMOPSQuoted(get(rec, m, "代理發言人")),
-			Phone:          parseMOPSQuoted(get(rec, m, "總機電話")),
-			Established:    mustDate(parseMOPSDate(get(rec, m, "成立日期"))),
-			Listed:         mustDate(parseMOPSDate(get(rec, m, "上市日期"))),
-			ParValue:       parseMOPSQuoted(get(rec, m, "普通股每股面額")),
-			Capital:        parseMOPSCents(get(rec, m, "實收資本額")),
-			PrivateStock:   parseMOPSInt(get(rec, m, "私募股數")),
-			Preferred:      parseMOPSInt(get(rec, m, "特別股")),
-			FinType:        parseMOPSQuoted(get(rec, m, "編制財務報表類型")),
-			Transfer:       parseMOPSQuoted(get(rec, m, "股票過戶機構")),
-			TransferPhone:  parseMOPSQuoted(get(rec, m, "過戶電話")),
-			TransferAddr:   parseMOPSQuoted(get(rec, m, "過戶地址")),
-			AuditorFirm:    parseMOPSQuoted(get(rec, m, "簽證會計師事務所")),
-			Auditor1:       parseMOPSQuoted(get(rec, m, "簽證會計師1")),
-			Auditor2:       parseMOPSQuoted(get(rec, m, "簽證會計師2")),
-			EngName:        parseMOPSQuoted(get(rec, m, "英文簡稱")),
-			EngAddr:        parseMOPSQuoted(get(rec, m, "英文通訊地址")),
-			Fax:            parseMOPSQuoted(get(rec, m, "傳真機號碼")),
-			Email:          parseMOPSQuoted(get(rec, m, "電子郵件信箱")),
-			Website:        parseMOPSQuoted(get(rec, m, "網址")),
-			SharesOut:      parseMOPSInt(get(rec, m, "已發行普通股數或TDR原股發行股數")),
+			TableDate:     mustDate(parseMOPSDateSimple(get(rec, m, "出表日期"))),
+			Code:          parseMOPSQuoted(get(rec, m, "公司代號")),
+			Name:          parseMOPSQuoted(get(rec, m, "公司名稱")),
+			ShortName:     parseMOPSQuoted(get(rec, m, "公司簡稱")),
+			ForeignReg:    parseMOPSQuoted(get(rec, m, "外國企業註冊地國")),
+			Industry:      parseMOPSQuoted(get(rec, m, "產業別")),
+			Address:       parseMOPSQuoted(get(rec, m, "住址")),
+			TaxID:         parseMOPSQuoted(get(rec, m, "營利事業統一編號")),
+			Chairman:      parseMOPSQuoted(get(rec, m, "董事長")),
+			President:     parseMOPSQuoted(get(rec, m, "總經理")),
+			Spokesman:     parseMOPSQuoted(get(rec, m, "發言人")),
+			SpokesTitle:   parseMOPSQuoted(get(rec, m, "發言人職稱")),
+			DepSpokes:     parseMOPSQuoted(get(rec, m, "代理發言人")),
+			Phone:         parseMOPSQuoted(get(rec, m, "總機電話")),
+			Established:   mustDate(parseMOPSDate(get(rec, m, "成立日期"))),
+			Listed:        mustDate(parseMOPSDate(get(rec, m, "上市日期"))),
+			ParValue:      parseMOPSQuoted(get(rec, m, "普通股每股面額")),
+			Capital:       parseMOPSCents(get(rec, m, "實收資本額")),
+			PrivateStock:  parseMOPSInt(get(rec, m, "私募股數")),
+			Preferred:     parseMOPSInt(get(rec, m, "特別股")),
+			FinType:       parseMOPSQuoted(get(rec, m, "編制財務報表類型")),
+			Transfer:      parseMOPSQuoted(get(rec, m, "股票過戶機構")),
+			TransferPhone: parseMOPSQuoted(get(rec, m, "過戶電話")),
+			TransferAddr:  parseMOPSQuoted(get(rec, m, "過戶地址")),
+			AuditorFirm:   parseMOPSQuoted(get(rec, m, "簽證會計師事務所")),
+			Auditor1:      parseMOPSQuoted(get(rec, m, "簽證會計師1")),
+			Auditor2:      parseMOPSQuoted(get(rec, m, "簽證會計師2")),
+			EngName:       parseMOPSQuoted(get(rec, m, "英文簡稱")),
+			EngAddr:       parseMOPSQuoted(get(rec, m, "英文通訊地址")),
+			Fax:           parseMOPSQuoted(get(rec, m, "傳真機號碼")),
+			Email:         parseMOPSQuoted(get(rec, m, "電子郵件信箱")),
+			Website:       parseMOPSQuoted(get(rec, m, "網址")),
+			SharesOut:     parseMOPSInt(get(rec, m, "已發行普通股數或TDR原股發行股數")),
 		})
 	}
 	return rows, nil

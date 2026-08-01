@@ -484,3 +484,118 @@ func TestMOPSContext(t *testing.T) {
 		t.Error("已取消的 context 應回傳錯誤")
 	}
 }
+
+// ---------------------------------------------------------------------------
+// AJAX HTML table 解析測試（財報三表，T012-followup）
+// ---------------------------------------------------------------------------
+
+func loadMOPSHTMLFixture(t *testing.T, name string) []byte {
+	t.Helper()
+	body, err := os.ReadFile(filepath.Join("testdata", "mops", name))
+	if err != nil {
+		t.Fatalf("讀取 fixture %s 失敗: %v", name, err)
+	}
+	return body
+}
+
+// TestMOPSBalanceSheetHTML 驗證合併資產負債表 HTML 解析。
+func TestMOPSBalanceSheetHTML(t *testing.T) {
+	body := loadMOPSHTMLFixture(t, "balance_sheet_2330_2026Q1.html")
+	raw := &RawResponse{
+		StatusCode: 200,
+		Body:       body,
+		SourceURL:  "https://mopsov.twse.com.tw/mops/web/ajax_t164sb03",
+	}
+	s := newTestMOPSSource()
+	if err := s.Validate(raw); err != nil {
+		t.Fatalf("Validate 失敗: %v", err)
+	}
+	out, err := s.Normalize(raw)
+	if err != nil {
+		t.Fatalf("Normalize 失敗: %v", err)
+	}
+	var bs model.BalanceSheet
+	if err := json.Unmarshal(out, &bs); err != nil {
+		t.Fatalf("Unmarshal 失敗: %v", err)
+	}
+	t.Logf("台積電 2026Q1 資產負債表: 資產=%d 負債=%d 權益=%d", bs.TotalAssets, bs.TotalLiabilities, bs.TotalEquity)
+
+	// 官方 2026Q1：資產總額 8,660,950（百萬元）→ 8,660,949,685 仟元 → 8,660,949,685,000 元
+	// 驗證 TotalAssets
+	if bs.TotalAssets != 8660949685000 {
+		t.Errorf("TotalAssets 應為 8660949685000（元），實際 %d", bs.TotalAssets)
+	}
+	if bs.TotalLiabilities != 2728560764000 {
+		t.Errorf("TotalLiabilities 應為 2728560764000，實際 %d", bs.TotalLiabilities)
+	}
+	if bs.TotalEquity != 5932388921000 {
+		t.Errorf("TotalEquity 應為 5932388921000，實際 %d", bs.TotalEquity)
+	}
+	if bs.Year != 2026 || bs.Quarter != 1 {
+		t.Errorf("Year/Quarter 應為 2026/1，實際 %d/%d", bs.Year, bs.Quarter)
+	}
+}
+
+// TestMOPSCashFlowHTML 驗證合併現金流量表 HTML 解析。
+func TestMOPSCashFlowHTML(t *testing.T) {
+	body := loadMOPSHTMLFixture(t, "cash_flow_2330_2026Q1.html")
+	raw := &RawResponse{
+		StatusCode: 200,
+		Body:       body,
+		SourceURL:  "https://mopsov.twse.com.tw/mops/web/ajax_t164sb05",
+	}
+	s := newTestMOPSSource()
+	out, err := s.Normalize(raw)
+	if err != nil {
+		t.Fatalf("Normalize 失敗: %v", err)
+	}
+	var cf model.CashFlowStatement
+	if err := json.Unmarshal(out, &cf); err != nil {
+		t.Fatalf("Unmarshal 失敗: %v", err)
+	}
+	t.Logf("台積電 2026Q1 現金流量: 營業=%d 投資=%d 籌資=%d 期末現金=%d",
+		cf.OperatingCashFlow, cf.InvestingCashFlow, cf.FinancingCashFlow, cf.EndingCashBalance)
+
+	if cf.OperatingCashFlow != 698976265000 {
+		t.Errorf("OperatingCashFlow 應為 698976265000，實際 %d", cf.OperatingCashFlow)
+	}
+	if cf.InvestingCashFlow != -356853756000 {
+		t.Errorf("InvestingCashFlow 應為 -356853756000，實際 %d", cf.InvestingCashFlow)
+	}
+	if cf.FinancingCashFlow != -119910612000 {
+		t.Errorf("FinancingCashFlow 應為 -119910612000，實際 %d", cf.FinancingCashFlow)
+	}
+	if cf.EndingCashBalance != 3035637228000 {
+		t.Errorf("EndingCashBalance 應為 3035637228000，實際 %d", cf.EndingCashBalance)
+	}
+}
+
+// TestMOPSIncomeStatementHTML 驗證合併綜合損益表 HTML 解析。
+func TestMOPSIncomeStatementHTML(t *testing.T) {
+	body := loadMOPSHTMLFixture(t, "income_statement_2330_2026Q1.html")
+	raw := &RawResponse{
+		StatusCode: 200,
+		Body:       body,
+		SourceURL:  "https://mopsov.twse.com.tw/mops/web/ajax_t164sb04",
+	}
+	s := newTestMOPSSource()
+	out, err := s.Normalize(raw)
+	if err != nil {
+		t.Fatalf("Normalize 失敗: %v", err)
+	}
+	var is model.IncomeStatementRow
+	if err := json.Unmarshal(out, &is); err != nil {
+		t.Fatalf("Unmarshal 失敗: %v", err)
+	}
+	t.Logf("台積電 2026Q1 損益: 營收=%d 營業利益=%d 稅後淨利=%d", is.Revenue, is.OperatingProfit, is.NetIncome)
+
+	if is.Revenue != 1134103440000 {
+		t.Errorf("Revenue 應為 1134103440000，實際 %d", is.Revenue)
+	}
+	if is.OperatingProfit != 658966142000 {
+		t.Errorf("OperatingProfit 應為 658966142000，實際 %d", is.OperatingProfit)
+	}
+	if is.NetIncome != 572801304000 {
+		t.Errorf("NetIncome 應為 572801304000，實際 %d", is.NetIncome)
+	}
+}

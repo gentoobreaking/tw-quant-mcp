@@ -30,11 +30,14 @@ var cacheDataset = map[string]string{
 	string(provider.TPExAttention):          cache.DatasetAlertStock,
 	string(provider.TPExDisposition):        cache.DatasetAlertStock,
 	// MOPS Open Data（T012）
-	string(provider.MOPSMonthlyRevenue):   cache.DatasetMonthlyRevenue,
-	string(provider.MOPSIncomeSummary):    cache.DatasetFinancials,
-	string(provider.MOPSProfitRatios):     cache.DatasetFinancials,
-	string(provider.MOPSAnnouncements):    cache.DatasetMaterialNews,
-	string(provider.MOPSCompanyProfile):   cache.DatasetCalendar, // 24h TTL，類似行事曆
+	string(provider.MOPSMonthlyRevenue):  cache.DatasetMonthlyRevenue,
+	string(provider.MOPSIncomeSummary):   cache.DatasetFinancials,
+	string(provider.MOPSProfitRatios):    cache.DatasetFinancials,
+	string(provider.MOPSBalanceSheet):    cache.DatasetFinancials,
+	string(provider.MOPSIncomeStatement): cache.DatasetFinancials,
+	string(provider.MOPSCashFlow):        cache.DatasetFinancials,
+	string(provider.MOPSAnnouncements):   cache.DatasetMaterialNews,
+	string(provider.MOPSCompanyProfile):  cache.DatasetCalendar, // 24h TTL，類似行事曆
 }
 
 // policyDataset 回傳資料集對應之政策類別；未登錄時回傳原字串（cacheable=false）。

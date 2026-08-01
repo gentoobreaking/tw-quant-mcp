@@ -5,39 +5,39 @@ package model
 
 // CompanyProfile 為公司基本資料（t187ap03_L）。
 type CompanyProfile struct {
-	TableDate   string `json:"table_date"`   // 出表日期 YYYY-MM-DD
-	Code        string `json:"code"`         // 公司代號
-	Name        string `json:"name"`         // 公司名稱
-	ShortName   string `json:"short_name"`   // 公司簡稱
-	ForeignReg  string `json:"foreign_reg"`  // 外國企業註冊地國
-	Industry    string `json:"industry"`     // 產業別
-	Address     string `json:"address"`      // 住址
-	TaxID       string `json:"tax_id"`       // 營利事業統一編號
-	Chairman    string `json:"chairman"`     // 董事長
-	President   string `json:"president"`    // 總經理
-	Spokesman   string `json:"spokesman"`    // 發言人
-	SpokesTitle string `json:"spokesman_title"` // 發言人職稱
-	DepSpokes   string `json:"deputy_spokesman"` // 代理發言人
-	Phone       string `json:"phone"`        // 總機電話
-	Established string `json:"established"`  // 成立日期 YYYY-MM-DD
-	Listed      string `json:"listed"`       // 上市日期 YYYY-MM-DD
-	ParValue    string `json:"par_value"`    // 普通股每股面額（原文）
-	Capital     int64  `json:"capital"`      // 實收資本額（元）
-	PrivateStock int64 `json:"private_stock"` // 私募股數（股）
-	Preferred   int64  `json:"preferred_stock"` // 特別股（股）
-	FinType     string `json:"fin_report_type"` // 編制財務報表類型
-	Transfer    string `json:"transfer_agent"`  // 股票過戶機構
-	TransferPhone string `json:"transfer_phone"` // 過戶電話
-	TransferAddr string `json:"transfer_address"` // 過戶地址
-	AuditorFirm string `json:"auditor_firm"` // 簽證會計師事務所
-	Auditor1    string `json:"auditor_1"`    // 簽證會計師1
-	Auditor2    string `json:"auditor_2"`    // 簽證會計師2
-	EngName     string `json:"english_name"` // 英文簡稱
-	EngAddr     string `json:"english_address"` // 英文通訊地址
-	Fax         string `json:"fax"`          // 傳真機號碼
-	Email       string `json:"email"`        // 電子郵件信箱
-	Website     string `json:"website"`      // 網址
-	SharesOut   int64  `json:"shares_outstanding"` // 已發行普通股數（股）
+	TableDate     string `json:"table_date"`         // 出表日期 YYYY-MM-DD
+	Code          string `json:"code"`               // 公司代號
+	Name          string `json:"name"`               // 公司名稱
+	ShortName     string `json:"short_name"`         // 公司簡稱
+	ForeignReg    string `json:"foreign_reg"`        // 外國企業註冊地國
+	Industry      string `json:"industry"`           // 產業別
+	Address       string `json:"address"`            // 住址
+	TaxID         string `json:"tax_id"`             // 營利事業統一編號
+	Chairman      string `json:"chairman"`           // 董事長
+	President     string `json:"president"`          // 總經理
+	Spokesman     string `json:"spokesman"`          // 發言人
+	SpokesTitle   string `json:"spokesman_title"`    // 發言人職稱
+	DepSpokes     string `json:"deputy_spokesman"`   // 代理發言人
+	Phone         string `json:"phone"`              // 總機電話
+	Established   string `json:"established"`        // 成立日期 YYYY-MM-DD
+	Listed        string `json:"listed"`             // 上市日期 YYYY-MM-DD
+	ParValue      string `json:"par_value"`          // 普通股每股面額（原文）
+	Capital       int64  `json:"capital"`            // 實收資本額（元）
+	PrivateStock  int64  `json:"private_stock"`      // 私募股數（股）
+	Preferred     int64  `json:"preferred_stock"`    // 特別股（股）
+	FinType       string `json:"fin_report_type"`    // 編制財務報表類型
+	Transfer      string `json:"transfer_agent"`     // 股票過戶機構
+	TransferPhone string `json:"transfer_phone"`     // 過戶電話
+	TransferAddr  string `json:"transfer_address"`   // 過戶地址
+	AuditorFirm   string `json:"auditor_firm"`       // 簽證會計師事務所
+	Auditor1      string `json:"auditor_1"`          // 簽證會計師1
+	Auditor2      string `json:"auditor_2"`          // 簽證會計師2
+	EngName       string `json:"english_name"`       // 英文簡稱
+	EngAddr       string `json:"english_address"`    // 英文通訊地址
+	Fax           string `json:"fax"`                // 傳真機號碼
+	Email         string `json:"email"`              // 電子郵件信箱
+	Website       string `json:"website"`            // 網址
+	SharesOut     int64  `json:"shares_outstanding"` // 已發行普通股數（股）
 }
 
 // MajorAnnouncement 為一筆重大訊息（t187ap04_L）。
@@ -74,9 +74,9 @@ type MonthlyRevenueRow struct {
 
 // MonthlyRevenueBundle 為 get_monthly_revenue（§10.D）之完整 data。
 type MonthlyRevenueBundle struct {
-	Symbol string             `json:"symbol"`
-	Name   string             `json:"name"`
-	Market string             `json:"market"`
+	Symbol string              `json:"symbol"`
+	Name   string              `json:"name"`
+	Market string              `json:"market"`
 	Rows   []MonthlyRevenueRow `json:"rows"`
 }
 
@@ -99,55 +99,55 @@ type IncomeStatementRow struct {
 
 // FinancialStatements 為 get_financial_statements（§10.D）之完整 data。
 type FinancialStatements struct {
-	Symbol       string                 `json:"symbol"`
-	Name         string                 `json:"name"`
-	Year         int                    `json:"year"`
-	Quarter      int                    `json:"quarter"`
-	Income       []IncomeStatementRow   `json:"income"`
-	BalanceSheet *BalanceSheet          `json:"balance_sheet,omitempty"`
-	CashFlow     *CashFlowStatement     `json:"cash_flow,omitempty"`
-	ProfitRatios []ProfitabilityRatio   `json:"profit_ratios,omitempty"`
-	Note         string                 `json:"note,omitempty"`
+	Symbol       string               `json:"symbol"`
+	Name         string               `json:"name"`
+	Year         int                  `json:"year"`
+	Quarter      int                  `json:"quarter"`
+	Income       []IncomeStatementRow `json:"income"`
+	BalanceSheet *BalanceSheet        `json:"balance_sheet,omitempty"`
+	CashFlow     *CashFlowStatement   `json:"cash_flow,omitempty"`
+	ProfitRatios []ProfitabilityRatio `json:"profit_ratios,omitempty"`
+	Note         string               `json:"note,omitempty"`
 }
 
 // BalanceSheet 為資產負債表（合併，IFRS）。
 // 單位：百萬元（依 IFRS 合併報表慣例），consumers 可自行 ×1e6 換算為元。
 type BalanceSheet struct {
-	TableDate       string `json:"table_date"`        // 出表日期
-	Year            int    `json:"year"`              // 年度
-	Quarter         int    `json:"quarter"`           // 季別（1-4）
-	TotalAssets     int64  `json:"total_assets"`      // 資產總額（百萬元）
-	CurrentAssets   int64  `json:"current_assets"`    // 流動資產
-	NonCurrentAssets int64 `json:"non_current_assets"` // 非流動資產
-	TotalLiabilities int64 `json:"total_liabilities"`  // 負債總額
-	CurrentLiabilities   int64 `json:"current_liabilities"`    // 流動負債
-	NonCurrentLiabilities int64 `json:"non_current_liabilities"` // 非流動負債
-	TotalEquity     int64  `json:"total_equity"`      // 權益總額（股東權益）
+	TableDate             string `json:"table_date"`              // 出表日期
+	Year                  int    `json:"year"`                    // 年度
+	Quarter               int    `json:"quarter"`                 // 季別（1-4）
+	TotalAssets           int64  `json:"total_assets"`            // 資產總額（百萬元）
+	CurrentAssets         int64  `json:"current_assets"`          // 流動資產
+	NonCurrentAssets      int64  `json:"non_current_assets"`      // 非流動資產
+	TotalLiabilities      int64  `json:"total_liabilities"`       // 負債總額
+	CurrentLiabilities    int64  `json:"current_liabilities"`     // 流動負債
+	NonCurrentLiabilities int64  `json:"non_current_liabilities"` // 非流動負債
+	TotalEquity           int64  `json:"total_equity"`            // 權益總額（股東權益）
 }
 
 // CashFlowStatement 為現金流量表（合併，IFRS）。
 // 單位：百萬元（依 IFRS 合併報表慣例）。
 type CashFlowStatement struct {
-	TableDate          string `json:"table_date"`           // 出表日期
-	Year               int    `json:"year"`                 // 年度
-	Quarter            int    `json:"quarter"`              // 季別（1-4）
-	OperatingCashFlow  int64  `json:"operating_cash_flow"`  // 營業活動淨現金流入（百萬元）
-	InvestingCashFlow  int64  `json:"investing_cash_flow"`  // 投資活動淨現金流出（百萬元）
-	FinancingCashFlow  int64  `json:"financing_cash_flow"`  // 籌資活動淨現金流出（百萬元）
-	EndingCashBalance  int64  `json:"ending_cash_balance"`  // 期末現金及約當現金（百萬元）
+	TableDate         string `json:"table_date"`          // 出表日期
+	Year              int    `json:"year"`                // 年度
+	Quarter           int    `json:"quarter"`             // 季別（1-4）
+	OperatingCashFlow int64  `json:"operating_cash_flow"` // 營業活動淨現金流入（百萬元）
+	InvestingCashFlow int64  `json:"investing_cash_flow"` // 投資活動淨現金流出（百萬元）
+	FinancingCashFlow int64  `json:"financing_cash_flow"` // 籌資活動淨現金流出（百萬元）
+	EndingCashBalance int64  `json:"ending_cash_balance"` // 期末現金及約當現金（百萬元）
 }
 
 // ProfitabilityRatio 為一筆獲利能力指標（t187ap17_L）。
 // 百分比欄位已為 %（與官方 CSV 一致，不另換算）。
 type ProfitabilityRatio struct {
-	TableDate          string  `json:"table_date"`          // 出表日期 YYYY-MM-DD
-	Year               int     `json:"year"`                // 年度（西元）
-	Quarter            int     `json:"quarter"`             // 季別（1-4）
-	Code               string  `json:"code"`                // 公司代號
-	Name               string  `json:"name"`                // 公司名稱
-	RevenueMillion     float64 `json:"revenue_million"`     // 營業收入（百萬元）
-	GrossMargin        float64 `json:"gross_margin_pct"`    // 毛利率（%）
-	OperatingMargin    float64 `json:"operating_margin_pct"` // 營業利益率（%）
-	PreTaxMargin       float64 `json:"pretax_margin_pct"`   // 稅前純益率（%）
-	NetMargin          float64 `json:"net_margin_pct"`      // 稅後純益率（%）
+	TableDate       string  `json:"table_date"`           // 出表日期 YYYY-MM-DD
+	Year            int     `json:"year"`                 // 年度（西元）
+	Quarter         int     `json:"quarter"`              // 季別（1-4）
+	Code            string  `json:"code"`                 // 公司代號
+	Name            string  `json:"name"`                 // 公司名稱
+	RevenueMillion  float64 `json:"revenue_million"`      // 營業收入（百萬元）
+	GrossMargin     float64 `json:"gross_margin_pct"`     // 毛利率（%）
+	OperatingMargin float64 `json:"operating_margin_pct"` // 營業利益率（%）
+	PreTaxMargin    float64 `json:"pretax_margin_pct"`    // 稅前純益率（%）
+	NetMargin       float64 `json:"net_margin_pct"`       // 稅後純益率（%）
 }
