@@ -256,7 +256,7 @@ func twseContractCases() []contractCase {
 		web(TWSEWDDailyK, "/rwd/afterTrading/STOCK_DAY", "date=20260731&stockNo=2330&response=json", "daily_k_2330.json"),
 		web(TWSEWDMarketClose, "/rwd/afterTrading/MI_INDEX", "response=json", "market_close.json"),
 		web(TWSEWDInstitutional, "/rwd/fund/T86", "response=json", "institutional.json"),
-		web(TWSEWDMargin, "/rwd/afterTrading/MI_MARGN", "date=20260731&selectType=ALL&response=json", "margin.json"),
+		web(TWSEWDMargin, "/rwd/marginTrading/MI_MARGN", "date=20260731&selectType=ALL&response=json", "margin.json"),
 		web(TWSEWDAbnormal, "/rwd/announcement/notice", "response=json", "abnormal_volume.json"),
 		web(TWSEWDForeignQFIIS, "/rwd/fund/MI_QFIIS", "date=20260731&response=json", "qfiis.json"),
 		web(TWSEWDMonthlyAvg, "/rwd/afterTrading/STOCK_DAY_AVG", "date=20260731&stockNo=2330&response=json", "day_avg.json"),

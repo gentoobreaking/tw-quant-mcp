@@ -255,6 +255,10 @@ func (a *App) Calendar() *calendar.Calendar { return a.calendar }
 // Symbols 回傳 Symbol Registry。
 func (a *App) Symbols() *model.Registry { return a.symbols }
 
+// RegistryLoader 回傳公司代碼表載入器（main 啟動流程用於同步載入
+// Symbol Registry，避免工具呼叫與預熱排程之 race；測試可注入）。
+func (a *App) RegistryLoader() *registry.Loader { return a.regLoader }
+
 // Watchlist 回傳盤中觀察清單引擎。
 func (a *App) Watchlist() *engine.Watchlist { return a.watchlist }
 

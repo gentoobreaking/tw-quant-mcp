@@ -204,7 +204,8 @@ func handlerGetMarketSummary(a *App, args map[string]any) (HandlerResult, error)
 }
 
 func (a *App) marketStatsTSE(ctx context.Context, date string) (model.MarketStats, error) {
-	params := url.Values{"date": {dateYMD(date)}}
+	// MI_INDEX 需 type=ALL 才回傳「每日收盤行情」表（§12.4 全市場彙總）。
+	params := url.Values{"date": {dateYMD(date)}, "type": {"ALL"}}
 	rows, _, err := fetchNormalize[[]provider.MarketCloseRow](a, ctx, string(provider.TWSEWDMarketClose),
 		date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDMarketClose), date, "", vals(params)),
 		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDMarketClose, params) })
@@ -418,7 +419,7 @@ func handlerGetMarginTrading(a *App, args map[string]any) (HandlerResult, error)
 		}
 		return HandlerResult{}, fmt.Errorf("代碼 %s 於 %s 無上櫃融資融券資料", sym.Code, date)
 	}
-	params := url.Values{"date": {dateYMD(date)}}
+	params := url.Values{"date": {dateYMD(date)}, "selectType": {"ALL"}}
 	rows, cached, err := fetchNormalize[[]provider.MarginRow](a, ctx, string(provider.TWSEWDMargin),
 		date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDMargin), date, sym.Code, vals(params)),
 		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDMargin, params) })

@@ -1,0 +1,86 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "response": {
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"symbol\":\"1232\",\"name\":\"大統益\",\"year\":2026,\"quarter\":2,\"income\":[{\"table_date\":\"2026-08-01\",\"year\":2026,\"quarter\":2,\"code\":\"1232\",\"name\":\"大統益股份有限公司\",\"industry\":\"食品工業\",\"eps\":4.71,\"par_value\":\"新台幣                 10.0000元\",\"revenue\":11481997000,\"operating_profit\":960027000,\"non_operating_items\":26046000,\"net_income\":790350000}],\"balance_sheet\":{\"table_date\":\"2026-04-01\",\"year\":2026,\"quarter\":2,\"total_assets\":10715479000,\"current_assets\":7829900000,\"non_current_assets\":2885579000,\"total_liabilities\":4974265000,\"current_liabilities\":3809801000,\"non_current_liabilities\":1164464000,\"total_equity\":5741214000},\"cash_flow\":{\"table_date\":\"2026-04-01\",\"year\":2026,\"quarter\":2,\"operating_cash_flow\":696778000,\"investing_cash_flow\":-189324000,\"financing_cash_flow\":-24943000,\"ending_cash_balance\":3172462000},\"profit_ratios\":[{\"table_date\":\"2026-08-01\",\"year\":2026,\"quarter\":2,\"code\":\"1232\",\"name\":\"大統益\",\"revenue_million\":11482,\"gross_margin_pct\":13.85,\"operating_margin_pct\":8.36,\"pretax_margin_pct\":8.59,\"net_margin_pct\":6.88}]},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:28:35+08:00\",\"data_date\":\"2026-08-01\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":43200,\"latency_ms\":6142},\"http_calls\":4,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "symbol": "1232",
+          "name": "大統益",
+          "year": 2026,
+          "quarter": 2,
+          "income": [
+            {
+              "table_date": "2026-08-01",
+              "year": 2026,
+              "quarter": 2,
+              "code": "1232",
+              "name": "大統益股份有限公司",
+              "industry": "食品工業",
+              "eps": 4.71,
+              "par_value": "新台幣                 10.0000元",
+              "revenue": 11481997000,
+              "operating_profit": 960027000,
+              "non_operating_items": 26046000,
+              "net_income": 790350000
+            }
+          ],
+          "balance_sheet": {
+            "table_date": "2026-04-01",
+            "year": 2026,
+            "quarter": 2,
+            "total_assets": 10715479000,
+            "current_assets": 7829900000,
+            "non_current_assets": 2885579000,
+            "total_liabilities": 4974265000,
+            "current_liabilities": 3809801000,
+            "non_current_liabilities": 1164464000,
+            "total_equity": 5741214000
+          },
+          "cash_flow": {
+            "table_date": "2026-04-01",
+            "year": 2026,
+            "quarter": 2,
+            "operating_cash_flow": 696778000,
+            "investing_cash_flow": -189324000,
+            "financing_cash_flow": -24943000,
+            "ending_cash_balance": 3172462000
+          },
+          "profit_ratios": [
+            {
+              "table_date": "2026-08-01",
+              "year": 2026,
+              "quarter": 2,
+              "code": "1232",
+              "name": "大統益",
+              "revenue_million": 11482,
+              "gross_margin_pct": 13.85,
+              "operating_margin_pct": 8.36,
+              "pretax_margin_pct": 8.59,
+              "net_margin_pct": 6.88
+            }
+          ]
+        },
+        "_lineage": {
+          "source": "MOPS",
+          "source_role": "canonical",
+          "fetched_at": "2026-08-01T18:28:35+08:00",
+          "data_date": "2026-08-01",
+          "freshness": "POST_MARKET_TODAY",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "cache_ttl": 43200,
+          "latency_ms": 6142
+        },
+        "http_calls": 4,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

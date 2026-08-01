@@ -64,6 +64,7 @@ func mopsStatement[T any](a *App, ctx context.Context, ds provider.MOPSDataset,
 		"step": {"1"}, "firstin": {"1"}, "off": {"1"}, "TYPEK": {"all"},
 		"co_id": {code}, "year": {fmt.Sprint(year)}, "season": {fmt.Sprint(quarter)},
 		"isnew": {"true"}, "queryName": {"co_id"}, "inpuType": {"co_id"},
+		"keyword4": {""}, "code1": {""}, "TYPEK2": {""}, "checkbtn": {""},
 	}
 	params := url.Values{
 		"co_id": {code}, "year": {fmt.Sprint(year)}, "season": {fmt.Sprint(quarter)},

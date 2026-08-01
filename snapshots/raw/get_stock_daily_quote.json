@@ -1,0 +1,70 @@
+{
+  "arguments": {
+    "symbol": "2330"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 16,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"date\":\"2026-07-31\",\"open\":2350,\"high\":2425,\"low\":2345,\"close\":2425,\"volume\":69478145,\"amount\":166661984712,\"indicators\":{\"ma20\":2381.5,\"ma60\":2348.0833333333335,\"rsi14\":54.41799689320122,\"macd\":{\"macd\":-22.06017839272181,\"signal\":-14.388572823294608,\"hist\":-7.671605569427202}}},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"canonical\",\"derived_from\":[\"TWSE_WEB:daily_k\"],\"fetched_at\":\"2026-08-01T18:27:10+08:00\",\"data_date\":\"2026-07-31\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":48765,\"latency_ms\":4392},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"close\"],\"title\":\"收盤價 (元)\"}},\"http_calls\":3,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "symbol": "2330",
+          "name": "台積電",
+          "market": "tse",
+          "date": "2026-07-31",
+          "open": 2350,
+          "high": 2425,
+          "low": 2345,
+          "close": 2425,
+          "volume": 69478145,
+          "amount": 166661984712,
+          "indicators": {
+            "ma20": 2381.5,
+            "ma60": 2348.0833333333335,
+            "rsi14": 54.41799689320122,
+            "macd": {
+              "macd": -22.06017839272181,
+              "signal": -14.388572823294608,
+              "hist": -7.671605569427202
+            }
+          }
+        },
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "canonical",
+          "derived_from": [
+            "TWSE_WEB:daily_k"
+          ],
+          "fetched_at": "2026-08-01T18:27:10+08:00",
+          "data_date": "2026-07-31",
+          "freshness": "POST_MARKET_TODAY",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "cache_ttl": 48765,
+          "latency_ms": 4392
+        },
+        "_chart_meta": {
+          "recommended_type": "line",
+          "x_axis": {
+            "key": "date",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "close"
+            ],
+            "title": "收盤價 (元)"
+          }
+        },
+        "http_calls": 3,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

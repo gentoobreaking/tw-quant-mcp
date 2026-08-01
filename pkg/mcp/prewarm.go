@@ -7,7 +7,9 @@ package mcp
 //	交易日 16:45   → 當日盤後資料（全市場彙總/名單，經既有 Handler 路徑入快取）
 //
 // 設計原則：
-//   - 非交易日（T005 行事曆 IsTradingDay）不執行任何預熱；
+//   - 非交易日（T005 行事曆 IsTradingDay）：僅執行基礎設施預熱（交易日曆 +
+//     公司代碼表，24h TTL 之官方基礎資料），跳過盤中相關階段（MIS Session、
+//     盤後彙總）；
 //   - 單一階段失敗僅記錄 Log，不阻塞其餘階段與服務啟動；
 //   - Rate Limit 遵守（§12.9 備註）：所有請求皆經各主機 BaseClient
 //     （HostLimiter 保證兩請求間隔 ≥ 對應 limiter 間隔），預熱佇列
@@ -97,8 +99,14 @@ func (s *PrewarmScheduler) TickOnce(ctx context.Context, now time.Time) {
 		s.day = day
 		s.morningDone, s.preOpenDone, s.eodDone = false, false, false
 	}
-	// 非交易日（§附錄 A / T005 行事曆）：不執行任何預熱
+	// 非交易日（T005 行事曆）：僅執行基礎設施預熱（交易日曆 + 公司代碼表，
+	// 兩者皆 24h TTL 之官方基礎資料，週末/假日亦應可載入供查詢使用）；
+	// 跳過盤中相關階段（MIS Session 重取、當日盤後彙總）。
 	if !s.app.calendar.IsTradingDay(now) {
+		if !s.morningDone {
+			s.morningDone = true
+			s.prewarmMorning(ctx)
+		}
 		return
 	}
 	sec := now.Hour()*3600 + now.Minute()*60 + now.Second()

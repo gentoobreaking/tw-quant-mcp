@@ -1,0 +1,18 @@
+{
+  "arguments": {
+    "symbol": "2330"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 15,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "非交易時段（2026-08-01 為非交易日）無法提供盤中資料"
+        }
+      ],
+      "isError": true
+    }
+  }
+}

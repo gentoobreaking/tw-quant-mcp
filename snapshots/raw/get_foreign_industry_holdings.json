@@ -1,0 +1,296 @@
+{
+  "arguments": {},
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 20,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"industry\":\"ETF\",\"company_count\":236,\"share_number\":245637445760,\"foreign_share\":6173897057,\"percentage\":2.51},{\"industry\":\"水泥工業\",\"company_count\":8,\"share_number\":14107198706,\"foreign_share\":1722768021,\"percentage\":12.21},{\"industry\":\"食品工業\",\"company_count\":25,\"share_number\":14867130138,\"foreign_share\":2420084212,\"percentage\":16.28},{\"industry\":\"塑膠工業\",\"company_count\":22,\"share_number\":32236388213,\"foreign_share\":8059533606,\"percentage\":25},{\"industry\":\"紡織纖維\",\"company_count\":42,\"share_number\":18966727617,\"foreign_share\":1774262933,\"percentage\":9.35},{\"industry\":\"電機機械\",\"company_count\":50,\"share_number\":12186726917,\"foreign_share\":1435748119,\"percentage\":11.78},{\"industry\":\"電器電纜\",\"company_count\":16,\"share_number\":8469626504,\"foreign_share\":1005166472,\"percentage\":11.87},{\"industry\":\"化學生技醫療\",\"company_count\":89,\"share_number\":21186671828,\"foreign_share\":3193112556,\"percentage\":15.07},{\"industry\":\"化學工業\",\"company_count\":28,\"share_number\":10749596100,\"foreign_share\":1396575174,\"percentage\":12.99},{\"industry\":\"生技醫療業\",\"company_count\":61,\"share_number\":10437075728,\"foreign_share\":1796537382,\"percentage\":17.21},{\"industry\":\"玻璃陶瓷\",\"company_count\":5,\"share_number\":3840410326,\"foreign_share\":197744395,\"percentage\":5.15},{\"industry\":\"造紙工業\",\"company_count\":7,\"share_number\":5877335202,\"foreign_share\":510304657,\"percentage\":8.68},{\"industry\":\"鋼鐵工業\",\"company_count\":32,\"share_number\":30071963006,\"foreign_share\":3846431481,\"percentage\":12.79},{\"industry\":\"橡膠工業\",\"company_count\":11,\"share_number\":8473538291,\"foreign_share\":815293098,\"percentage\":9.62},{\"industry\":\"汽車工業\",\"company_count\":44,\"share_number\":9423658423,\"foreign_share\":1036585110,\"percentage\":11},{\"industry\":\"電子工業\",\"company_count\":457,\"share_number\":238393884554,\"foreign_share\":66790123601,\"percentage\":28.02},{\"industry\":\"半導體業\",\"company_count\":96,\"share_number\":79024428481,\"foreign_share\":33843920302,\"percentage\":42.83},{\"industry\":\"電腦及週邊設備業\",\"company_count\":64,\"share_number\":37609156096,\"foreign_share\":8218700525,\"percentage\":21.85},{\"industry\":\"光電業\",\"company_count\":68,\"share_number\":35372900467,\"foreign_share\":4889961051,\"percentage\":13.82},{\"industry\":\"通信網路業\",\"company_count\":46,\"share_number\":24014128830,\"foreign_share\":3786746262,\"percentage\":15.77},{\"industry\":\"電子零組件業\",\"company_count\":104,\"share_number\":29250925540,\"foreign_share\":7078558252,\"percentage\":24.2},{\"industry\":\"電子通路業\",\"company_count\":22,\"share_number\":8833953485,\"foreign_share\":1957111453,\"percentage\":22.15},{\"industry\":\"資訊服務業\",\"company_count\":11,\"share_number\":1444906567,\"foreign_share\":92685007,\"percentage\":6.41},{\"industry\":\"其他電子業\",\"company_count\":46,\"share_number\":22843485088,\"foreign_share\":6922440749,\"percentage\":30.3},{\"industry\":\"建材營造\",\"company_count\":55,\"share_number\":29100096429,\"foreign_share\":3572194957,\"percentage\":12.28},{\"industry\":\"航運業\",\"company_count\":28,\"share_number\":38039579607,\"foreign_share\":6697707428,\"percentage\":17.61},{\"industry\":\"觀光餐旅\",\"company_count\":19,\"share_number\":3069101690,\"foreign_share\":270547313,\"percentage\":8.82},{\"industry\":\"金融保險\",\"company_count\":49,\"share_number\":269778600860,\"foreign_share\":59686355148,\"percentage\":22.12},{\"industry\":\"貿易百貨\",\"company_count\":18,\"share_number\":7289187905,\"foreign_share\":673114644,\"percentage\":9.23},{\"industry\":\"油電燃氣業\",\"company_count\":8,\"share_number\":11799335310,\"foreign_share\":777192646,\"percentage\":6.59},{\"industry\":\"存託憑證\",\"company_count\":10,\"share_number\":2454091676,\"foreign_share\":44239433,\"percentage\":1.8},{\"industry\":\"綠能環保\",\"company_count\":27,\"share_number\":4081219692,\"foreign_share\":211096803,\"percentage\":5.17},{\"industry\":\"數位雲端\",\"company_count\":13,\"share_number\":864267724,\"foreign_share\":103588853,\"percentage\":11.99},{\"industry\":\"運動休閒\",\"company_count\":18,\"share_number\":6714118894,\"foreign_share\":1874109812,\"percentage\":27.91},{\"industry\":\"居家生活\",\"company_count\":11,\"share_number\":1827530995,\"foreign_share\":417919480,\"percentage\":22.87},{\"industry\":\"其他\",\"company_count\":57,\"share_number\":17197256314,\"foreign_share\":2639405003,\"percentage\":15.35}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:27:22+08:00\",\"data_date\":\"2026-07-31\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":48757,\"latency_ms\":230},\"_chart_meta\":{\"recommended_type\":\"pie\",\"x_axis\":{\"key\":\"industry\",\"type\":\"category\"},\"y_axis\":{\"key\":\"foreign_share\",\"title\":\"外資產業配置\"},\"note\":\"依 industry 加總 foreign_share（aggregate=sum）\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "industry": "ETF",
+            "company_count": 236,
+            "share_number": 245637445760,
+            "foreign_share": 6173897057,
+            "percentage": 2.51
+          },
+          {
+            "industry": "水泥工業",
+            "company_count": 8,
+            "share_number": 14107198706,
+            "foreign_share": 1722768021,
+            "percentage": 12.21
+          },
+          {
+            "industry": "食品工業",
+            "company_count": 25,
+            "share_number": 14867130138,
+            "foreign_share": 2420084212,
+            "percentage": 16.28
+          },
+          {
+            "industry": "塑膠工業",
+            "company_count": 22,
+            "share_number": 32236388213,
+            "foreign_share": 8059533606,
+            "percentage": 25
+          },
+          {
+            "industry": "紡織纖維",
+            "company_count": 42,
+            "share_number": 18966727617,
+            "foreign_share": 1774262933,
+            "percentage": 9.35
+          },
+          {
+            "industry": "電機機械",
+            "company_count": 50,
+            "share_number": 12186726917,
+            "foreign_share": 1435748119,
+            "percentage": 11.78
+          },
+          {
+            "industry": "電器電纜",
+            "company_count": 16,
+            "share_number": 8469626504,
+            "foreign_share": 1005166472,
+            "percentage": 11.87
+          },
+          {
+            "industry": "化學生技醫療",
+            "company_count": 89,
+            "share_number": 21186671828,
+            "foreign_share": 3193112556,
+            "percentage": 15.07
+          },
+          {
+            "industry": "化學工業",
+            "company_count": 28,
+            "share_number": 10749596100,
+            "foreign_share": 1396575174,
+            "percentage": 12.99
+          },
+          {
+            "industry": "生技醫療業",
+            "company_count": 61,
+            "share_number": 10437075728,
+            "foreign_share": 1796537382,
+            "percentage": 17.21
+          },
+          {
+            "industry": "玻璃陶瓷",
+            "company_count": 5,
+            "share_number": 3840410326,
+            "foreign_share": 197744395,
+            "percentage": 5.15
+          },
+          {
+            "industry": "造紙工業",
+            "company_count": 7,
+            "share_number": 5877335202,
+            "foreign_share": 510304657,
+            "percentage": 8.68
+          },
+          {
+            "industry": "鋼鐵工業",
+            "company_count": 32,
+            "share_number": 30071963006,
+            "foreign_share": 3846431481,
+            "percentage": 12.79
+          },
+          {
+            "industry": "橡膠工業",
+            "company_count": 11,
+            "share_number": 8473538291,
+            "foreign_share": 815293098,
+            "percentage": 9.62
+          },
+          {
+            "industry": "汽車工業",
+            "company_count": 44,
+            "share_number": 9423658423,
+            "foreign_share": 1036585110,
+            "percentage": 11
+          },
+          {
+            "industry": "電子工業",
+            "company_count": 457,
+            "share_number": 238393884554,
+            "foreign_share": 66790123601,
+            "percentage": 28.02
+          },
+          {
+            "industry": "半導體業",
+            "company_count": 96,
+            "share_number": 79024428481,
+            "foreign_share": 33843920302,
+            "percentage": 42.83
+          },
+          {
+            "industry": "電腦及週邊設備業",
+            "company_count": 64,
+            "share_number": 37609156096,
+            "foreign_share": 8218700525,
+            "percentage": 21.85
+          },
+          {
+            "industry": "光電業",
+            "company_count": 68,
+            "share_number": 35372900467,
+            "foreign_share": 4889961051,
+            "percentage": 13.82
+          },
+          {
+            "industry": "通信網路業",
+            "company_count": 46,
+            "share_number": 24014128830,
+            "foreign_share": 3786746262,
+            "percentage": 15.77
+          },
+          {
+            "industry": "電子零組件業",
+            "company_count": 104,
+            "share_number": 29250925540,
+            "foreign_share": 7078558252,
+            "percentage": 24.2
+          },
+          {
+            "industry": "電子通路業",
+            "company_count": 22,
+            "share_number": 8833953485,
+            "foreign_share": 1957111453,
+            "percentage": 22.15
+          },
+          {
+            "industry": "資訊服務業",
+            "company_count": 11,
+            "share_number": 1444906567,
+            "foreign_share": 92685007,
+            "percentage": 6.41
+          },
+          {
+            "industry": "其他電子業",
+            "company_count": 46,
+            "share_number": 22843485088,
+            "foreign_share": 6922440749,
+            "percentage": 30.3
+          },
+          {
+            "industry": "建材營造",
+            "company_count": 55,
+            "share_number": 29100096429,
+            "foreign_share": 3572194957,
+            "percentage": 12.28
+          },
+          {
+            "industry": "航運業",
+            "company_count": 28,
+            "share_number": 38039579607,
+            "foreign_share": 6697707428,
+            "percentage": 17.61
+          },
+          {
+            "industry": "觀光餐旅",
+            "company_count": 19,
+            "share_number": 3069101690,
+            "foreign_share": 270547313,
+            "percentage": 8.82
+          },
+          {
+            "industry": "金融保險",
+            "company_count": 49,
+            "share_number": 269778600860,
+            "foreign_share": 59686355148,
+            "percentage": 22.12
+          },
+          {
+            "industry": "貿易百貨",
+            "company_count": 18,
+            "share_number": 7289187905,
+            "foreign_share": 673114644,
+            "percentage": 9.23
+          },
+          {
+            "industry": "油電燃氣業",
+            "company_count": 8,
+            "share_number": 11799335310,
+            "foreign_share": 777192646,
+            "percentage": 6.59
+          },
+          {
+            "industry": "存託憑證",
+            "company_count": 10,
+            "share_number": 2454091676,
+            "foreign_share": 44239433,
+            "percentage": 1.8
+          },
+          {
+            "industry": "綠能環保",
+            "company_count": 27,
+            "share_number": 4081219692,
+            "foreign_share": 211096803,
+            "percentage": 5.17
+          },
+          {
+            "industry": "數位雲端",
+            "company_count": 13,
+            "share_number": 864267724,
+            "foreign_share": 103588853,
+            "percentage": 11.99
+          },
+          {
+            "industry": "運動休閒",
+            "company_count": 18,
+            "share_number": 6714118894,
+            "foreign_share": 1874109812,
+            "percentage": 27.91
+          },
+          {
+            "industry": "居家生活",
+            "company_count": 11,
+            "share_number": 1827530995,
+            "foreign_share": 417919480,
+            "percentage": 22.87
+          },
+          {
+            "industry": "其他",
+            "company_count": 57,
+            "share_number": 17197256314,
+            "foreign_share": 2639405003,
+            "percentage": 15.35
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "canonical",
+          "fetched_at": "2026-08-01T18:27:22+08:00",
+          "data_date": "2026-07-31",
+          "freshness": "POST_MARKET_TODAY",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "cache_ttl": 48757,
+          "latency_ms": 230
+        },
+        "_chart_meta": {
+          "recommended_type": "pie",
+          "x_axis": {
+            "key": "industry",
+            "type": "category"
+          },
+          "y_axis": {
+            "key": "foreign_share",
+            "title": "外資產業配置"
+          },
+          "note": "依 industry 加總 foreign_share（aggregate=sum）"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

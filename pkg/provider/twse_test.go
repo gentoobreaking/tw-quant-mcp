@@ -61,7 +61,7 @@ func TestTWSEWebURL(t *testing.T) {
 		t.Errorf("URL = %q\nwant %q", u, want)
 	}
 	if got := s.URL(TWSEWDMargin, url.Values{"date": {"20260730"}}); got !=
-		"https://www.twse.com.tw/rwd/afterTrading/MI_MARGN?response=json&date=20260730" {
+		"https://www.twse.com.tw/rwd/marginTrading/MI_MARGN?response=json&date=20260730" {
 		t.Errorf("margin URL = %q", got)
 	}
 }
@@ -191,7 +191,7 @@ func TestTWSEWebMonthlyAvg(t *testing.T) {
 // TestTWSEWebMargin 融資融券：張 → 股（×1000，§5.1）。
 func TestTWSEWebMargin(t *testing.T) {
 	src := sourceOf("margin")
-	raw := fixtureRaw(t, urlOf("/rwd/afterTrading/MI_MARGN?response=json&date=20260730&selectType=ALL"),
+	raw := fixtureRaw(t, urlOf("/rwd/marginTrading/MI_MARGN?response=json&date=20260730&selectType=ALL"),
 		loadFixture(t, "margin.json"))
 	if err := src.Validate(raw); err != nil {
 		t.Fatalf("Validate 失敗: %v", err)
@@ -716,7 +716,7 @@ func TestTWSEValidateErrors(t *testing.T) {
 // TestTWSEEmptyData 官方「查無資料」回應視為合法空資料。
 func TestTWSEEmptyData(t *testing.T) {
 	src := sourceOf("margin")
-	raw := fixtureRaw(t, urlOf("/rwd/afterTrading/MI_MARGN?response=json&date=20260731&selectType=ALL"),
+	raw := fixtureRaw(t, urlOf("/rwd/marginTrading/MI_MARGN?response=json&date=20260731&selectType=ALL"),
 		loadFixture(t, "margin_empty.json"))
 	if err := src.Validate(raw); err != nil {
 		t.Fatalf("空資料 Validate 應通過: %v", err)

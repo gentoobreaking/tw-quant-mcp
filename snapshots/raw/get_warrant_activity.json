@@ -1,0 +1,129 @@
+{
+  "arguments": {
+    "top_n": 5
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 24,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"date\":\"2026-07-31\",\"amount_top\":[{\"trade_date\":\"2026-07-31\",\"code\":\"03732B\",\"name\":\"臺股指元大61熊24\",\"amount\":11108350000,\"volume\":14114000000},{\"trade_date\":\"2026-07-31\",\"code\":\"064514\",\"name\":\"臺股指國票5A購06\",\"amount\":9769740000,\"volume\":10712000000},{\"trade_date\":\"2026-07-31\",\"code\":\"03035X\",\"name\":\"元展32\",\"amount\":9203000000,\"volume\":700000000},{\"trade_date\":\"2026-07-31\",\"code\":\"03735B\",\"name\":\"臺股指元大5B熊28\",\"amount\":8422240000,\"volume\":10169000000},{\"trade_date\":\"2026-07-31\",\"code\":\"067456\",\"name\":\"台灣50台新5B購09\",\"amount\":7330300000,\"volume\":3059000000}],\"volume_top\":[{\"trade_date\":\"2026-07-31\",\"code\":\"03732B\",\"name\":\"臺股指元大61熊24\",\"amount\":11108350000,\"volume\":14114000000},{\"trade_date\":\"2026-07-31\",\"code\":\"064514\",\"name\":\"臺股指國票5A購06\",\"amount\":9769740000,\"volume\":10712000000},{\"trade_date\":\"2026-07-31\",\"code\":\"03735B\",\"name\":\"臺股指元大5B熊28\",\"amount\":8422240000,\"volume\":10169000000},{\"trade_date\":\"2026-07-31\",\"code\":\"065423\",\"name\":\"台股增元大5A購01\",\"amount\":5143400000,\"volume\":10048000000},{\"trade_date\":\"2026-07-31\",\"code\":\"065609\",\"name\":\"台積電富邦5B購03\",\"amount\":5834910000,\"volume\":9668000000}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:27:32+08:00\",\"data_date\":\"2026-07-31\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":48747,\"latency_ms\":421},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"code\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"amount\"],\"title\":\"權證成交金額 (元)\"},\"series\":[{\"key\":\"amount\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "date": "2026-07-31",
+          "amount_top": [
+            {
+              "trade_date": "2026-07-31",
+              "code": "03732B",
+              "name": "臺股指元大61熊24",
+              "amount": 11108350000,
+              "volume": 14114000000
+            },
+            {
+              "trade_date": "2026-07-31",
+              "code": "064514",
+              "name": "臺股指國票5A購06",
+              "amount": 9769740000,
+              "volume": 10712000000
+            },
+            {
+              "trade_date": "2026-07-31",
+              "code": "03035X",
+              "name": "元展32",
+              "amount": 9203000000,
+              "volume": 700000000
+            },
+            {
+              "trade_date": "2026-07-31",
+              "code": "03735B",
+              "name": "臺股指元大5B熊28",
+              "amount": 8422240000,
+              "volume": 10169000000
+            },
+            {
+              "trade_date": "2026-07-31",
+              "code": "067456",
+              "name": "台灣50台新5B購09",
+              "amount": 7330300000,
+              "volume": 3059000000
+            }
+          ],
+          "volume_top": [
+            {
+              "trade_date": "2026-07-31",
+              "code": "03732B",
+              "name": "臺股指元大61熊24",
+              "amount": 11108350000,
+              "volume": 14114000000
+            },
+            {
+              "trade_date": "2026-07-31",
+              "code": "064514",
+              "name": "臺股指國票5A購06",
+              "amount": 9769740000,
+              "volume": 10712000000
+            },
+            {
+              "trade_date": "2026-07-31",
+              "code": "03735B",
+              "name": "臺股指元大5B熊28",
+              "amount": 8422240000,
+              "volume": 10169000000
+            },
+            {
+              "trade_date": "2026-07-31",
+              "code": "065423",
+              "name": "台股增元大5A購01",
+              "amount": 5143400000,
+              "volume": 10048000000
+            },
+            {
+              "trade_date": "2026-07-31",
+              "code": "065609",
+              "name": "台積電富邦5B購03",
+              "amount": 5834910000,
+              "volume": 9668000000
+            }
+          ]
+        },
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "canonical",
+          "fetched_at": "2026-08-01T18:27:32+08:00",
+          "data_date": "2026-07-31",
+          "freshness": "POST_MARKET_TODAY",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "cache_ttl": 48747,
+          "latency_ms": 421
+        },
+        "_chart_meta": {
+          "recommended_type": "bar",
+          "x_axis": {
+            "key": "code",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "amount"
+            ],
+            "title": "權證成交金額 (元)"
+          },
+          "series": [
+            {
+              "key": "amount",
+              "type": "bar",
+              "style": "diverging"
+            }
+          ]
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "arguments": {
+    "symbol": "2330"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 30,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"date\":\"2026-07-31\",\"pe\":32.6,\"pe_available\":true,\"pb\":10.67,\"dividend_yield_pct\":0.91,\"roe_pct\":0,\"roe_method\":\"\",\"dividend_per_share\":7,\"note\":\"ROE 計算失敗：無損益表摘要\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:27:47+08:00\",\"data_date\":\"2026-07-31\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":true,\"cache_ttl\":48732,\"latency_ms\":0},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "symbol": "2330",
+          "name": "台積電",
+          "market": "tse",
+          "date": "2026-07-31",
+          "pe": 32.6,
+          "pe_available": true,
+          "pb": 10.67,
+          "dividend_yield_pct": 0.91,
+          "roe_pct": 0,
+          "roe_method": "",
+          "dividend_per_share": 7,
+          "note": "ROE 計算失敗：無損益表摘要"
+        },
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "canonical",
+          "fetched_at": "2026-08-01T18:27:47+08:00",
+          "data_date": "2026-07-31",
+          "freshness": "POST_MARKET_TODAY",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "cache_ttl": 48732,
+          "latency_ms": 0
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

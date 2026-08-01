@@ -98,7 +98,7 @@ func misServer(t *testing.T) (srv *httptest.Server, hits func() int) {
 // stubEOD 建立 2026-07-31 盤後預熱所需之整批 stub（§12.4 彙總/名單端點）。
 // 註：TSE/TPEx 法人同用 "institutional" 資料集 ID（fake 鍵相同，一體共用）。
 func stubEOD(f *fakeFetch) {
-	f.stub("market_close", url.Values{"date": {"20260731"}},
+	f.stub("market_close", url.Values{"date": {"20260731"}, "type": {"ALL"}},
 		`[{"code":"2330","name":"台積電","volume":1000,"amount":100000,"open":100,"high":110,"low":99,"close":110,"change_dir":"+","change":10,"pe":20}]`)
 	f.stub("daily_close", url.Values{"date": {"20260731"}},
 		`[{"date":"2026-07-31","code":"6147","name":"頎邦","close":75.5,"change_dir":"+","change":1.2,"open":74.3,"high":76,"low":74.1,"volume":1200000}]`)
@@ -209,7 +209,9 @@ func TestPrewarmEOD(t *testing.T) {
 	}
 }
 
-// TestPrewarmSkipsNonTradingDay：非交易日（週六）任何階段皆不執行。
+// TestPrewarmSkipsNonTradingDay：非交易日（週六）僅執行基礎設施預熱
+// （交易日曆 + 公司代碼表，24h TTL 官方基礎資料），跳過盤中相關階段
+// （MIS Session 重取、盤後彙總）。
 func TestPrewarmSkipsNonTradingDay(t *testing.T) {
 	_, hits := misServer(t)
 	f := newFake(t)
@@ -218,8 +220,11 @@ func TestPrewarmSkipsNonTradingDay(t *testing.T) {
 	s := NewPrewarmScheduler(app)
 
 	s.TickOnce(context.Background(), sat)
-	if app.symbols.Len() != 0 {
-		t.Error("非交易日不得載入代碼表")
+	if app.symbols.Len() == 0 {
+		t.Error("非交易日應載入基礎設施（公司代碼表）")
+	}
+	if _, ok := app.symbols.Lookup("2330"); !ok {
+		t.Error("非交易日載入後 2330 應註冊於 Symbol Registry")
 	}
 	if hits() != 0 {
 		t.Error("非交易日不得執行 MIS Session 預熱")

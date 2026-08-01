@@ -71,7 +71,7 @@ var (
 	twseWebPaths = map[TWSEWebDataset]string{
 		TWSEWDDailyK:        "/rwd/afterTrading/STOCK_DAY",
 		TWSEWDMonthlyAvg:    "/rwd/afterTrading/STOCK_DAY_AVG",
-		TWSEWDMargin:        "/rwd/afterTrading/MI_MARGN",
+		TWSEWDMargin:        "/rwd/marginTrading/MI_MARGN",
 		TWSEWDInstitutional: "/rwd/fund/T86",
 		TWSEWDMarketClose:   "/rwd/afterTrading/MI_INDEX",
 		TWSEWDIndexHistory:  "/indicesReport/MI_5MINS_HIST",
@@ -323,6 +323,11 @@ func validateTables(ds string, body []byte) error {
 		"block_trades": {"鉅額交易", []string{"日期", "交易別", "類別", "成交股數", "成交金額"}},
 	}
 	for _, table := range t.Tables {
+		// 容忍官方尾表瑕疵：MI_INDEX type=ALL 等回應末尾偶有
+		// title 為空、data 為 null 之空表，跳過不驗證。
+		if len(table.Title) == 0 || len(table.DataRaw) == 0 || string(table.DataRaw) == "null" {
+			continue
+		}
 		rows, err := rawRows(table.DataRaw)
 		if err != nil {
 			return fmt.Errorf("provider: %s 表格 %q data 非列式陣列: %w", ds, table.Title, err)

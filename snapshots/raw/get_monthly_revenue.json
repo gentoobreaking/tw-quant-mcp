@@ -1,0 +1,76 @@
+{
+  "arguments": {
+    "symbol": "2330",
+    "years": 2
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 28,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"rows\":[{\"table_date\":\"2026-07-17\",\"data_year_month\":\"202606\",\"code\":\"2330\",\"name\":\"台積電\",\"industry\":\"半導體業\",\"revenue\":442679969000,\"last_month_revenue\":416975163000,\"last_year_revenue\":263708978000,\"mom_change_pct\":6.164589232380731,\"yoy_change_pct\":67.86685548491262,\"cum_revenue\":2404483690000,\"cum_last_year\":1773045533000,\"cum_change_pct\":35.613194655616326,\"note\":\"因先進製程產品需求增加所致。\"}]},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:27:41+08:00\",\"data_date\":\"2026-08-01\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":43200,\"latency_ms\":1025},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"data_year_month\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"revenue\"],\"title\":\"月營收 (元)\"},\"series\":[{\"key\":\"revenue\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "symbol": "2330",
+          "name": "台積電",
+          "market": "tse",
+          "rows": [
+            {
+              "table_date": "2026-07-17",
+              "data_year_month": "202606",
+              "code": "2330",
+              "name": "台積電",
+              "industry": "半導體業",
+              "revenue": 442679969000,
+              "last_month_revenue": 416975163000,
+              "last_year_revenue": 263708978000,
+              "mom_change_pct": 6.164589232380731,
+              "yoy_change_pct": 67.86685548491262,
+              "cum_revenue": 2404483690000,
+              "cum_last_year": 1773045533000,
+              "cum_change_pct": 35.613194655616326,
+              "note": "因先進製程產品需求增加所致。"
+            }
+          ]
+        },
+        "_lineage": {
+          "source": "MOPS",
+          "source_role": "canonical",
+          "fetched_at": "2026-08-01T18:27:41+08:00",
+          "data_date": "2026-08-01",
+          "freshness": "POST_MARKET_TODAY",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "cache_ttl": 43200,
+          "latency_ms": 1025
+        },
+        "_chart_meta": {
+          "recommended_type": "bar",
+          "x_axis": {
+            "key": "data_year_month",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "revenue"
+            ],
+            "title": "月營收 (元)"
+          },
+          "series": [
+            {
+              "key": "revenue",
+              "type": "bar",
+              "style": "diverging"
+            }
+          ]
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

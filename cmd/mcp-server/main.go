@@ -45,11 +45,29 @@ func main() {
 	}
 	app.Wire(srv)
 
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	// Symbol Registry 同步載入（上市+上櫃清單，24h TTL 入 L2）：
+	// 避免工具首次呼叫與預熱排程之 race（registry 未就緒時 symbolOf
+	// 會誤判「非法代號」）。載入失敗僅記錄、不阻斷啟動（L2 既有
+	// 快取仍可於下次預熱/呼叫時補上）。
+	if loader := app.RegistryLoader(); loader != nil {
+		regCtx, regCancel := context.WithTimeout(ctx, 30*time.Second)
+		reg, err := loader.Load(regCtx)
+		regCancel()
+		if err != nil {
+			logger.Warn("Symbol Registry 同步載入失敗（沿用既有快取）", "err", err)
+		} else if err := app.Symbols().Set(reg.List("")); err != nil {
+			logger.Warn("Symbol Registry 寫入失敗", "err", err)
+		} else {
+			logger.Info("Symbol Registry 已載入", "symbols", app.Symbols().Len())
+		}
+	}
+
 	// T018：§12.9 預熱排程（08:00 行事曆/代碼表、開盤前 MIS Session、
 	// 16:45 當日盤後）。長駐 goroutine 隨 ctx 取消（SIGINT/SIGTERM）
 	// 結束；預熱失敗僅記錄、不影響服務啟動。
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer stop()
 	go func() {
 		if err := mcpapp.NewPrewarmScheduler(app).Run(ctx); err != nil {
 			logger.Error("預熱排程結束", "err", err)

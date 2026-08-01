@@ -1,0 +1,261 @@
+{
+  "arguments": {
+    "symbol": "2330",
+    "period": "day"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 17,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"timestamp\":\"2026-07-01\",\"open\":2495,\"high\":2505,\"low\":2475,\"close\":2505,\"volume\":37544470,\"amount\":93600076825},{\"timestamp\":\"2026-07-02\",\"open\":2450,\"high\":2480,\"low\":2445,\"close\":2465,\"volume\":35919290,\"amount\":88369879773},{\"timestamp\":\"2026-07-03\",\"open\":2415,\"high\":2465,\"low\":2415,\"close\":2445,\"volume\":32905868,\"amount\":80082636340},{\"timestamp\":\"2026-07-06\",\"open\":2465,\"high\":2500,\"low\":2455,\"close\":2460,\"volume\":21041918,\"amount\":52022654454},{\"timestamp\":\"2026-07-07\",\"open\":2480,\"high\":2500,\"low\":2440,\"close\":2440,\"volume\":31400854,\"amount\":77617188273},{\"timestamp\":\"2026-07-08\",\"open\":2445,\"high\":2465,\"low\":2420,\"close\":2465,\"volume\":25519599,\"amount\":62400639776},{\"timestamp\":\"2026-07-09\",\"open\":2450,\"high\":2460,\"low\":2415,\"close\":2415,\"volume\":34681018,\"amount\":84397735035},{\"timestamp\":\"2026-07-13\",\"open\":2460,\"high\":2480,\"low\":2440,\"close\":2440,\"volume\":35310380,\"amount\":86697387632},{\"timestamp\":\"2026-07-14\",\"open\":2410,\"high\":2430,\"low\":2390,\"close\":2420,\"volume\":42857055,\"amount\":103370532441},{\"timestamp\":\"2026-07-15\",\"open\":2425,\"high\":2460,\"low\":2415,\"close\":2440,\"volume\":33665566,\"amount\":82213791038},{\"timestamp\":\"2026-07-16\",\"open\":2430,\"high\":2470,\"low\":2420,\"close\":2470,\"volume\":30538604,\"amount\":74750491934},{\"timestamp\":\"2026-07-17\",\"open\":2375,\"high\":2395,\"low\":2290,\"close\":2290,\"volume\":97362670,\"amount\":229051751965},{\"timestamp\":\"2026-07-20\",\"open\":2300,\"high\":2345,\"low\":2300,\"close\":2320,\"volume\":55790346,\"amount\":129815956839},{\"timestamp\":\"2026-07-21\",\"open\":2350,\"high\":2410,\"low\":2345,\"close\":2410,\"volume\":31605663,\"amount\":75429747048},{\"timestamp\":\"2026-07-22\",\"open\":2440,\"high\":2445,\"low\":2385,\"close\":2400,\"volume\":31653123,\"amount\":76206482625},{\"timestamp\":\"2026-07-23\",\"open\":2385,\"high\":2405,\"low\":2370,\"close\":2405,\"volume\":28001492,\"amount\":66833713878},{\"timestamp\":\"2026-07-24\",\"open\":2355,\"high\":2365,\"low\":2345,\"close\":2350,\"volume\":24810509,\"amount\":58407263735},{\"timestamp\":\"2026-07-27\",\"open\":2330,\"high\":2365,\"low\":2330,\"close\":2350,\"volume\":28939466,\"amount\":67885214772},{\"timestamp\":\"2026-07-28\",\"open\":2270,\"high\":2305,\"low\":2270,\"close\":2280,\"volume\":45333029,\"amount\":103624205064},{\"timestamp\":\"2026-07-29\",\"open\":2260,\"high\":2280,\"low\":2180,\"close\":2200,\"volume\":68139691,\"amount\":151551634905},{\"timestamp\":\"2026-07-30\",\"open\":2205,\"high\":2260,\"low\":2190,\"close\":2205,\"volume\":51372177,\"amount\":114098819878},{\"timestamp\":\"2026-07-31\",\"open\":2350,\"high\":2425,\"low\":2345,\"close\":2425,\"volume\":69478145,\"amount\":166661984712}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:27:15+08:00\",\"data_date\":\"2026-07-31\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":48763,\"latency_ms\":647},\"_chart_meta\":{\"recommended_type\":\"candlestick\",\"x_axis\":{\"key\":\"timestamp\",\"type\":\"datetime\",\"format\":\"YYYY-MM-DD\"},\"y_axis\":{\"keys\":[\"open\",\"high\",\"low\",\"close\"],\"title\":\"價格 (元)\",\"right_axis\":[\"volume\"]},\"series\":[{\"key\":\"volume\",\"type\":\"bar\",\"style\":\"volume\"}],\"note\":\"Candle[] 之 timestamp 格式 YYYY-MM-DD（盤後日/週/月 K）\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "timestamp": "2026-07-01",
+            "open": 2495,
+            "high": 2505,
+            "low": 2475,
+            "close": 2505,
+            "volume": 37544470,
+            "amount": 93600076825
+          },
+          {
+            "timestamp": "2026-07-02",
+            "open": 2450,
+            "high": 2480,
+            "low": 2445,
+            "close": 2465,
+            "volume": 35919290,
+            "amount": 88369879773
+          },
+          {
+            "timestamp": "2026-07-03",
+            "open": 2415,
+            "high": 2465,
+            "low": 2415,
+            "close": 2445,
+            "volume": 32905868,
+            "amount": 80082636340
+          },
+          {
+            "timestamp": "2026-07-06",
+            "open": 2465,
+            "high": 2500,
+            "low": 2455,
+            "close": 2460,
+            "volume": 21041918,
+            "amount": 52022654454
+          },
+          {
+            "timestamp": "2026-07-07",
+            "open": 2480,
+            "high": 2500,
+            "low": 2440,
+            "close": 2440,
+            "volume": 31400854,
+            "amount": 77617188273
+          },
+          {
+            "timestamp": "2026-07-08",
+            "open": 2445,
+            "high": 2465,
+            "low": 2420,
+            "close": 2465,
+            "volume": 25519599,
+            "amount": 62400639776
+          },
+          {
+            "timestamp": "2026-07-09",
+            "open": 2450,
+            "high": 2460,
+            "low": 2415,
+            "close": 2415,
+            "volume": 34681018,
+            "amount": 84397735035
+          },
+          {
+            "timestamp": "2026-07-13",
+            "open": 2460,
+            "high": 2480,
+            "low": 2440,
+            "close": 2440,
+            "volume": 35310380,
+            "amount": 86697387632
+          },
+          {
+            "timestamp": "2026-07-14",
+            "open": 2410,
+            "high": 2430,
+            "low": 2390,
+            "close": 2420,
+            "volume": 42857055,
+            "amount": 103370532441
+          },
+          {
+            "timestamp": "2026-07-15",
+            "open": 2425,
+            "high": 2460,
+            "low": 2415,
+            "close": 2440,
+            "volume": 33665566,
+            "amount": 82213791038
+          },
+          {
+            "timestamp": "2026-07-16",
+            "open": 2430,
+            "high": 2470,
+            "low": 2420,
+            "close": 2470,
+            "volume": 30538604,
+            "amount": 74750491934
+          },
+          {
+            "timestamp": "2026-07-17",
+            "open": 2375,
+            "high": 2395,
+            "low": 2290,
+            "close": 2290,
+            "volume": 97362670,
+            "amount": 229051751965
+          },
+          {
+            "timestamp": "2026-07-20",
+            "open": 2300,
+            "high": 2345,
+            "low": 2300,
+            "close": 2320,
+            "volume": 55790346,
+            "amount": 129815956839
+          },
+          {
+            "timestamp": "2026-07-21",
+            "open": 2350,
+            "high": 2410,
+            "low": 2345,
+            "close": 2410,
+            "volume": 31605663,
+            "amount": 75429747048
+          },
+          {
+            "timestamp": "2026-07-22",
+            "open": 2440,
+            "high": 2445,
+            "low": 2385,
+            "close": 2400,
+            "volume": 31653123,
+            "amount": 76206482625
+          },
+          {
+            "timestamp": "2026-07-23",
+            "open": 2385,
+            "high": 2405,
+            "low": 2370,
+            "close": 2405,
+            "volume": 28001492,
+            "amount": 66833713878
+          },
+          {
+            "timestamp": "2026-07-24",
+            "open": 2355,
+            "high": 2365,
+            "low": 2345,
+            "close": 2350,
+            "volume": 24810509,
+            "amount": 58407263735
+          },
+          {
+            "timestamp": "2026-07-27",
+            "open": 2330,
+            "high": 2365,
+            "low": 2330,
+            "close": 2350,
+            "volume": 28939466,
+            "amount": 67885214772
+          },
+          {
+            "timestamp": "2026-07-28",
+            "open": 2270,
+            "high": 2305,
+            "low": 2270,
+            "close": 2280,
+            "volume": 45333029,
+            "amount": 103624205064
+          },
+          {
+            "timestamp": "2026-07-29",
+            "open": 2260,
+            "high": 2280,
+            "low": 2180,
+            "close": 2200,
+            "volume": 68139691,
+            "amount": 151551634905
+          },
+          {
+            "timestamp": "2026-07-30",
+            "open": 2205,
+            "high": 2260,
+            "low": 2190,
+            "close": 2205,
+            "volume": 51372177,
+            "amount": 114098819878
+          },
+          {
+            "timestamp": "2026-07-31",
+            "open": 2350,
+            "high": 2425,
+            "low": 2345,
+            "close": 2425,
+            "volume": 69478145,
+            "amount": 166661984712
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "canonical",
+          "fetched_at": "2026-08-01T18:27:15+08:00",
+          "data_date": "2026-07-31",
+          "freshness": "POST_MARKET_TODAY",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "cache_ttl": 48763,
+          "latency_ms": 647
+        },
+        "_chart_meta": {
+          "recommended_type": "candlestick",
+          "x_axis": {
+            "key": "timestamp",
+            "type": "datetime",
+            "format": "YYYY-MM-DD"
+          },
+          "y_axis": {
+            "keys": [
+              "open",
+              "high",
+              "low",
+              "close"
+            ],
+            "title": "價格 (元)",
+            "right_axis": [
+              "volume"
+            ]
+          },
+          "series": [
+            {
+              "key": "volume",
+              "type": "bar",
+              "style": "volume"
+            }
+          ],
+          "note": "Candle[] 之 timestamp 格式 YYYY-MM-DD（盤後日/週/月 K）"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

@@ -161,13 +161,20 @@ func (s *TAIFEXDLSource) Fetch(ctx context.Context, req RawRequest) (*RawRespons
 		s.client.logger.Debug("TAIFEX-DL view GET 失敗，仍嘗試下載", "err", err)
 	}
 
-	// 第二步：POST 下載（目標為 view 同目錄之 down 端點）
+	// 第二步：POST 下載（目標為 view 同目錄之 down 端點）。
+	// 注意：down URL 必須基於純路徑（去除 query）——view URL 帶 query 參數
+	// 時若直接字串拼接會產生 `...view?query...futDataDown` 之錯誤路徑。
 	form := s.buildForm(spec, start, end, contract)
 	body := form.Encode()
 	headers := http.Header{}
 	headers.Set("Content-Type", "application/x-www-form-urlencoded")
 	headers.Set("Referer", viewURL)
-	downURL := strings.TrimSuffix(viewURL, spec.view) + spec.down
+	base := viewURL
+	if u, err := url.Parse(viewURL); err == nil {
+		u.RawQuery, u.Fragment = "", ""
+		base = u.String()
+	}
+	downURL := strings.TrimSuffix(base, spec.view) + spec.down
 	return s.client.Do(ctx, RawRequest{
 		Method:  http.MethodPost,
 		URL:     downURL,

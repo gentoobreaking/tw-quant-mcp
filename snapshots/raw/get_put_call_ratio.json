@@ -1,0 +1,62 @@
+{
+  "arguments": {},
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 39,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-07-31\",\"call_volume\":364487,\"put_volume\":351655,\"volume_ratio\":96.48,\"call_oi\":50049,\"put_oi\":53689,\"oi_ratio\":107.27}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:28:03+08:00\",\"data_date\":\"2026-07-31\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":0,\"latency_ms\":225},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"volume_ratio\"],\"title\":\"買賣權成交量比 (%)\"},\"annotations\":[{\"type\":\"hline\",\"value\":1,\"label\":\"多空分界\"}],\"note\":\"volume_ratio 單位 %（100 = 多空均衡；annotation 1.0 為對數刻度之分界）\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-07-31",
+            "call_volume": 364487,
+            "put_volume": 351655,
+            "volume_ratio": 96.48,
+            "call_oi": 50049,
+            "put_oi": 53689,
+            "oi_ratio": 107.27
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "canonical",
+          "fetched_at": "2026-08-01T18:28:03+08:00",
+          "data_date": "2026-07-31",
+          "freshness": "POST_MARKET_TODAY",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "cache_ttl": 0,
+          "latency_ms": 225
+        },
+        "_chart_meta": {
+          "recommended_type": "line",
+          "x_axis": {
+            "key": "date",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "volume_ratio"
+            ],
+            "title": "買賣權成交量比 (%)"
+          },
+          "annotations": [
+            {
+              "type": "hline",
+              "value": 1,
+              "label": "多空分界"
+            }
+          ],
+          "note": "volume_ratio 單位 %（100 = 多空均衡；annotation 1.0 為對數刻度之分界）"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

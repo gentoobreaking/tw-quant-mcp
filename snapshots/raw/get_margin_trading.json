@@ -1,0 +1,69 @@
+{
+  "arguments": {
+    "symbol": "2330"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 22,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"code\":\"2330\",\"name\":\"台積電\",\"margin_buy\":1340000,\"margin_sell\":2674000,\"margin_cash_redeem\":41000,\"margin_prev_balance\":30664000,\"margin_balance\":29289000,\"margin_limit\":6483092000,\"short_buy\":7000,\"short_sell\":25000,\"short_cash_redeem\":0,\"short_prev_balance\":130000,\"short_balance\":124000,\"short_limit\":6483092000,\"offset\":15000},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:27:28+08:00\",\"data_date\":\"2026-07-31\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":48749,\"latency_ms\":1155},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"code\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"margin_balance\"],\"title\":\"融資融券餘額\"},\"series\":[{\"key\":\"margin_balance\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "code": "2330",
+          "name": "台積電",
+          "margin_buy": 1340000,
+          "margin_sell": 2674000,
+          "margin_cash_redeem": 41000,
+          "margin_prev_balance": 30664000,
+          "margin_balance": 29289000,
+          "margin_limit": 6483092000,
+          "short_buy": 7000,
+          "short_sell": 25000,
+          "short_cash_redeem": 0,
+          "short_prev_balance": 130000,
+          "short_balance": 124000,
+          "short_limit": 6483092000,
+          "offset": 15000
+        },
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "canonical",
+          "fetched_at": "2026-08-01T18:27:28+08:00",
+          "data_date": "2026-07-31",
+          "freshness": "POST_MARKET_TODAY",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "cache_ttl": 48749,
+          "latency_ms": 1155
+        },
+        "_chart_meta": {
+          "recommended_type": "bar",
+          "x_axis": {
+            "key": "code",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "margin_balance"
+            ],
+            "title": "融資融券餘額"
+          },
+          "series": [
+            {
+              "key": "margin_balance",
+              "type": "bar",
+              "style": "diverging"
+            }
+          ]
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

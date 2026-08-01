@@ -52,7 +52,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	// get_stock_daily_kline（day 預設）
 	f.stub("daily_k", url.Values{"date": {"20260730"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "07", 0, 10)))
 	// get_market_summary
-	f.stub("market_close", url.Values{"date": {"20260730"}}, `[{"code":"2330","name":"台積電","volume":1000,"amount":100000,"open":100,"high":110,"low":99,"close":110,"change_dir":"+","change":10,"pe":20}]`)
+	f.stub("market_close", url.Values{"date": {"20260730"}, "type": {"ALL"}}, `[{"code":"2330","name":"台積電","volume":1000,"amount":100000,"open":100,"high":110,"low":99,"close":110,"change_dir":"+","change":10,"pe":20}]`)
 	f.stub("daily_close", url.Values{"date": {"20260730"}}, `[{"date":"2026-07-30","code":"6147","name":"頎邦","close":75.5,"change_dir":"+","change":1.2,"open":74.3,"high":76,"low":74.1,"volume":1200000}]`)
 	// get_institutional_investors
 	f.stub("institutional", url.Values{"date": {"20260730"}},
@@ -66,7 +66,7 @@ func stubBCEnvelope(f *fakeFetch) {
 			`[{"date":"`+d[:4]+`-`+d[4:6]+`-`+d[6:]+`","code":"2330","name":"台積電","issue_shares":25930389000,"foreign_shares":1000000,"foreign_percent":10.5,"upper_limit_pct":100.0,"change_reason":"","last_changed_date":""}]`)
 	}
 	// get_margin_trading（TSE）
-	f.stub("margin", url.Values{"date": {"20260730"}},
+	f.stub("margin", url.Values{"date": {"20260730"}, "selectType": {"ALL"}},
 		`[{"code":"2330","name":"台積電","margin_buy":100000,"margin_sell":50000,"margin_cash_redeem":10000,"margin_prev_balance":1000000,"margin_balance":1040000,"margin_limit":2000000}]`)
 	// get_abnormal_trading + get_attention_disposition_stocks（abnormal_volume/punish）
 	f.stub("abnormal_volume", url.Values{"date": {"20260730"}},
