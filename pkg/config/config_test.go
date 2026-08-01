@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-var envKeys = []string{"MCP_TRANSPORT", "MCP_HTTP_ADDR", "DATA_DIR", "LOG_LEVEL"}
+var envKeys = []string{"MCP_TRANSPORT", "MCP_HTTP_ADDR", "DATA_DIR", "LOG_LEVEL", "MCP_SCORING_CONFIG"}
 
 func clearEnv(t *testing.T) {
 	t.Helper()
@@ -93,5 +93,91 @@ func TestValidateRejects(t *testing.T) {
 				t.Errorf("Load() 應失敗，但成功回傳")
 			}
 		})
+	}
+}
+
+// TestScoringDefault：未設定 MCP_SCORING_CONFIG 時回傳 v1 內建規則（T017）。
+func TestScoringDefault(t *testing.T) {
+	clearEnv(t)
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("Load() 不應失敗: %v", err)
+	}
+	s, err := cfg.Scoring()
+	if err != nil {
+		t.Fatalf("Scoring() 不應失敗: %v", err)
+	}
+	if s.Version != "v1" {
+		t.Errorf("預設 scoring_version 應為 v1，實際 %s", s.Version)
+	}
+	w := s.Weights
+	if w.Profit+w.Growth+w.Structure+w.Dividend+w.Governance != 1.0 {
+		t.Errorf("權重總和應為 1.0，實際 %v", w)
+	}
+	if s.GrossMarginMax == 0 || s.DebtRatioMax == 0 || s.ConsecutiveMax == 0 {
+		t.Errorf("預設規則門檻不得為 0: %+v", s)
+	}
+}
+
+// TestScoringFromFile：MCP_SCORING_CONFIG JSON 可覆寫規則（版本/權重/門檻）。
+func TestScoringFromFile(t *testing.T) {
+	clearEnv(t)
+	file := filepath.Join(t.TempDir(), "scoring.json")
+	content := `{
+		"version": "v2-custom",
+		"weights": {"profit": 0.4, "growth": 0.2, "structure": 0.2, "dividend": 0.1, "governance": 0.1},
+		"gross_margin_max_pct": 60,
+		"consecutive_max": 10
+	}`
+	if err := os.WriteFile(file, []byte(content), 0o644); err != nil {
+		t.Fatalf("寫入設定檔失敗: %v", err)
+	}
+	t.Setenv("MCP_SCORING_CONFIG", file)
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("Load() 不應失敗: %v", err)
+	}
+	s, err := cfg.Scoring()
+	if err != nil {
+		t.Fatalf("Scoring() 不應失敗: %v", err)
+	}
+	if s.Version != "v2-custom" {
+		t.Errorf("version 應為 v2-custom，實際 %s", s.Version)
+	}
+	if s.Weights.Profit != 0.4 || s.Weights.Governance != 0.1 {
+		t.Errorf("權重覆寫失敗: %+v", s.Weights)
+	}
+	if s.GrossMarginMax != 60 || s.ConsecutiveMax != 10 {
+		t.Errorf("門檻覆寫失敗: %+v", s)
+	}
+	// 未覆寫欄位保留預設
+	if s.DebtRatioMax == 0 || s.NetMarginMax == 0 {
+		t.Errorf("未覆寫欄位應保留預設: %+v", s)
+	}
+}
+
+// TestScoringFileError：設定檔不存在/格式錯誤 → 明確錯誤。
+func TestScoringFileError(t *testing.T) {
+	clearEnv(t)
+	t.Setenv("MCP_SCORING_CONFIG", "/nonexistent/scoring.json")
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("Load() 不應失敗（檔案延遲讀取）: %v", err)
+	}
+	if _, err := cfg.Scoring(); err == nil {
+		t.Error("設定檔不存在時 Scoring() 應失敗")
+	}
+
+	bad := filepath.Join(t.TempDir(), "bad.json")
+	if err := os.WriteFile(bad, []byte("{not json"), 0o644); err != nil {
+		t.Fatalf("寫入失敗: %v", err)
+	}
+	t.Setenv("MCP_SCORING_CONFIG", bad)
+	cfg, err = Load()
+	if err != nil {
+		t.Fatalf("Load() 不應失敗: %v", err)
+	}
+	if _, err := cfg.Scoring(); err == nil {
+		t.Error("JSON 格式錯誤時 Scoring() 應失敗")
 	}
 }

@@ -6,14 +6,18 @@
 //	MCP_HTTP_ADDR  streamable-http 的監聽位址（預設 127.0.0.1:8787）
 //	DATA_DIR       L2 SQLite 資料目錄（預設 ~/.tw-quant-mcp/data）
 //	LOG_LEVEL      debug | info | warn | error（預設 info）
+//	MCP_SCORING_CONFIG  五面向評分規則 JSON 檔路徑（選填，預設 v1 內建規則）
 package config
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"tw-quant-mcp/pkg/engine/composite"
 )
 
 // Transport 定義 MCP Server 的傳輸層。
@@ -35,10 +39,11 @@ const (
 
 // Config 是伺服器執行所需的全部設定。
 type Config struct {
-	Transport Transport
-	HTTPAddr  string
-	DataDir   string
-	LogLevel  string
+	Transport   Transport
+	HTTPAddr    string
+	DataDir     string
+	LogLevel    string
+	ScoringFile string // MCP_SCORING_CONFIG：五面向評分規則 JSON 檔（選填）
 }
 
 // Load 從環境變數讀取設定並填入預設值。
@@ -61,6 +66,9 @@ func Load() (*Config, error) {
 	}
 	if v := os.Getenv("LOG_LEVEL"); v != "" {
 		cfg.LogLevel = strings.ToLower(strings.TrimSpace(v))
+	}
+	if v := os.Getenv("MCP_SCORING_CONFIG"); v != "" {
+		cfg.ScoringFile = strings.TrimSpace(v)
 	}
 
 	if err := cfg.Validate(); err != nil {
@@ -98,6 +106,27 @@ func (c *Config) Validate() error {
 		return fmt.Errorf("config: 建立 DATA_DIR %q 失敗: %w", c.DataDir, err)
 	}
 	return nil
+}
+
+// Scoring 回傳五面向評分規則（§10.D，T017）：預設 v1 內建規則，
+// 或自 MCP_SCORING_CONFIG 指定之 JSON 檔載入（欄位與
+// composite.ScoringConfig 對應，可部分覆寫）。
+func (c *Config) Scoring() (composite.ScoringConfig, error) {
+	cfg := composite.DefaultScoringConfig()
+	if c.ScoringFile == "" {
+		return cfg, nil
+	}
+	b, err := os.ReadFile(c.ScoringFile)
+	if err != nil {
+		return cfg, fmt.Errorf("config: 讀取 MCP_SCORING_CONFIG %q 失敗: %w", c.ScoringFile, err)
+	}
+	if err := json.Unmarshal(b, &cfg); err != nil {
+		return cfg, fmt.Errorf("config: 解析 MCP_SCORING_CONFIG %q 失敗: %w", c.ScoringFile, err)
+	}
+	if cfg.Version == "" {
+		cfg.Version = composite.DefaultScoringConfig().Version
+	}
+	return cfg, nil
 }
 
 // defaultDataDir 回傳 ~/.tw-quant-mcp/data（無法取得家目錄時回傳 ./data）。

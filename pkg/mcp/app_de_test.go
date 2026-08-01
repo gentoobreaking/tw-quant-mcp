@@ -3,9 +3,11 @@ package mcp
 import (
 	"context"
 	"net/url"
+	"strings"
 	"testing"
 	"time"
 
+	"tw-quant-mcp/pkg/engine/composite"
 	"tw-quant-mcp/pkg/model"
 )
 
@@ -50,7 +52,8 @@ func stubDE(f *fakeFetch) {
 	f.stub("dividend", nil, `[
 		{"table_date":"2026-07-31","code":"2330","name":"台積電","progress":"董事會決議","dividend_year":"115","cash_dividend":7.0,"stock_dividend":0,"cash_total":181500000000,"net_income":0,"retained":0},
 		{"table_date":"2026-07-31","code":"2330","name":"台積電","progress":"董事會決議","dividend_year":"114","cash_dividend":6.0,"stock_dividend":0,"cash_total":155600000000,"net_income":0,"retained":0},
-		{"table_date":"2026-07-31","code":"2317","name":"鴻海","progress":"董事會決議","dividend_year":"114","cash_dividend":7.2,"stock_dividend":0,"cash_total":0,"net_income":0,"retained":0},
+		{"table_date":"2026-07-31","code":"2317","name":"鴻海","progress":"董事會決議","dividend_year":"115","cash_dividend":7.2,"stock_dividend":0,"cash_total":0,"net_income":0,"retained":0},
+		{"table_date":"2026-07-31","code":"2317","name":"鴻海","progress":"董事會決議","dividend_year":"114","cash_dividend":6.0,"stock_dividend":0,"cash_total":0,"net_income":0,"retained":0},
 		{"table_date":"2026-07-31","code":"1101","name":"台泥","progress":"股東會確認","dividend_year":"114","cash_dividend":0.8,"stock_dividend":0,"cash_total":0,"net_income":0,"retained":0}]`)
 	// 除權除息預告（TWT48U_ALL）
 	f.stub("ex_div", nil, `[
@@ -69,10 +72,11 @@ func stubDE(f *fakeFetch) {
 		{"report_date":"2026-07-31","year":"2025","code":"2317","name":"鴻海","fields":{"範疇一排放量(噸CO2e)":"5678"}}]`)
 	f.stub("company_governance", nil, `[
 		{"report_date":"2026-07-31","code":"2330","name":"台積電","rules":"訂有公司治理實務守則"}]`)
-	// MOPS 損益表摘要（2330：2026Q1 + 2025Q4；1101：2026Q1）
+	// MOPS 損益表摘要（2330：2026Q1 + 2025Q4 + 2025Q1；1101：2026Q1）
 	f.stub("income_summary", nil, `[
 		{"table_date":"2026-07-31","year":2026,"quarter":1,"code":"2330","name":"台積電","industry":"半導體","eps":14.5,"par_value":"新台幣 10.0000元","revenue":1134103440000,"operating_profit":470000000000,"non_operating_items":-5000000000,"net_income":460000000000},
 		{"table_date":"2026-04-30","year":2025,"quarter":4,"code":"2330","name":"台積電","industry":"半導體","eps":15.0,"par_value":"新台幣 10.0000元","revenue":1100000000000,"operating_profit":500000000000,"non_operating_items":0,"net_income":520000000000},
+		{"table_date":"2026-04-30","year":2025,"quarter":1,"code":"2330","name":"台積電","industry":"半導體","eps":13.0,"par_value":"新台幣 10.0000元","revenue":1000000000000,"operating_profit":400000000000,"non_operating_items":0,"net_income":390000000000},
 		{"table_date":"2026-07-31","year":2026,"quarter":1,"code":"1101","name":"台泥","industry":"水泥工業","eps":0.1,"par_value":"新台幣 10.0000元","revenue":33168148000,"operating_profit":2792191000,"non_operating_items":-659456000,"net_income":1204739000}]`)
 	// MOPS 獲利能力（2330 2026Q1）
 	f.stub("profit_ratios", nil, `[
@@ -86,6 +90,9 @@ func stubDE(f *fakeFetch) {
 	// MOPS 現金流量表 AJAX（2330 2026Q1）
 	f.stub("cash_flow", url.Values{"co_id": {"2330"}, "year": {"2026"}, "season": {"1"}}, `{
 		"table_date":"2026-07-31","year":2026,"quarter":1,"operating_cash_flow":350000000000,"investing_cash_flow":-400000000000,"financing_cash_flow":-100000000000,"ending_cash_balance":2500000000000}`)
+	// MOPS 現金流量表 AJAX（1101 2026Q1，供結構評分）
+	f.stub("cash_flow", url.Values{"co_id": {"1101"}, "year": {"2026"}, "season": {"1"}}, `{
+		"table_date":"2026-07-31","year":2026,"quarter":1,"operating_cash_flow":10000000000,"investing_cash_flow":-20000000000,"financing_cash_flow":5000000000,"ending_cash_balance":30000000000}`)
 	// MOPS 月營收（YoY）
 	f.stub("monthly_revenue", nil, `[
 		{"table_date":"2026-07-10","data_year_month":"202606","code":"2330","name":"台積電","industry":"半導體","revenue":300000000000,"last_month_revenue":280000000000,"last_year_revenue":250000000000,"mom_change_pct":7.1,"yoy_change_pct":20.0,"cum_revenue":1700000000000,"cum_last_year":1500000000000,"cum_change_pct":13.3},
@@ -379,6 +386,44 @@ func TestDEScreenStocksRequireESG(t *testing.T) {
 	}
 }
 
+// 獲利成長（淨利 YoY）：僅 2330 有去年同期財報（2026Q1 vs 2025Q1，+17.9%）
+func TestDEScreenStocksProfitGrowth(t *testing.T) {
+	f := newFake(t)
+	stubDE(f)
+	app := deApp(t, f)
+
+	env := callEnv(t, app, "screen_stocks", map[string]any{
+		"min_profit_growth": 10,
+	})
+	sr := env.Data.(model.ScreenResult)
+	if len(sr.Rows) != 1 || sr.Rows[0].Code != "2330" {
+		t.Fatalf("MinProfitGrowth 10 應僅命中 2330（+17.9%%），實際 %+v", sr)
+	}
+	r := sr.Rows[0]
+	if r.ProfitGrowth < 17.8 || r.ProfitGrowth > 18.0 {
+		t.Errorf("profit_growth_pct 應為 17.9，實際 %v", r.ProfitGrowth)
+	}
+	matched := false
+	for _, m := range r.Matched {
+		if m == "獲利成長" {
+			matched = true
+		}
+	}
+	if !matched {
+		t.Errorf("應標記獲利成長條件，實際 %v", r.Matched)
+	}
+	// lineage：獲利成長條件引入 income_summary 父資料集
+	hasIncome := false
+	for _, d := range env.Lineage.DerivedFrom {
+		if d == "MOPS:income_summary" {
+			hasIncome = true
+		}
+	}
+	if !hasIncome {
+		t.Errorf("derived_from 應含 MOPS:income_summary，實際 %v", env.Lineage.DerivedFrom)
+	}
+}
+
 // ************** E. 股利 **************
 
 func TestDEGetDividendHistory(t *testing.T) {
@@ -500,19 +545,133 @@ func TestDEScreenHighYield(t *testing.T) {
 			t.Errorf("虧損公司不應命中 max_pe 條件: %+v", r)
 		}
 	}
+	// 配息穩定性（min_consecutive=2）：僅 2317 連年配息 2 年通過（1101/6147 為 1 年）
+	env = callEnv(t, app, "screen_high_yield",
+		map[string]any{"min_yield": 3.0, "min_consecutive": 2, "market": "tse"})
+	sr = env.Data.(model.ScreenResult)
+	if sr.Matched != 1 || len(sr.Rows) != 1 || sr.Rows[0].Code != "2317" {
+		t.Fatalf("min_consecutive=2 應僅命中 2317，實際 %+v", sr)
+	}
+	if sr.Rows[0].ConsecutiveYears != 2 {
+		t.Errorf("連年配息年數錯誤: %+v", sr.Rows[0])
+	}
 	if chartType(env) != "scatter" {
 		t.Errorf("高殖利率 chart 應為 scatter，實際 %s", chartType(env))
 	}
 }
 
-// get_financial_health_check：T017 尚未接線（登錄但回明確錯誤）
-func TestDEGetFinancialHealthCheckNotWired(t *testing.T) {
+// get_financial_health_check：T017 五面向評分（快取 raw 資料輸入，helper lineage）。
+func TestDEGetFinancialHealthCheck(t *testing.T) {
 	f := newFake(t)
 	stubDE(f)
 	app := deApp(t, f)
 
-	if _, err := app.core.Call(context.Background(), "get_financial_health_check",
-		map[string]any{"symbol": "2330"}); err == nil {
-		t.Fatal("T017 未接線應回明確錯誤")
+	env := callEnv(t, app, "get_financial_health_check", map[string]any{"symbol": "2330"})
+	s, ok := env.Data.(composite.HealthScore)
+	if !ok {
+		t.Fatalf("Data 應為 composite.HealthScore，實際 %T", env.Data)
+	}
+	if s.ScoringVersion != "v1" {
+		t.Errorf("scoring_version 應為 v1，實際 %s", s.ScoringVersion)
+	}
+	// 獲利：毛利率 59%/營益率 41.4%/純益率 40.6% 皆 ≥ 門檻 → 100
+	if !s.Profit.Available || s.Profit.Score != 100 {
+		t.Errorf("獲利能力應為 100，實際 %+v", s.Profit)
+	}
+	// 成長：營收 YoY +13.4%（→67.1）、淨利 YoY +17.9%（→71.8）→ 平均 69.4
+	if !s.Growth.Available || s.Growth.Score != 69.4 {
+		t.Errorf("成長性應為 69.4，實際 %+v", s.Growth)
+	}
+	// 結構：負債比 22.7% → 100；營業現金流為正 → 加 5（上限 100）
+	if !s.Structure.Available || s.Structure.Score != 100 {
+		t.Errorf("財務結構應為 100，實際 %+v", s.Structure)
+	}
+	// 配息：連年 2 年 → 2/5×70=28；2/2 年度有配 → 30；合計 58（殖利率 2.1 < 5 無加分）
+	if !s.Dividend.Available || s.Dividend.Score != 58 {
+		t.Errorf("配息政策應為 58，實際 %+v", s.Dividend)
+	}
+	// 治理：ESG + 公司治理規程皆揭露 → 50+25+25=100
+	if !s.Governance.Available || s.Governance.Score != 100 {
+		t.Errorf("公司治理應為 100，實際 %+v", s.Governance)
+	}
+	// 總分：0.3×100 + 0.2×69.4 + 0.2×100 + 0.15×58 + 0.15×100 = 87.6
+	if s.Total != 87.6 {
+		t.Errorf("加權總分應為 87.6，實際 %v", s.Total)
+	}
+	// lineage：helper + derived_from 標明所有父資料集
+	if env.Lineage.SourceRole != model.SourceRoleHelper {
+		t.Errorf("source_role 應為 helper，實際 %s", env.Lineage.SourceRole)
+	}
+	derived := strings.Join(env.Lineage.DerivedFrom, ",")
+	for _, want := range []string{"MOPS:income_summary", "MOPS:profit_ratios",
+		"MOPS:balance_sheet", "TWSE_API:dividend", "TWSE_API:esg", "TWSE_API:company_governance"} {
+		if !strings.Contains(derived, want) {
+			t.Errorf("derived_from 應含 %s，實際 %v", want, env.Lineage.DerivedFrom)
+		}
+	}
+	// chart：radar（§11.3 財報五面向）
+	if chartType(env) != "radar" {
+		t.Errorf("財報體檢 chart 應為 radar，實際 %s", chartType(env))
+	}
+}
+
+// 快取命中驗證（§12.4）：重複查詢對上游 Adapter 之呼叫次數 = 1。
+func TestDEGetFinancialHealthCheckCacheHit(t *testing.T) {
+	f := newFake(t)
+	stubDE(f)
+	app := deApp(t, f)
+
+	for i := 0; i < 2; i++ {
+		callEnv(t, app, "get_financial_health_check", map[string]any{"symbol": "2330"})
+	}
+	for _, ds := range []string{"income_summary", "profit_ratios", "company_governance"} {
+		if n := f.called(ds, nil); n != 1 {
+			t.Errorf("整批資料集 %s 上游呼叫次數應為 1（快取命中），實際 %d", ds, n)
+		}
+	}
+	if n := f.called("esg", url.Values{"topic": {"1"}}); n != 1 {
+		t.Errorf("esg 上游呼叫次數應為 1（快取命中），實際 %d", n)
+	}
+	bs := url.Values{"co_id": {"2330"}, "year": {"2026"}, "season": {"1"}}
+	if n := f.called("balance_sheet", bs); n != 1 {
+		t.Errorf("資產負債表上游呼叫次數應為 1（快取命中），實際 %d", n)
+	}
+}
+
+// 邊界：缺財報/ESG 資料之個股 → 該面向 0 分 + available=false + 註記（不臆測）。
+func TestDEGetFinancialHealthCheckMissingData(t *testing.T) {
+	f := newFake(t)
+	stubDE(f)
+	app := deApp(t, f)
+
+	env := callEnv(t, app, "get_financial_health_check", map[string]any{"symbol": "1101"})
+	s, ok := env.Data.(composite.HealthScore)
+	if !ok {
+		t.Fatalf("Data 應為 composite.HealthScore，實際 %T", env.Data)
+	}
+	// 無獲利能力指標 stub → 不評分
+	if s.Profit.Available || s.Profit.Score != 0 {
+		t.Errorf("缺獲利能力資料應 available=false、0 分，實際 %+v", s.Profit)
+	}
+	// 無去年同期財報 → 成長性不評分（註記）
+	if s.Growth.Available {
+		t.Errorf("缺去年同期財報應不評分，實際 %+v", s.Growth)
+	}
+	if s.Growth.Note == "" {
+		t.Error("成長性缺資料應有註記")
+	}
+	// 無 ESG/治理揭露 → 治理不評分
+	if s.Governance.Available {
+		t.Errorf("缺 ESG 揭露應不評分，實際 %+v", s.Governance)
+	}
+	// 有資產負債表 + 股利：仍正常評分
+	if !s.Structure.Available || s.Structure.Score == 0 {
+		t.Errorf("1101 有資產負債表，結構應評分，實際 %+v", s.Structure)
+	}
+	if !s.Dividend.Available || s.Dividend.Score == 0 {
+		t.Errorf("1101 有股利資料，配息應評分，實際 %+v", s.Dividend)
+	}
+	if s.Total <= 0 {
+		t.Errorf("總分應 > 0，實際 %v", s.Total)
 	}
 }

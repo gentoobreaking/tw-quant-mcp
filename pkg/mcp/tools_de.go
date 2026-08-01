@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"tw-quant-mcp/pkg/cache"
-	"tw-quant-mcp/pkg/engine"
+	"tw-quant-mcp/pkg/engine/composite"
 	"tw-quant-mcp/pkg/model"
 	"tw-quant-mcp/pkg/provider"
 )
@@ -298,14 +298,159 @@ func handlerGetMonthlyRevenue(a *App, args map[string]any) (HandlerResult, error
 	}, Lineage: postLineage(model.SourceMOPS, a.now().Format("2006-01-02"), cached, ttl)}, nil
 }
 
-// handlerGetFinancialHealthCheck：五面向評分（§10.D）。
-// 評分邏輯由 T017 composite engine 提供；T014 僅登錄工具。
+// handlerGetFinancialHealthCheck：五面向評分（§10.D，T017 composite engine）。
+// 評分輸入全部來自 T014 已快取之 raw 資料（財報/估值/股利/ESG），
+// 引擎不直接呼叫 Adapter（§12.4）；輸出為 helper 資料，lineage
+// 標明 source_role=helper 且 derived_from 列出所有父資料集。
 func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
 	code, _ := args["symbol"].(string)
-	if _, err := a.symbolOf(code); err != nil {
+	sym, err := a.symbolOf(code)
+	if err != nil {
 		return HandlerResult{}, err
 	}
-	return HandlerResult{}, fmt.Errorf("五面向評分（獲利/成長/結構/配息/治理）由 T017 composite engine 提供，尚未接線；請先以 get_financial_statements / get_valuation_ratios / get_dividend_history 取得 raw 資料")
+	cfg, err := a.scoringConfig()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	in := composite.HealthInput{Code: sym.Code, Name: sym.Name, Market: sym.Market}
+	derived := []string{}
+
+	// 獲利能力 + 成長性：MOPS 損益表摘要（整批）＋獲利能力指標（整批）
+	income, cachedI, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	derived = append(derived, "MOPS:income_summary")
+	in.Income = incomeOf(income, sym.Code)
+	profit, cachedP, err := mopsRows[model.ProfitabilityRatio](a, ctx, provider.MOPSProfitRatios)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	derived = append(derived, "MOPS:profit_ratios")
+	bySym := incomeOf(income, sym.Code)
+	if len(bySym) > 0 {
+		year, quarter, perr := parsePeriod("", bySym)
+		if perr == nil {
+			in.Profit = filterProfit(profit, sym.Code, year, quarter)
+		}
+	}
+
+	// 財務結構：最新一季資產負債表/現金流量表（快取共用）
+	year, quarter := 0, 0
+	if len(in.Income) > 0 {
+		latest, _ := compositeLatestIncome(in.Income)
+		year, quarter = latest.Year, latest.Quarter
+	}
+	if year > 0 {
+		if bs, cached, berr := mopsStatement[model.BalanceSheet](a, ctx, provider.MOPSBalanceSheet, sym.Code, year, quarter); berr == nil {
+			in.Balance = &bs
+			derived = append(derived, "MOPS:balance_sheet")
+			cachedI = cachedI || cached
+		}
+		if cf, cached, cerr := mopsStatement[model.CashFlowStatement](a, ctx, provider.MOPSCashFlow, sym.Code, year, quarter); cerr == nil {
+			in.CashFlow = &cf
+			derived = append(derived, "MOPS:cash_flow")
+			cachedI = cachedI || cached
+		}
+	}
+
+	// 配息政策 + 殖利率：上市 t187ap45_L 整批 / 上櫃 TPEx 估值
+	if sym.Market == model.MarketOTC {
+		otc, cached, oerr := a.valuationOTC(ctx)
+		if oerr != nil {
+			return HandlerResult{}, err
+		}
+		cachedI = cachedI || cached
+		derived = append(derived, "TPEx_API:pe_valuation")
+		for _, r := range otc {
+			if r.Code == sym.Code {
+				in.Yield = r.YieldRatio
+				if r.DividendPerShare > 0 {
+					in.DividendYears = []composite.DividendYear{{Year: "最新", Cash: r.DividendPerShare}}
+				}
+				break
+			}
+		}
+	} else {
+		divRows, cached, derr := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend)
+		if derr != nil {
+			return HandlerResult{}, err
+		}
+		cachedI = cachedI || cached
+		derived = append(derived, "TWSE_API:dividend")
+		byCode := make([]provider.DividendRow, 0)
+		for _, r := range divRows {
+			if r.Code == sym.Code {
+				byCode = append(byCode, r)
+			}
+		}
+		sort.Slice(byCode, func(i, j int) bool { return byCode[i].DividendYear > byCode[j].DividendYear })
+		for _, r := range byCode {
+			in.DividendYears = append(in.DividendYears, composite.DividendYear{Year: r.DividendYear, Cash: r.CashDividend})
+		}
+		valRows, _, verr := a.valuationTSE(ctx)
+		if verr == nil {
+			derived = append(derived, "TWSE_API:valuation")
+			for _, r := range valRows {
+				if r.Code == sym.Code {
+					in.Yield = r.DividendYield
+					break
+				}
+			}
+		}
+	}
+
+	// 公司治理：ESG（topic=1）＋公司治理規程（整批，快取共用）
+	esgSet, err := a.esgCodes(ctx)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	derived = append(derived, "TWSE_API:esg")
+	in.ESGDisclosed = esgSet[sym.Code]
+	dataDate := a.now().Format("2006-01-02")
+	govRows, cachedG, gerr := fetchNormalize[[]provider.GovernanceRow](a, ctx, string(provider.TWSEAPIGovernance),
+		dataDate, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIGovernance), dataDate, "", nil),
+		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIGovernance, nil) })
+	if gerr == nil {
+		derived = append(derived, "TWSE_API:company_governance")
+		for _, r := range govRows {
+			if r.Code == sym.Code {
+				in.GovernanceDisclosed = true
+				break
+			}
+		}
+	}
+
+	score := composite.ScoreHealth(in, cfg)
+	score.DataDate = dataDate
+	score.Note = "評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）"
+	ttl, _ := a.ttlOf(string(provider.MOPSIncomeSummary))
+	lg := postLineage(model.SourceMOPS, dataDate, cachedI || cachedP || cachedG, ttl)
+	lg.SourceRole = model.SourceRoleHelper
+	lg.DerivedFrom = derived
+	return HandlerResult{Data: score, Lineage: lg}, nil
+}
+
+// scoringConfig 回傳五面向評分規則（預設 v1；config 可覆寫）。
+func (a *App) scoringConfig() (composite.ScoringConfig, error) {
+	if a.cfg == nil {
+		return composite.DefaultScoringConfig(), nil
+	}
+	return a.cfg.Scoring()
+}
+
+// compositeLatestIncome 回傳該代碼最新（年, 季）之損益表摘要。
+func compositeLatestIncome(rows []model.IncomeStatementRow) (model.IncomeStatementRow, bool) {
+	var best model.IncomeStatementRow
+	found := false
+	for _, r := range rows {
+		if !found || r.Year > best.Year || (r.Year == best.Year && r.Quarter > best.Quarter) {
+			best = r
+			found = true
+		}
+	}
+	return best, found
 }
 
 // handlerGetValuationRatios：PE/PB/ROE/殖利率（§10.D）。
@@ -506,7 +651,7 @@ func handlerGetCompanyProfile(a *App, args map[string]any) (HandlerResult, error
 func handlerScreenStocks(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	market, _ := args["market"].(string)
-	c := engine.ValueCriterion{}
+	c := composite.ValueCriterion{}
 	if v, ok := args["max_pe"]; ok {
 		if f, e := asFloat(v); e == nil && f > 0 {
 			c.MaxPE = f
@@ -527,12 +672,31 @@ func handlerScreenStocks(a *App, args map[string]any) (HandlerResult, error) {
 			c.MinGrowth = f
 		}
 	}
+	if v, ok := args["min_profit_growth"]; ok {
+		if f, e := asFloat(v); e == nil && f > 0 {
+			c.MinProfitGrowth = f
+		}
+	}
 	requireESG, _ := args["require_esg"].(bool)
 	limit := 50
 	if v, ok := args["limit"]; ok {
 		if n, e := asInt(v); e == nil && n >= 1 && n <= 200 {
 			limit = n
 		}
+	}
+	c.TopN = limit
+	// 排序（T017）：pe（預設）| yield | pb | growth
+	switch strVal(args["sort"]) {
+	case "yield":
+		c.Sort = composite.ScreenSortYield
+	case "pb":
+		c.Sort = composite.ScreenSortPB
+	case "growth":
+		c.Sort = composite.ScreenSortGrowth
+	case "", "pe":
+		c.Sort = composite.ScreenSortPE
+	default:
+		return HandlerResult{}, fmt.Errorf("參數 sort 僅允許 pe|yield|pb|growth")
 	}
 	metrics, meta, err := a.screenMetrics(ctx, market)
 	if err != nil {
@@ -551,29 +715,23 @@ func handlerScreenStocks(a *App, args map[string]any) (HandlerResult, error) {
 		}
 		metrics = filtered
 	}
-	matches := engine.ScreenValue(metrics, c)
-	// 依本益比升冪（無本益比者置後）
-	sort.SliceStable(matches, func(i, j int) bool {
-		if matches[i].PEAvailable != matches[j].PEAvailable {
-			return matches[i].PEAvailable
-		}
-		return matches[i].PE < matches[j].PE
-	})
+	matches := composite.ScreenValue(metrics, c)
 	out := model.ScreenResult{Total: len(metrics), Matched: len(matches), Limit: limit}
-	if len(matches) > limit {
-		matches = matches[:limit]
-	}
 	for _, m := range matches {
 		out.Rows = append(out.Rows, model.ScreenStock{
 			Code: m.Code, Name: m.Name, Market: m.Market,
 			PE: m.PE, PEAvailable: m.PEAvailable, PB: m.PB,
 			DividendYield: m.DividendYield, RevenueGrowth: m.RevenueGrowth,
-			Matched: m.Matched,
+			ProfitGrowth: m.ProfitGrowth,
+			Matched:      m.Matched,
 		})
 	}
 	lg := meta.lineage()
-	if c.MinGrowth > 0 {
+	if c.MinGrowth > 0 || c.MinProfitGrowth > 0 {
 		lg.DerivedFrom = append(lg.DerivedFrom, "MOPS:monthly_revenue")
+	}
+	if c.MinProfitGrowth > 0 {
+		lg.DerivedFrom = append(lg.DerivedFrom, "MOPS:income_summary")
 	}
 	if requireESG {
 		lg.DerivedFrom = append(lg.DerivedFrom, "TWSE_API:esg")
@@ -722,7 +880,7 @@ func handlerGetExdividendCalendar(a *App, args map[string]any) (HandlerResult, e
 func handlerScreenHighYield(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	market, _ := args["market"].(string)
-	c := engine.HighYieldCriterion{}
+	c := composite.HighYieldCriterion{}
 	if v, ok := args["min_yield"]; ok {
 		if f, e := asFloat(v); e == nil && f > 0 {
 			c.MinYield = f
@@ -741,27 +899,31 @@ func handlerScreenHighYield(a *App, args map[string]any) (HandlerResult, error) 
 			c.MaxPE = f
 		}
 	}
+	if v, ok := args["min_consecutive"]; ok {
+		if n, e := asInt(v); e == nil && n >= 0 {
+			c.MinConsecutive = n
+		}
+	}
 	limit := 20
 	if v, ok := args["limit"]; ok {
 		if n, e := asInt(v); e == nil && n >= 1 && n <= 100 {
 			limit = n
 		}
 	}
+	c.TopN = limit
 	metrics, meta, err := a.screenMetrics(ctx, market)
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	matches := engine.ScreenHighYield(metrics, c)
+	matches := composite.ScreenHighYield(metrics, c)
 	out := model.ScreenResult{Total: len(metrics), Matched: len(matches), Limit: limit}
-	if len(matches) > limit {
-		matches = matches[:limit]
-	}
 	for _, m := range matches {
 		out.Rows = append(out.Rows, model.ScreenStock{
 			Code: m.Code, Name: m.Name, Market: m.Market,
 			PE: m.PE, PEAvailable: m.PEAvailable, PB: m.PB,
 			DividendYield: m.DividendYield, DividendShare: m.DividendShare,
-			Matched: m.Matched,
+			ConsecutiveYears: m.ConsecutiveYears,
+			Matched:          m.Matched,
 		})
 	}
 	return HandlerResult{Data: out, Lineage: meta.lineage()}, nil
@@ -771,7 +933,7 @@ func handlerScreenHighYield(a *App, args map[string]any) (HandlerResult, error) 
 
 // screenMeta 記錄篩選工具之資料源與快取狀態（供 lineage 聚合）。
 type screenMeta struct {
-	rows     []engine.ValuationMetrics
+	rows     []composite.ValuationMetrics
 	source   string
 	dataDate string
 	cached   bool
@@ -788,8 +950,8 @@ func (m *screenMeta) lineage() *model.Lineage {
 
 // screenMetrics 建立篩選輸入（估值 + 月營收成長 + 每股現金股利；上市/上櫃
 // 分批，全部整批快取，§12.4）。
-func (a *App) screenMetrics(ctx context.Context, market string) ([]engine.ValuationMetrics, *screenMeta, error) {
-	var metrics []engine.ValuationMetrics
+func (a *App) screenMetrics(ctx context.Context, market string) ([]composite.ValuationMetrics, *screenMeta, error) {
+	var metrics []composite.ValuationMetrics
 	meta := &screenMeta{cached: false}
 	switch market {
 	case "", model.MarketTSE:
@@ -800,7 +962,7 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]engine.Valuat
 		meta.cached = meta.cached || cached
 		meta.derived = append(meta.derived, "TWSE_API:valuation")
 		for _, r := range tse {
-			metrics = append(metrics, engine.ValuationMetrics{
+			metrics = append(metrics, composite.ValuationMetrics{
 				Code: r.Code, Name: r.Name, Market: model.MarketTSE,
 				PE: r.PE, PEAvailable: r.PE > 0, PB: r.PB, DividendYield: r.DividendYield,
 			})
@@ -815,7 +977,7 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]engine.Valuat
 		meta.cached = meta.cached || cached
 		meta.derived = append(meta.derived, "TPEx_API:pe_valuation")
 		for _, r := range otc {
-			metrics = append(metrics, engine.ValuationMetrics{
+			metrics = append(metrics, composite.ValuationMetrics{
 				Code: r.Code, Name: r.Name, Market: model.MarketOTC,
 				PE: r.PE, PEAvailable: r.PE > 0, PB: r.PriceBookRatio,
 				DividendYield: r.YieldRatio, DividendShare: r.DividendPerShare,
@@ -842,7 +1004,21 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]engine.Valuat
 			metrics[i].HasGrowth = true
 		}
 	}
-	// 上市每股現金股利（最新年度，t187ap45_L 整批）
+	// 獲利成長（淨利 YoY，MOPS 損益表摘要整批；最新季 vs 去年同期）
+	income, _, ierr := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
+	if ierr == nil {
+		latest, prev := latestIncomeOf(income), incomeAgoOf(income)
+		meta.derived = append(meta.derived, "MOPS:income_summary")
+		for i := range metrics {
+			li, ok1 := latest[metrics[i].Code]
+			pi, ok2 := prev[metrics[i].Code]
+			if ok1 && ok2 && pi.NetIncome > 0 {
+				metrics[i].ProfitGrowth = (float64(li.NetIncome) - float64(pi.NetIncome)) / float64(pi.NetIncome) * 100
+				metrics[i].HasProfitGrowth = true
+			}
+		}
+	}
+	// 上市每股現金股利（t187ap45_L 整批）＋連年配息年數（配息穩定性，§10.E）
 	if market != model.MarketOTC {
 		divRows, _, err := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend)
 		if err != nil {
@@ -850,16 +1026,26 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]engine.Valuat
 		}
 		div := make(map[string]float64)
 		divYear := make(map[string]string)
+		divYears := make(map[string][]provider.DividendRow)
 		for _, r := range divRows {
 			if y, ok := divYear[r.Code]; !ok || r.DividendYear > y {
 				divYear[r.Code] = r.DividendYear
 				div[r.Code] = r.CashDividend
 			}
+			divYears[r.Code] = append(divYears[r.Code], r)
 		}
 		meta.derived = append(meta.derived, "TWSE_API:dividend")
 		for i := range metrics {
 			if d, ok := div[metrics[i].Code]; ok {
 				metrics[i].DividendShare = d
+			}
+			metrics[i].ConsecutiveYears = consecutiveDividendYears(divYears[metrics[i].Code])
+		}
+	} else {
+		// 上櫃：僅最新年度（TPEx 歷史除息資料未接線）
+		for i := range metrics {
+			if metrics[i].DividendShare > 0 {
+				metrics[i].ConsecutiveYears = 1
 			}
 		}
 	}
@@ -870,6 +1056,51 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]engine.Valuat
 	}
 	meta.ttl, _ = a.ttlOf(cache.DatasetValuation)
 	return metrics, meta, nil
+}
+
+// latestIncomeOf 回傳各代碼最新（年, 季）之損益表摘要（含去年同期對照）。
+// 由 (latest, prev) 兩 map 組成：latest 為最新季、prev 為最新季之去年同期。
+func latestIncomeOf(rows []model.IncomeStatementRow) map[string]model.IncomeStatementRow {
+	out := make(map[string]model.IncomeStatementRow)
+	for _, r := range rows {
+		best, ok := out[r.Code]
+		if !ok || r.Year > best.Year || (r.Year == best.Year && r.Quarter > best.Quarter) {
+			out[r.Code] = r
+		}
+	}
+	return out
+}
+
+func incomeAgoOf(rows []model.IncomeStatementRow) map[string]model.IncomeStatementRow {
+	latest := latestIncomeOf(rows)
+	out := make(map[string]model.IncomeStatementRow)
+	for _, r := range rows {
+		li, ok := latest[r.Code]
+		if !ok {
+			continue
+		}
+		if r.Year == li.Year-1 && r.Quarter == li.Quarter {
+			out[r.Code] = r
+		}
+	}
+	return out
+}
+
+// consecutiveDividendYears 計算連年配息年數（§10.E 配息穩定性）：
+// 官方股利年度由新至舊，期間現金股利 > 0 之連續年數（0 年中斷即停）。
+func consecutiveDividendYears(rows []provider.DividendRow) int {
+	sort.Slice(rows, func(i, j int) bool { return rows[i].DividendYear > rows[j].DividendYear })
+	n := 0
+	for i, r := range rows {
+		if r.CashDividend <= 0 {
+			break
+		}
+		if i > 0 && rows[i-1].DividendYear == r.DividendYear {
+			continue // 同年多次決議不重複計
+		}
+		n++
+	}
+	return n
 }
 
 // esgCodes 回傳具 ESG 揭露之代碼集合（topic=1 溫室氣體排放，全市場）。

@@ -80,16 +80,18 @@ type ESGReport struct {
 
 // ScreenStock 為 screen_stocks / screen_high_yield（§10.D/E）篩選結果列。
 type ScreenStock struct {
-	Code          string   `json:"code"`
-	Name          string   `json:"name"`
-	Market        string   `json:"market"`
-	PE            float64  `json:"pe"`
-	PEAvailable   bool     `json:"pe_available"`
-	PB            float64  `json:"pb"`
-	DividendYield float64  `json:"dividend_yield_pct"`
-	DividendShare float64  `json:"dividend_per_share"` // 每股現金股利（元/股，高殖利率篩選）
-	RevenueGrowth float64  `json:"revenue_growth_pct"` // 月營收 YoY（最近月份，%）
-	Matched       []string `json:"matched"`            // 命中之條件說明
+	Code             string   `json:"code"`
+	Name             string   `json:"name"`
+	Market           string   `json:"market"`
+	PE               float64  `json:"pe"`
+	PEAvailable      bool     `json:"pe_available"`
+	PB               float64  `json:"pb"`
+	DividendYield    float64  `json:"dividend_yield_pct"`
+	DividendShare    float64  `json:"dividend_per_share"` // 每股現金股利（元/股，高殖利率篩選）
+	RevenueGrowth    float64  `json:"revenue_growth_pct"` // 月營收 YoY（最近月份，%）
+	ProfitGrowth     float64  `json:"profit_growth_pct"`  // 淨利 YoY（最新季 vs 去年同期，%）
+	ConsecutiveYears int      `json:"consecutive_years"`  // 連年配息年數（配息穩定性，高殖利率篩選）
+	Matched          []string `json:"matched"`            // 命中之條件說明
 }
 
 // ScreenResult 為篩選工具（§10.D/E）之 data。

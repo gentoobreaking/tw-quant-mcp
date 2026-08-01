@@ -42,9 +42,9 @@ func registerDETools(r *Registry) {
 	r.Register(ToolDef{
 		Symbol: "get_financial_health_check",
 		Name:   "get_financial_health_check",
-		Description: "查詢個股財務健康五面向評分（獲利/成長/結構/配息/治理）。" +
-			"評分邏輯由 T017 composite engine 提供，目前尚未接線（回傳錯誤）；" +
-			"請先以 get_financial_statements / get_valuation_ratios / get_dividend_history 取得 raw 資料。",
+		Description: "查詢個股財務健康五面向評分（獲利/成長/結構/配息/治理，各 0-100）。" +
+			"評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）；" +
+			"評分規則版本化（scoring_version，config 可調）；輸出為 helper 資料（_lineage.source_role=helper）。",
 		Schema: map[string]any{
 			"type": "object",
 			"properties": map[string]any{
@@ -104,20 +104,22 @@ func registerDETools(r *Registry) {
 	r.Register(ToolDef{
 		Symbol: "screen_stocks",
 		Name:   "screen_stocks",
-		Description: "價值/成長篩選全市場股票（§10.D；引擎由 T017 composite 批次過濾，" +
+		Description: "價值/成長篩選全市場股票（§10.D；T017 composite 引擎批次過濾，" +
 			"整批快取 + 記憶體計算，§12.4）。條件：max_pe（低本益比）、max_pb（低股價淨值比）、" +
-			"min_yield（高殖利率）、min_growth（月營收 YoY）、require_esg（具 ESG 揭露）。" +
-			"結果依本益比升冪；ESG 五面向評分屬 T017。",
+			"min_yield（高殖利率）、min_growth（月營收 YoY）、min_profit_growth（淨利 YoY）、" +
+			"require_esg（具 ESG 揭露）。排序 sort（pe 預設|yield|pb|growth）；limit 即 top_n 回傳上限。",
 		Schema: map[string]any{
 			"type": "object",
 			"properties": map[string]any{
-				"market":      map[string]any{"type": "string", "enum": []string{"tse", "otc"}, "description": "市場別（省略為全部）"},
-				"max_pe":      map[string]any{"type": "number", "description": "本益比上限"},
-				"max_pb":      map[string]any{"type": "number", "description": "股價淨值比上限"},
-				"min_yield":   map[string]any{"type": "number", "description": "最低現金殖利率（%）"},
-				"min_growth":  map[string]any{"type": "number", "description": "最低月營收 YoY（%）"},
-				"require_esg": map[string]any{"type": "boolean", "description": "僅保留具 ESG 揭露之公司"},
-				"limit":       map[string]any{"type": "integer", "minimum": 1, "maximum": 200, "description": "回傳筆數上限（預設 50）"},
+				"market":            map[string]any{"type": "string", "enum": []string{"tse", "otc"}, "description": "市場別（省略為全部）"},
+				"max_pe":            map[string]any{"type": "number", "description": "本益比上限"},
+				"max_pb":            map[string]any{"type": "number", "description": "股價淨值比上限"},
+				"min_yield":         map[string]any{"type": "number", "description": "最低現金殖利率（%）"},
+				"min_growth":        map[string]any{"type": "number", "description": "最低月營收 YoY（%）"},
+				"min_profit_growth": map[string]any{"type": "number", "description": "最低淨利 YoY（最新季 vs 去年同期，%）"},
+				"require_esg":       map[string]any{"type": "boolean", "description": "僅保留具 ESG 揭露之公司"},
+				"sort":              map[string]any{"type": "string", "enum": []string{"pe", "yield", "pb", "growth"}, "description": "排序（預設 pe 升冪；yield/growth 遞減）"},
+				"limit":             map[string]any{"type": "integer", "minimum": 1, "maximum": 200, "description": "top_n 回傳筆數上限（預設 50）"},
 			},
 		},
 		ReadOnly: true,
@@ -158,17 +160,19 @@ func registerDETools(r *Registry) {
 	r.Register(ToolDef{
 		Symbol: "screen_high_yield",
 		Name:   "screen_high_yield",
-		Description: "高殖利率排行（§10.E；引擎由 T017 composite 批次過濾）。" +
-			"條件：min_yield（預設 3%）、min_dividend（每股現金股利下限）、max_pe。" +
+		Description: "高殖利率排行（§10.E；T017 composite 引擎批次過濾）。" +
+			"條件：min_yield（預設 3%）、min_dividend（每股現金股利下限）、max_pe、" +
+			"min_consecutive（最低連年配息年數，配息穩定性）。" +
 			"結果依殖利率遞減；整批快取 + 記憶體計算（§12.4）。",
 		Schema: map[string]any{
 			"type": "object",
 			"properties": map[string]any{
-				"market":       map[string]any{"type": "string", "enum": []string{"tse", "otc"}, "description": "市場別（省略為全部）"},
-				"min_yield":    map[string]any{"type": "number", "description": "最低現金殖利率 %（預設 3）"},
-				"min_dividend": map[string]any{"type": "number", "description": "最低每股現金股利（元/股）"},
-				"max_pe":       map[string]any{"type": "number", "description": "本益比上限（0=不限制）"},
-				"limit":        map[string]any{"type": "integer", "minimum": 1, "maximum": 100, "description": "回傳筆數上限（預設 20）"},
+				"market":          map[string]any{"type": "string", "enum": []string{"tse", "otc"}, "description": "市場別（省略為全部）"},
+				"min_yield":       map[string]any{"type": "number", "description": "最低現金殖利率 %（預設 3）"},
+				"min_dividend":    map[string]any{"type": "number", "description": "最低每股現金股利（元/股）"},
+				"max_pe":          map[string]any{"type": "number", "description": "本益比上限（0=不限制）"},
+				"min_consecutive": map[string]any{"type": "integer", "minimum": 0, "description": "最低連年配息年數（0=不限制）"},
+				"limit":           map[string]any{"type": "integer", "minimum": 1, "maximum": 100, "description": "回傳筆數上限（預設 20）"},
 			},
 		},
 		ReadOnly: true,
