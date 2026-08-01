@@ -111,7 +111,7 @@ type FinancialStatements struct {
 }
 
 // BalanceSheet 為資產負債表（合併，IFRS）。
-// 單位：百萬元（依 IFRS 合併報表慣例），consumers 可自行 ×1e6 換算為元。
+// 金額已由 MOPS 仟元換算為元（§5.1）。
 type BalanceSheet struct {
 	TableDate             string `json:"table_date"`              // 出表日期
 	Year                  int    `json:"year"`                    // 年度
@@ -126,7 +126,7 @@ type BalanceSheet struct {
 }
 
 // CashFlowStatement 為現金流量表（合併，IFRS）。
-// 單位：百萬元（依 IFRS 合併報表慣例）。
+// 金額已由 MOPS 仟元換算為元（§5.1）。
 type CashFlowStatement struct {
 	TableDate         string `json:"table_date"`          // 出表日期
 	Year              int    `json:"year"`                // 年度

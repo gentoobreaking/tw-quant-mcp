@@ -533,87 +533,62 @@ func handlerGetMajorAnnouncements(a *App, args map[string]any) (HandlerResult, e
 		return HandlerResult{}, fmt.Errorf("重大訊息資料源（MOPS）尚未接線")
 	}
 
-	// 建立 filterFn：先將全量 CSV raw-normalize 為 []MajorAnnouncement，
-	// 再依 date/symbol/keyword 過濾
-	mopsSrc := a.mops
-	mopsSrcWithFilter := &mopsSourceWrapper{
-		base:    mopsSrc,
-		date:    date,
-		symbol:  symbol,
-		keyword: keyword,
-	}
-
+	// 快取全量（key 不含過濾參數）：一次下載供各 symbol/date/keyword 組合共用，
+	// 過濾於快取讀取後於記憶體進行（重大訊息 TTL 5min，§4.2）
 	dataset := string(provider.MOPSAnnouncements)
-	// 重大訊息預設取最新交易日（無 date 時以今日為 data_date，CSV 本身為全量）
 	dataDate := date
 	if dataDate == "" {
 		dataDate = a.now().Format("2006-01-02")
 	}
 
-	key := cache.KeyString(model.SourceMOPS, dataset, dataDate, symbol, nil)
+	key := cache.KeyString(model.SourceMOPS, dataset, dataDate, "", nil)
 
 	cached, raw, err := a.fetchRaw(ctx, dataset, dataDate, key, func() ([]byte, error) {
 		req := provider.RawRequest{
-			URL: mopsSrc.URL(provider.MOPSAnnouncements, nil),
+			URL: a.mops.URL(provider.MOPSAnnouncements, nil),
 		}
-		resp, fetchErr := mopsSrc.Fetch(ctx, req)
+		resp, fetchErr := a.mops.Fetch(ctx, req)
 		if fetchErr != nil {
 			return nil, fetchErr
 		}
-		if valErr := mopsSrc.Validate(resp); valErr != nil {
+		if valErr := a.mops.Validate(resp); valErr != nil {
 			return nil, valErr
 		}
-		// 正常 normalize + filter 合成一步
-		return mopsSrcWithFilter.Normalize(resp)
+		return a.mops.Normalize(resp)
 	})
 	if err != nil {
 		return HandlerResult{}, fmt.Errorf("MOPS 重大訊息取得失敗: %w", err)
 	}
 
-	var announcements []model.MajorAnnouncement
-	if err := json.Unmarshal(raw, &announcements); err != nil {
+	var all []model.MajorAnnouncement
+	if err := json.Unmarshal(raw, &all); err != nil {
 		return HandlerResult{}, fmt.Errorf("mcp: 重大訊息解析失敗: %w", err)
 	}
 
 	ttl, _ := a.ttlOf(dataset)
 	return HandlerResult{
-		Data:    announcements,
+		Data:    filterAnnouncements(all, date, symbol, keyword),
 		Lineage: postLineage(model.SourceMOPS, dataDate, cached, ttl),
 	}, nil
 }
 
-// mopsSourceWrapper 封裝 MOPS filterFn 注入，避免改寫 provider 層 export 型別
-type mopsSourceWrapper struct {
-	base                  MOPSFetcher
-	date, symbol, keyword string
-}
-
-func (w *mopsSourceWrapper) Normalize(raw *provider.RawResponse) ([]byte, error) {
-	// 先取得全量歸一化結果
-	all, err := w.base.RawNormalize(raw)
-	if err != nil {
-		return nil, err
-	}
-	var rows []model.MajorAnnouncement
-	if err := json.Unmarshal(all, &rows); err != nil {
-		return nil, err
-	}
-	// 過濾
+// filterAnnouncements 依日期/symbol/關鍵字過濾重大訊息。
+func filterAnnouncements(rows []model.MajorAnnouncement, date, symbol, keyword string) []model.MajorAnnouncement {
 	filtered := make([]model.MajorAnnouncement, 0, len(rows))
 	for _, r := range rows {
-		if w.date != "" && r.AnnounceDate != w.date {
+		if date != "" && r.AnnounceDate != date {
 			continue
 		}
-		if w.symbol != "" && r.Code != w.symbol {
+		if symbol != "" && r.Code != symbol {
 			continue
 		}
-		if w.keyword != "" && !strings.Contains(r.Subject, w.keyword) &&
-			!strings.Contains(r.Description, w.keyword) {
+		if keyword != "" && !strings.Contains(r.Subject, keyword) &&
+			!strings.Contains(r.Description, keyword) {
 			continue
 		}
 		filtered = append(filtered, r)
 	}
-	return json.Marshal(filtered)
+	return filtered
 }
 
 // handlerGetAttentionDispositionStocks：注意股/處置股清單（§10.C）。

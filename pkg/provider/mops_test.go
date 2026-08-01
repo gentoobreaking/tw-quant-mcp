@@ -474,6 +474,60 @@ func TestMOPSUnits(t *testing.T) {
 }
 
 // TestMOPSContext 驗證 Fetch 可被 context 取消。
+// TestMOPSHTMLValueCol 驗證「本季」欄定位
+// （資產負債表=期末日欄、現金流量=本季期間欄、損益表=第N季單季欄）。
+func TestMOPSHTMLValueCol(t *testing.T) {
+	cases := []struct {
+		name, file string
+		want       int
+	}{
+		{"資產負債表", "balance_sheet_2330_2026Q1.html", 1},
+		{"現金流量表", "cash_flow_2330_2026Q1.html", 1},
+		{"綜合損益表", "income_statement_2330_2026Q1.html", 3},
+	}
+	for _, tc := range cases {
+		body := loadMOPSHTMLFixture(t, tc.file)
+		_, _, valueCol, err := parseMOPSHTMLTable(body)
+		if err != nil {
+			t.Fatalf("%s 解析失敗: %v", tc.name, err)
+		}
+		if valueCol != tc.want {
+			t.Errorf("%s 本季欄應為 %d，實際 %d", tc.name, tc.want, valueCol)
+		}
+	}
+}
+
+// TestMOPSAmountLabelPriority 驗證 labelMap 優先與 rows fallback 語意：
+// 欄位存在（含值為 0）時不得以「值為 0」誤觸 fallback。
+func TestMOPSAmountLabelPriority(t *testing.T) {
+	rows := []mopsTableRow{{label: "資產總額", values: []string{"999"}}}
+	// labelMap 優先
+	m := map[string]string{"資產總額": "1,000"}
+	if got := mopsAmount(m, rows, "資產總額", "資產總"); got != 1000000 {
+		t.Errorf("labelMap 優先應為 1,000×1000=1000000，實際 %d", got)
+	}
+	// 欄位缺失 → fallback 由 rows 比對
+	m = map[string]string{}
+	if got := mopsAmount(m, rows, "資產總額", "資產總"); got != 999000 {
+		t.Errorf("fallback 應為 999×1000=999000，實際 %d", got)
+	}
+	// 欄位存在但值為 0 → 採用 labelMap 值，不觸發 fallback
+	m = map[string]string{"資產總額": "0"}
+	if got := mopsAmount(m, rows, "資產總額", "資產總"); got != 0 {
+		t.Errorf("值為 0 時應直接採用 labelMap，實際 %d", got)
+	}
+}
+
+// TestMOPSYearQuarterPrefersTblHead 驗證年度/季別解析優先自標題列，
+// 避免誤中頁面其他「民國」字樣（如出表日期）。
+func TestMOPSYearQuarterPrefersTblHead(t *testing.T) {
+	body := `<th class='tblHead' colspan='10'>民國115年第1季</tr>出表日期：民國115年5月15日`
+	year, quarter := mopsYearQuarter(body)
+	if year != 2026 || quarter != 1 {
+		t.Errorf("應解析為 2026Q1，實際 %dQ%d", year, quarter)
+	}
+}
+
 func TestMOPSContext(t *testing.T) {
 	s := newTestMOPSSource()
 	req := RawRequest{Method: "GET", URL: mopsOpenDataBase + mopsPaths[MOPSCompanyProfile]}

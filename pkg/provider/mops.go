@@ -392,7 +392,13 @@ func parseMOPSQuoted(s string) string {
 
 // 公司基本資料（t187ap03_L）
 func parseCompanyProfiles(r *mopsCSVReader, header []string) ([]model.CompanyProfile, error) {
-	m := headerMap(header)
+	c := resolveMOPSCols(header,
+		"出表日期", "公司代號", "公司名稱", "公司簡稱", "外國企業註冊地國", "產業別",
+		"住址", "營利事業統一編號", "董事長", "總經理", "發言人", "發言人職稱", "代理發言人",
+		"總機電話", "成立日期", "上市日期", "普通股每股面額", "實收資本額", "私募股數", "特別股",
+		"編制財務報表類型", "股票過戶機構", "過戶電話", "過戶地址", "簽證會計師事務所",
+		"簽證會計師1", "簽證會計師2", "英文簡稱", "英文通訊地址", "傳真機號碼", "電子郵件信箱",
+		"網址", "已發行普通股數或TDR原股發行股數")
 	var rows []model.CompanyProfile
 	for {
 		rec, err := r.Read()
@@ -403,39 +409,39 @@ func parseCompanyProfiles(r *mopsCSVReader, header []string) ([]model.CompanyPro
 			return nil, fmt.Errorf("mops: CSV 列解析失敗: %w", err)
 		}
 		rows = append(rows, model.CompanyProfile{
-			TableDate:     mustDate(parseMOPSDateSimple(get(rec, m, "出表日期"))),
-			Code:          parseMOPSQuoted(get(rec, m, "公司代號")),
-			Name:          parseMOPSQuoted(get(rec, m, "公司名稱")),
-			ShortName:     parseMOPSQuoted(get(rec, m, "公司簡稱")),
-			ForeignReg:    parseMOPSQuoted(get(rec, m, "外國企業註冊地國")),
-			Industry:      parseMOPSQuoted(get(rec, m, "產業別")),
-			Address:       parseMOPSQuoted(get(rec, m, "住址")),
-			TaxID:         parseMOPSQuoted(get(rec, m, "營利事業統一編號")),
-			Chairman:      parseMOPSQuoted(get(rec, m, "董事長")),
-			President:     parseMOPSQuoted(get(rec, m, "總經理")),
-			Spokesman:     parseMOPSQuoted(get(rec, m, "發言人")),
-			SpokesTitle:   parseMOPSQuoted(get(rec, m, "發言人職稱")),
-			DepSpokes:     parseMOPSQuoted(get(rec, m, "代理發言人")),
-			Phone:         parseMOPSQuoted(get(rec, m, "總機電話")),
-			Established:   mustDate(parseMOPSDate(get(rec, m, "成立日期"))),
-			Listed:        mustDate(parseMOPSDate(get(rec, m, "上市日期"))),
-			ParValue:      parseMOPSQuoted(get(rec, m, "普通股每股面額")),
-			Capital:       parseMOPSCents(get(rec, m, "實收資本額")),
-			PrivateStock:  parseMOPSInt(get(rec, m, "私募股數")),
-			Preferred:     parseMOPSInt(get(rec, m, "特別股")),
-			FinType:       parseMOPSQuoted(get(rec, m, "編制財務報表類型")),
-			Transfer:      parseMOPSQuoted(get(rec, m, "股票過戶機構")),
-			TransferPhone: parseMOPSQuoted(get(rec, m, "過戶電話")),
-			TransferAddr:  parseMOPSQuoted(get(rec, m, "過戶地址")),
-			AuditorFirm:   parseMOPSQuoted(get(rec, m, "簽證會計師事務所")),
-			Auditor1:      parseMOPSQuoted(get(rec, m, "簽證會計師1")),
-			Auditor2:      parseMOPSQuoted(get(rec, m, "簽證會計師2")),
-			EngName:       parseMOPSQuoted(get(rec, m, "英文簡稱")),
-			EngAddr:       parseMOPSQuoted(get(rec, m, "英文通訊地址")),
-			Fax:           parseMOPSQuoted(get(rec, m, "傳真機號碼")),
-			Email:         parseMOPSQuoted(get(rec, m, "電子郵件信箱")),
-			Website:       parseMOPSQuoted(get(rec, m, "網址")),
-			SharesOut:     parseMOPSInt(get(rec, m, "已發行普通股數或TDR原股發行股數")),
+			TableDate:     mustDate(parseMOPSDateSimple(cell(rec, c, "出表日期"))),
+			Code:          parseMOPSQuoted(cell(rec, c, "公司代號")),
+			Name:          parseMOPSQuoted(cell(rec, c, "公司名稱")),
+			ShortName:     parseMOPSQuoted(cell(rec, c, "公司簡稱")),
+			ForeignReg:    parseMOPSQuoted(cell(rec, c, "外國企業註冊地國")),
+			Industry:      parseMOPSQuoted(cell(rec, c, "產業別")),
+			Address:       parseMOPSQuoted(cell(rec, c, "住址")),
+			TaxID:         parseMOPSQuoted(cell(rec, c, "營利事業統一編號")),
+			Chairman:      parseMOPSQuoted(cell(rec, c, "董事長")),
+			President:     parseMOPSQuoted(cell(rec, c, "總經理")),
+			Spokesman:     parseMOPSQuoted(cell(rec, c, "發言人")),
+			SpokesTitle:   parseMOPSQuoted(cell(rec, c, "發言人職稱")),
+			DepSpokes:     parseMOPSQuoted(cell(rec, c, "代理發言人")),
+			Phone:         parseMOPSQuoted(cell(rec, c, "總機電話")),
+			Established:   mustDate(parseMOPSDate(cell(rec, c, "成立日期"))),
+			Listed:        mustDate(parseMOPSDate(cell(rec, c, "上市日期"))),
+			ParValue:      parseMOPSQuoted(cell(rec, c, "普通股每股面額")),
+			Capital:       parseMOPSCents(cell(rec, c, "實收資本額")),
+			PrivateStock:  parseMOPSInt(cell(rec, c, "私募股數")),
+			Preferred:     parseMOPSInt(cell(rec, c, "特別股")),
+			FinType:       parseMOPSQuoted(cell(rec, c, "編制財務報表類型")),
+			Transfer:      parseMOPSQuoted(cell(rec, c, "股票過戶機構")),
+			TransferPhone: parseMOPSQuoted(cell(rec, c, "過戶電話")),
+			TransferAddr:  parseMOPSQuoted(cell(rec, c, "過戶地址")),
+			AuditorFirm:   parseMOPSQuoted(cell(rec, c, "簽證會計師事務所")),
+			Auditor1:      parseMOPSQuoted(cell(rec, c, "簽證會計師1")),
+			Auditor2:      parseMOPSQuoted(cell(rec, c, "簽證會計師2")),
+			EngName:       parseMOPSQuoted(cell(rec, c, "英文簡稱")),
+			EngAddr:       parseMOPSQuoted(cell(rec, c, "英文通訊地址")),
+			Fax:           parseMOPSQuoted(cell(rec, c, "傳真機號碼")),
+			Email:         parseMOPSQuoted(cell(rec, c, "電子郵件信箱")),
+			Website:       parseMOPSQuoted(cell(rec, c, "網址")),
+			SharesOut:     parseMOPSInt(cell(rec, c, "已發行普通股數或TDR原股發行股數")),
 		})
 	}
 	return rows, nil
@@ -443,7 +449,9 @@ func parseCompanyProfiles(r *mopsCSVReader, header []string) ([]model.CompanyPro
 
 // 重大訊息（t187ap04_L）
 func parseAnnouncements(r *mopsCSVReader, header []string) ([]model.MajorAnnouncement, error) {
-	m := headerMap(header)
+	c := resolveMOPSCols(header,
+		"出表日期", "發言日期", "發言時間", "公司代號", "公司名稱", "主旨",
+		"符合條款", "事實發生日", "說明")
 	var rows []model.MajorAnnouncement
 	for {
 		rec, err := r.Read()
@@ -453,7 +461,7 @@ func parseAnnouncements(r *mopsCSVReader, header []string) ([]model.MajorAnnounc
 		if err != nil {
 			return nil, fmt.Errorf("mops: CSV 列解析失敗: %w", err)
 		}
-		announceTime := parseMOPSQuoted(get(rec, m, "發言時間"))
+		announceTime := parseMOPSQuoted(cell(rec, c, "發言時間"))
 		// 正規化時間為 HH:MM:SS
 		if len(announceTime) >= 4 && len(announceTime) <= 6 {
 			t := announceTime
@@ -466,15 +474,15 @@ func parseAnnouncements(r *mopsCSVReader, header []string) ([]model.MajorAnnounc
 			announceTime = fmt.Sprintf("%s:%s:%s", t[0:2], t[2:4], t[4:6])
 		}
 		rows = append(rows, model.MajorAnnouncement{
-			TableDate:    mustDate(parseMOPSDateSimple(get(rec, m, "出表日期"))),
-			AnnounceDate: mustDate(parseMOPSDateSimple(get(rec, m, "發言日期"))),
+			TableDate:    mustDate(parseMOPSDateSimple(cell(rec, c, "出表日期"))),
+			AnnounceDate: mustDate(parseMOPSDateSimple(cell(rec, c, "發言日期"))),
 			AnnounceTime: announceTime,
-			Code:         parseMOPSQuoted(get(rec, m, "公司代號")),
-			Name:         parseMOPSQuoted(get(rec, m, "公司名稱")),
-			Subject:      parseMOPSQuoted(get(rec, m, "主旨")),
-			Clause:       parseMOPSQuoted(get(rec, m, "符合條款")),
-			FactDate:     mustDate(parseMOPSDateSimple(get(rec, m, "事實發生日"))),
-			Description:  parseMOPSQuoted(get(rec, m, "說明")),
+			Code:         parseMOPSQuoted(cell(rec, c, "公司代號")),
+			Name:         parseMOPSQuoted(cell(rec, c, "公司名稱")),
+			Subject:      parseMOPSQuoted(cell(rec, c, "主旨")),
+			Clause:       parseMOPSQuoted(cell(rec, c, "符合條款")),
+			FactDate:     mustDate(parseMOPSDateSimple(cell(rec, c, "事實發生日"))),
+			Description:  parseMOPSQuoted(cell(rec, c, "說明")),
 		})
 	}
 	// 依公告日期（新→舊）排序
@@ -484,7 +492,12 @@ func parseAnnouncements(r *mopsCSVReader, header []string) ([]model.MajorAnnounc
 
 // 月營收（t187ap05_L）
 func parseMonthlyRevenues(r *mopsCSVReader, header []string) ([]model.MonthlyRevenueRow, error) {
-	m := headerMap(header)
+	c := resolveMOPSCols(header,
+		"出表日期", "資料年月", "公司代號", "公司名稱", "產業別",
+		"營業收入-當月營收", "營業收入-上月營收", "營業收入-去年當月營收",
+		"營業收入-上月比較增減(%)", "營業收入-去年同月增減(%)",
+		"累計營業收入-當月累計營收", "累計營業收入-去年累計營收",
+		"累計營業收入-前期比較增減(%)", "備註")
 	var rows []model.MonthlyRevenueRow
 	for {
 		rec, err := r.Read()
@@ -494,27 +507,27 @@ func parseMonthlyRevenues(r *mopsCSVReader, header []string) ([]model.MonthlyRev
 		if err != nil {
 			return nil, fmt.Errorf("mops: CSV 列解析失敗: %w", err)
 		}
-		dataYM := parseMOPSQuoted(get(rec, m, "資料年月"))
+		dataYM := parseMOPSQuoted(cell(rec, c, "資料年月"))
 		// 民國年 → 西元年
 		if len(dataYM) == 5 {
 			y, _ := strconv.Atoi(dataYM[:3])
 			dataYM = fmt.Sprintf("%04d%s", y+1911, dataYM[3:])
 		}
 		rows = append(rows, model.MonthlyRevenueRow{
-			TableDate:        mustDate(parseMOPSDateSimple(get(rec, m, "出表日期"))),
+			TableDate:        mustDate(parseMOPSDateSimple(cell(rec, c, "出表日期"))),
 			DataYearMonth:    dataYM,
-			Code:             parseMOPSQuoted(get(rec, m, "公司代號")),
-			Name:             parseMOPSQuoted(get(rec, m, "公司名稱")),
-			Industry:         parseMOPSQuoted(get(rec, m, "產業別")),
-			Revenue:          parseMOPSCents(get(rec, m, "營業收入-當月營收")),
-			LastMonthRevenue: parseMOPSCents(get(rec, m, "營業收入-上月營收")),
-			LastYearRevenue:  parseMOPSCents(get(rec, m, "營業收入-去年當月營收")),
-			MoMChange:        parseMOPSFloat(get(rec, m, "營業收入-上月比較增減(%)")),
-			YoYChange:        parseMOPSFloat(get(rec, m, "營業收入-去年同月增減(%)")),
-			CumRevenue:       parseMOPSCents(get(rec, m, "累計營業收入-當月累計營收")),
-			CumLastYear:      parseMOPSCents(get(rec, m, "累計營業收入-去年累計營收")),
-			CumChange:        parseMOPSFloat(get(rec, m, "累計營業收入-前期比較增減(%)")),
-			Note:             parseMOPSQuoted(get(rec, m, "備註")),
+			Code:             parseMOPSQuoted(cell(rec, c, "公司代號")),
+			Name:             parseMOPSQuoted(cell(rec, c, "公司名稱")),
+			Industry:         parseMOPSQuoted(cell(rec, c, "產業別")),
+			Revenue:          parseMOPSCents(cell(rec, c, "營業收入-當月營收")),
+			LastMonthRevenue: parseMOPSCents(cell(rec, c, "營業收入-上月營收")),
+			LastYearRevenue:  parseMOPSCents(cell(rec, c, "營業收入-去年當月營收")),
+			MoMChange:        parseMOPSFloat(cell(rec, c, "營業收入-上月比較增減(%)")),
+			YoYChange:        parseMOPSFloat(cell(rec, c, "營業收入-去年同月增減(%)")),
+			CumRevenue:       parseMOPSCents(cell(rec, c, "累計營業收入-當月累計營收")),
+			CumLastYear:      parseMOPSCents(cell(rec, c, "累計營業收入-去年累計營收")),
+			CumChange:        parseMOPSFloat(cell(rec, c, "累計營業收入-前期比較增減(%)")),
+			Note:             parseMOPSQuoted(cell(rec, c, "備註")),
 		})
 	}
 	sort.Slice(rows, func(i, j int) bool { return rows[i].DataYearMonth > rows[j].DataYearMonth })
@@ -523,7 +536,10 @@ func parseMonthlyRevenues(r *mopsCSVReader, header []string) ([]model.MonthlyRev
 
 // 損益表摘要（t187ap14_L）
 func parseIncomeSummaries(r *mopsCSVReader, header []string) ([]model.IncomeStatementRow, error) {
-	m := headerMap(header)
+	c := resolveMOPSCols(header,
+		"出表日期", "年度", "季別", "公司代號", "公司名稱", "產業別",
+		"基本每股盈餘(元)", "普通股每股面額", "營業收入", "營業利益",
+		"營業外收入及支出", "稅後淨利")
 	var rows []model.IncomeStatementRow
 	for {
 		rec, err := r.Read()
@@ -533,22 +549,22 @@ func parseIncomeSummaries(r *mopsCSVReader, header []string) ([]model.IncomeStat
 		if err != nil {
 			return nil, fmt.Errorf("mops: CSV 列解析失敗: %w", err)
 		}
-		year, _ := parseROCYear(get(rec, m, "年度"))
-		q, _ := strconv.Atoi(strings.TrimSpace(get(rec, m, "季別")))
+		year, _ := parseROCYear(cell(rec, c, "年度"))
+		q, _ := strconv.Atoi(strings.TrimSpace(cell(rec, c, "季別")))
 
 		rows = append(rows, model.IncomeStatementRow{
-			TableDate:         mustDate(parseMOPSDateSimple(get(rec, m, "出表日期"))),
+			TableDate:         mustDate(parseMOPSDateSimple(cell(rec, c, "出表日期"))),
 			Year:              year,
 			Quarter:           q,
-			Code:              parseMOPSQuoted(get(rec, m, "公司代號")),
-			Name:              parseMOPSQuoted(get(rec, m, "公司名稱")),
-			Industry:          parseMOPSQuoted(get(rec, m, "產業別")),
-			EPS:               parseMOPSFloat(get(rec, m, "基本每股盈餘(元)")),
-			ParValue:          parseMOPSQuoted(get(rec, m, "普通股每股面額")),
-			Revenue:           parseMOPSCents(get(rec, m, "營業收入")),
-			OperatingProfit:   parseMOPSCents(get(rec, m, "營業利益")),
-			NonOperatingItems: parseMOPSCents(get(rec, m, "營業外收入及支出")),
-			NetIncome:         parseMOPSCents(get(rec, m, "稅後淨利")),
+			Code:              parseMOPSQuoted(cell(rec, c, "公司代號")),
+			Name:              parseMOPSQuoted(cell(rec, c, "公司名稱")),
+			Industry:          parseMOPSQuoted(cell(rec, c, "產業別")),
+			EPS:               parseMOPSFloat(cell(rec, c, "基本每股盈餘(元)")),
+			ParValue:          parseMOPSQuoted(cell(rec, c, "普通股每股面額")),
+			Revenue:           parseMOPSCents(cell(rec, c, "營業收入")),
+			OperatingProfit:   parseMOPSCents(cell(rec, c, "營業利益")),
+			NonOperatingItems: parseMOPSCents(cell(rec, c, "營業外收入及支出")),
+			NetIncome:         parseMOPSCents(cell(rec, c, "稅後淨利")),
 		})
 	}
 	sort.Slice(rows, func(i, j int) bool {
@@ -562,7 +578,11 @@ func parseIncomeSummaries(r *mopsCSVReader, header []string) ([]model.IncomeStat
 
 // 獲利能力指標（t187ap17_L）
 func parseProfitabilityRatios(r *mopsCSVReader, header []string) ([]model.ProfitabilityRatio, error) {
-	m := headerMap(header)
+	c := resolveMOPSCols(header,
+		"出表日期", "年度", "季別", "公司代號", "公司名稱",
+		"營業收入(百萬元)", "毛利率(%)(營業毛利)/(營業收入)",
+		"營業利益率(%)(營業利益)/(營業收入)", "稅前純益率(%)(稅前純益)/(營業收入)",
+		"稅後純益率(%)(稅後純益)/(營業收入)")
 	var rows []model.ProfitabilityRatio
 	for {
 		rec, err := r.Read()
@@ -572,20 +592,20 @@ func parseProfitabilityRatios(r *mopsCSVReader, header []string) ([]model.Profit
 		if err != nil {
 			return nil, fmt.Errorf("mops: CSV 列解析失敗: %w", err)
 		}
-		year, _ := parseROCYear(get(rec, m, "年度"))
-		q, _ := strconv.Atoi(strings.TrimSpace(get(rec, m, "季別")))
+		year, _ := parseROCYear(cell(rec, c, "年度"))
+		q, _ := strconv.Atoi(strings.TrimSpace(cell(rec, c, "季別")))
 
 		rows = append(rows, model.ProfitabilityRatio{
-			TableDate:       mustDate(parseMOPSDateSimple(get(rec, m, "出表日期"))),
+			TableDate:       mustDate(parseMOPSDateSimple(cell(rec, c, "出表日期"))),
 			Year:            year,
 			Quarter:         q,
-			Code:            parseMOPSQuoted(get(rec, m, "公司代號")),
-			Name:            parseMOPSQuoted(get(rec, m, "公司名稱")),
-			RevenueMillion:  parseMOPSFloat(get(rec, m, "營業收入(百萬元)")),
-			GrossMargin:     parseMOPSFloat(get(rec, m, "毛利率(%)(營業毛利)/(營業收入)")),
-			OperatingMargin: parseMOPSFloat(get(rec, m, "營業利益率(%)(營業利益)/(營業收入)")),
-			PreTaxMargin:    parseMOPSFloat(get(rec, m, "稅前純益率(%)(稅前純益)/(營業收入)")),
-			NetMargin:       parseMOPSFloat(get(rec, m, "稅後純益率(%)(稅後純益)/(營業收入)")),
+			Code:            parseMOPSQuoted(cell(rec, c, "公司代號")),
+			Name:            parseMOPSQuoted(cell(rec, c, "公司名稱")),
+			RevenueMillion:  parseMOPSFloat(cell(rec, c, "營業收入(百萬元)")),
+			GrossMargin:     parseMOPSFloat(cell(rec, c, "毛利率(%)(營業毛利)/(營業收入)")),
+			OperatingMargin: parseMOPSFloat(cell(rec, c, "營業利益率(%)(營業利益)/(營業收入)")),
+			PreTaxMargin:    parseMOPSFloat(cell(rec, c, "稅前純益率(%)(稅前純益)/(營業收入)")),
+			NetMargin:       parseMOPSFloat(cell(rec, c, "稅後純益率(%)(稅後純益)/(營業收入)")),
 		})
 	}
 	sort.Slice(rows, func(i, j int) bool {
@@ -613,20 +633,33 @@ func headerMap(header []string) map[string]int {
 	return m
 }
 
-// get 以 header name 取值；不存在時回傳 ""。
-func get(rec []string, m map[string]int, key string) string {
-	idx, ok := m[key]
-	if !ok {
-		// 嘗試模糊比對（部分欄位名含多餘空格）
-		for k, v := range m {
-			if strings.Contains(k, key) || strings.Contains(key, k) {
-				idx = v
-				ok = true
-				break
+// resolveMOPSCols 預解析 header 欄位 index（每請求一次，取代逐列模糊比對）。
+// 缺失欄位以 -1 標記；含既有 get() 之模糊比對邏輯（部分欄位名含多餘空格）。
+func resolveMOPSCols(header []string, names ...string) map[string]int {
+	m := headerMap(header)
+	c := make(map[string]int, len(names))
+	for _, n := range names {
+		idx, ok := m[n]
+		if !ok {
+			for k, v := range m {
+				if strings.Contains(k, n) || strings.Contains(n, k) {
+					idx, ok = v, true
+					break
+				}
 			}
 		}
+		if !ok {
+			idx = -1
+		}
+		c[n] = idx
 	}
-	if !ok || idx >= len(rec) {
+	return c
+}
+
+// cell 以預解析 index 取值；缺失或越界回傳 ""。
+func cell(rec []string, c map[string]int, name string) string {
+	idx, ok := c[name]
+	if !ok || idx < 0 || idx >= len(rec) {
 		return ""
 	}
 	return rec[idx]
