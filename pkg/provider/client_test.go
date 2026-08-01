@@ -131,11 +131,9 @@ func TestTransportConnectionPoolParams(t *testing.T) {
 // 共用連線池：同一主機連續請求可復用連線（Keep-Alive 生效）。
 func TestKeepAliveConnectionReuse(t *testing.T) {
 	var active, closed int32
-	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	srv := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "{}")
 	}))
-	defer srv.Close()
-	conn := srv.Config.ConnState
 	srv.Config.ConnState = func(c net.Conn, s http.ConnState) {
 		if s == http.StateNew {
 			atomic.AddInt32(&active, 1)
@@ -143,8 +141,9 @@ func TestKeepAliveConnectionReuse(t *testing.T) {
 		if s == http.StateClosed {
 			atomic.AddInt32(&closed, 1)
 		}
-		conn(c, s)
 	}
+	srv.Start()
+	defer srv.Close()
 
 	c := fastClient()
 	for i := 0; i < 3; i++ {

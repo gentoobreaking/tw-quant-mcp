@@ -1,7 +1,7 @@
 package provider
 
 // TAIFEX Adapter 契約測試（T013）：以 2026-07-31 實地錄製之官方 raw fixtures
-// （testdata/taifex_*.csv 為 DL 下載 CSV 轉 UTF-8；tfx_*.json 為 API 回應）
+// （testdata/taifex/ 下 taifex_*.csv 為 DL 下載 CSV 轉 UTF-8；tfx_*.json 為 API 回應）
 // 驗證 Fetch→Validate→Normalize：欄位型別、單位換算（千元 → 元，§5.1）、
 // 日期格式（西元 → YYYY-MM-DD）、DL 表頭契約、缺口/補檔/範圍查詢流程（§9.3）。
 
@@ -22,10 +22,10 @@ import (
 	"tw-quant-mcp/pkg/model"
 )
 
-// taifexFixture 讀取 testdata/<name> 之 TAIFEX 官方錄製回應。
+// taifexFixture 讀取 testdata/taifex/<name> 之 TAIFEX 官方錄製回應。
 func taifexFixture(t *testing.T, name string) []byte {
 	t.Helper()
-	b, err := os.ReadFile(filepath.Join("testdata", name))
+	b, err := os.ReadFile(filepath.Join("testdata", "taifex", name))
 	if err != nil {
 		t.Fatalf("讀取 fixture %s 失敗: %v", name, err)
 	}

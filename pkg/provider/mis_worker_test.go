@@ -2,8 +2,11 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -13,13 +16,21 @@ import (
 	"tw-quant-mcp/pkg/model"
 )
 
-// misFixture 為 mis.twse.com.tw/stock/api/getStockInfo.jsp 之真實回應
-// （2026-07-31 14:30 收盤後抓取，tse_2330.tw|otc_6547.tw 兩檔）。
-const misFixture = `{"msgArray":[{"@":"2330.tw","tv":"4512","ps":"4411","pid":"9.tse.tw|13527","pz":"2425.0000","bp":"0","fv":"156","oa":"2425.0000","ob":"2420.0000","m%":"000000","^":"20260731","key":"tse_2330.tw_20260731","a":"-","b":"2425.0000_2420.0000_2415.0000_2410.0000_2405.0000_","c":"2330","#":"13.tse.tw|1969","d":"20260731","%":"14:30:00","ch":"2330.tw","tlong":"1785479400000","ot":"14:30:00","f":"-","g":"1989_138_237_300_307_","ip":"0","mt":"000000","ov":"93894","h":"2425.0000","i":"24","it":"12","oz":"2425.0000","l":"2345.0000","n":"台積電","o":"2350.0000","p":"0","ex":"tse","s":"4512","t":"13:30:00","u":"2425.0000","v":"56896","w":"1985.0000","nf":"台灣積體電路製造股份有限公司","y":"2205.0000","z":"2425.0000","ts":"0"},{"@":"6547.tw","tv":"93","ps":"92","pid":"9.otc.tw|869","pz":"45.8000","bp":"0","fv":"4","oa":"49.0000","ob":"45.8000","m%":"000000","^":"20260731","key":"otc_6547.tw_20260731","a":"45.8000_45.8500_45.9000_45.9500_46.0000_","b":"45.7500_45.7000_45.6500_45.6000_45.5500_","c":"6547","#":"13.otc.tw|1403","d":"20260731","%":"14:30:00","ch":"6547.tw","tlong":"1785479400000","ot":"14:30:00","f":"3_3_3_8_9_","g":"5_12_11_23_8_","ip":"0","mt":"000000","ov":"100","h":"47.2000","i":"22","it":"12","oz":"46.0500","l":"45.7000","n":"高端疫苗","o":"46.2500","p":"0","ex":"otc","s":"93","t":"13:30:00","u":"50.1000","v":"1584","w":"41.0500","nf":"高端疫苗生物製劑股份有限公司","y":"45.6000","z":"45.8000","ts":"0"}],"referer":"","userDelay":5000,"rtcode":"0000","queryTime":{"sysDate":"20260731","stockInfoItem":13493,"stockInfo":4497,"sessionStr":"UserSession","sysTime":"18:51:24","showChart":false,"sessionFromTime":-1,"sessionLatestTime":-1},"rtmessage":"OK"}`
+// misFixtureBytes 讀取 testdata/mis/tick_01.json（2026-07-31 錄製之官方 raw
+// 回應，tse_2330.tw|otc_6547.tw 兩檔）。多 tick 序列（tick_01..05）由
+// cmd/fixtures -host mis 於 2026-08-01 錄製（間隔 9s，資料日 2026-07-31）。
+func misFixtureBytes(t *testing.T) []byte {
+	t.Helper()
+	b, err := os.ReadFile(filepath.Join("testdata", "mis", "tick_01.json"))
+	if err != nil {
+		t.Fatalf("讀取 MIS fixture 失敗: %v", err)
+	}
+	return b
+}
 
 // 真實 fixture 解析：欄位轉換與單位（§8.3/§5.1）。
 func TestParseMISReal(t *testing.T) {
-	snaps, err := parseMIS([]byte(misFixture))
+	snaps, err := parseMIS(misFixtureBytes(t))
 	if err != nil {
 		t.Fatalf("parseMIS 失敗: %v", err)
 	}
@@ -61,10 +72,46 @@ func TestParseMISReal(t *testing.T) {
 	}
 }
 
+// 多 tick 序列回放（§13 錄製回放）：testdata/mis/tick_01..05.json 為
+// 2026-08-01 以 cmd/fixtures 錄製（間隔 9s），全部應可解析且欄位穩定。
+func TestParseMISMultiTickSequence(t *testing.T) {
+	var prevTlong int64
+	for i := 1; i <= 5; i++ {
+		b, err := os.ReadFile(filepath.Join("testdata", "mis", fmt.Sprintf("tick_%02d.json", i)))
+		if err != nil {
+			t.Fatalf("讀取 tick_%02d 失敗: %v", i, err)
+		}
+		snaps, err := parseMIS(b)
+		if err != nil {
+			t.Fatalf("tick_%02d 解析失敗: %v", i, err)
+		}
+		if len(snaps) != 2 {
+			t.Fatalf("tick_%02d 應 2 檔（2330/6547），實際 %d", i, len(snaps))
+		}
+		for _, s := range snaps {
+			if s.Code != "2330" && s.Code != "6547" {
+				t.Errorf("tick_%02d 出現未知代碼 %s", i, s.Code)
+			}
+			if s.Last <= 0 || s.MinuteVol <= 0 {
+				t.Errorf("tick_%02d %s 價格/量應 > 0: %+v", i, s.Code, s)
+			}
+			if i > 1 && s.Time.UnixMilli() < prevTlong {
+				t.Errorf("tick 序列時間應不遞減（tick_%02d）", i)
+			}
+			if i == 5 && s.Code == "2330" {
+				prevTlong = s.Time.UnixMilli()
+			}
+		}
+		if i == 1 {
+			prevTlong = snaps[0].Time.UnixMilli()
+		}
+	}
+}
+
 // 五檔轉換（§8.3/T010）：b/g=買價/買量、a/f=賣價/賣量，"_" 分隔字串、
 // 單位張→股；2330 漲停無賣單（a="-"）應為空。
 func TestParseMISBook(t *testing.T) {
-	snaps, err := parseMIS([]byte(misFixture))
+	snaps, err := parseMIS(misFixtureBytes(t))
 	if err != nil {
 		t.Fatalf("parseMIS 失敗: %v", err)
 	}
@@ -171,7 +218,7 @@ func TestMISPollAndStore(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		gotQuery.Store(r.URL.RawQuery)
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(misFixture))
+		w.Write(misFixtureBytes(t))
 	}))
 	defer srv.Close()
 
@@ -237,7 +284,7 @@ func TestMISToKlineEndToEnd(t *testing.T) {
 	client := NewBaseClient("mis.twse.com.tw",
 		WithRateInterval(time.Microsecond), WithJitterRatio(0))
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(misFixture))
+		w.Write(misFixtureBytes(t))
 	}))
 	defer srv.Close()
 	wk := NewMISWorker(client, testWatchlist(), rings,
@@ -265,7 +312,7 @@ func TestMISToKlineEndToEnd(t *testing.T) {
 func TestMISIntradayCompute(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(misFixture))
+		w.Write(misFixtureBytes(t))
 	}))
 	defer srv.Close()
 

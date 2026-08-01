@@ -60,7 +60,7 @@ func TestWorkerRunSamples(t *testing.T) {
 			w.WriteHeader(http.StatusOK)
 			return
 		}
-		w.Write([]byte(misFixture))
+		w.Write(misFixtureBytes(t))
 	}))
 	defer srv.Close()
 
@@ -108,7 +108,7 @@ func TestWorkerRunDegraded(t *testing.T) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		w.Write([]byte(misFixture))
+		w.Write(misFixtureBytes(t))
 	}))
 	defer srv.Close()
 
@@ -205,7 +205,7 @@ func TestWorkerRunDayReset(t *testing.T) {
 			w.Write([]byte(`{"rtcode":"5000","msgArray":[]}`))
 			return
 		}
-		w.Write([]byte(misFixture))
+		w.Write(misFixtureBytes(t))
 	}))
 	defer srv.Close()
 

@@ -473,6 +473,7 @@ func TestFGGetTradingCalendar(t *testing.T) {
 // ************** 路徑驗證（真實 TAIFEXQuery + httptest，§9.3） **************
 
 // readFixture 讀取 provider 套件之官方錄製 fixture（測試工作目錄為 pkg/mcp）。
+// name 需含子目錄前綴（如 "taifex/tfx_PutCallRatio.json"）。
 func readFixture(t *testing.T, name string) []byte {
 	t.Helper()
 	b, err := os.ReadFile(filepath.Join("..", "provider", "testdata", name))
@@ -486,9 +487,9 @@ func readFixture(t *testing.T, name string) []byte {
 func tfxAPIHandler(t *testing.T, w http.ResponseWriter, r *http.Request) {
 	switch {
 	case strings.HasSuffix(r.URL.Path, "/PutCallRatio"):
-		w.Write(readFixture(t, "tfx_PutCallRatio.json"))
+		w.Write(readFixture(t, "taifex/tfx_PutCallRatio.json"))
 	case strings.HasSuffix(r.URL.Path, "/DailyMarketReportFut"):
-		w.Write(readFixture(t, "tfx_fut.json"))
+		w.Write(readFixture(t, "taifex/tfx_fut.json"))
 	default:
 		http.NotFound(w, r)
 	}
@@ -534,7 +535,7 @@ func TestFGFuturesPathLatestUsesAPI(t *testing.T) {
 			return
 		}
 		atomic.AddInt32(&dlDownloads, 1)
-		w.Write(readFixture(t, "taifex_fut_daily.csv"))
+		w.Write(readFixture(t, "taifex/taifex_fut_daily.csv"))
 	}))
 	t.Cleanup(func() { apiSrv.Close(); dlSrv.Close() })
 
@@ -572,7 +573,7 @@ func TestFGFuturesPathHistoryDLAndL2(t *testing.T) {
 			return
 		}
 		atomic.AddInt32(&downloads, 1)
-		w.Write(readFixture(t, "taifex_fut_daily.csv"))
+		w.Write(readFixture(t, "taifex/taifex_fut_daily.csv"))
 	}))
 	t.Cleanup(func() { apiSrv.Close(); dlSrv.Close() })
 

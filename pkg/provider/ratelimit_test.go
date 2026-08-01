@@ -60,9 +60,11 @@ func TestJitterRanges(t *testing.T) {
 
 // TestWaitSequentialTiming 驗證 Wait 保證間隔 ≥ interval（rate 層）。
 // 首個 Wait 持有初始權杖可立即回傳，故間隔自第 2 個起檢查。
+// 注入 no-op sleep 以排除 jitter 實際等待（避免時序抖動造成 flaky）。
 func TestWaitSequentialTiming(t *testing.T) {
 	const interval = 30 * time.Millisecond
 	l := NewHostLimiter("test.host", interval, 0)
+	l.SetSleepFunc(func(_ context.Context, _ time.Duration) error { return nil })
 
 	var starts []time.Time
 	for i := 0; i < 4; i++ {

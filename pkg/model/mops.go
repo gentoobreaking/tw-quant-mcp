@@ -5,39 +5,39 @@ package model
 
 // CompanyProfile 為公司基本資料（t187ap03_L）。
 type CompanyProfile struct {
-	TableDate     string `json:"table_date"`         // 出表日期 YYYY-MM-DD
-	Code          string `json:"code"`               // 公司代號
-	Name          string `json:"name"`               // 公司名稱
-	ShortName     string `json:"short_name"`         // 公司簡稱
-	ForeignReg    string `json:"foreign_reg"`        // 外國企業註冊地國
-	Industry      string `json:"industry"`           // 產業別
-	Address       string `json:"address"`            // 住址
-	TaxID         string `json:"tax_id"`             // 營利事業統一編號
-	Chairman      string `json:"chairman"`           // 董事長
-	President     string `json:"president"`          // 總經理
-	Spokesman     string `json:"spokesman"`          // 發言人
-	SpokesTitle   string `json:"spokesman_title"`    // 發言人職稱
-	DepSpokes     string `json:"deputy_spokesman"`   // 代理發言人
-	Phone         string `json:"phone"`              // 總機電話
-	Established   string `json:"established"`        // 成立日期 YYYY-MM-DD
-	Listed        string `json:"listed"`             // 上市日期 YYYY-MM-DD
-	ParValue      string `json:"par_value"`          // 普通股每股面額（原文）
-	Capital       int64  `json:"capital"`            // 實收資本額（元）
-	PrivateStock  int64  `json:"private_stock"`      // 私募股數（股）
-	Preferred     int64  `json:"preferred_stock"`    // 特別股（股）
-	FinType       string `json:"fin_report_type"`    // 編制財務報表類型
-	Transfer      string `json:"transfer_agent"`     // 股票過戶機構
-	TransferPhone string `json:"transfer_phone"`     // 過戶電話
-	TransferAddr  string `json:"transfer_address"`   // 過戶地址
-	AuditorFirm   string `json:"auditor_firm"`       // 簽證會計師事務所
-	Auditor1      string `json:"auditor_1"`          // 簽證會計師1
-	Auditor2      string `json:"auditor_2"`          // 簽證會計師2
-	EngName       string `json:"english_name"`       // 英文簡稱
-	EngAddr       string `json:"english_address"`    // 英文通訊地址
-	Fax           string `json:"fax"`                // 傳真機號碼
-	Email         string `json:"email"`              // 電子郵件信箱
-	Website       string `json:"website"`            // 網址
-	SharesOut     int64  `json:"shares_outstanding"` // 已發行普通股數（股）
+	TableDate     string `json:"table_date"`                 // 出表日期 YYYY-MM-DD
+	Code          string `json:"code"`                       // 公司代號
+	Name          string `json:"name"`                       // 公司名稱
+	ShortName     string `json:"short_name"`                 // 公司簡稱
+	ForeignReg    string `json:"foreign_reg,omitempty"`      // 外國企業註冊地國（缺值省略，§5.1）
+	Industry      string `json:"industry"`                   // 產業別
+	Address       string `json:"address"`                    // 住址
+	TaxID         string `json:"tax_id"`                     // 營利事業統一編號
+	Chairman      string `json:"chairman"`                   // 董事長
+	President     string `json:"president"`                  // 總經理
+	Spokesman     string `json:"spokesman"`                  // 發言人
+	SpokesTitle   string `json:"spokesman_title"`            // 發言人職稱
+	DepSpokes     string `json:"deputy_spokesman,omitempty"` // 代理發言人（缺值省略）
+	Phone         string `json:"phone"`                      // 總機電話
+	Established   string `json:"established"`                // 成立日期 YYYY-MM-DD
+	Listed        string `json:"listed"`                     // 上市日期 YYYY-MM-DD
+	ParValue      string `json:"par_value"`                  // 普通股每股面額（原文）
+	Capital       int64  `json:"capital"`                    // 實收資本額（元）
+	PrivateStock  int64  `json:"private_stock"`              // 私募股數（股）
+	Preferred     int64  `json:"preferred_stock"`            // 特別股（股）
+	FinType       string `json:"fin_report_type,omitempty"`  // 編制財務報表類型
+	Transfer      string `json:"transfer_agent,omitempty"`   // 股票過戶機構
+	TransferPhone string `json:"transfer_phone,omitempty"`   // 過戶電話
+	TransferAddr  string `json:"transfer_address,omitempty"` // 過戶地址
+	AuditorFirm   string `json:"auditor_firm,omitempty"`     // 簽證會計師事務所
+	Auditor1      string `json:"auditor_1,omitempty"`        // 簽證會計師1
+	Auditor2      string `json:"auditor_2,omitempty"`        // 簽證會計師2
+	EngName       string `json:"english_name,omitempty"`     // 英文簡稱
+	EngAddr       string `json:"english_address,omitempty"`  // 英文通訊地址
+	Fax           string `json:"fax,omitempty"`              // 傳真機號碼
+	Email         string `json:"email,omitempty"`            // 電子郵件信箱
+	Website       string `json:"website,omitempty"`          // 網址
+	SharesOut     int64  `json:"shares_outstanding"`         // 已發行普通股數（股）
 }
 
 // MajorAnnouncement 為一筆重大訊息（t187ap04_L）。

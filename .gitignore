@@ -2,6 +2,9 @@
 /bin/
 /tw-quant-mcp
 *.exe
+# cmd/fixtures 之編譯產物（錄製工具；T019）
+/fixtures
+/loadtest
 
 # L2 資料（DATA_DIR，預設 ~/.tw-quant-mcp/data）
 /data/
