@@ -2,7 +2,7 @@ BINARY := bin/tw-quant-mcp
 VERSION ?= 0.1.0
 LDFLAGS := -ldflags "-X main.version=$(VERSION)"
 
-.PHONY: build test test-race test-live loadtest fixtures lint vet fmt check run clean
+.PHONY: build test test-race test-live loadtest fixtures lint vet fmt check run clean snapshots snapshots-call snapshots-render
 
 build:
 	go build $(LDFLAGS) -o $(BINARY) ./cmd/mcp-server
@@ -61,3 +61,16 @@ soak:
 # 發布檢查：CGO-free 建置 + tools/list 36 工具
 release-check:
 	./scripts/release_check.sh $(VERSION)
+
+# T020：36 工具真實呼叫 + 截圖（一鍵：重建→呼叫→渲染）
+# 子流程與參數說明見 scripts/README-snapshots.md
+snapshots:
+	./scripts/run_all.sh
+
+# 只呼叫 36 工具（真資料源，更新 snapshots/raw/*.json）
+snapshots-call:
+	./scripts/run_all.sh --call-only
+
+# 只渲染 PNG（用現有 raw JSON，秒級）
+snapshots-render:
+	./scripts/run_all.sh --render-only
