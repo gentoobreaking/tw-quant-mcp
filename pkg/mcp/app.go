@@ -54,7 +54,7 @@ type MOPSFetcher interface {
 // App 是 MCP Engine Layer 之組裝根（§6）：
 // Symbol Registry / 交易日曆 / 盤中引擎（Watchlist + RingStore +
 // Aggregator + IntradayStore）/ 風險掃描器 / 盤後資料源（TWSE-WEB /
-// TWSE-API / TPEx-API，T011）/ 快取層 / Tool Registry。
+// TWSE-API / TPEx-API，T011）/ TAIFEX 查詢層（T013）/ 快取層 / Tool Registry。
 type App struct {
 	cfg       *config.Config
 	symbols   *model.Registry
@@ -68,6 +68,7 @@ type App struct {
 	twseAPI   APIFetcher
 	tpex      TPExFetcher
 	mops      MOPSFetcher
+	taifex    TAIFEXQuerier
 	cache     *cache.Cache
 	core      *Core
 	registry  *Registry
@@ -122,6 +123,11 @@ func WithAppMOPS(m MOPSFetcher) AppOption {
 	return func(a *App) { a.mops = m }
 }
 
+// WithAppTAIFEX 注入 TAIFEX 查詢層（測試用；預設以真實 API/DL 來源建立）。
+func WithAppTAIFEX(q TAIFEXQuerier) AppOption {
+	return func(a *App) { a.taifex = q }
+}
+
 // WithAppCache 注入快取層（測試用；預設 L1-only 快取）。
 func WithAppCache(c *cache.Cache) AppOption {
 	return func(a *App) { a.cache = c }
@@ -169,6 +175,15 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 	}
 	if a.risk == nil {
 		a.risk = NewDaytradeScanner(a.symbols)
+	}
+	if a.taifex == nil {
+		var err error
+		if a.taifex, err = provider.NewTAIFEXQuery(
+			provider.NewTAIFEXAPISource(),
+			provider.NewTAIFEXDLSource(),
+			a.cache, a.now); err != nil {
+			return nil, fmt.Errorf("mcp: TAIFEX 查詢層初始化失敗: %w", err)
+		}
 	}
 	a.registry = buildRegistry()
 	a.core = NewCore(a, a.registry,
@@ -334,5 +349,6 @@ func buildRegistry() *Registry {
 	})
 	registerBCTools(r)
 	registerDETools(r)
+	registerFGTools(r)
 	return r
 }

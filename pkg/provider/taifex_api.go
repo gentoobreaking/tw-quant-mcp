@@ -61,6 +61,15 @@ func NewTAIFEXAPISource(opts ...Option) *TAIFEXAPISource {
 	return &TAIFEXAPISource{client: NewBaseClient("openapi.taifex.com.tw", opts...)}
 }
 
+// NewTAIFEXAPISourceWithBase 建立 TAIFEX-API 來源並指定基底 URL
+// （測試/多環境覆寫用；base 應含 /v1 前綴）。
+func NewTAIFEXAPISourceWithBase(base string) *TAIFEXAPISource {
+	return &TAIFEXAPISource{
+		client:  NewBaseClient("openapi.taifex.com.tw", WithRateInterval(time.Microsecond)),
+		baseURL: base,
+	}
+}
+
 // TAIFEXAPISource 實作 SourceContract（§2.2），ID = TAIFEX_API。
 type TAIFEXAPISource struct {
 	client  *BaseClient

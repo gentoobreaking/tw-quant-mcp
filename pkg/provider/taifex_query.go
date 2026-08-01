@@ -43,11 +43,13 @@ const gapRetryWindow = 3
 // TAIFEXQueryResult 為單一 (dataset, date) 之查詢結果。
 // Data 為 Normalized Model 之 JSON 陣列；缺口時為 nil（配合 Note 註明）。
 // DerivedFrom 非空表示以鄰近交易日補檔（§9.3 缺口處理）。
+// IsCached 隨結果持久化於 L2（§3.2 is_cached：重啟後命中仍正確標記）。
 type TAIFEXQueryResult struct {
 	Data        json.RawMessage `json:"data"`
 	Source      string          `json:"source"`       // model.SourceTAIFEXAPI / SourceTAIFEXDL
 	DerivedFrom string          `json:"derived_from"` // YYYY-MM-DD；空=無補檔
 	Note        string          `json:"note"`         // 缺口註記；空=正常
+	IsCached    bool            `json:"is_cached,omitempty"`
 }
 
 // gapError 承載缺口結果，經 GetOrFetch 錯誤路徑回傳（缺口不寫入 L2）。
@@ -78,6 +80,12 @@ func NewTAIFEXQuery(api *TAIFEXAPISource, dl *TAIFEXDLSource, c *cache.Cache, no
 	return &TAIFEXQuery{api: api, dl: dl, cache: c, now: now}, nil
 }
 
+// LatestTradingDay 回傳最新交易日（YYYY-MM-DD，公開包裝，供 §10.F 工具
+// 於 date 省略時以 hot tier API 判定）。
+func (q *TAIFEXQuery) LatestTradingDay(ctx context.Context) (string, error) {
+	return q.latestTradingDay(ctx)
+}
+
 // queryKey 建構 (dataset, date, contract) 之統一快取鍵。
 func (q *TAIFEXQuery) queryKey(ds model.TAIFEXDataset, date, contract string) string {
 	return cache.KeyString(taifexKeySource, string(ds), date, contract, nil)
@@ -99,6 +107,9 @@ func (q *TAIFEXQuery) Fetch(ctx context.Context, ds model.TAIFEXDataset, date, c
 			return ge.res, fromCache, nil // 缺口：null 資料 + Note
 		}
 		return TAIFEXQueryResult{}, fromCache, err
+	}
+	if fromCache {
+		res.IsCached = true // 快取命中標記（§3.2 is_cached；隨 L2 持久）
 	}
 	return res, fromCache, nil
 }
@@ -264,6 +275,7 @@ func (q *TAIFEXQuery) FetchRange(ctx context.Context, ds model.TAIFEXDataset, st
 		if v, ok, err := cache.Get[TAIFEXQueryResult](ctx, q.cache, key, cache.WithDataset(cache.DatasetTAIFEXHistory, d)); err != nil {
 			return nil, err
 		} else if ok {
+			v.IsCached = true // L2 命中（重啟後仍正確標記，§3.2）
 			out[d] = v
 			continue
 		}

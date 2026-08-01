@@ -98,6 +98,15 @@ func NewTAIFEXDLSource(opts ...Option) *TAIFEXDLSource {
 	return &TAIFEXDLSource{client: NewBaseClient("www.taifex.com.tw", opts...)}
 }
 
+// NewTAIFEXDLSourceWithBase 建立 TAIFEX-DL 來源並指定基底 URL
+// （測試/多環境覆寫用；base 應含 /cht/3/ 前綴）。
+func NewTAIFEXDLSourceWithBase(base string) *TAIFEXDLSource {
+	return &TAIFEXDLSource{
+		client:  NewBaseClient("www.taifex.com.tw", WithRateInterval(time.Microsecond), WithTimeout(defaultDLTimeout)),
+		baseURL: base,
+	}
+}
+
 // defaultDLTimeout 為 DL 下載 timeout（大 CSV）。
 const defaultDLTimeout = 60 * time.Second
 

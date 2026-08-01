@@ -127,8 +127,60 @@ func (defaultChartUpdater) UpdateEnvelope(env *model.Envelope, def *ToolDef, opt
 		env.ChartMeta = scatterChart("殖利率 / PE 散佈", "pe", "dividend_yield_pct", "dividend_per_share")
 	case "get_financial_health_check":
 		env.ChartMeta = radarChart("財務健康五面向", []string{"profit", "growth", "structure", "dividend", "governance"})
+	case "get_futures_daily_ohlc", "get_futures_history":
+		env.ChartMeta = FuturesKlineChartMeta()
+	case "get_put_call_ratio":
+		env.ChartMeta = PCRLineChartMeta()
+	case "get_institutional_futures_positions", "get_institutional_options_positions":
+		env.ChartMeta = barChart("三大法人淨口數 (口)", "investor", "net_volume")
+	case "get_institutional_futures_history":
+		env.ChartMeta = lineChart("三大法人期貨淨口數 (口)", "date", "net_volume")
+	case "get_large_trader_positions":
+		env.ChartMeta = barChart("大額交易人前五大買方 (口)", "contract", "top5_long")
 	}
 	return nil
+}
+
+// FuturesKlineChartMeta 產出期貨 K 線之 §11.2 標準描述（§11.3 期貨 candlestick）。
+func FuturesKlineChartMeta() map[string]any {
+	return map[string]any{
+		"recommended_type": "candlestick",
+		"x_axis": map[string]any{
+			"key":    "timestamp",
+			"type":   "datetime",
+			"format": "YYYY-MM-DD",
+		},
+		"y_axis": map[string]any{
+			"keys":       []string{"open", "high", "low", "close"},
+			"title":      "價格 (點)",
+			"right_axis": []string{"volume"},
+		},
+		"series": []map[string]any{
+			{"key": "volume", "type": "bar", "style": "volume"},
+		},
+		"annotations": []any{},
+		"note":        "FuturesDailyRow 之 date 欄位為 YYYY-MM-DD（契約月份見 contract_month）",
+	}
+}
+
+// PCRLineChartMeta 產出 Put/Call Ratio 之 §11.2 標準描述
+// （§11.3 line + 多空分界線 1.0 annotation，§T015 備註）。
+func PCRLineChartMeta() map[string]any {
+	return map[string]any{
+		"recommended_type": "line",
+		"x_axis": map[string]any{
+			"key":  "date",
+			"type": "category",
+		},
+		"y_axis": map[string]any{
+			"keys":  []string{"volume_ratio"},
+			"title": "買賣權成交量比 (%)",
+		},
+		"annotations": []any{
+			map[string]any{"type": "hline", "value": 1.0, "label": "多空分界"},
+		},
+		"note": "volume_ratio 單位 %（100 = 多空均衡；annotation 1.0 為對數刻度之分界）",
+	}
 }
 
 // scatterChart 產出散佈圖之 §11.2 標準描述（§11.3 篩選結果）。
