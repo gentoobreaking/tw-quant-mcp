@@ -14,6 +14,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -441,6 +442,62 @@ func TestTAIFEXQueryFetchRange(t *testing.T) {
 	r30 := out["2026-07-30"]
 	if r30.DerivedFrom != "2026-07-29" {
 		t.Errorf("07-30 應補檔自 07-29，實際 derived_from=%q", r30.DerivedFrom)
+	}
+}
+
+// TestTAIFEXQueryL2NoRedownload L2 命中後不再重複下載（計數器驗證，§9.3）。
+func TestTAIFEXQueryL2NoRedownload(t *testing.T) {
+	var downloads int32
+	apiSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasSuffix(r.URL.Path, "/PutCallRatio") {
+			w.Write(taifexFixture(t, "tfx_PutCallRatio.json"))
+			return
+		}
+		http.NotFound(w, r)
+	}))
+	dlSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			w.Write([]byte("<html>view</html>"))
+			return
+		}
+		atomic.AddInt32(&downloads, 1)
+		w.Write(taifexFixture(t, "taifex_fut_daily.csv"))
+	}))
+	t.Cleanup(func() { apiSrv.Close(); dlSrv.Close() })
+
+	c, err := cache.New(cache.WithDataDir(t.TempDir()))
+	if err != nil {
+		t.Fatalf("cache.New 失敗: %v", err)
+	}
+	t.Cleanup(func() { c.Close() })
+	q, err := NewTAIFEXQuery(
+		newTAIFEXAPISource(apiSrv.URL+"/v1"),
+		newTAIFEXDLSource(dlSrv.URL+"/cht/3/"),
+		c, func() time.Time { return time.Date(2026, 8, 1, 10, 0, 0, 0, model.Taipei()) })
+	if err != nil {
+		t.Fatalf("NewTAIFEXQuery 失敗: %v", err)
+	}
+
+	ctx := context.Background()
+	if _, _, err := q.Fetch(ctx, model.TAFuturesDaily, "2026-07-29", ""); err != nil {
+		t.Fatalf("首次 Fetch 失敗: %v", err)
+	}
+	if got := atomic.LoadInt32(&downloads); got != 1 {
+		t.Fatalf("首次查詢應下載 1 次，實際 %d", got)
+	}
+	if _, fromCache, err := q.Fetch(ctx, model.TAFuturesDaily, "2026-07-29", ""); err != nil || !fromCache {
+		t.Fatalf("二次查詢應 L2 命中: fromCache=%v err=%v", fromCache, err)
+	}
+	if got := atomic.LoadInt32(&downloads); got != 1 {
+		t.Errorf("L2 命中後不應重複下載，實際下載 %d 次", got)
+	}
+
+	// FetchRange 探測到 L2 既有日期 → 不再下載
+	if _, err := q.FetchRange(ctx, model.TAFuturesDaily, "2026-07-29", "2026-07-29", ""); err != nil {
+		t.Fatalf("FetchRange 失敗: %v", err)
+	}
+	if got := atomic.LoadInt32(&downloads); got != 1 {
+		t.Errorf("FetchRange 命中 L2 後不應再下載，實際下載 %d 次", got)
 	}
 }
 
