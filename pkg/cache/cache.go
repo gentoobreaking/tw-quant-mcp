@@ -59,8 +59,11 @@ func New(opts ...Option) (*Cache, error) {
 	return c, nil
 }
 
-// Close 關閉 L2（若存在）。L1 無需釋放資源。
+// Close 釋放資源：L2（若存在）與 L1 背景 goroutine（§12 效能原則：無 Leak）。
 func (c *Cache) Close() error {
+	if c.l1 != nil {
+		c.l1.close()
+	}
 	if c.l2 != nil {
 		return c.l2.close()
 	}

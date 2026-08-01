@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"errors"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -320,4 +321,24 @@ func TestL2HitRefillsL1(t *testing.T) {
 func ctx(t *testing.T) context.Context {
 	t.Helper()
 	return context.Background()
+}
+
+// T020 發布檢查：Close 後 L1 背景 goroutine 應停止（無 Leak）。
+func TestCloseStopsL1Goroutines(t *testing.T) {
+	before := runtime.NumGoroutine()
+	for i := 0; i < 3; i++ {
+		c := newTestCache(t)
+		if err := c.Close(); err != nil {
+			t.Fatalf("Close 失敗: %v", err)
+		}
+	}
+	deadline := time.Now().Add(2 * time.Second)
+	for time.Now().Before(deadline) {
+		runtime.Gosched()
+		time.Sleep(50 * time.Millisecond)
+	}
+	after := runtime.NumGoroutine()
+	if after > before+2 {
+		t.Errorf("Close 後 goroutine 疑似殘留: 前 %d → 後 %d", before, after)
+	}
 }

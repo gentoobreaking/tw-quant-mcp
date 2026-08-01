@@ -45,3 +45,10 @@ func (l *l1) set(key string, v any, ttl time.Duration) {
 func (l *l1) del(key string) {
 	l.c.Del(key)
 }
+
+// close 釋放 L1 資源（停止 Ristretto 背景 goroutine：processItems / policy / ticker）。
+func (l *l1) close() {
+	if l != nil && l.c != nil {
+		l.c.Close()
+	}
+}

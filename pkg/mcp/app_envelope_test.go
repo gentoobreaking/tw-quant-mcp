@@ -184,6 +184,10 @@ func TestAllToolsEnvelopeConsistent(t *testing.T) {
 // checkEnvelopeConsistency 驗證單一 Envelope 之 _lineage 欄位齊全（§3.2/§5）。
 func checkEnvelopeConsistency(t *testing.T, name string, e *model.Envelope) {
 	t.Helper()
+	// 附錄 A：所有回傳附加免責欄位（僅供研究參考，不構成投資建議）
+	if e.Disclaimer != model.DisclaimerText {
+		t.Errorf("%s: 缺免責欄位（附錄 A），實際 %q", name, e.Disclaimer)
+	}
 	lg := e.Lineage
 	if lg.Source == "" {
 		t.Errorf("%s: source 不得為空", name)

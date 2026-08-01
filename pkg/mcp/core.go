@@ -101,7 +101,7 @@ func (c *Core) Call(ctx context.Context, name string, args map[string]any) (inte
 	}
 	lg.LatencyMS = time.Since(started).Milliseconds()
 
-	env := &model.Envelope{Data: hr.Data, Lineage: lg, HTTPCalls: a.httpCalls.Load()}
+	env := &model.Envelope{Data: hr.Data, Lineage: lg, HTTPCalls: a.httpCalls.Load(), Disclaimer: model.DisclaimerText}
 	if opt.Chart && c.chart != nil {
 		if err := c.chart.UpdateEnvelope(env, def, opt, hr.Data); err != nil {
 			return nil, fmt.Errorf("mcp: 工具 %s chart 注入失敗: %w", name, err)

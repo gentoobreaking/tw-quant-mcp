@@ -43,3 +43,21 @@ run:
 
 clean:
 	rm -rf bin
+
+# === T020 發布 ===
+
+# 單一可執行檔（CGO-free，帶版本號）
+build-release:
+	CGO_ENABLED=0 go build $(LDFLAGS) -o bin/tw-quant-mcp-v$(VERSION) ./cmd/mcp-server
+
+# 端到端驗證：MCP client 依序呼叫 A→G 代表工具（離線 fake）
+e2e:
+	go test -tags=e2e ./pkg/mcp/ -run 'TestE2E' -v
+
+# 4.5h 連續運行測試（實際交易日 09:00 前啟動；非開盤自動 Skip）
+soak:
+	TW_QUANT_SOAK=1 go test -tags=soak ./pkg/mcp/ -run TestSoakContinuousRun -v
+
+# 發布檢查：CGO-free 建置 + tools/list 36 工具
+release-check:
+	./scripts/release_check.sh $(VERSION)
