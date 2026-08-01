@@ -132,25 +132,75 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 ## 工具清單（36 個，§10）
 
 ### A. 盤中即時引擎（6）
-`set_active_watchlist` · `get_intraday_kline` · `get_intraday_quote` · `get_intraday_vwap` · `detect_volume_surge` · `scan_daytrade_eligibility`
+
+| 工具 | 說明 |
+| --- | --- |
+| `set_active_watchlist` | 設定盤中監控觀察清單（最多 15 檔）；觸發 8 秒快照輪詢，為其餘盤中工具提供記憶體資料 |
+| `get_intraday_kline` | 當日盤中 1 分 / 5 分 K 線（純記憶體重採樣，零 HTTP） |
+| `get_intraday_quote` | 最新即時報價 + 五檔買賣價量（純記憶體讀取，零 HTTP） |
+| `get_intraday_vwap` | 當日累計 VWAP、當日高低點與 Fibonacci 支撐/壓力位（記憶體計算，零 HTTP） |
+| `detect_volume_surge` | 偵測近 N 分鐘爆量/急拉訊號（前 20 分鐘均量滑動窗口比對，零 HTTP） |
+| `scan_daytrade_eligibility` | 買前風險掃描：當沖資格、注意/處置股風險摘要（名單來自 TWSE-WEB / TPEx 盤後名單） |
 
 ### B. 盤後行情與籌碼（9）
-`get_stock_daily_quote` · `get_stock_daily_kline` · `get_market_summary` · `get_institutional_investors` · `get_foreign_industry_holdings` · `get_foreign_shareholding_history` · `get_margin_trading` · `get_abnormal_trading` · `get_warrant_activity`
+
+| 工具 | 說明 |
+| --- | --- |
+| `get_stock_daily_quote` | 盤後日收盤報價 + MA20/MA60、RSI14、MACD helper 指標（上市以 TWSE-WEB 日 K 計算；上櫃以 TPEx 收盤行情） |
+| `get_stock_daily_kline` | 盤後日/週/月 K 線（TWSE-WEB STOCK_DAY，period/adjust 官方參數；上櫃未接線） |
+| `get_market_summary` | 全市場漲跌家數/成交量/漲跌停統計（上市 TWSE-WEB + 上櫃 TPEx 收盤行情） |
+| `get_institutional_investors` | 三大法人買賣超（個股 + 市場彙總；15:00 前資料可能未齊全） |
+| `get_foreign_industry_holdings` | 外資產業配置（TWSE-API 類股外資持股比率，chart pie） |
+| `get_foreign_shareholding_history` | 個股外資及陸資持股歷史（TWSE-WEB MI_QFIIS 逐日快照，T-1 翌日釋出，僅上市） |
+| `get_margin_trading` | 盤後融資融券（上市 TWSE-WEB MI_MARGN / 上櫃 TPEx） |
+| `get_abnormal_trading` | 異常成交量（注意股）排名（上市 TWSE-WEB notice / 上櫃 TPEx 注意股；top_n 預設 20，最大 100） |
+| `get_warrant_activity` | 權證活躍度：成交金額/張數 Top N（TWSE-API；top_n 預設 10，最大 50） |
 
 ### C. 重大訊息與風險（2）
-`get_major_announcements` · `get_attention_disposition_stocks`
+
+| 工具 | 說明 |
+| --- | --- |
+| `get_major_announcements` | 上市/上櫃重大訊息（MOPS 公開資訊觀測站），支援依日期、股票代號、關鍵字過濾 |
+| `get_attention_disposition_stocks` | 注意股/處置股清單（買前風險掃描；結果同步注入 `scan_daytrade_eligibility` 名單） |
 
 ### D. 基本面與篩選（7）
-`get_financial_statements` · `get_monthly_revenue` · `get_financial_health_check` · `get_valuation_ratios` · `get_esg_report` · `get_company_profile` · `screen_stocks`
+
+| 工具 | 說明 |
+| --- | --- |
+| `get_financial_statements` | 財報三表（MOPS）：損益表/資產負債表/現金流量表；period 支援 "2026Q1" 或年度 |
+| `get_monthly_revenue` | 月營收與成長率（MOPS t187ap05_L，含 YoY/MoM/累計；years 預設 2，上限 10） |
+| `get_financial_health_check` | 財務健康五面向評分（獲利/成長/結構/配息/治理，各 0-100，評分規則版本化） |
+| `get_valuation_ratios` | 估值指標（PE/PB/殖利率/ROE/每股股利；上市 TWSE-API BWIBBU_ALL + MOPS，上櫃 TPEx） |
+| `get_esg_report` | ESG 揭露與公司治理（TWSE OpenAPI 溫室氣體排放 + 公司治理） |
+| `get_company_profile` | 公司基本資料（MOPS t187ap03_L：董事長、資本額、上市日期、產業別、發言人等） |
+| `screen_stocks` | 價值/成長篩選全市場股票（條件：max_pe / max_pb / min_yield / min_growth；整批快取記憶體計算） |
 
 ### E. 股利（3）
-`get_dividend_history` · `get_exdividend_calendar` · `screen_high_yield`
+
+| 工具 | 說明 |
+| --- | --- |
+| `get_dividend_history` | 配息歷史與穩定性：現金/股票股利、連續配息年數、平均每股現金股利、最新殖利率 |
+| `get_exdividend_calendar` | 除權除息行事曆（上市 TWT48U_ALL + 上櫃 TPEx 預告；預設今日起 6 個月，L2 持久） |
+| `screen_high_yield` | 高殖利率排行（條件：min_yield 預設 3%、min_dividend、max_pe、min_consecutive 連年配息） |
 
 ### F. 期貨與選擇權（7）
-`get_futures_daily_ohlc` · `get_futures_history` · `get_put_call_ratio` · `get_large_trader_positions` · `get_institutional_futures_positions` · `get_institutional_options_positions` · `get_institutional_futures_history`
+
+| 工具 | 說明 |
+| --- | --- |
+| `get_futures_daily_ohlc` | 期貨契約每日 OHLC（TAIFEX API 最新交易日；契約限白名單 TX/MTX/GTX/G2F/G1F/G9F/E4F/XIF/GXF/T5F） |
+| `get_futures_history` | 期貨 OHLC 歷史回溯（TAIFEX-DL 下載頁，跨度 ≤ 366 日，L2 永久快取） |
+| `get_put_call_ratio` | 買賣權比（Put/Call Ratio：成交量/未平倉比；支援單日或範圍回溯，多空分界 1.0 由 _chart_meta 標示） |
+| `get_large_trader_positions` | 大額交易人未沖銷部位（期貨 + 選擇權合併；前五大/前十大交易人買賣方口數） |
+| `get_institutional_futures_positions` | 三大法人期貨部位（自營/投信/外資之多方、空方、未平倉口數與金額） |
+| `get_institutional_options_positions` | 三大法人選擇權部位（自營/投信/外資之多方、空方、未平倉口數與金額） |
+| `get_institutional_futures_history` | 三大法人期貨部位歷史（TAIFEX-DL 回溯，跨度 ≤ 366 日，L2 永久快取） |
 
 ### G. 基礎設施（2）
-`get_symbol_list` · `get_trading_calendar`
+
+| 工具 | 說明 |
+| --- | --- |
+| `get_symbol_list` | 上市/上櫃代碼表（Symbol Registry，來源 TWSE/TPEx 官方清單，24h 快取每日預熱） |
+| `get_trading_calendar` | 交易日曆（TWSE 官方開休市表，內嵌 2026 年資料；回傳交易日清單與官方休市日） |
 
 ## 回傳結構（Envelope）
 
