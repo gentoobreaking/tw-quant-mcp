@@ -44,7 +44,11 @@ MCP_TRANSPORT=streamable-http ./bin/tw-quant-mcp   # Streamable HTTP 傳輸
 | `MCP_SCORING_CONFIG` | 內建 v1 規則 | 五面向評分規則 JSON 檔路徑 |
 | `RATE_LIMIT_<HOST>_EVERY` | §4.4 預設表 | 覆寫特定主機請求級間隔（秒） |
 
-## MCP 客戶端設定（Claude Desktop 範例）
+## MCP 客戶端設定
+
+### Claude Desktop
+
+`claude_desktop_config.json`（macOS：`~/Library/Application Support/Claude/claude_desktop_config.json`）：
 
 ```json
 {
@@ -56,6 +60,74 @@ MCP_TRANSPORT=streamable-http ./bin/tw-quant-mcp   # Streamable HTTP 傳輸
   }
 }
 ```
+
+### OpenClaw
+
+`openclaw.json` 的 `mcp.servers` 區塊（或執行 `openclaw mcp set tw-quant-mcp -- command /absolute/path/to/bin/tw-quant-mcp`）：
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "tw-quant-mcp": {
+        "command": "/absolute/path/to/bin/tw-quant-mcp",
+        "args": []
+      }
+    }
+  }
+}
+```
+
+### Hermes agent
+
+`~/.hermes/config.yaml` 新增 `mcp_servers` 區塊：
+
+```yaml
+mcp_servers:
+  tw-quant-mcp:
+    command: /absolute/path/to/bin/tw-quant-mcp
+    args: []
+```
+
+### Pi agent
+
+於專案目錄執行（官方 `pi mcp add` 方式）：
+
+```bash
+pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
+```
+
+或於 `~/.pi/agent/settings.json` / 專案 `.pi/` 設定檔新增：
+
+```json
+{
+  "mcpServers": {
+    "tw-quant-mcp": {
+      "command": "/absolute/path/to/bin/tw-quant-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+### OpenCode
+
+`~/.config/opencode/opencode.json` 的 `mcp` 欄位（`type: "local"` + `command` 陣列）：
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "tw-quant-mcp": {
+      "type": "local",
+      "command": ["/absolute/path/to/bin/tw-quant-mcp"],
+      "enabled": true
+    }
+  }
+}
+```
+
+> 提示：以上皆為 stdio 傳輸範例，請將 `/absolute/path/to/bin/tw-quant-mcp` 換成實際執行檔路徑。若需 HTTP 傳輸，可先以 `MCP_TRANSPORT=streamable-http MCP_HTTP_ADDR=127.0.0.1:8787 ./bin/tw-quant-mcp` 啟動服務，再將客戶端指向 `http://127.0.0.1:8787/mcp`（客戶端需支援 streamable-http）。
 
 ## 工具清單（36 個，§10）
 
