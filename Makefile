@@ -2,7 +2,7 @@ BINARY := bin/tw-quant-mcp
 VERSION ?= 0.1.0
 LDFLAGS := -ldflags "-X main.version=$(VERSION)"
 
-.PHONY: build test test-race test-live loadtest fixtures lint vet fmt check run clean snapshots snapshots-call snapshots-render
+.PHONY: build test test-race test-live loadtest fixtures lint vet fmt check run clean snapshots snapshots-call snapshots-render snapshots-report
 
 build:
 	go build $(LDFLAGS) -o $(BINARY) ./cmd/mcp-server
@@ -74,3 +74,7 @@ snapshots-call:
 # 只渲染 PNG（用現有 raw JSON，秒級）
 snapshots-render:
 	./scripts/run_all.sh --render-only
+
+# 匯出 36 工具呼叫結果為 Markdown 報告（snapshots/REPORT.md）
+snapshots-report:
+	python3 ./scripts/export_snapshots_md.py
