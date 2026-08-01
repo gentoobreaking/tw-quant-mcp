@@ -333,5 +333,6 @@ func buildRegistry() *Registry {
 		Handler:  handlerScanDaytradeEligibility,
 	})
 	registerBCTools(r)
+	registerDETools(r)
 	return r
 }

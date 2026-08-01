@@ -571,6 +571,117 @@ func TestTWSEAPIGovernance(t *testing.T) {
 	}
 }
 
+// TestTWSEAPIValuation 估值指標（T014）：BWIBBU_ALL 全市場快照。
+func TestTWSEAPIValuation(t *testing.T) {
+	src := sourceOf("valuation")
+	raw := fixtureRaw(t, "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL",
+		loadFixture(t, "bwibbu_all.json"))
+	if err := src.Validate(raw); err != nil {
+		t.Fatalf("Validate 失敗: %v", err)
+	}
+	out, err := src.Normalize(raw)
+	if err != nil {
+		t.Fatalf("Normalize 失敗: %v", err)
+	}
+	var rows []ValuationRow
+	if err := json.Unmarshal(out, &rows); err != nil {
+		t.Fatal(err)
+	}
+	if len(rows) != 3 {
+		t.Fatalf("應輸出 3 列，實際 %d", len(rows))
+	}
+	// 官方 Date 1150731 → 2026-07-31
+	if rows[0].Date != "2026-07-31" || rows[0].Code != "1101" || rows[0].Name != "台泥" {
+		t.Errorf("列 0 錯誤: %+v", rows[0])
+	}
+	// 台泥虧損：PEratio 為空字串 → pe=0；其餘欄位正常
+	if rows[0].PE != 0 || rows[0].DividendYield != 3.29 || rows[0].PB != 0.77 {
+		t.Errorf("台泥估值錯誤: %+v", rows[0])
+	}
+	// 2330 正常本益比
+	if rows[2].Code != "2330" || rows[2].PE == 0 || rows[2].DividendYield == 0 {
+		t.Errorf("2330 估值錯誤: %+v", rows[2])
+	}
+}
+
+// TestTWSEAPIExDiv 除權除息預告表（T014）：TWT48U_ALL。
+func TestTWSEAPIExDiv(t *testing.T) {
+	src := sourceOf("ex_div")
+	raw := fixtureRaw(t, "https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL",
+		loadFixture(t, "twt48u_all.json"))
+	if err := src.Validate(raw); err != nil {
+		t.Fatalf("Validate 失敗: %v", err)
+	}
+	out, err := src.Normalize(raw)
+	if err != nil {
+		t.Fatalf("Normalize 失敗: %v", err)
+	}
+	var rows []ExDivEventRow
+	if err := json.Unmarshal(out, &rows); err != nil {
+		t.Fatal(err)
+	}
+	if len(rows) != 4 {
+		t.Fatalf("應輸出 4 列，實際 %d", len(rows))
+	}
+	// 官方 Date 1150807 → 2026-08-07
+	r := rows[1]
+	if r.Code != "1210" || r.Name != "大成" || r.Date != "2026-08-07" {
+		t.Errorf("大成列錯誤: %+v", r)
+	}
+	if r.Kind != "息" || r.CashDividend != 3.0 || r.StockRatio != 0 {
+		t.Errorf("大成除息錯誤: %+v", r)
+	}
+	// 權息：現金+股票股利
+	r = rows[2]
+	if r.Kind != "權息" || r.CashDividend != 1.5 || r.StockRatio < 0.09 {
+		t.Errorf("聯華食權息錯誤: %+v", r)
+	}
+}
+
+// TestTWSEAPIDividend 股利分派情形（T014）：t187ap45_L。
+func TestTWSEAPIDividend(t *testing.T) {
+	src := sourceOf("dividend")
+	raw := fixtureRaw(t, "https://openapi.twse.com.tw/v1/opendata/t187ap45_L",
+		loadFixture(t, "t187ap45.json"))
+	if err := src.Validate(raw); err != nil {
+		t.Fatalf("Validate 失敗: %v", err)
+	}
+	out, err := src.Normalize(raw)
+	if err != nil {
+		t.Fatalf("Normalize 失敗: %v", err)
+	}
+	var rows []DividendRow
+	if err := json.Unmarshal(out, &rows); err != nil {
+		t.Fatal(err)
+	}
+	if len(rows) != 4 {
+		t.Fatalf("應輸出 4 列，實際 %d", len(rows))
+	}
+	// 2330 兩年度（115 期中 + 114）
+	years := 0
+	for _, r := range rows {
+		if r.Code == "2330" {
+			years++
+		}
+	}
+	if years != 2 {
+		t.Errorf("2330 應有 2 年度分派，實際 %d", years)
+	}
+	// 台泥 114：盈餘現金 0 + 資本公積 0.8 → cash_dividend 合計 0.8
+	var twn []DividendRow
+	for _, r := range rows {
+		if r.Code == "1101" && r.DividendYear == "114" {
+			twn = append(twn, r)
+		}
+	}
+	if len(twn) != 1 || twn[0].CashDividend != 0.8 || twn[0].StockDividend != 0 {
+		t.Errorf("台泥股利錯誤: %+v", twn)
+	}
+	if rows[0].TableDate != "2026-07-31" {
+		t.Errorf("出表日期 1150731 應為 2026-07-31，實際 %s", rows[0].TableDate)
+	}
+}
+
 // TestTWSEValidateErrors Validate 錯誤路徑。
 func TestTWSEValidateErrors(t *testing.T) {
 	src := sourceOf("daily_k")

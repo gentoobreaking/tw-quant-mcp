@@ -19,6 +19,10 @@ const (
 	DatasetTAIFEXHistory  = "taifex_history"  // TAIFEX 歷史回溯（download 解析結果）
 	DatasetForeignHold    = "foreign_holding" // 外資持股（個股歷史/類股，T011）
 	DatasetWarrants       = "warrants"        // 權證每日成交（T011）
+	DatasetValuation      = "valuation"       // 估值指標（PE/PB/殖利率，T014）
+	DatasetESG            = "esg"             // ESG 揭露/公司治理（T014）
+	DatasetExDivCalendar  = "ex_div_calendar" // 除權除息行事曆（T014，§4.1 明列 L2 資格）
+	DatasetDividend       = "dividend"        // 股利分派資料（t187ap45_L，T014）
 )
 
 // 特殊 TTL 值（§4.2）。
@@ -54,6 +58,12 @@ var policies = map[string]Policy{
 	DatasetTAIFEXHistory:  {Intraday: ForeverTTL, Post: ForeverTTL, AllowL2: true},
 	DatasetForeignHold:    {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
 	DatasetWarrants:       {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
+	// T014：估值/除權息行事曆為日級資料（同 daily_kline 盤後 TTL）；行事曆
+	// L2 持久（§4.2「L2 持久」），L1 24h 內重取以免遺漏新公告事件。
+	DatasetValuation:     {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
+	DatasetESG:           {Intraday: 24 * time.Hour, Post: 24 * time.Hour, AllowL2: true},
+	DatasetExDivCalendar: {Intraday: 24 * time.Hour, Post: 24 * time.Hour, AllowL2: true},
+	DatasetDividend:      {Intraday: 12 * time.Hour, Post: 12 * time.Hour, AllowL2: true},
 }
 
 // TTLFor 依 §4.2 政策表與目前時間回傳資料類別之有效期間。

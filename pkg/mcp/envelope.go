@@ -117,8 +117,50 @@ func (defaultChartUpdater) UpdateEnvelope(env *model.Envelope, def *ToolDef, opt
 		env.ChartMeta = barChart("權證成交金額 (元)", "code", "amount")
 	case "get_market_summary":
 		env.ChartMeta = barChart("漲跌家數", "tse|otc", "advancers")
+	case "get_monthly_revenue":
+		env.ChartMeta = barChart("月營收 (元)", "data_year_month", "revenue")
+	case "get_dividend_history":
+		env.ChartMeta = barChart("每股現金股利 (元/股)", "dividend_year", "cash_dividend")
+	case "screen_stocks":
+		env.ChartMeta = scatterChart("PE / 殖利率散佈", "pe", "dividend_yield_pct", "pb")
+	case "screen_high_yield":
+		env.ChartMeta = scatterChart("殖利率 / PE 散佈", "pe", "dividend_yield_pct", "dividend_per_share")
+	case "get_financial_health_check":
+		env.ChartMeta = radarChart("財務健康五面向", []string{"profit", "growth", "structure", "dividend", "governance"})
 	}
 	return nil
+}
+
+// scatterChart 產出散佈圖之 §11.2 標準描述（§11.3 篩選結果）。
+func scatterChart(title, xKey, yKey, sizeKey string) map[string]any {
+	return map[string]any{
+		"recommended_type": "scatter",
+		"x_axis": map[string]any{
+			"key":  xKey,
+			"type": "value",
+		},
+		"y_axis": map[string]any{
+			"key":   yKey,
+			"title": title,
+		},
+		"series": []map[string]any{
+			{"key": sizeKey, "type": "bubble"},
+		},
+		"annotations": []any{},
+	}
+}
+
+// radarChart 產出雷達圖之 §11.2 標準描述（§11.3 財報五面向）。
+func radarChart(title string, keys []string) map[string]any {
+	return map[string]any{
+		"recommended_type": "radar",
+		"axes":             keys,
+		"series": []map[string]any{
+			{"type": "radar"},
+		},
+		"title":       title,
+		"annotations": []any{},
+	}
 }
 
 // DailyKlineChartMeta 產出盤後日 K 之 §11.2 標準描述（candlestick）。

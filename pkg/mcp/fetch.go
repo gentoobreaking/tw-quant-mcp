@@ -26,6 +26,8 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,
 	string(provider.TWSEAPIWarrants):        cache.DatasetWarrants,
 	string(provider.TWSEAPIPunish):          cache.DatasetAlertStock,
+	string(provider.TWSEAPIESG):             cache.DatasetESG,
+	string(provider.TWSEAPIGovernance):      cache.DatasetESG,
 	string(provider.TPExDailyClose):         cache.DatasetDailyKLine,
 	string(provider.TPExAttention):          cache.DatasetAlertStock,
 	string(provider.TPExDisposition):        cache.DatasetAlertStock,
@@ -38,6 +40,12 @@ var cacheDataset = map[string]string{
 	string(provider.MOPSCashFlow):        cache.DatasetFinancials,
 	string(provider.MOPSAnnouncements):   cache.DatasetMaterialNews,
 	string(provider.MOPSCompanyProfile):  cache.DatasetCalendar, // 24h TTL，類似行事曆
+	// T014：TWSE-API 估值/除權息/股利分派資料
+	string(provider.TWSEAPIValuation): cache.DatasetValuation,
+	string(provider.TWSEAPIExDiv):     cache.DatasetExDivCalendar,
+	string(provider.TWSEAPIDividend):  cache.DatasetDividend,
+	string(provider.TPExPEValuation):  cache.DatasetValuation,
+	string(provider.TPExExRights):     cache.DatasetExDivCalendar,
 }
 
 // policyDataset 回傳資料集對應之政策類別；未登錄時回傳原字串（cacheable=false）。

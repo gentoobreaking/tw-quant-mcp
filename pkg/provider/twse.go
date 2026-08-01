@@ -58,6 +58,9 @@ const (
 	TWSEAPIESG             TWSEAPIDataset = "esg"                // ESG 資訊揭露（topic 1..21）
 	TWSEAPIGovernance      TWSEAPIDataset = "company_governance" // 公司治理
 	TWSEAPIPunish          TWSEAPIDataset = "punish"             // 集中市場公布處置股票（T011）
+	TWSEAPIValuation       TWSEAPIDataset = "valuation"          // 本益比/殖利率/股價淨值比（T014）
+	TWSEAPIExDiv           TWSEAPIDataset = "ex_div"             // 除權除息預告表（T014）
+	TWSEAPIDividend        TWSEAPIDataset = "dividend"           // 股利分派情形（T014）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -84,6 +87,9 @@ var (
 		TWSEAPIESG:             "/opendata/t187ap46_L_%s", // topic 1..21
 		TWSEAPIGovernance:      "/opendata/t187ap32_L",
 		TWSEAPIPunish:          "/announcement/punish",
+		TWSEAPIValuation:       "/exchangeReport/BWIBBU_ALL", // 上市個股日本益比、殖利率及股價淨值比
+		TWSEAPIExDiv:           "/exchangeReport/TWT48U_ALL", // 除權除息預告表
+		TWSEAPIDividend:        "/opendata/t187ap45_L",       // 上市公司股利分派情形
 	}
 )
 
@@ -463,6 +469,12 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizeESG(raw)
 	case "company_governance":
 		out, err = normalizeGovernance(raw)
+	case "valuation":
+		out, err = normalizeValuation(raw)
+	case "ex_div":
+		out, err = normalizeExDiv(raw)
+	case "dividend":
+		out, err = normalizeDividend(raw)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
 	}
@@ -1422,6 +1434,150 @@ func normalizeGovernance(raw *RawResponse) ([]GovernanceRow, error) {
 	}
 	if len(out) == 0 {
 		return nil, fmt.Errorf("provider: company_governance 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 估值指標（TWSE-API）：BWIBBU_ALL 上市個股日本益比、殖利率及股價淨值比
+// （依代碼查詢，全市場快照；2026-07 實測 1081 列，含 ETF）。
+// 虧損公司 PEratio 為空字串 → pe=0（由 handler 標記 pe_available=false）。
+
+// ValuationRow 為單一上市股票之估值指標。
+type ValuationRow struct {
+	Date          string  `json:"date"` // YYYY-MM-DD
+	Code          string  `json:"code"`
+	Name          string  `json:"name"`
+	PE            float64 `json:"pe"`             // 本益比（虧損/不適用為 0）
+	DividendYield float64 `json:"dividend_yield"` // 現金殖利率 %
+	PB            float64 `json:"pb"`             // 股價淨值比
+}
+
+func normalizeValuation(raw *RawResponse) ([]ValuationRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: BWIBBU_ALL JSON 解析失敗: %w", err)
+	}
+	out := make([]ValuationRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := ValuationRow{
+			Code: strings.TrimSpace(m["Code"]),
+			Name: strings.TrimSpace(m["Name"]),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		if ts, err := parseROCDate(m["Date"]); err == nil {
+			r.Date = model.FormatDate(ts)
+		}
+		r.PE = commaFloatOrZero(m["PEratio"])
+		r.DividendYield = commaFloatOrZero(m["DividendYield"])
+		r.PB = commaFloatOrZero(m["PBratio"])
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: valuation 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 除權除息預告表（TWSE-API）：TWT48U_ALL 上市股票除權除息預告（2026-07
+// 實測 122 列；Exdividend 為官方欄位名，值 息/權/權息；含 ETF）。
+
+// ExDivEventRow 為單一除權息事件。
+type ExDivEventRow struct {
+	Date         string  `json:"date"` // 除權息日 YYYY-MM-DD
+	Code         string  `json:"code"`
+	Name         string  `json:"name"`
+	Kind         string  `json:"kind"`          // 息 / 權 / 權息
+	CashDividend float64 `json:"cash_dividend"` // 現金股利（元/股）
+	StockRatio   float64 `json:"stock_ratio"`   // 股票股利（元/股）
+}
+
+func normalizeExDiv(raw *RawResponse) ([]ExDivEventRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: TWT48U_ALL JSON 解析失敗: %w", err)
+	}
+	out := make([]ExDivEventRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := ExDivEventRow{
+			Code: strings.TrimSpace(m["Code"]),
+			Name: strings.TrimSpace(m["Name"]),
+			Kind: strings.TrimSpace(m["Exdividend"]),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		if ts, err := parseROCDate(m["Date"]); err == nil {
+			r.Date = model.FormatDate(ts)
+		}
+		r.CashDividend = commaFloatOrZero(m["CashDividend"])
+		r.StockRatio = commaFloatOrZero(m["StockDividendRatio"])
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: ex_div 無有效資料列")
+	}
+	return out, nil
+}
+
+// ---------------------------------------------------------------------------
+// 股利分派情形（TWSE-API）：t187ap45_L 上市公司股利分派（2026-07 實測 1148
+// 列，股利年度 114/115；股利年度為分派基準年度，非除息日）。
+
+// DividendRow 為單一公司單一年度之股利分派決議。
+type DividendRow struct {
+	TableDate     string  `json:"table_date"` // 出表日期 YYYY-MM-DD
+	Code          string  `json:"code"`
+	Name          string  `json:"name"`
+	Progress      string  `json:"progress"`       // 決議（擬議）進度
+	DividendYear  string  `json:"dividend_year"`  // 股利年度（民國）
+	CashDividend  float64 `json:"cash_dividend"`  // 現金股利合計（盈餘+公積+法定）
+	StockDividend float64 `json:"stock_dividend"` // 股票股利合計（盈餘+公積+法定）
+	CashTotal     float64 `json:"cash_total"`     // 現金股利總金額（元）
+	NetIncome     float64 `json:"net_income"`     // 本期淨利（元）
+	Retained      float64 `json:"retained"`       // 可分配盈餘（元）
+}
+
+func normalizeDividend(raw *RawResponse) ([]DividendRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(raw.Body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: t187ap45_L JSON 解析失敗: %w", err)
+	}
+	out := make([]DividendRow, 0, len(rows))
+	for _, row := range rows {
+		m := rowToMap(row)
+		r := DividendRow{
+			Code:         strings.TrimSpace(m["公司代號"]),
+			Name:         strings.TrimSpace(m["公司名稱"]),
+			Progress:     strings.TrimSpace(m["決議（擬議）進度"]),
+			DividendYear: strings.TrimSpace(m["股利年度"]),
+		}
+		if r.Code == "" || r.Name == "" {
+			continue
+		}
+		if ts, err := parseROCDate(m["出表日期"]); err == nil {
+			r.TableDate = model.FormatDate(ts)
+		}
+		cash := commaFloatOrZero(m["股東配發-盈餘分配之現金股利(元/股)"]) +
+			commaFloatOrZero(m["股東配發-法定盈餘公積發放之現金(元/股)"]) +
+			commaFloatOrZero(m["股東配發-資本公積發放之現金(元/股)"])
+		stock := commaFloatOrZero(m["股東配發-盈餘轉增資配股(元/股)"]) +
+			commaFloatOrZero(m["股東配發-法定盈餘公積轉增資配股(元/股)"]) +
+			commaFloatOrZero(m["股東配發-資本公積轉增資配股(元/股)"])
+		r.CashDividend = math.Round(cash*100) / 100
+		r.StockDividend = math.Round(stock*100) / 100
+		r.CashTotal = commaFloatOrZero(m["股東配發-股東配發之現金(股利)總金額(元)"])
+		r.NetIncome = commaFloatOrZero(m["本期淨利(淨損)(元)"])
+		r.Retained = commaFloatOrZero(m["可分配盈餘(元)"])
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: dividend 無有效資料列")
 	}
 	return out, nil
 }

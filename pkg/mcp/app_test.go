@@ -126,14 +126,17 @@ func callCore(t *testing.T, app *App, name string, args map[string]any) *model.E
 func TestRegistryContains6Tools(t *testing.T) {
 	app := newTestApp(t)
 	names := app.Registry().Names()
-	if len(names) != 17 {
-		t.Fatalf("應登錄 17 個工具（A 6 + B/C 11），實際 %d: %v", len(names), names)
+	if len(names) != 27 {
+		t.Fatalf("應登錄 27 個工具（A 6 + B/C 11 + D/E 10），實際 %d: %v", len(names), names)
 	}
-	if len(app.Registry().Tools()) != 17 {
-		t.Fatalf("Tools() 應回傳 17 個 mcp.Tool")
+	if len(app.Registry().Tools()) != 27 {
+		t.Fatalf("Tools() 應回傳 27 個 mcp.Tool")
 	}
 	if !strings.Contains(app.Registry().BuildTOML(), "set_active_watchlist") {
 		t.Fatalf("BuildTOML 應含工具清單")
+	}
+	if !strings.Contains(app.Registry().BuildTOML(), "screen_stocks") {
+		t.Fatalf("BuildTOML 應含 D/E 工具清單")
 	}
 }
 
