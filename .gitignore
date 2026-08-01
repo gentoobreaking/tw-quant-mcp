@@ -22,3 +22,6 @@ data/
 .idea/
 .vscode/
 *.log
+
+# 渲染暫存
+snapshots/.html_tmp/
