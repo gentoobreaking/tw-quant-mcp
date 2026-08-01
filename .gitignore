@@ -25,3 +25,5 @@ data/
 
 # 渲染暫存
 snapshots/.html_tmp/
+__pycache__/
+*.pyc
