@@ -1,6 +1,6 @@
 # MCP image 輸出改法評估（tw-quant-mcp）
 
-> 日期：2026-08-01 ｜ 狀態：**建議做，範圍適中，風險可控**
+> 日期：2026-08-01 ｜ 狀態：~~建議做~~ → **結論：不建議做**（2026-08-01 與 winvest.tw 比較後定案）
 > 目標：讓 QClaw GUI 等 MCP 客戶端**直接看到 server 渲染的圖表**（不依賴 AI 解讀）
 
 ## 一、結論摘要
@@ -12,7 +12,9 @@
 | 圖表庫 | ✅ go-chart v2 純 Go（freetype + x/image），**CGO-free 可維持** |
 | 改動範圍 | 中：chart 套件 + Wire 層 + 少數 handler，約 300–500 行 |
 | 相容性 | ✅ 向後相容（保留 text + structuredContent，額外附 image） |
-| 主要風險 | QClaw webchat 前端**是否渲染 tool image 未實測**——需 POC 驗證 |
+| **價值比較** | **❌ 靜態 PNG 無法與 winvest.tw 等互動式商業圖表競爭 → 不值得做** |
+
+**最終結論：不做。** 理由見「九、與 winvest.tw 比較後定案」。
 
 ## 二、現況（已查證）
 
@@ -22,7 +24,37 @@
 - **`_chart_meta` 已存在**：每個工具回傳建議圖表型態（line/bar/candlestick/heatmap），但 QClaw webchat 前端**不讀它畫圖** → 圖表資訊閒置。
 - **QClaw/OpenClaw 對 image 的處理**：模型層有過濾 tool content 的 `image`（餵給 LLM）；webchat 前端對 tool result 的 image 渲染**未確認**（需實測）。
 
-## 三、實作方案
+## 九、與 winvest.tw 比較後定案（2026-08-01）
+
+使用者以 https://winvest.tw/Stock/Symbol/Comment/2308 為基準提問：
+「這做出來的圖，有比 winvest 上的圖容易看麼？」
+
+**比較結果（誠實評估）：**
+
+| 面向 | winvest.tw | go-chart PNG |
+|---|---|---|
+| 互動性 | hover 看值、縮放、切期間 | 死的圖片 |
+| 圖型 | 河流圖（紅/黃/藍色帶）、K線+量、多圖聯動 | 基本 line/bar/candlestick |
+| 資訊密度 | 一頁整合 10+ 面向（健診/營收/EPS/股利/籌碼） | 單一圖一張 |
+| 美觀 | 專業前端團隊 ECharts 級 | 預設樣式 |
+| 成本 | 付費商業產品 | 半天工程換「堪用」 |
+
+**定案理由：**
+1. 靜態 PNG 先天輸給互動式商業圖表——做了也只是「有圖」而非「好看」
+2. 真正的視覺化出路是互動 HTML（ECharts），但那是瀏覽器客戶端的場合，QClaw webchat 不是
+3. MCP 的護城河是「對話中取得資料 + AI 解讀」，不是圖表美醜——資源應花在資料正確性與解讀品質
+4. 若偶爾需要視覺化：由 AI 在對話中用 render_ui / embed / MEDIA 主動提供，不塞進 MCP 回傳
+
+**若日後要視覺化的替代方向（不經 MCP image）：**
+- AI 讀 `_chart_meta` → render_ui 互動面板（webchat）
+- 互動 HTML（ECharts）+ 瀏覽器客戶端 embed
+- 維持 JSON + AI 表格解讀（現況，已驗證）
+
+## 十、附錄：原「建議做」內容保留供參考
+
+以下為 2026-08-01 較早版本之評估（已定案不做，保留供日後參考）。
+
+### 三、實作方案（原）
 
 ### 架構（最小侵入）
 
