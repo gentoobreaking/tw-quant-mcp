@@ -31,6 +31,7 @@ cd ~/Projects/tw-quant-mcp
 | 腳本 | 位置 | 用途 |
 |---|---|---|
 | `call_tw_quant_tools.py` | `~/.qclaw/workspace/scripts/` | stdio 子程序 + initialize 握手 + 逐一 `tools/call` 36 工具，每工具間隔 1s |
+| `one_tool.py` | 同上 | 單工具呼叫（握手+呼叫+存檔），結果寫入 snapshots/raw/，可被渲染 |
 | `render_tool_snapshots.py` | 同上 | 讀 raw JSON → HTML（標題/狀態/參數/data 摘要/_lineage/原始 JSON）→ Chrome headless 截圖 |
 | `run_all.sh` | `~/Projects/tw-quant-mcp/scripts/` | 串接上面兩者 + 重建 |
 
@@ -77,7 +78,11 @@ A: Symbol Registry 未載入完成（啟動 race）。run_all.sh 會先重建執
 
 **Q: 想只重跑單一工具？**
 A: 用 `one_tool.py`（`~/.qclaw/workspace/scripts/one_tool.py`）：
-`python3 one_tool.py get_margin_trading '{"symbol":"2330"}'`，結果寫入 snapshots/raw/ 同名檔。
+```bash
+python3 one_tool.py get_margin_trading '{"symbol":"2330"}'
+python3 one_tool.py get_financial_statements '{"symbol":"1232"}'   # 不傳參數則用 ARGS 表預設
+```
+結果寫入 snapshots/raw/ 同名檔，之後 `make snapshots-render` 可重新渲染該工具 PNG。
 
 ## 歷史紀錄
 

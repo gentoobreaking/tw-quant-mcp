@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+  body { font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+         background: #f5f6fa; margin: 0; padding: 24px; color: #1a1a2e; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .title { font-size: 22px; font-weight: 700; }
+  .badge { background: #e6f4ea; color: #0a7d32; padding: 4px 12px; border-radius: 12px;
+            font-size: 13px; font-weight: 600; }
+  .args { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #555;
+           background: #eef0f5; padding: 4px 8px; border-radius: 6px; margin-bottom: 12px; }
+  .card { background: #fff; border: 1px solid #e0e3eb; border-radius: 10px;
+           padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .card.err { border-left: 4px solid #c62828; }
+  .kv { font-size: 13px; line-height: 1.65; margin-bottom: 6px; overflow-wrap: break-word; }
+  .lineage { font-size: 12px; color: #444; background: #f8f9fc; padding: 8px 10px;
+              border-radius: 6px; line-height: 1.7; }
+  .raw { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #666;
+          background: #fbfbfd; border: 1px dashed #ddd; padding: 10px; border-radius: 6px;
+          white-space: pre-wrap; max-height: 260px; overflow: auto; }
+  h2 { margin: 18px 0 6px; font-size: 15px; color: #333; }
+</style></head>
+<body>
+  <div class="header">
+    <div class="title">screen_high_yield</div>
+    <div class="badge">成功 ✅</div>
+  </div>
+  <div class="args">參數: {"limit": 5}</div>
+  
+        <div class="card">
+          <div class="kv"><b>data</b>: { <b>total</b>: 1969; <b>matched</b>: 5; <b>limit</b>: 5; <b>rows</b>: [5 筆, 例: { <b>code</b>: …; <b>name</b>: …; <b>market</b>: …; <b>pe</b>: …; <b>pe_available</b>: …; <b>pb</b>: …; <b>dividend_yield_pct</b>: …; <b>dividend_per_share</b>: …; <i>… 共 12 鍵</i> }] }</div>
+          <div class="kv"><b>http_calls</b>: 0</div>
+          <div class="lineage"><b>_lineage</b>:<br><b>source</b>: TWSE_API<br><b>source_role</b>: canonical<br><b>derived_from</b>: ['TWSE_API:valuation', 'TPEx_API:pe_valuation', 'MOPS:monthly_revenue', 'MOPS:income_summary', 'TWSE_API:dividend']<br><b>fetched_at</b>: 2026-08-01T18:27:53+08:00<br><b>data_date</b>: 2026-08-01<br><b>freshness</b>: POST_MARKET_TODAY<br><b>sampling_sec</b>: 0<br><b>is_cached</b>: True<br><b>cache_ttl</b>: 48726<br><b>latency_ms</b>: 6</div>
+          <div class='kv'><b>_chart_meta</b>: {"recommended_type": "scatter", "x_axis": {"key": "pe", "type": "value"}, "y_axis": {"key": "dividend_yield_pct", "title": "殖利率 / PE 散佈"}, "series": [{"key": "dividend_per_share", "type": "bubble"}]}…</div>
+        </div>
+  <h2>原始回應（JSON）</h2>
+  <div class="raw">{
+  "isError": false,
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"data\":{\"total\":1969,\"matched\":5,\"limit\":5,\"rows\":[{\"code\":\"6596\",\"name\":\"寬宏藝術\",\"market\":\"otc\",\"pe\":5.15,\"pe_available\":true,\"pb\":3.24,\"dividend_yield_pct\":21.25,\"dividend_per_share\":18.7,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"2528\",\"name\":\"皇普\",\"market\":\"tse\",\"pe\":8.12,\"pe_available\":true,\"pb\":1.18,\"dividend_yield_pct\":15.46,\"dividend_per_share\":1.5,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"2442\",\"name\":\"新美齊\",\"market\":\"tse\",\"pe\":3.7,\"pe_available\":true,\"pb\":0.83,\"dividend_yield_pct\":13.92,\"dividend_per_share\":2,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"1436\",\"name\":\"華友聯\",\"market\":\"tse\",\"pe\":8.44,\"pe_available\":true,\"pb\":1.29,\"dividend_yield_pct\":13.91,\"dividend_per_share\":5.05,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"3188\",\"name\":\"鑫龍騰\",\"market\":\"otc\",\"pe\":3.82,\"pe_available\":true,\"pb\":1.39,\"dividend_yield_pct\":13.86,\"dividend_per_share\":3.2,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"canonical\",\"derived_from\":[\"TWSE_API:valuation\",\"TPEx_API:pe_valuation\",\"MOPS:monthly_revenue\",\"MOPS:income_summary\",\"TWSE_API:dividend\"],\"fetched_at\":\"2026-08-01T18:27:53+08:00\",\"data_date\":\"2026-08-01\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":true,\"cache_ttl\":48726,\"latency_ms\":6},\"_chart_meta\":{\"recommended_type\":\"scatter\",\"x_axis\":{\"key\":\"pe\",\"type\":\"value\"},\"y_axis\":{\"key\":\"dividend_yield_pct\",\"title\":\"殖利率 / PE 散佈\"},\"series\":[{\"key\":\"dividend_per_share\",\"type\":\"bubble\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+    }
+  ]
+}</div>
+</body></html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+  body { font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+         background: #f5f6fa; margin: 0; padding: 24px; color: #1a1a2e; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .title { font-size: 22px; font-weight: 700; }
+  .badge { background: #e6f4ea; color: #0a7d32; padding: 4px 12px; border-radius: 12px;
+            font-size: 13px; font-weight: 600; }
+  .args { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #555;
+           background: #eef0f5; padding: 4px 8px; border-radius: 6px; margin-bottom: 12px; }
+  .card { background: #fff; border: 1px solid #e0e3eb; border-radius: 10px;
+           padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .card.err { border-left: 4px solid #c62828; }
+  .kv { font-size: 13px; line-height: 1.65; margin-bottom: 6px; overflow-wrap: break-word; }
+  .lineage { font-size: 12px; color: #444; background: #f8f9fc; padding: 8px 10px;
+              border-radius: 6px; line-height: 1.7; }
+  .raw { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #666;
+          background: #fbfbfd; border: 1px dashed #ddd; padding: 10px; border-radius: 6px;
+          white-space: pre-wrap; max-height: 260px; overflow: auto; }
+  h2 { margin: 18px 0 6px; font-size: 15px; color: #333; }
+</style></head>
+<body>
+  <div class="header">
+    <div class="title">get_institutional_futures_history</div>
+    <div class="badge">成功 ✅</div>
+  </div>
+  <div class="args">參數: {"start": "2026-07-28", "end": "2026-07-31"}</div>
+  
+        <div class="card">
+          <div class="kv"><b>data</b>: [273 筆, 例: { <b>date</b>: '2026-07-28'; <b>contract</b>: 'ETF期貨'; <b>investor</b>: '外資及陸資'; <b>long_volume</b>: 8757; <b>long_value</b>: 5948149000; <b>short_volume</b>: 9137; <b>short_value</b>: 5897802000; <b>net_volume</b>: -380; <i>… 共 15 鍵</i> }]</div>
+          <div class="kv"><b>http_calls</b>: 1</div>
+          <div class="lineage"><b>_lineage</b>:<br><b>source</b>: TAIFEX_DL<br><b>source_role</b>: canonical<br><b>fetched_at</b>: 2026-08-01T18:28:15+08:00<br><b>data_date</b>: 2026-07-31<br><b>freshness</b>: HISTORICAL<br><b>sampling_sec</b>: 0<br><b>is_cached</b>: True<br><b>cache_ttl</b>: 0<br><b>latency_ms</b>: 6355</div>
+          <div class='kv'><b>_chart_meta</b>: {"recommended_type": "line", "x_axis": {"key": "date", "type": "category"}, "y_axis": {"keys": ["net_volume"], "title": "三大法人期貨淨口數 (口)"}}…</div>
+        </div>
+  <h2>原始回應（JSON）</h2>
+  <div class="raw">{
+  "isError": false,
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"data\":[{\"date\":\"2026-07-28\",\"contract\":\"ETF期貨\",\"investor\":\"外資及陸資\",\"long_volume\":8757,\"long_value\":5948149000,\"short_volume\":9137,\"short_value\":5897802000,\"net_volume\":-380,\"net_value\":50347000,\"oi_long\":15932,\"oi_long_value\":12652051000,\"oi_short\":3080,\"oi_short_value\":1930014000,\"oi_net\":12852,\"oi_net_value\":10722037000},{\"date\":\"2026-07-28\",\"contract\":\"半導體30期貨\",\"investor\":\"外資及陸資\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":0,\"oi_net_value\":0},{\"date\":\"2026-07-28\",\"contract\":\"富櫃200期貨\",\"investor\":\"外資及陸資\",\"long_volume\":0,\"long_value\":0,\"short_volume\":2,\"short_value\":1618000,\"net_volume\":-2,\"net_value\":-1618000,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":2,\"oi_short_value\":1614000,\"oi_net\":-2,\"oi_net_value\":-1614000},{\"date\":\"2026-07-28\",\"contract\":\"小型臺指期貨\",\"investor\":\"外資及陸資\",\"long_volume\":166168,\"long_value\":355276368000,\"short_volume\":172043,\"short_value\":367977141000,\"net_volume\":-5875,\"net_value\":-12700773000,\"oi_long\":653,\"oi_long_value\":1357673000,\"oi_short\":3753,\"oi_short_value\":7809380000,\"oi_net\":-3100,\"oi_net_value\":-6451707000},{\"date\":\"2026-07-28\",\"contract\":\"小型金融期貨\",\"investor\":\"外資及陸資\",\"long_volume\":231,\"long_value\":178245000,\"short_volume\":214,\"short_value\":165164000,\"net_volume\":17,\"net_value\":13081000,\"oi_long\":40,\"oi_long_value\":30680000,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":40,\"oi_net_value\":30680000},{\"date\":\"2026-07-28\",\"contract\":\"小型電子期貨\",\"investor\":\"外資及陸資\",\"long_volume\":1001,\"long_value\":1347221000,\"short_volume\":1008,\"short_value\":1358104000,\"net_volume\":-7,\"net_value\":-10884000,\"oi_long\":40,\"oi_long_value\":52560000,\"oi_short\":53,\"oi_short_value\":69642000,\"oi_net\":-13,\"oi_net_value\":-17082000},{\"date\":\"2026-07-28\",\"contract\":\"微型臺指期貨\",\"investor\":\"外資及陸資\",\"long_volume\":241774,\"long_value\":103531243000,\"short_volume\":247005,\"short_value\":105770045000,\"net_volume\":-5231,\"net_value\":-2238803000,\"oi_long\":1093,\"oi_long_value\":454393000,\"oi_short\":5174,\"oi_short_value\":2151285000,\"oi_net\":-4081,\"oi_net_value\":-1696892000},{\"date\":\"2026-07-28\",\"contract\":\"東證期貨\",\"investor\":\"外資及陸資\",\"long_volume\":44,\"long_value\":35501000,\"short_volume\":39,\"short_value\":31552000,\"net_volume\":5,\"net_value\":3949000,\"oi_long\":70,\"oi_long_value\":55808000,\"oi_short\":103,\"oi_short_value\":82096000,\"oi_net\":-33,\"oi_net_value\":-26288000},{\"date\":\"2026-07-28\",\"contract\":\"櫃買指數期貨\",\"investor\":\"外資及陸資\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":0,\"oi_net_value\":0},{\"date\":\"2026-07-28\",\"contract\":\"美國標普500期貨\",\"investor\":\"外資及陸資\",\"long_volume\":19,\"long_value\":28303000,\"short_volume\":12,\"short_value\":17847000,\"net_volume\":7,\"net_value\":10457000,\"oi_long\":58,\"oi_long_value\":86223000,\"oi_short\":63,\"oi_short_value\":93737000,\"oi_net\":-5,\"oi_net_value\":-7514000},{\"date\":\"2026-07-28\",\"contract\":\"美國費城半導體期貨\",\"investor\":\"外資及陸資\",\"long_volume\":69,\"long_value\":63611000,\"short_volume\":21,\"short_value\":20157000,\"net_volume\":48,\"net_value\":43454000,\"oi_long\":409,\"oi_long_value\":366208000,\"oi_short\":112,\"oi_short_value\":100280000,\"oi_net\":297,\"oi_net_value\":265928000},{\"date\":\"2026-07-28\",\"contract\":\"美國道瓊期貨\",\"investor\":\"外資及陸資\",\"long_volume\":39,\"long_value\":40976000,\"short_volume\":32,\"short_value\":33609000,\"net_volume\":7,\"net_value\":7366000,\"oi_long\":150,\"oi_long_value\":157188000,\"oi_short\":50,\"oi_short_value\":52383000,\"oi_net\":100,</div>
+</body></html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+  body { font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+         background: #f5f6fa; margin: 0; padding: 24px; color: #1a1a2e; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .title { font-size: 22px; font-weight: 700; }
+  .badge { background: #e6f4ea; color: #0a7d32; padding: 4px 12px; border-radius: 12px;
+            font-size: 13px; font-weight: 600; }
+  .args { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #555;
+           background: #eef0f5; padding: 4px 8px; border-radius: 6px; margin-bottom: 12px; }
+  .card { background: #fff; border: 1px solid #e0e3eb; border-radius: 10px;
+           padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .card.err { border-left: 4px solid #c62828; }
+  .kv { font-size: 13px; line-height: 1.65; margin-bottom: 6px; overflow-wrap: break-word; }
+  .lineage { font-size: 12px; color: #444; background: #f8f9fc; padding: 8px 10px;
+              border-radius: 6px; line-height: 1.7; }
+  .raw { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #666;
+          background: #fbfbfd; border: 1px dashed #ddd; padding: 10px; border-radius: 6px;
+          white-space: pre-wrap; max-height: 260px; overflow: auto; }
+  h2 { margin: 18px 0 6px; font-size: 15px; color: #333; }
+</style></head>
+<body>
+  <div class="header">
+    <div class="title">get_financial_statements</div>
+    <div class="badge">成功 ✅</div>
+  </div>
+  <div class="args">參數: {"symbol": "1232"}</div>
+  
+        <div class="card">
+          <div class="kv"><b>data</b>: { <b>symbol</b>: '1232'; <b>name</b>: '大統益'; <b>year</b>: 2026; <b>quarter</b>: 2; <b>income</b>: [1 筆, 例: { <b>table_date</b>: …; <b>year</b>: …; <b>quarter</b>: …; <b>code</b>: …; <b>name</b>: …; <b>industry</b>: …; <b>eps</b>: …; <b>par_value</b>: …; <i>… 共 12 鍵</i> }]; <b>balance_sheet</b>: { <b>table_date</b>: '2026-04-01'; <b>year</b>: 2026; <b>quarter</b>: 2; <b>total_assets</b>: 10715479000; <b>current_assets</b>: 7829900000; <b>non_current_assets</b>: 2885579000; <b>total_liabilities</b>: 4974265000; <b>current_liabilities</b>: 3809801000; <i>… 共 10 鍵</i> }; <b>cash_flow</b>: { <b>table_date</b>: '2026-04-01'; <b>year</b>: 2026; <b>quarter</b>: 2; <b>operating_cash_flow</b>: 696778000; <b>investing_cash_flow</b>: -189324000; <b>financing_cash_flow</b>: -24943000; <b>ending_cash_balance</b>: 3172462000 }; <b>profit_ratios</b>: [1 筆, 例: { <b>table_date</b>: …; <b>year</b>: …; <b>quarter</b>: …; <b>code</b>: …; <b>name</b>: …; <b>revenue_million</b>: …; <b>gross_margin_pct</b>: …; <b>operating_margin_pct</b>: …; <i>… 共 10 鍵</i> }] }</div>
+          <div class="kv"><b>http_calls</b>: 4</div>
+          <div class="lineage"><b>_lineage</b>:<br><b>source</b>: MOPS<br><b>source_role</b>: canonical<br><b>fetched_at</b>: 2026-08-01T18:28:35+08:00<br><b>data_date</b>: 2026-08-01<br><b>freshness</b>: POST_MARKET_TODAY<br><b>sampling_sec</b>: 0<br><b>is_cached</b>: False<br><b>cache_ttl</b>: 43200<br><b>latency_ms</b>: 6142</div>
+          
+        </div>
+  <h2>原始回應（JSON）</h2>
+  <div class="raw">{
+  "isError": false,
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"data\":{\"symbol\":\"1232\",\"name\":\"大統益\",\"year\":2026,\"quarter\":2,\"income\":[{\"table_date\":\"2026-08-01\",\"year\":2026,\"quarter\":2,\"code\":\"1232\",\"name\":\"大統益股份有限公司\",\"industry\":\"食品工業\",\"eps\":4.71,\"par_value\":\"新台幣                 10.0000元\",\"revenue\":11481997000,\"operating_profit\":960027000,\"non_operating_items\":26046000,\"net_income\":790350000}],\"balance_sheet\":{\"table_date\":\"2026-04-01\",\"year\":2026,\"quarter\":2,\"total_assets\":10715479000,\"current_assets\":7829900000,\"non_current_assets\":2885579000,\"total_liabilities\":4974265000,\"current_liabilities\":3809801000,\"non_current_liabilities\":1164464000,\"total_equity\":5741214000},\"cash_flow\":{\"table_date\":\"2026-04-01\",\"year\":2026,\"quarter\":2,\"operating_cash_flow\":696778000,\"investing_cash_flow\":-189324000,\"financing_cash_flow\":-24943000,\"ending_cash_balance\":3172462000},\"profit_ratios\":[{\"table_date\":\"2026-08-01\",\"year\":2026,\"quarter\":2,\"code\":\"1232\",\"name\":\"大統益\",\"revenue_million\":11482,\"gross_margin_pct\":13.85,\"operating_margin_pct\":8.36,\"pretax_margin_pct\":8.59,\"net_margin_pct\":6.88}]},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:28:35+08:00\",\"data_date\":\"2026-08-01\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":43200,\"latency_ms\":6142},\"http_calls\":4,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+    }
+  ]
+}</div>
+</body></html>

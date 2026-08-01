@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+  body { font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+         background: #f5f6fa; margin: 0; padding: 24px; color: #1a1a2e; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .title { font-size: 22px; font-weight: 700; }
+  .badge { background: #e6f4ea; color: #0a7d32; padding: 4px 12px; border-radius: 12px;
+            font-size: 13px; font-weight: 600; }
+  .args { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #555;
+           background: #eef0f5; padding: 4px 8px; border-radius: 6px; margin-bottom: 12px; }
+  .card { background: #fff; border: 1px solid #e0e3eb; border-radius: 10px;
+           padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .card.err { border-left: 4px solid #c62828; }
+  .kv { font-size: 13px; line-height: 1.65; margin-bottom: 6px; overflow-wrap: break-word; }
+  .lineage { font-size: 12px; color: #444; background: #f8f9fc; padding: 8px 10px;
+              border-radius: 6px; line-height: 1.7; }
+  .raw { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #666;
+          background: #fbfbfd; border: 1px dashed #ddd; padding: 10px; border-radius: 6px;
+          white-space: pre-wrap; max-height: 260px; overflow: auto; }
+  h2 { margin: 18px 0 6px; font-size: 15px; color: #333; }
+</style></head>
+<body>
+  <div class="header">
+    <div class="title">get_attention_disposition_stocks</div>
+    <div class="badge">成功 ✅</div>
+  </div>
+  <div class="args">參數: {"market": "otc"}</div>
+  
+        <div class="card">
+          <div class="kv"><b>data</b>: { <b>market</b>: 'otc'; <b>date</b>: '2026-07-31'; <b>attention</b>: [21 筆, 例: { <b>code</b>: …; <b>name</b>: …; <b>info</b>: … }]; <b>disposition</b>: [39 筆, 例: { <b>code</b>: …; <b>name</b>: …; <b>period</b>: …; <b>reason</b>: … }] }</div>
+          <div class="kv"><b>http_calls</b>: 1</div>
+          <div class="lineage"><b>_lineage</b>:<br><b>source</b>: TPEX_API<br><b>source_role</b>: canonical<br><b>fetched_at</b>: 2026-08-01T18:27:34+08:00<br><b>data_date</b>: 2026-07-31<br><b>freshness</b>: POST_MARKET_TODAY<br><b>sampling_sec</b>: 0<br><b>is_cached</b>: True<br><b>cache_ttl</b>: 48745<br><b>latency_ms</b>: 152</div>
+          
+        </div>
+  <h2>原始回應（JSON）</h2>
+  <div class="raw">{
+  "isError": false,
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"data\":{\"market\":\"otc\",\"date\":\"2026-07-31\",\"attention\":[{\"code\":\"2061\",\"name\":\"風青\",\"info\":\"最近六個營業日(自當日之前一個營業日起)之當日沖銷成交量占總成交量比率達64.51%，當日之前一個營業日當日沖銷成交量占總成交量達69.14%（第十三款)\"},{\"code\":\"3211\",\"name\":\"順達\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達28.03%且最近六個營業日(含當日)起迄兩個營業日之最後成交價價差達新臺幣90元(第一款)當日週轉率達5.79%(第四款)\"},{\"code\":\"3236\",\"name\":\"千如\",\"info\":\"最近六個營業日(自當日之前一個營業日起)之當日沖銷成交量占總成交量比率達65.66%，當日之前一個營業日當日沖銷成交量占總成交量達66.25%（第十三款)\"},{\"code\":\"3260\",\"name\":\"威剛\",\"info\":\"最近六個營業日(自當日之前一個營業日起)之當日沖銷成交量占總成交量比率達62.1%，當日之前一個營業日當日沖銷成交量占總成交量達68.07%（第十三款)\"},{\"code\":\"3362\",\"name\":\"先進光\",\"info\":\"當日本益比為N/A、股價淨值比為6.72且為其所屬產業類別股價淨值比之2.93倍、當日週轉率達6.49%(第六款)\"},{\"code\":\"3374\",\"name\":\"精材\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達34.78%(第一款)\"},{\"code\":\"3491\",\"name\":\"昇達科\",\"info\":\"當日本益比為106.02、股價淨值比為19.14且為其所屬產業類別股價淨值比之3.53倍、當日週轉率達7.12%(第六款)\"},{\"code\":\"3624\",\"name\":\"光頡\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達37.6%(第一款)統一證券公司當日受託賣出該有價證券之成交量占當日該有價證券總成交量之比率為32.22%，摩根士丹利證券公司當日受託買進該有價證券之成交量占當日該有價證券總成交量之比率為31.9%(第五款)\"},{\"code\":\"4542\",\"name\":\"科嶠\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達34.82%(第一款)當日週轉率達5.78%(第四款)\"},{\"code\":\"45421\",\"name\":\"科嶠一\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達59.33%(第一款)\"},{\"code\":\"4556\",\"name\":\"旭然\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達49.11%(第一款)\"},{\"code\":\"4939\",\"name\":\"亞電\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達29.36%，當日週轉率達12.21%(第四款)最近六個營業日(自當日之前一個營業日起)之當日沖銷成交量占總成交量比率達72.31%，當日之前一個營業日當日沖銷成交量占總成交量達63.87%（第十三款)\"},{\"code\":\"6182\",\"name\":\"合晶\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達32.9%(第一款)\"},{\"code\":\"61828\",\"name\":\"合晶八\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達34.13%(第一款)\"},{\"code\":\"62075\",\"name\":\"雷科五\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達28.25%且最近六個營業日(含當日)起迄兩個營業日之最後成交價價差達新臺幣54元(第一款)\"},{\"code\":\"6217\",\"name\":\"中探針\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達39.63%(第一款)\"},{\"code\":\"65841\",\"name\":\"南俊國際一\",\"info\":\"最近六個營業日(含當日)起迄兩個營業日之最後成交價價差達新臺幣77元(第十一款)\"},{\"code\":\"6739\",\"name\":\"竹陞科技\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達34.8%(第一款)\"},{\"code\":\"700673\",\"name\":\"信昌電統一6A購01\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達39.98%(第一款)\"},{\"code\":\"7828\",\"name\":\"創新服務\",\"info\":\"最近六個營業日(含當日)累積之最後成交價跌幅達31.99%(第一款)\"},{\"code\":\"8932\",\"name\":\"智通*\",\"info\":\"最近六個營業日(自當日之前一個營業日起)之借券賣出成交量占總成交量比率達9.38%，當日之前一個營業日借券賣出成交量較最近六十個營業日(自當日之前一個營業日起)之日平均借券賣出成交量放大為5倍(第十二款)\"}],\"disposition\":[{\"code\":\"3624\",\"name\":\"光頡\",\"period\":\"1150803~1150814\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"6182\",\"name\":\"合晶\",\"period\":\"1150803~1150814\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"61828\",\"name\":\"合晶八\",\"period\":\"1150803~1150814\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"6739\",\"name\":\"竹陞科技\",\"period\":\"1150803~1150814\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"7828\",\"name\":\"創新服務\",\"period\":\"1150803~1150814\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"31672\",\"name\":\"大量二\",\"period\":\"1150731~1150813\",\"reason\":\"轉(交)換公司債之標的證券經本中心或臺灣證券交易所發布處置\"},{\"code\":\"45421\",\"name\":\"科嶠一\",\"period\":\"1150731~1150813\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"6217\",\"name\":\"中探針\",\"period\":\"1150731~1150813\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"729185\",\"name\":\"華星光統一59購03\",\"period\":\"1150731~1150813\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"76101\",\"name\":\"聯友金屬一創\",\"period\":\"1150731~1150813\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"23511\",\"name\":\"順德一\",\"period\":\"1150730~1150812\",\"reason\":\"因連續3個營業日達本中心作業要點第四條第一項第一款\"},{\"code\":\"4979\",\"name\":\"華星光\",\"period\":\"1150730~1150814\",\"reason\":\"連續5個營業日及沖銷標準\"},{\"code\":\"49793\",\"name\":\"華星光三\",\"period\":\"1150730~1150814\",\"reason\":\"轉(交)換公司債之標的證券經本中心或臺灣證券交易所發布處置\"},{\"code\":\"49794\",\"name\":\"華星光四\",\"period\":\"1150730~1150814\",\"reas</div>
+</body></html>
