@@ -146,6 +146,23 @@ func GetOrFetch[T any](ctx context.Context, c *Cache, key string, ttl time.Durat
 	return hit.value, hit.cached, nil
 }
 
+// Get 執行唯讀快取查詢（L1 → L2），不觸發上游 fetch（§12.2 讀穿之唯讀端）。
+// 用於批次查詢前之快取探測（如 TAIFEX FetchRange 先探測哪些日期已在 L2）。
+func Get[T any](ctx context.Context, c *Cache, key string, opts ...FetchOption) (T, bool, error) {
+	var zero T
+	if key == "" {
+		return zero, false, ErrEmptyKey
+	}
+	cfg := fetchConfig{}
+	for _, o := range opts {
+		o(&cfg)
+	}
+	if v, ok := l1Get[T](c, key); ok {
+		return v, true, nil
+	}
+	return l2Get[T](ctx, c, key, cfg)
+}
+
 // cacheHit 承載 singleflight 之結果與來源（避免以 error 通道回傳標記）。
 type cacheHit[T any] struct {
 	value  T

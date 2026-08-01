@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -173,7 +174,7 @@ func (c *BaseClient) Do(ctx context.Context, req RawRequest) (*RawResponse, erro
 
 	backoff := firstBackoff
 	for attempt := 0; ; attempt++ {
-		resp, err := c.doOnce(ctx, method, req.URL, req.Headers)
+		resp, err := c.doOnce(ctx, method, req.URL, req.Headers, req.Body)
 		if err != nil {
 			c.breaker.Record(false)
 			return nil, err
@@ -205,8 +206,12 @@ func (c *BaseClient) Do(ctx context.Context, req RawRequest) (*RawResponse, erro
 	}
 }
 
-func (c *BaseClient) doOnce(ctx context.Context, method, url string, headers http.Header) (*RawResponse, error) {
-	httpReq, err := http.NewRequestWithContext(ctx, method, url, nil)
+func (c *BaseClient) doOnce(ctx context.Context, method, url string, headers http.Header, body []byte) (*RawResponse, error) {
+	var r io.Reader
+	if body != nil {
+		r = bytes.NewReader(body)
+	}
+	httpReq, err := http.NewRequestWithContext(ctx, method, url, r)
 	if err != nil {
 		return nil, err
 	}

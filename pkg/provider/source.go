@@ -18,6 +18,7 @@ type RawRequest struct {
 	Method  string      // 預設 GET
 	URL     string      // 完整 URL（含 query 參數）
 	Headers http.Header // 額外 header（如 content-type）；User-Agent 由 BaseClient 注入
+	Body    []byte      // 請求 body（POST form-urlencoded 用，如 TAIFEX-DL 下載）
 }
 
 // RawResponse 為官方來源之原始回應。僅內部暫存（§3.1 raw capture），
