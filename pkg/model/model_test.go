@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 	"time"
+
+	"tw-quant-mcp/pkg/chart"
 )
 
 func TestLineageMarshalFull(t *testing.T) {
@@ -88,7 +90,7 @@ func TestEnvelopeMarshal(t *testing.T) {
 			FetchedAt: NewTaipeiTime(time.Date(2026, 7, 31, 13, 30, 0, 0, taipei)),
 			DataDate:  "2026-07-31", Freshness: FreshnessPostMarketToday,
 		},
-		ChartMeta: map[string]any{"recommended_type": "candlestick"},
+		ChartMeta: chart.Candlestick(),
 	}
 	b, err := json.Marshal(env)
 	if err != nil {

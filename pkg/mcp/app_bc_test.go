@@ -470,7 +470,8 @@ func callEnv(t *testing.T, app *App, name string, args map[string]any) *model.En
 
 // chartType 取出 _chart_meta 之 recommended_type。
 func chartType(env *model.Envelope) string {
-	m, _ := env.ChartMeta.(map[string]any)
-	s, _ := m["recommended_type"].(string)
-	return s
+	if env.ChartMeta == nil {
+		return ""
+	}
+	return env.ChartMeta.RecommendedType
 }

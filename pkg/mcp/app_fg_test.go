@@ -292,17 +292,15 @@ func TestFGPutCallRatioSingleDate(t *testing.T) {
 	if env.Lineage.Freshness != model.FreshnessPostMarketToday {
 		t.Errorf("API 單日 freshness 應為 POST_MARKET_TODAY: %+v", env.Lineage)
 	}
-	m, _ := env.ChartMeta.(map[string]any)
 	if chartType(env) != "line" {
 		t.Fatalf("PCR chart 應為 line，實際 %s", chartType(env))
 	}
-	anns, _ := m["annotations"].([]any)
+	anns := env.ChartMeta.Annotations
 	if len(anns) != 1 {
 		t.Fatalf("應有 1 個 annotation（多空分界線），實際 %v", anns)
 	}
-	a, _ := anns[0].(map[string]any)
-	if a["type"] != "hline" || a["value"] != float64(1) {
-		t.Errorf("annotation 應為 hline 1.0，實際 %v", a)
+	if anns[0].Type != "hline" || anns[0].Value != float64(1) {
+		t.Errorf("annotation 應為 hline 1.0，實際 %v", anns[0])
 	}
 }
 

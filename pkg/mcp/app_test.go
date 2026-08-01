@@ -234,12 +234,11 @@ func TestCallGetIntradayKline(t *testing.T) {
 	}
 
 	// _chart_meta 預設注入（chart=true）
-	cm, ok := env.ChartMeta.(map[string]any)
-	if !ok {
-		t.Fatalf("chart=true 應注入 _chart_meta，實際 %T", env.ChartMeta)
+	if env.ChartMeta == nil {
+		t.Fatalf("chart=true 應注入 _chart_meta，實際 nil")
 	}
-	if cm["recommended_type"] != "candlestick" {
-		t.Errorf("recommended_type 應為 candlestick，實際 %v", cm["recommended_type"])
+	if env.ChartMeta.RecommendedType != "candlestick" {
+		t.Errorf("recommended_type 應為 candlestick，實際 %v", env.ChartMeta.RecommendedType)
 	}
 
 	// chart=false 移除
