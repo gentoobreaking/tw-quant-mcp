@@ -23,6 +23,9 @@ var (
 	tpexListURL = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 )
 
+// SetListURLs 覆寫官方清單 URL（僅測試用：httptest 注入，T018 預熱排程測試）。
+func SetListURLs(twse, tpex string) { twseListURL, tpexListURL = twse, tpex }
+
 // registryTTL 對應 §4.2「交易日曆 / 公司代碼表」24h 盤中/盤後 TTL。
 const registryTTL = 24 * time.Hour
 

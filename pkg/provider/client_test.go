@@ -8,9 +8,11 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 )
@@ -93,6 +95,65 @@ func TestGzipAutoDecompress(t *testing.T) {
 	}
 	if got := string(raw.Body); got != `{"gzip":true}` {
 		t.Errorf("gzip 未自動解壓: %q", got)
+	}
+}
+
+// §12.3 連線池驗收：每主機獨立 Transport、Keep-Alive、MaxIdleConnsPerHost=8、HTTP/2、gzip 未停用。
+func TestTransportConnectionPoolParams(t *testing.T) {
+	c := NewBaseClient("www.twse.com.tw")
+	tr, ok := c.http.Transport.(*http.Transport)
+	if !ok {
+		t.Fatalf("應為 *http.Transport，實際 %T", c.http.Transport)
+	}
+	if tr.MaxIdleConnsPerHost < 8 {
+		t.Errorf("MaxIdleConnsPerHost 應 >= 8（§12.3），實際 %d", tr.MaxIdleConnsPerHost)
+	}
+	if tr.MaxIdleConns < 32 {
+		t.Errorf("MaxIdleConns 應 >= 32，實際 %d", tr.MaxIdleConns)
+	}
+	if tr.DialContext == nil {
+		t.Error("DialContext 應設定（含 Keep-Alive）")
+	}
+	if !tr.ForceAttemptHTTP2 {
+		t.Error("應啟用 HTTP/2（ForceAttemptHTTP2）")
+	}
+	if tr.DisableCompression {
+		t.Error("DisableCompression 應為 false（保留 gzip 自動解壓）")
+	}
+	// 各主機獨立 Transport（禁止共享連線池）
+	c2 := NewBaseClient("www.tpex.org.tw")
+	tr2 := c2.http.Transport.(*http.Transport)
+	if tr == tr2 {
+		t.Error("不同主機應有獨立 Transport（§12.3 每主機連線池）")
+	}
+}
+
+// 共用連線池：同一主機連續請求可復用連線（Keep-Alive 生效）。
+func TestKeepAliveConnectionReuse(t *testing.T) {
+	var active, closed int32
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "{}")
+	}))
+	defer srv.Close()
+	conn := srv.Config.ConnState
+	srv.Config.ConnState = func(c net.Conn, s http.ConnState) {
+		if s == http.StateNew {
+			atomic.AddInt32(&active, 1)
+		}
+		if s == http.StateClosed {
+			atomic.AddInt32(&closed, 1)
+		}
+		conn(c, s)
+	}
+
+	c := fastClient()
+	for i := 0; i < 3; i++ {
+		if _, err := c.Do(context.Background(), RawRequest{URL: srv.URL}); err != nil {
+			t.Fatalf("Do %d 失敗: %v", i, err)
+		}
+	}
+	if active != 1 {
+		t.Errorf("連續 3 請求應復用同一連線（Keep-Alive），實際建立 %d 條", active)
 	}
 }
 

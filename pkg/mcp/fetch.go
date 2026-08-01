@@ -72,6 +72,7 @@ func fetchNormalize[T any](a *App, ctx context.Context, dataset, dataDate, key s
 	dataset = policyDataset(dataset)
 	ttl, cacheable := cache.TTLFor(dataset, a.now())
 	fn := func(ctx context.Context) (T, error) {
+		a.httpCalls.Add(1) // §12.9 instrumentation：快取 miss 即為一次上游 HTTP 請求
 		raw, err := fetch()
 		if err != nil {
 			return zero, err
@@ -100,6 +101,7 @@ func (a *App) fetchRaw(ctx context.Context, dataset, dataDate, key string,
 	dataset = policyDataset(dataset)
 	ttl, cacheable := cache.TTLFor(dataset, a.now())
 	fn := func(ctx context.Context) ([]byte, error) {
+		a.httpCalls.Add(1) // §12.9 instrumentation
 		return fetch()
 	}
 	if !cacheable {

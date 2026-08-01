@@ -87,7 +87,9 @@ func (c *Core) Call(ctx context.Context, name string, args map[string]any) (inte
 	}
 
 	started := c.now()
-	hr, err := def.Handler(c.app, args)
+	a := c.app
+	a.httpCalls.Store(0) // §12.9：每次查詢歸零上游 HTTP 計數器
+	hr, err := def.Handler(a, args)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +101,7 @@ func (c *Core) Call(ctx context.Context, name string, args map[string]any) (inte
 	}
 	lg.LatencyMS = time.Since(started).Milliseconds()
 
-	env := &model.Envelope{Data: hr.Data, Lineage: lg}
+	env := &model.Envelope{Data: hr.Data, Lineage: lg, HTTPCalls: a.httpCalls.Load()}
 	if opt.Chart && c.chart != nil {
 		if err := c.chart.UpdateEnvelope(env, def, opt, hr.Data); err != nil {
 			return nil, fmt.Errorf("mcp: 工具 %s chart 注入失敗: %w", name, err)

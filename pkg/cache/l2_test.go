@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 	"time"
 )
@@ -137,5 +138,68 @@ func TestL2ListByDatasetDate(t *testing.T) {
 	}
 	if keys, err = l.list(ctx, "daily_kline", "2026-08-02"); err != nil || len(keys) != 0 {
 		t.Errorf("list 無匹配應為空，實際 %v（err=%v）", keys, err)
+	}
+}
+
+// §12.8 L2 最佳化驗收：WAL 模式、(dataset, data_date) 索引、prepared statement 生效。
+func TestL2Optimizations(t *testing.T) {
+	l := openTestL2(t)
+
+	// WAL journal mode
+	var mode string
+	if err := l.db.QueryRow("PRAGMA journal_mode").Scan(&mode); err != nil {
+		t.Fatal(err)
+	}
+	if mode != "wal" {
+		t.Errorf("journal_mode 應為 wal，實際 %q", mode)
+	}
+
+	// 索引存在
+	var idxName string
+	err := l.db.QueryRow(
+		`SELECT name FROM sqlite_master WHERE type='index' AND name='idx_cache_entries_dataset_date'`,
+	).Scan(&idxName)
+	if err != nil {
+		t.Fatalf("應存在 (dataset, data_date) 索引: %v", err)
+	}
+	if idxName != "idx_cache_entries_dataset_date" {
+		t.Errorf("索引名稱錯誤: %s", idxName)
+	}
+
+	// prepared statement 已建置
+	for name, stmt := range map[string]*sql.Stmt{
+		"get": l.stmts.get, "set": l.stmts.set,
+		"del": l.stmts.del, "list": l.stmts.list,
+	} {
+		if stmt == nil {
+			t.Errorf("prepared statement %s 未建置", name)
+		}
+	}
+
+	// 查詢計畫確實使用索引
+	ctx := context.Background()
+	if err := l.set(ctx, "k1", "daily_kline", "2026-07-31", []byte("v"), time.Hour); err != nil {
+		t.Fatal(err)
+	}
+	rows, err := l.db.Query(
+		`EXPLAIN QUERY PLAN SELECT key FROM cache_entries WHERE dataset = ? AND data_date = ?`,
+		"daily_kline", "2026-07-31",
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rows.Close()
+	foundIdx := false
+	for rows.Next() {
+		var id, parent, notused, detail string
+		if err := rows.Scan(&id, &parent, &notused, &detail); err != nil {
+			t.Fatal(err)
+		}
+		if detail == "SEARCH cache_entries USING INDEX idx_cache_entries_dataset_date (dataset=? AND data_date=?)" {
+			foundIdx = true
+		}
+	}
+	if !foundIdx {
+		t.Error("list 查詢計畫應使用 idx_cache_entries_dataset_date")
 	}
 }

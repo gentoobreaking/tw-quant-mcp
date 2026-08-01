@@ -11,7 +11,9 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -43,7 +45,17 @@ func main() {
 	}
 	app.Wire(srv)
 
-	ctx := context.Background()
+	// T018：§12.9 預熱排程（08:00 行事曆/代碼表、開盤前 MIS Session、
+	// 16:45 當日盤後）。長駐 goroutine 隨 ctx 取消（SIGINT/SIGTERM）
+	// 結束；預熱失敗僅記錄、不影響服務啟動。
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	go func() {
+		if err := mcpapp.NewPrewarmScheduler(app).Run(ctx); err != nil {
+			logger.Error("預熱排程結束", "err", err)
+		}
+	}()
+
 	switch cfg.Transport {
 	case config.TransportStdio:
 		logger.Info("啟動 tw-quant-mcp", "transport", "stdio", "version", version)
@@ -68,9 +80,21 @@ func main() {
 			ReadHeaderTimeout: 10 * time.Second,
 		}
 		logger.Info("啟動 tw-quant-mcp", "transport", "streamable-http", "addr", cfg.HTTPAddr, "version", version)
-		if err := httpSrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			logger.Error("http server 異常結束", "err", err)
-			os.Exit(1)
+		errCh := make(chan error, 1)
+		go func() { errCh <- httpSrv.ListenAndServe() }()
+		select {
+		case <-ctx.Done():
+			logger.Info("收到中斷訊號，關閉 http server")
+			shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			if err := httpSrv.Shutdown(shutdownCtx); err != nil {
+				logger.Error("http server 關閉失敗", "err", err)
+			}
+		case err := <-errCh:
+			if err != nil && !errors.Is(err, http.ErrServerClosed) {
+				logger.Error("http server 異常結束", "err", err)
+				os.Exit(1)
+			}
 		}
 	}
 }

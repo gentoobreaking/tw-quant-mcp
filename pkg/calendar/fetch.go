@@ -16,6 +16,9 @@ import (
 // 以變數而非 const 提供，供測試以 httptest 注入。
 var holidayScheduleURL = "https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json"
 
+// SetScheduleURL 覆寫開休市表 URL（僅測試用：httptest 注入，T018 預熱排程測試）。
+func SetScheduleURL(u string) { holidayScheduleURL = u }
+
 // scheduleTTL 對應 §4.2「交易日曆 / 公司代碼表」24h TTL。
 const scheduleTTL = 24 * time.Hour
 

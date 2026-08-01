@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/url"
+	"sync/atomic"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -15,6 +16,7 @@ import (
 	"tw-quant-mcp/pkg/engine"
 	"tw-quant-mcp/pkg/model"
 	"tw-quant-mcp/pkg/provider"
+	"tw-quant-mcp/pkg/registry"
 )
 
 // WebFetcher 為 TWSE-WEB 資料源之 handler 視界（URL 建構 + 請求 +
@@ -74,6 +76,16 @@ type App struct {
 	registry  *Registry
 	now       func() time.Time
 	logger    *slog.Logger
+	// 預熱排程（§12.9，T018）之資料源：行事曆（www.twse.com.tw）、
+	// 代碼表載入器（openapi.twse.com.tw / www.tpex.org.tw）、MIS Session
+	// 預熱（mis.twse.com.tw）。測試可注入替身。
+	calClient *provider.BaseClient
+	regLoader *registry.Loader
+	misClient *provider.BaseClient
+	// httpCalls 為本次查詢之實際上游 HTTP 請求計數（§12.9 instrumentation）。
+	// Core.Call 於每次查詢前歸零、fetch 路徑於 miss 時累加、結束後注入
+	// Envelope.HTTPCalls。盤中 K 線等純記憶體路徑應恆為 0（§12.4）。
+	httpCalls atomic.Int64
 }
 
 // AppOption 為 App 建置選項（測試用注入）。
@@ -138,6 +150,21 @@ func WithAppLogger(l *slog.Logger) AppOption {
 	return func(a *App) { a.logger = l }
 }
 
+// WithAppCalendarClient 注入行事曆抓取 client（測試用；預設 www.twse.com.tw）。
+func WithAppCalendarClient(c *provider.BaseClient) AppOption {
+	return func(a *App) { a.calClient = c }
+}
+
+// WithAppRegistryLoader 注入代碼表載入器（測試用；預設 openapi.twse.com.tw）。
+func WithAppRegistryLoader(l *registry.Loader) AppOption {
+	return func(a *App) { a.regLoader = l }
+}
+
+// WithAppMISClient 注入 MIS Session 預熱 client（測試用；預設 mis.twse.com.tw）。
+func WithAppMISClient(c *provider.BaseClient) AppOption {
+	return func(a *App) { a.misClient = c }
+}
+
 // NewApp 建立 MCP Engine Layer 組裝根。cfg 可為 nil（預設零值設定）。
 func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 	if cfg == nil {
@@ -184,6 +211,21 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 			a.cache, a.now); err != nil {
 			return nil, fmt.Errorf("mcp: TAIFEX 查詢層初始化失敗: %w", err)
 		}
+		// §12.9 instrumentation：TAIFEX 路徑之上游 HTTP 計數回呼
+		if q, ok := a.taifex.(*provider.TAIFEXQuery); ok {
+			q.SetHTTPCounter(func() { a.httpCalls.Add(1) })
+		}
+	}
+	// 預熱排程（§12.9，T018）之預設資料源
+	if a.calClient == nil {
+		a.calClient = provider.NewBaseClient("www.twse.com.tw")
+	}
+	if a.regLoader == nil {
+		a.regLoader = registry.NewLoader(
+			provider.NewBaseClient("openapi.twse.com.tw"), a.cache)
+	}
+	if a.misClient == nil {
+		a.misClient = provider.NewBaseClient("mis.twse.com.tw")
 	}
 	a.registry = buildRegistry()
 	a.core = NewCore(a, a.registry,

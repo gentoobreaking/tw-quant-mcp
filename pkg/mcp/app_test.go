@@ -233,6 +233,11 @@ func TestCallGetIntradayKline(t *testing.T) {
 		t.Log("is_cached=false 符合無快取現況")
 	}
 
+	// 盤中 K 線純記憶體組裝：零上游 HTTP（§12.9 http_calls=0）
+	if env.HTTPCalls != 0 {
+		t.Errorf("盤中 K 線查詢 http_calls 應為 0，實際 %d", env.HTTPCalls)
+	}
+
 	// _chart_meta 預設注入（chart=true）
 	if env.ChartMeta == nil {
 		t.Fatalf("chart=true 應注入 _chart_meta，實際 nil")
@@ -248,6 +253,9 @@ func TestCallGetIntradayKline(t *testing.T) {
 	if env2.ChartMeta != nil {
 		t.Errorf("chart=false 不應注入 _chart_meta")
 	}
+	if env2.HTTPCalls != 0 {
+		t.Errorf("盤中 K 線（chart=false）http_calls 應為 0，實際 %d", env2.HTTPCalls)
+	}
 }
 
 func TestCallGetIntradayQuote(t *testing.T) {
@@ -262,6 +270,9 @@ func TestCallGetIntradayQuote(t *testing.T) {
 	}
 	if q.Bids[0].Volume != 1000 {
 		t.Errorf("買量應為 1000 股，實際 %d", q.Bids[0].Volume)
+	}
+	if env.HTTPCalls != 0 {
+		t.Errorf("盤中報價查詢 http_calls 應為 0，實際 %d", env.HTTPCalls)
 	}
 }
 

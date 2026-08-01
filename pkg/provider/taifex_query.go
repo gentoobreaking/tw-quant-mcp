@@ -64,6 +64,10 @@ type TAIFEXQuery struct {
 	cache *cache.Cache
 	now   func() time.Time
 
+	// onHTTP 為每次實際上游 HTTP 請求之回呼（§12.9 instrumentation，
+	// 由 mcp 層注入以計數 http_calls）；nil 時不呼叫。
+	onHTTP func()
+
 	mu        sync.Mutex
 	latestAt  string // 最新交易日快取之台北日期
 	latestDay string // 最新交易日 YYYY-MM-DD
@@ -78,6 +82,18 @@ func NewTAIFEXQuery(api *TAIFEXAPISource, dl *TAIFEXDLSource, c *cache.Cache, no
 		now = model.TaipeiNow
 	}
 	return &TAIFEXQuery{api: api, dl: dl, cache: c, now: now}, nil
+}
+
+// SetHTTPCounter 註冊上游 HTTP 請求計數回呼（§12.9；每筆實際請求呼叫一次）。
+func (q *TAIFEXQuery) SetHTTPCounter(fn func()) {
+	q.onHTTP = fn
+}
+
+// countHTTP 於每次實際上游請求前呼叫。
+func (q *TAIFEXQuery) countHTTP() {
+	if q.onHTTP != nil {
+		q.onHTTP()
+	}
 }
 
 // LatestTradingDay 回傳最新交易日（YYYY-MM-DD，公開包裝，供 §10.F 工具
@@ -153,6 +169,7 @@ func apiSupported(ds model.TAIFEXDataset) bool {
 func (q *TAIFEXQuery) loadAPI(ctx context.Context, ds model.TAIFEXDataset, date, contract string) (TAIFEXQueryResult, error) {
 	params := queryOfParams(date, contract)
 	url := q.api.URL(ds, params)
+	q.countHTTP() // §12.9 instrumentation
 	raw, err := q.api.Fetch(ctx, RawRequest{URL: url})
 	if err != nil {
 		return TAIFEXQueryResult{}, err
@@ -211,6 +228,7 @@ func (q *TAIFEXQuery) downloadDL(ctx context.Context, ds model.TAIFEXDataset, st
 		params.Set("commodity_id", contract)
 	}
 	url := q.dl.URL(ds, params)
+	q.countHTTP() // §12.9 instrumentation
 	raw, err := q.dl.Fetch(ctx, RawRequest{URL: url})
 	if err != nil {
 		return nil, err
@@ -344,6 +362,7 @@ func (q *TAIFEXQuery) latestTradingDay(ctx context.Context) (string, error) {
 func (q *TAIFEXQuery) discoverLatest(ctx context.Context) (string, error) {
 	// PutCallRatio 回傳近一月多日；取其最大 Date 為最新交易日
 	url := q.api.URL(model.TAPutCallRatio, urlValues(nil))
+	q.countHTTP() // §12.9 instrumentation
 	raw, err := q.api.Fetch(ctx, RawRequest{URL: url})
 	if err != nil {
 		return "", fmt.Errorf("provider: 判定最新交易日失敗: %w", err)

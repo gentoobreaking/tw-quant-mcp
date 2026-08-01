@@ -192,6 +192,30 @@ func (w *MISWorker) Run(ctx context.Context) error {
 	}
 }
 
+// MISIndexURL 回傳 MIS Session 預熱端點（§8.3；供預熱排程 T018 使用）。
+func MISIndexURL() string { return misIndexURL }
+
+// SetMISIndexURL 覆寫 MIS index.jsp URL（僅測試用：httptest 注入，
+// T018 預熱排程測試）。
+func SetMISIndexURL(u string) { misIndexURL = u }
+
+// WarmupMISSession 執行 MIS Session 預熱（§8.3：GET index.jsp 取 Cookie）。
+// 供 MISWorker 與 §12.9 預熱排程共用；index.jsp 回應異常（如官方改版 404）
+// 不阻斷：cookie 由 cookiejar 維護，取不到時 MIS 仍可正常回應。
+func WarmupMISSession(ctx context.Context, client *BaseClient) error {
+	if client == nil {
+		return fmt.Errorf("provider: client 為 nil")
+	}
+	resp, err := client.Do(ctx, RawRequest{URL: misIndexURL})
+	if err != nil {
+		return fmt.Errorf("provider: MIS session 預熱失敗: %w", err)
+	}
+	if resp.StatusCode >= 400 {
+		return fmt.Errorf("provider: MIS index.jsp 回應異常（status=%d）", resp.StatusCode)
+	}
+	return nil
+}
+
 // warmupSession 執行 Session 預熱（§8.3：GET index.jsp 取 Cookie）。
 // index.jsp 回應異常（如官方改版 404）不阻斷：cookie 由 cookiejar 維護，
 // 取不到時 MIS 仍可正常回應。
