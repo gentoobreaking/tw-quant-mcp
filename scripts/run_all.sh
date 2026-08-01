@@ -30,12 +30,12 @@ fi
 
 if [ "$CALL" = 1 ]; then
   echo "▶ 2/3 呼叫 36 工具（真實資料源，約 1~2 分鐘）..."
-  python3 ~/Projects/tw-quant-mcp/scripts~/call_tw_quant_tools.py
+  python3 ./scripts/call_tw_quant_tools.py
 fi
 
 if [ "$RENDER" = 1 ]; then
   echo "▶ 3/3 渲染 36 張 PNG 截圖..."
-  python3 ~/Projects/tw-quant-mcp/scripts/render_tool_snapshots.py
+  python3 ./scripts/render_tool_snapshots.py
 fi
 
 echo ""
