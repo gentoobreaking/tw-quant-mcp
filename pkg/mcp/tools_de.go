@@ -428,7 +428,6 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 	score.Note = "評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）"
 	ttl, _ := a.ttlOf(string(provider.MOPSIncomeSummary))
 	lg := postLineage(model.SourceMOPS, dataDate, cachedI || cachedP || cachedG, ttl)
-	lg.SourceRole = model.SourceRoleHelper
 	lg.DerivedFrom = derived
 	return HandlerResult{Data: score, Lineage: lg}, nil
 }

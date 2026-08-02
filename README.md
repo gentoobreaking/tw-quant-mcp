@@ -211,14 +211,15 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
   "data": { "...": "業務資料（Normalized Model）" },
   "_lineage": {
     "source": "TWSE_WEB",
-    "source_role": "canonical",
-    "freshness": "POST_MARKET_TODAY",
+    "source_role": "CANONICAL",
+    "freshness": "POST_MARKET",
     "fetched_at": "2026-08-01T16:30:00+08:00",
     "data_date": "2026-08-01",
     "sampling_sec": 0,
     "is_cached": false,
-    "cache_ttl": 86400,
-    "latency_ms": 123
+    "cache_age_sec": 86400,
+    "latency_ms": 123,
+    "grade": "AVAILABLE"
   },
   "_chart_meta": { "recommended_type": "line" },
   "http_calls": 1,
@@ -226,7 +227,7 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 }
 ```
 
-- `_lineage`：來源機構 / 來源角色（canonical/helper/fallback）/ 新鮮度分級 / 採樣間隔 / 快取狀態 / 延遲
+- `_lineage`：來源機構 / 來源角色（CANONICAL/SEMI_OFFICIAL_REALTIME/FALLBACK）/ 新鮮度分級（REALTIME_INTRADAY/POST_MARKET/MONTHLY/QUARTERLY/STALE_FALLBACK）/ 採樣間隔 / 快取狀態 / 資料存活秒數 / 延遲 / 成熟度分級（AVAILABLE/PREVIEW/NOT_YET_AVAILABLE，v2.1 §4）；多來源聚合時 `_lineage` 輸出為 `[]Lineage` 陣列。`derived_from` / `cache_ttl` / `source_url` 僅內部保留（debug/log 模式輸出），正式 JSON 不含
 - `_chart_meta`：圖表渲染描述（請求含 `chart=true`，預設 true）
 - `http_calls`：本次查詢實際上游 HTTP 請求數（盤中 K 線恆為 0）
 - `disclaimer`：附錄 A 法遵免責欄位

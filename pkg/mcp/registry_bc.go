@@ -1,7 +1,7 @@
 package mcp
 
 // registry_bc.go 登錄 §10.B（盤後行情・籌碼）與 §10.C（重大訊息與風險）
-// 之 11 個工具。全部為 POST_MARKET_TODAY 資料，lineage 由 handler 回報。
+// 之 11 個工具。全部為 POST_MARKET 資料，lineage 由 handler 回報。
 
 // registerBCTools 將 B/C 組工具登錄至 r。
 func registerBCTools(r *Registry) {

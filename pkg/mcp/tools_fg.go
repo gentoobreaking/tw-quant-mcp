@@ -113,17 +113,13 @@ func taifexRows[T any](ds model.TAIFEXDataset, date string, res provider.TAIFEXQ
 	return rows, nil
 }
 
-// taifexLineage 依查詢結果建立 lineage（§3.2）：API 最新日為
-// POST_MARKET_TODAY；DL 歷史為 HISTORICAL；補檔標 derived_from。
+// taifexLineage 依查詢結果建立 lineage（v2.1 §4）：TAIFEX 資料為每日盤後
+// 公布，freshness 一律 POST_MARKET；補檔標 derived_from（僅 debug/log 輸出）。
 func taifexLineage(res provider.TAIFEXQueryResult, date string, fromCache bool) *model.Lineage {
-	freshness := model.FreshnessHistorical
-	if res.Source == model.SourceTAIFEXAPI {
-		freshness = model.FreshnessPostMarketToday
-	}
 	lg := &model.Lineage{
 		Source:     res.Source,
 		SourceRole: model.SourceRoleCanonical,
-		Freshness:  freshness,
+		Freshness:  model.FreshnessPostMarket,
 		DataDate:   date,
 		IsCached:   fromCache || res.IsCached,
 	}
@@ -375,7 +371,7 @@ func collectRangeRows[T any](ds model.TAIFEXDataset, byDay map[string]provider.T
 	return rows, nil
 }
 
-// rangeLineage 範圍查詢之 lineage：DL 歷史資料（freshness=HISTORICAL）。
+// rangeLineage 範圍查詢之 lineage：DL 歷史資料（freshness=POST_MARKET）。
 func rangeLineage(byDay map[string]provider.TAIFEXQueryResult, end string) *model.Lineage {
 	source := model.SourceTAIFEXDL
 	derived := []string{}
@@ -391,7 +387,7 @@ func rangeLineage(byDay map[string]provider.TAIFEXQueryResult, end string) *mode
 	lg := &model.Lineage{
 		Source:     source,
 		SourceRole: model.SourceRoleCanonical,
-		Freshness:  model.FreshnessHistorical,
+		Freshness:  model.FreshnessPostMarket,
 		DataDate:   end,
 		IsCached:   cached,
 	}
@@ -418,7 +414,7 @@ func handlerGetSymbolList(a *App, args map[string]any) (HandlerResult, error) {
 		Lineage: &model.Lineage{
 			Source:     model.SourceTWSEAPI, // Registry 來源（TWSE+TPEx 官方清單，§5.2）
 			SourceRole: model.SourceRoleCanonical,
-			Freshness:  model.FreshnessPostMarketToday,
+			Freshness:  model.FreshnessPostMarket,
 			DataDate:   model.FormatDate(a.now()),
 		},
 	}, nil
@@ -466,7 +462,7 @@ func handlerGetTradingCalendar(a *App, args map[string]any) (HandlerResult, erro
 		Lineage: &model.Lineage{
 			Source:     model.SourceTWSEWeb, // TWSE 官方開休市表
 			SourceRole: model.SourceRoleCanonical,
-			Freshness:  model.FreshnessHistorical,
+			Freshness:  model.FreshnessPostMarket,
 			DataDate:   model.FormatDate(a.now()),
 		},
 	}, nil

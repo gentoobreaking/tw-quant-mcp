@@ -101,7 +101,7 @@ func (c *Core) Call(ctx context.Context, name string, args map[string]any) (inte
 	}
 	lg.LatencyMS = time.Since(started).Milliseconds()
 
-	env := &model.Envelope{Data: hr.Data, Lineage: lg, HTTPCalls: a.httpCalls.Load(), Disclaimer: model.DisclaimerText}
+	env := &model.Envelope{Data: hr.Data, Lineage: model.Lineages{Lineage: lg}, HTTPCalls: a.httpCalls.Load(), Disclaimer: model.DisclaimerText}
 	if opt.Chart && c.chart != nil {
 		if err := c.chart.UpdateEnvelope(env, def, opt, hr.Data); err != nil {
 			return nil, fmt.Errorf("mcp: 工具 %s chart 注入失敗: %w", name, err)
@@ -113,14 +113,17 @@ func (c *Core) Call(ctx context.Context, name string, args map[string]any) (inte
 // lineageFor 合併 ToolDef.Response 與 HandlerResult.Lineage：
 //   - HandlerResult.Lineage 優先（欄位級覆寫）；
 //   - 其餘由 ToolDef.Response 補齊；
-//   - 兩者皆無 → 盤中預設（§10.A：TWSE_MIS / REALTIME_INTRADAY / 8s 採樣）。
+//   - 兩者皆無 → 盤中預設（§10.A：TWSE_MIS / SEMI_OFFICIAL_REALTIME /
+//     REALTIME_INTRADAY / 8s 採樣；§8 尾註：source_role 固定 SEMI_OFFICIAL_REALTIME、
+//     grade 標註 AVAILABLE）。
 func lineageFor(def *ToolDef, hr HandlerResult) model.Lineage {
 	if def.Response == nil && hr.Lineage == nil {
 		return model.Lineage{
 			Source:      model.SourceTWSEMIS,
-			SourceRole:  model.SourceRoleCanonical,
+			SourceRole:  model.SourceRoleRealtime,
 			Freshness:   model.FreshnessRealtimeIntraday,
 			SamplingSec: 8,
+			Grade:       model.GradeAvailable,
 		}
 	}
 	var lg model.Lineage
@@ -147,7 +150,11 @@ func lineageFor(def *ToolDef, hr HandlerResult) model.Lineage {
 		lg.DerivedFrom = o.DerivedFrom
 		lg.IsCached = o.IsCached
 		lg.CacheTTL = o.CacheTTL
+		lg.CacheAgeSec = o.CacheAgeSec
 		lg.SourceURL = o.SourceURL
+		if o.Grade != "" {
+			lg.Grade = o.Grade
+		}
 	}
 	return lg
 }

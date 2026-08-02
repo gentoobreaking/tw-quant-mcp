@@ -202,12 +202,12 @@ func checkEnvelopeConsistency(t *testing.T, name string, e *model.Envelope) {
 		t.Errorf("%s: source_role 不得為空", name)
 	}
 	switch lg.SourceRole {
-	case model.SourceRoleCanonical, model.SourceRoleHelper, model.SourceRoleFallback:
+	case model.SourceRoleCanonical, model.SourceRoleRealtime, model.SourceRoleFallback:
 	default:
 		t.Errorf("%s: source_role 非登錄值 %q", name, lg.SourceRole)
 	}
 	if !model.ValidFreshness(lg.Freshness) {
-		t.Errorf("%s: freshness 非法 %q（§3.2 僅允許三值）", name, lg.Freshness)
+		t.Errorf("%s: freshness 非法 %q（v2.1 §4 僅允許五值）", name, lg.Freshness)
 	}
 	if lg.DataDate == "" {
 		t.Errorf("%s: data_date 不得為空", name)
@@ -222,6 +222,9 @@ func checkEnvelopeConsistency(t *testing.T, name string, e *model.Envelope) {
 	}
 	if lg.CacheTTL < 0 {
 		t.Errorf("%s: cache_ttl 應 ≥ 0，實際 %d", name, lg.CacheTTL)
+	}
+	if lg.CacheAgeSec < 0 {
+		t.Errorf("%s: cache_age_sec 應 ≥ 0，實際 %d", name, lg.CacheAgeSec)
 	}
 	if e.Data == nil {
 		t.Errorf("%s: data 不得為 nil", name)

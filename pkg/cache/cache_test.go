@@ -159,9 +159,10 @@ func TestGetOrFetchEmptyKey(t *testing.T) {
 	}
 }
 
-// 命中標記注入：MarkCacheHit 於 _lineage 標記 is_cached + cache_ttl（§3.2）。
+// 命中標記注入：MarkCacheHit 於 _lineage 標記 is_cached + cache_ttl（v2.1 §4；
+// cache_ttl 為內部欄位，僅 debug/log 模式輸出）。
 func TestMarkCacheHit(t *testing.T) {
-	env := &model.Envelope{Data: "x", Lineage: model.Lineage{Source: model.SourceTWSEAPI}}
+	env := &model.Envelope{Data: "x", Lineage: model.Lineages{Lineage: model.Lineage{Source: model.SourceTWSEAPI}}}
 	MarkCacheHit(env, 90*time.Second)
 	if !env.Lineage.IsCached {
 		t.Error("is_cached 應為 true")

@@ -212,9 +212,9 @@ func TestCallGetIntradayKline(t *testing.T) {
 		t.Logf("K 線收盤序列正常")
 	}
 
-	// _lineage 完整欄位
+	// _lineage 完整欄位（§8 尾註：MIS 固定標 SEMI_OFFICIAL_REALTIME）
 	lg := env.Lineage
-	if lg.Source != model.SourceTWSEMIS || lg.SourceRole != model.SourceRoleCanonical {
+	if lg.Source != model.SourceTWSEMIS || lg.SourceRole != model.SourceRoleRealtime {
 		t.Errorf("lineage source 錯誤: %s/%s", lg.Source, lg.SourceRole)
 	}
 	if lg.Freshness != model.FreshnessRealtimeIntraday {

@@ -598,9 +598,10 @@ func TestDEGetFinancialHealthCheck(t *testing.T) {
 	if s.Total != 87.6 {
 		t.Errorf("加權總分應為 87.6，實際 %v", s.Total)
 	}
-	// lineage：helper + derived_from 標明所有父資料集
-	if env.Lineage.SourceRole != model.SourceRoleHelper {
-		t.Errorf("source_role 應為 helper，實際 %s", env.Lineage.SourceRole)
+	// lineage：v2.1 無 helper 角色——聚合計算資料源為 MOPS（CANONICAL），
+	// derived_from 標明所有父資料集（僅 debug/log 模式輸出）
+	if env.Lineage.SourceRole != model.SourceRoleCanonical {
+		t.Errorf("source_role 應為 CANONICAL，實際 %s", env.Lineage.SourceRole)
 	}
 	derived := strings.Join(env.Lineage.DerivedFrom, ",")
 	for _, want := range []string{"MOPS:income_summary", "MOPS:profit_ratios",

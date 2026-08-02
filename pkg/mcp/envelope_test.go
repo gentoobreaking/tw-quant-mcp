@@ -17,14 +17,14 @@ func TestEnvelopeJSONMinimal(t *testing.T) {
 		Data: []model.Candle{
 			{Open: 900, High: 910, Low: 895, Close: 905, Volume: 1000},
 		},
-		Lineage: model.Lineage{
+		Lineage: model.Lineages{Lineage: model.Lineage{
 			Source:      model.SourceTWSEMIS,
-			SourceRole:  model.SourceRoleCanonical,
+			SourceRole:  model.SourceRoleRealtime,
 			DataDate:    "2026-07-31",
 			Freshness:   model.FreshnessRealtimeIntraday,
 			SamplingSec: 8,
 			FetchedAt:   model.NewTaipeiTime(time.Date(2026, 7, 31, 9, 30, 0, 0, model.Taipei())),
-		},
+		}},
 		HTTPCalls: 0,
 	}
 	// chart=false：ChartMeta 為 nil → omitempty 應省略

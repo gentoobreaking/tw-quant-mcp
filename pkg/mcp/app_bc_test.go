@@ -174,7 +174,7 @@ func TestBCGetStockDailyQuoteTSE(t *testing.T) {
 	if q.Indicators.MACD.MACD <= 0 {
 		t.Errorf("上升序列 MACD DIF 應 > 0，實際 %+v", q.Indicators.MACD)
 	}
-	if env.Lineage.Source != model.SourceTWSEWeb || env.Lineage.Freshness != model.FreshnessPostMarketToday {
+	if env.Lineage.Source != model.SourceTWSEWeb || env.Lineage.Freshness != model.FreshnessPostMarket {
 		t.Errorf("lineage 不符: %+v", env.Lineage)
 	}
 	if len(env.Lineage.DerivedFrom) != 1 || env.Lineage.DerivedFrom[0] != "TWSE_WEB:daily_k" {

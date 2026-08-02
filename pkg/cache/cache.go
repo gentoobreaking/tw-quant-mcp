@@ -223,8 +223,9 @@ func ttlFromExpires(expiresAt time.Time) time.Duration {
 	return time.Until(expiresAt)
 }
 
-// MarkCacheHit 將快取命中資訊注入 Envelope 之 _lineage（§3.2）：
-// is_cached=true、cache_ttl=<秒>。各 Handler 於 GetOrFetch 回傳 fromCache=true 時呼叫。
+// MarkCacheHit 將快取命中資訊注入 Envelope 之 _lineage（v2.1 §4）：
+// is_cached=true、cache_ttl=<秒>（cache_ttl 為內部欄位，僅 debug/log 模式
+// 輸出）。各 Handler 於 GetOrFetch 回傳 fromCache=true 時呼叫。
 func MarkCacheHit(env *model.Envelope, ttl time.Duration) {
 	env.Lineage.IsCached = true
 	env.Lineage.CacheTTL = int(ttl.Seconds())

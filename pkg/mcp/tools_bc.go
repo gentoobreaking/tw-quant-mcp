@@ -16,8 +16,8 @@ import (
 )
 
 // tools_bc.go 實作 §10.B（盤後行情・籌碼）與 §10.C（重大訊息與風險）工具。
-// 全部為 POST_MARKET_TODAY 資料：統一經 fetchRaw/fetchNormalize
-//（§4.2 快取 TTL + §12.2 讀穿），並於 lineage 標明資料源（§3.2）。
+// 全部為 POST_MARKET 資料：統一經 fetchRaw/fetchNormalize
+//（§4.2 快取 TTL + §12.2 讀穿），並於 lineage 標明資料源（v2.1 §4）。
 
 // postLineage 建構盤後工具之 lineage 預設值；cached/ttl 由 handler 依快取
 // 結果填入。
@@ -26,7 +26,7 @@ func postLineage(source, dataDate string, cached bool, ttl time.Duration) *model
 		Source:     source,
 		SourceRole: model.SourceRoleCanonical,
 		DataDate:   dataDate,
-		Freshness:  model.FreshnessPostMarketToday,
+		Freshness:  model.FreshnessPostMarket,
 		IsCached:   cached,
 		CacheTTL:   int(ttl.Seconds()),
 	}

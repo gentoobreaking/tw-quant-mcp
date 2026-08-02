@@ -178,8 +178,8 @@ func TestFGFuturesDailyOHLCLatest(t *testing.T) {
 	if len(rows) != 2 || rows[0].Contract != "TX" || rows[0].Close != 40392 {
 		t.Errorf("期貨行情錯誤: %+v", rows)
 	}
-	if env.Lineage.Source != model.SourceTAIFEXAPI || env.Lineage.Freshness != model.FreshnessPostMarketToday {
-		t.Errorf("lineage 應為 API/POST_MARKET_TODAY: %+v", env.Lineage)
+	if env.Lineage.Source != model.SourceTAIFEXAPI || env.Lineage.Freshness != model.FreshnessPostMarket {
+		t.Errorf("lineage 應為 API/POST_MARKET: %+v", env.Lineage)
 	}
 	if env.Lineage.DataDate != "2026-07-29" {
 		t.Errorf("data_date 應為 2026-07-29，實際 %s", env.Lineage.DataDate)
@@ -249,7 +249,7 @@ func TestFGFuturesHistory(t *testing.T) {
 	if len(rows) != 2 || rows[0].Date != "2026-07-27" || rows[1].Date != "2026-07-28" {
 		t.Errorf("歷史行情排序錯誤: %+v", rows)
 	}
-	if env.Lineage.Source != model.SourceTAIFEXDL || env.Lineage.Freshness != model.FreshnessHistorical {
+	if env.Lineage.Source != model.SourceTAIFEXDL || env.Lineage.Freshness != model.FreshnessPostMarket {
 		t.Errorf("lineage 應為 DL/HISTORICAL: %+v", env.Lineage)
 	}
 	if len(env.Lineage.DerivedFrom) == 0 {
@@ -289,8 +289,8 @@ func TestFGPutCallRatioSingleDate(t *testing.T) {
 	if len(rows) != 1 || rows[0].VolumeRatio != 120.5 {
 		t.Errorf("PCR 錯誤: %+v", rows)
 	}
-	if env.Lineage.Freshness != model.FreshnessPostMarketToday {
-		t.Errorf("API 單日 freshness 應為 POST_MARKET_TODAY: %+v", env.Lineage)
+	if env.Lineage.Freshness != model.FreshnessPostMarket {
+		t.Errorf("API 單日 freshness 應為 POST_MARKET: %+v", env.Lineage)
 	}
 	if chartType(env) != "line" {
 		t.Fatalf("PCR chart 應為 line，實際 %s", chartType(env))
@@ -316,7 +316,7 @@ func TestFGPutCallRatioRange(t *testing.T) {
 	if len(rows) != 3 || rows[0].Date != "2026-07-27" || rows[2].Date != "2026-07-29" {
 		t.Errorf("PCR 範圍排序錯誤: %+v", rows)
 	}
-	if env.Lineage.Freshness != model.FreshnessHistorical {
+	if env.Lineage.Freshness != model.FreshnessPostMarket {
 		t.Errorf("範圍 freshness 應為 HISTORICAL: %+v", env.Lineage)
 	}
 }
@@ -335,8 +335,8 @@ func TestFGInstitutionalPositions(t *testing.T) {
 	if rows[2].Investor != "外資及陸資" || rows[2].NetVolume != 12000 {
 		t.Errorf("外資部位錯誤: %+v", rows[2])
 	}
-	if env.Lineage.Freshness != model.FreshnessPostMarketToday {
-		t.Errorf("freshness 應為 POST_MARKET_TODAY: %+v", env.Lineage)
+	if env.Lineage.Freshness != model.FreshnessPostMarket {
+		t.Errorf("freshness 應為 POST_MARKET: %+v", env.Lineage)
 	}
 	if chartType(env) != "bar" {
 		t.Errorf("chart 應為 bar，實際 %s", chartType(env))
@@ -452,7 +452,7 @@ func TestFGGetTradingCalendar(t *testing.T) {
 	if cal.Note == "" {
 		t.Error("應標示行事曆版本")
 	}
-	if env.Lineage.Freshness != model.FreshnessHistorical {
+	if env.Lineage.Freshness != model.FreshnessPostMarket {
 		t.Errorf("行事曆 freshness 應為 HISTORICAL: %+v", env.Lineage)
 	}
 
