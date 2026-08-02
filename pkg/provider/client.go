@@ -37,7 +37,8 @@ func (e *HTTPStatusError) Error() string {
 }
 
 // BaseClient 是 Resilient HTTP Client 基類（§6、§12.3）：
-// 每主機獨立連線池 + Cookie Session 維持 + 請求級 Rate Limit（含 Jitter）+
+// 每主機獨立連線池 + Cookie Session 維持 + Per-Source Rate Limit
+// （§5.3 token bucket，每來源獨立；含 Jitter，置於請求前）+
 // 403/429 指數退避 + 熔斷。所有官方來源 Adapter 皆以之為底層。
 type BaseClient struct {
 	host         string

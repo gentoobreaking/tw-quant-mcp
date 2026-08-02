@@ -11,6 +11,11 @@
 //	CACHE_L1_MAX_MEMORY_MB L1 最大記憶體 MB（v2.1 §5.2，預設 256）
 //	CACHE_L2_SQLITE_PATH   L2 SQLite 資料庫檔路徑（v2.1 §5.2，預設 ./data/cache.db）
 //	CACHE_HIT_RATE_TARGET  快取命中率目標（v2.1 §5.2，預設 0.8）
+//	RATE_LIMIT_ENABLED      是否啟用限流（v2.1 §5.3，預設 true；pkg/provider
+//	                        ratelimit.go 亦直接讀取同一變數，值必須一致）
+//	RATE_LIMIT_BULK_CONCURRENCY  篩選類操作最大併發數（v2.1 §5.3/§10.2，預設 8）
+//	MIS_JITTER_MIN_MS / MIS_JITTER_MAX_MS  盤中引擎 jitter 區間（v2.1 §5.3，
+//	                        預設 7000/9000；由 pkg/provider 直接讀取）
 package config
 
 import (
@@ -49,6 +54,12 @@ const (
 	DefaultL2SQLitePath = "./data/cache.db"
 	// DefaultCacheHitRateTarget 是 CACHE_HIT_RATE_TARGET 預設值（v2.1 §5.2）。
 	DefaultCacheHitRateTarget = 0.8
+
+	// DefaultRateLimitEnabled 是 RATE_LIMIT_ENABLED 預設值（v2.1 §5.3）。
+	DefaultRateLimitEnabled = true
+	// DefaultRateLimitBulkConcurrency 是 RATE_LIMIT_BULK_CONCURRENCY 預設值
+	//（v2.1 §5.3 / §10.2 篩選類操作之最大併發數）。
+	DefaultRateLimitBulkConcurrency = 8
 )
 
 // Config 是伺服器執行所需的全部設定。
@@ -64,19 +75,25 @@ type Config struct {
 	L1MaxMemoryMB      int     // CACHE_L1_MAX_MEMORY_MB
 	L2SQLitePath       string  // CACHE_L2_SQLITE_PATH
 	CacheHitRateTarget float64 // CACHE_HIT_RATE_TARGET
+
+	// v2.1 §5.3 限流參數化。
+	RateLimitEnabled         bool // RATE_LIMIT_ENABLED（provider 亦直接讀取同一變數）
+	RateLimitBulkConcurrency int  // RATE_LIMIT_BULK_CONCURRENCY（§10.2 篩選類併發）
 }
 
 // Load 從環境變數讀取設定並填入預設值。
 func Load() (*Config, error) {
 	cfg := &Config{
-		Transport:          TransportStdio,
-		HTTPAddr:           DefaultHTTPAddr,
-		DataDir:            defaultDataDir(),
-		LogLevel:           DefaultLogLevel,
-		L1MaxEntries:       DefaultL1MaxEntries,
-		L1MaxMemoryMB:      DefaultL1MaxMemoryMB,
-		L2SQLitePath:       DefaultL2SQLitePath,
-		CacheHitRateTarget: DefaultCacheHitRateTarget,
+		Transport:                TransportStdio,
+		HTTPAddr:                 DefaultHTTPAddr,
+		DataDir:                  defaultDataDir(),
+		LogLevel:                 DefaultLogLevel,
+		L1MaxEntries:             DefaultL1MaxEntries,
+		L1MaxMemoryMB:            DefaultL1MaxMemoryMB,
+		L2SQLitePath:             DefaultL2SQLitePath,
+		CacheHitRateTarget:       DefaultCacheHitRateTarget,
+		RateLimitEnabled:         DefaultRateLimitEnabled,
+		RateLimitBulkConcurrency: DefaultRateLimitBulkConcurrency,
 	}
 
 	if v := os.Getenv("MCP_TRANSPORT"); v != "" {
@@ -117,6 +134,20 @@ func Load() (*Config, error) {
 			return nil, fmt.Errorf("config: CACHE_HIT_RATE_TARGET 須為數字，實際 %q", v)
 		}
 		cfg.CacheHitRateTarget = f
+	}
+	if v := os.Getenv("RATE_LIMIT_ENABLED"); v != "" {
+		b, err := strconv.ParseBool(strings.TrimSpace(v))
+		if err != nil {
+			return nil, fmt.Errorf("config: RATE_LIMIT_ENABLED 須為 true/false，實際 %q", v)
+		}
+		cfg.RateLimitEnabled = b
+	}
+	if v := os.Getenv("RATE_LIMIT_BULK_CONCURRENCY"); v != "" {
+		n, err := strconv.Atoi(strings.TrimSpace(v))
+		if err != nil {
+			return nil, fmt.Errorf("config: RATE_LIMIT_BULK_CONCURRENCY 須為整數，實際 %q", v)
+		}
+		cfg.RateLimitBulkConcurrency = n
 	}
 
 	if err := cfg.Validate(); err != nil {
@@ -162,6 +193,9 @@ func (c *Config) Validate() error {
 	}
 	if c.CacheHitRateTarget <= 0 || c.CacheHitRateTarget > 1 {
 		return fmt.Errorf("config: CACHE_HIT_RATE_TARGET 須在 (0, 1]，實際 %v", c.CacheHitRateTarget)
+	}
+	if c.RateLimitBulkConcurrency < 1 {
+		return fmt.Errorf("config: RATE_LIMIT_BULK_CONCURRENCY 須為正整數，實際 %d", c.RateLimitBulkConcurrency)
 	}
 	l2, err := expandPath(c.L2SQLitePath)
 	if err != nil {

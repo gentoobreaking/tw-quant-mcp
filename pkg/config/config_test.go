@@ -9,6 +9,7 @@ import (
 var envKeys = []string{
 	"MCP_TRANSPORT", "MCP_HTTP_ADDR", "DATA_DIR", "LOG_LEVEL", "MCP_SCORING_CONFIG",
 	"CACHE_L1_MAX_ENTRIES", "CACHE_L1_MAX_MEMORY_MB", "CACHE_L2_SQLITE_PATH", "CACHE_HIT_RATE_TARGET",
+	"RATE_LIMIT_ENABLED", "RATE_LIMIT_BULK_CONCURRENCY",
 }
 
 func clearEnv(t *testing.T) {
@@ -58,6 +59,14 @@ func TestLoadDefaults(t *testing.T) {
 	if _, err := os.Stat(filepath.Dir(cfg.L2SQLitePath)); err != nil {
 		t.Errorf("L2 SQLite 目錄 %q 應已被建立: %v", filepath.Dir(cfg.L2SQLitePath), err)
 	}
+	// v2.1 §5.3 限流參數預設值。
+	if cfg.RateLimitEnabled != DefaultRateLimitEnabled {
+		t.Errorf("RateLimitEnabled 預設應為 %v，實際 %v", DefaultRateLimitEnabled, cfg.RateLimitEnabled)
+	}
+	if cfg.RateLimitBulkConcurrency != DefaultRateLimitBulkConcurrency {
+		t.Errorf("RateLimitBulkConcurrency 預設應為 %d，實際 %d",
+			DefaultRateLimitBulkConcurrency, cfg.RateLimitBulkConcurrency)
+	}
 }
 
 func TestLoadEnvOverrides(t *testing.T) {
@@ -71,6 +80,8 @@ func TestLoadEnvOverrides(t *testing.T) {
 	t.Setenv("CACHE_L1_MAX_MEMORY_MB", "512")
 	t.Setenv("CACHE_L2_SQLITE_PATH", "$HOME/cache-test.db")
 	t.Setenv("CACHE_HIT_RATE_TARGET", "0.9")
+	t.Setenv("RATE_LIMIT_ENABLED", "false")
+	t.Setenv("RATE_LIMIT_BULK_CONCURRENCY", "16")
 
 	cfg, err := Load()
 	if err != nil {
@@ -105,6 +116,13 @@ func TestLoadEnvOverrides(t *testing.T) {
 	if cfg.CacheHitRateTarget != 0.9 {
 		t.Errorf("CacheHitRateTarget 應為 0.9，實際 %v", cfg.CacheHitRateTarget)
 	}
+	// v2.1 §5.3 限流參數覆寫。
+	if cfg.RateLimitEnabled {
+		t.Errorf("RateLimitEnabled 應為 false，實際 %v", cfg.RateLimitEnabled)
+	}
+	if cfg.RateLimitBulkConcurrency != 16 {
+		t.Errorf("RateLimitBulkConcurrency 應為 16，實際 %d", cfg.RateLimitBulkConcurrency)
+	}
 	if _, err := os.Stat(filepath.Dir(cfg.L2SQLitePath)); err != nil {
 		t.Errorf("L2 SQLite 目錄應已被建立: %v", err)
 	}
@@ -128,6 +146,9 @@ func TestValidateRejects(t *testing.T) {
 		{"CACHE_HIT_RATE_TARGET 非數字", map[string]string{"CACHE_HIT_RATE_TARGET": "high"}},
 		{"CACHE_HIT_RATE_TARGET 超出範圍", map[string]string{"CACHE_HIT_RATE_TARGET": "1.5"}},
 		{"CACHE_HIT_RATE_TARGET 為零", map[string]string{"CACHE_HIT_RATE_TARGET": "0"}},
+		{"RATE_LIMIT_ENABLED 非布林", map[string]string{"RATE_LIMIT_ENABLED": "maybe"}},
+		{"RATE_LIMIT_BULK_CONCURRENCY 非整數", map[string]string{"RATE_LIMIT_BULK_CONCURRENCY": "many"}},
+		{"RATE_LIMIT_BULK_CONCURRENCY 非正數", map[string]string{"RATE_LIMIT_BULK_CONCURRENCY": "0"}},
 		{"CACHE_L2_SQLITE_PATH 環境變數未定義", map[string]string{"CACHE_L2_SQLITE_PATH": "$NOT_DEFINED_XYZ/cache.db"}},
 		{"CACHE_L2_SQLITE_PATH 無法建立", map[string]string{"CACHE_L2_SQLITE_PATH": "/dev/null/child/cache.db"}},
 	}

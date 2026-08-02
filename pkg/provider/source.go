@@ -1,6 +1,7 @@
 // Package provider 實作官方資料來源 Adapter 層（規格書 §2、§6）。
-// 本包為 SourceContract（§2.2）、Resilient HTTP Client、每主機 Rate Limiter、
-// Jitter、403/429 指數退避與 Circuit Breaker（§4.4）之唯一實作所在。
+// 本包為 SourceContract（§2.2）、Resilient HTTP Client、Per-Source
+// Token Bucket Rate Limiter（§5.3，每來源獨立）、Jitter、403/429
+// 指數退避與 Circuit Breaker（§4.4）之唯一實作所在。
 package provider
 
 import (
