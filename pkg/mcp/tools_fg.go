@@ -113,12 +113,18 @@ func taifexRows[T any](ds model.TAIFEXDataset, date string, res provider.TAIFEXQ
 	return rows, nil
 }
 
-// taifexLineage 依查詢結果建立 lineage（v2.1 §4）：TAIFEX 資料為每日盤後
-// 公布，freshness 一律 POST_MARKET；補檔標 derived_from（僅 debug/log 輸出）。
+// taifexLineage 依查詢結果建立 lineage（v2.1 §3/§4）：TAIFEX 資料為每日盤後
+// 公布，freshness 一律 POST_MARKET；source_role 依實際使用來源標註
+// （TAIFEX-API → CANONICAL，TAIFEX-DL → FALLBACK，§3 表）；補檔標
+// derived_from（僅 debug/log 輸出）。
 func taifexLineage(res provider.TAIFEXQueryResult, date string, fromCache bool) *model.Lineage {
+	role := model.SourceRoleCanonical
+	if res.Source == model.SourceTAIFEXDL {
+		role = model.SourceRoleFallback
+	}
 	lg := &model.Lineage{
 		Source:     res.Source,
-		SourceRole: model.SourceRoleCanonical,
+		SourceRole: role,
 		Freshness:  model.FreshnessPostMarket,
 		DataDate:   date,
 		IsCached:   fromCache || res.IsCached,
@@ -371,7 +377,8 @@ func collectRangeRows[T any](ds model.TAIFEXDataset, byDay map[string]provider.T
 	return rows, nil
 }
 
-// rangeLineage 範圍查詢之 lineage：DL 歷史資料（freshness=POST_MARKET）。
+// rangeLineage 範圍查詢之 lineage：DL 歷史資料（freshness=POST_MARKET，
+// source_role=FALLBACK，§3 表）。
 func rangeLineage(byDay map[string]provider.TAIFEXQueryResult, end string) *model.Lineage {
 	source := model.SourceTAIFEXDL
 	derived := []string{}
@@ -386,7 +393,7 @@ func rangeLineage(byDay map[string]provider.TAIFEXQueryResult, end string) *mode
 	}
 	lg := &model.Lineage{
 		Source:     source,
-		SourceRole: model.SourceRoleCanonical,
+		SourceRole: model.SourceRoleFallback,
 		Freshness:  model.FreshnessPostMarket,
 		DataDate:   end,
 		IsCached:   cached,

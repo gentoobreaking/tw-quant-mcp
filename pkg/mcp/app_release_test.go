@@ -21,6 +21,44 @@ import (
 //
 // 皆為離線測試，不連網、不觸發官方來源（§13 錄製回放原則）。
 
+// TestAppendixAMISIntradayOnly T023 守門：TWSE_MIS（SEMI_OFFICIAL_REALTIME）
+// 僅供 §8 盤中引擎（A 組）使用；其他 domain 模組（B–G）不得以 MIS 為來源，
+// 且其 lineage 不得出現 SEMI_OFFICIAL_REALTIME 角色（§3 表）。
+func TestAppendixAMISIntradayOnly(t *testing.T) {
+	f := newFake(t)
+	stubBCEnvelope(f)
+	stubDE(f)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+	intraday := newTestApp(t)
+
+	for _, p := range allToolProbes() {
+		target := app
+		if intradayTools[p.name] {
+			target = intraday
+		}
+		env, err := target.core.Call(context.Background(), p.name, p.args)
+		if err != nil {
+			t.Fatalf("%s: Call 失敗: %v", p.name, err)
+		}
+		lg := env.(*model.Envelope).Lineage
+		if intradayTools[p.name] {
+			if lg.Source != model.SourceTWSEMIS || lg.SourceRole != model.SourceRoleRealtime {
+				t.Errorf("%s（A 組）應為 TWSE_MIS / SEMI_OFFICIAL_REALTIME，實際 %q / %q",
+					p.name, lg.Source, lg.SourceRole)
+			}
+			continue
+		}
+		if lg.Source == model.SourceTWSEMIS {
+			t.Errorf("%s（非 A 組）不得以 TWSE_MIS 為資料來源（§3：MIS 僅供盤中引擎）", p.name)
+		}
+		if lg.SourceRole == model.SourceRoleRealtime {
+			t.Errorf("%s（非 A 組）source_role 不得為 SEMI_OFFICIAL_REALTIME", p.name)
+		}
+	}
+}
+
 // TestAppendixAOfficialSourcesOnly 附錄 A 檢查 1：來源僅官方登錄值。
 func TestAppendixAOfficialSourcesOnly(t *testing.T) {
 	f := newFake(t)

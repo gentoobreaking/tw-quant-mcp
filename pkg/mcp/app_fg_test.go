@@ -552,6 +552,9 @@ func TestFGFuturesPathLatestUsesAPI(t *testing.T) {
 	if env.Lineage.Source != model.SourceTAIFEXAPI {
 		t.Errorf("最新日 lineage 應為 TAIFEX_API: %+v", env.Lineage)
 	}
+	if env.Lineage.SourceRole != model.SourceRoleCanonical {
+		t.Errorf("最新日（API）source_role 應為 CANONICAL，實際 %q", env.Lineage.SourceRole)
+	}
 	if dlDownloads != 0 {
 		t.Errorf("最新日走 API 路徑，DL 不應下載（實際 %d 次）", dlDownloads)
 	}
@@ -593,6 +596,12 @@ func TestFGFuturesPathHistoryDLAndL2(t *testing.T) {
 	if env.Lineage.IsCached {
 		t.Error("首次查詢不應 is_cached")
 	}
+	if env.Lineage.Source != model.SourceTAIFEXDL {
+		t.Errorf("歷史 lineage 應為 TAIFEX_DL: %+v", env.Lineage)
+	}
+	if env.Lineage.SourceRole != model.SourceRoleFallback {
+		t.Errorf("歷史（DL）source_role 應為 FALLBACK，實際 %q", env.Lineage.SourceRole)
+	}
 	app.Close()
 
 	// 第二次：新 App 實例（新 L1），L2 命中 → 不重複下載
@@ -600,6 +609,9 @@ func TestFGFuturesPathHistoryDLAndL2(t *testing.T) {
 	env2 := callEnv(t, app2, "get_futures_history", args)
 	if !env2.Lineage.IsCached {
 		t.Errorf("L2 命中應 is_cached=true: %+v", env2.Lineage)
+	}
+	if env2.Lineage.SourceRole != model.SourceRoleFallback {
+		t.Errorf("L2 命中（DL 資料）source_role 應仍為 FALLBACK，實際 %q", env2.Lineage.SourceRole)
 	}
 	if got := atomic.LoadInt32(&downloads); got != 1 {
 		t.Errorf("L2 命中後不應重複下載，實際 %d 次", got)
