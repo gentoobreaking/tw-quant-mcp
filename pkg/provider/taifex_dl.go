@@ -243,6 +243,8 @@ func (s *TAIFEXDLSource) Validate(raw *RawResponse) error {
 	return validateTAIFEXDL(raw)
 }
 
+// Deprecated: v2.1 §6 起轉換集中於 pkg/model/normalize（FromTAIFEXDownload）；
+// 本方法為 v1.3 相容層，遷移時逐步移除（T022）。
 func (s *TAIFEXDLSource) Normalize(raw *RawResponse) ([]byte, error) {
 	return normalizeTAIFEXDL(raw)
 }

@@ -118,6 +118,8 @@ func (s *TWSEWebSource) Validate(raw *RawResponse) error {
 	return validateTWSE(raw, s.ID())
 }
 
+// Deprecated: v2.1 §6 起轉換集中於 pkg/model/normalize（FromTWSEWeb）；
+// 本方法為 v1.3 相容層，遷移時逐步移除（T022）。
 func (s *TWSEWebSource) Normalize(raw *RawResponse) ([]byte, error) {
 	return normalizeTWSE(raw, s.ID())
 }
@@ -162,6 +164,8 @@ func (s *TWSEAPISource) Validate(raw *RawResponse) error {
 	return validateTWSE(raw, s.ID())
 }
 
+// Deprecated: v2.1 §6 起轉換集中於 pkg/model/normalize（FromTWSEOpenAPI）；
+// 本方法為 v1.3 相容層，遷移時逐步移除（T022）。
 func (s *TWSEAPISource) Normalize(raw *RawResponse) ([]byte, error) {
 	return normalizeTWSE(raw, s.ID())
 }

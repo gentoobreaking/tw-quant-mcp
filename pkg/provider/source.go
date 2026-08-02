@@ -36,7 +36,10 @@ type RawResponse struct {
 type SourceContract interface {
 	ID() string // 對應 §2 登錄表之 ID（如 "TWSE_WEB"）
 	Fetch(ctx context.Context, req RawRequest) (*RawResponse, error)
-	Validate(raw *RawResponse) error            // schema 檢查（欄位存在性、數值範圍、日期一致性）
+	Validate(raw *RawResponse) error // schema 檢查（欄位存在性、數值範圍、日期一致性）
+	// Deprecated: v2.1 §6 起，原始欄位之轉換統一集中於
+	// pkg/model/normalize 層（From<Source>()），本方法為 v1.3 相容層
+	//（T022：既有輸出標記為相容層；T026/T027 遷移時逐步移除）。
 	Normalize(raw *RawResponse) ([]byte, error) // 轉為 Normalized Model（JSON）
 }
 

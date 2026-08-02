@@ -149,6 +149,8 @@ func (s *MOPSSource) Validate(raw *RawResponse) error {
 // Normalize 將 MOPS CSV raw payload 轉為歸一化 JSON。
 // raw.SourceURL 需包含端點路徑以供分派。
 // 支援 filterFn 注入（測試/MCP 過濾用）：非 nil 時直接委派。
+// Deprecated: v2.1 §6 起轉換集中於 pkg/model/normalize（FromMOPS）；
+// 本方法為 v1.3 相容層，遷移時逐步移除（T022）。
 // filterFn 應自行呼叫 normalizeMOPSRaw 獲取原始結果後過濾，
 // 避免遞迴呼叫 s.Normalize。
 func (s *MOPSSource) Normalize(raw *RawResponse) ([]byte, error) {
