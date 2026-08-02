@@ -131,10 +131,12 @@ type sleepFunc func(ctx context.Context, d time.Duration) error
 
 // HostLimiter 是單一主機（= 單一來源，§5.3 per-source token bucket）之
 // 請求級 Rate Limiter：以 x/time/rate 保證兩次請求間隔 ≥ interval（burst 1），
-// 並於取得權杖後、請求**發送前**追加 jitter 等待（v1.2 已知錯誤：
-// sleep 置於請求後，本實作不得復發）：
-//   - MIS 於 §4.4 預設 8s 節奏下以 MIS_JITTER_MIN_MS/MAX_MS 絕對區間疊加
-//     （v2.1 §5.3 區間可調；以 WithRateInterval 覆寫節奏時退回比例 jitter）；
+// 並於請求**發送前**追加 jitter 等待（v1.2 已知錯誤：sleep 置於請求後，
+// 本實作不得復發）：
+//   - MIS 於 §4.4 預設節奏下以 MIS_JITTER_MIN_MS/MAX_MS 絕對區間作為
+//     採樣節奏（v2.1 §8.1「每 8 秒 ± 1 秒」；區間可調，§5.3），
+//     token bucket 不另疊加（避免節奏砍半）——以 WithRateInterval 覆寫
+//     節奏時退回一般比例 jitter + token bucket 路徑；
 //   - 其餘來源為 interval × ratio 之 ±ratio 抖動（預設 ±20%）。
 type HostLimiter struct {
 	source       string
@@ -184,8 +186,8 @@ func NewHostLimiter(host string, interval time.Duration, jitterRatio float64) *H
 	}
 
 	// MIS 絕對 jitter 區間僅於 §4.4 預設 8s 節奏下套用（區間即「每 8 秒
-	// ±1 秒」之絕對化，§5.3）；以 WithRateInterval / 環境變數覆寫節奏時
-	// 節奏已由呼叫端接管，改用比例 jitter 後備。
+	// ±1 秒」採樣節奏，§8.1/§5.3）；以 WithRateInterval / 環境變數覆寫
+	// 節奏時節奏已由呼叫端接管，退回比例 jitter + token bucket 路徑。
 	misWindow := source == SourceTWSEMIS && !explicitInterval
 	min, max := envMISJitterWindow()
 
@@ -225,9 +227,17 @@ func (l *HostLimiter) SetSleepFunc(fn sleepFunc) { l.sleep = fn }
 // Wait 於請求前等待：先取得 per-source token bucket 權杖，再追加
 // jitter 等待（Jitter 一律置於請求發出之前，§4.4/v1.2 修正）。
 // RATE_LIMIT_ENABLED=false 時立即回傳。
+//
+// MIS 於 §4.4 預設節奏下例外：採樣節奏即 MIS_JITTER 區間（即 v2.1 §8.1
+// 「每 8 秒 ± 1 秒隨機擾動」，QPS ≈ 0.12 已「極安全」），不另疊加
+// token bucket 等待（避免有效節奏砍半）；token bucket（§5.3 per-source、
+// burst 1）仍保留於結構上，作為節奏被覆寫或 jitter 被停用時之防暴走守門。
 func (l *HostLimiter) Wait(ctx context.Context) error {
 	if l.disabled {
 		return nil
+	}
+	if l.misWindow {
+		return l.jitter(ctx)
 	}
 	if err := l.limiter.Wait(ctx); err != nil {
 		return err

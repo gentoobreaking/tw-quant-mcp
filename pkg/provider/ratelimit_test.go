@@ -198,6 +198,31 @@ func TestRateLimitDisabled(t *testing.T) {
 	}
 }
 
+// TestMISWaitUsesWindowAsCadence 驗證 MIS 於 §4.4 預設節奏下，
+// Wait 以 MIS_JITTER 區間作為採樣節奏，不另等候 token bucket
+// （避免有效節奏砍半為 8s+[7,9]s；v2.1 §8.1「每 8 秒 ±1 秒」）。
+func TestMISWaitUsesWindowAsCadence(t *testing.T) {
+	l := NewHostLimiter("mis.twse.com.tw", 0, 0)
+	var got []time.Duration
+	l.SetSleepFunc(func(_ context.Context, d time.Duration) error {
+		got = append(got, d)
+		return nil
+	})
+	start := time.Now()
+	if err := l.Wait(context.Background()); err != nil {
+		t.Fatalf("Wait 失敗: %v", err)
+	}
+	if elapsed := time.Since(start); elapsed > 100*time.Millisecond {
+		t.Errorf("MIS 預設節奏下 Wait 不得再等候 token bucket（應僅 jitter），實際耗時 %v", elapsed)
+	}
+	if len(got) != 1 {
+		t.Fatalf("應恰好一次 jitter 等待，實際 %d 次", len(got))
+	}
+	if d := got[0]; d < 7*time.Second || d > 9*time.Second {
+		t.Errorf("MIS Wait jitter = %v，應於 [7s, 9s] 內（採樣節奏 8s±1s）", d)
+	}
+}
+
 // TestWaitSequentialTiming 驗證 Wait 保證間隔 ≥ interval（token bucket 層）。
 // 首個 Wait 持有初始權杖可立即回傳，故間隔自第 2 個起檢查。
 // 注入 no-op sleep 以排除 jitter 實際等待（避免時序抖動造成 flaky）。
