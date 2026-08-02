@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"path/filepath"
 	"time"
 
 	"golang.org/x/sync/singleflight"
@@ -14,6 +15,11 @@ import (
 
 // ErrEmptyKey 表示以空字串快取鍵呼叫 GetOrFetch。
 var ErrEmptyKey = errors.New("cache: 快取鍵不得為空")
+
+// ErrServedStale 表示上游 fetch 失敗，已回退「過期但仍存在」之 L2 值
+// （v2.1 §5.2 stale-if-error）。回傳值（含 fromCache=true）仍有效；
+// 呼叫端以 errors.Is 辨識，並將 _lineage.freshness 標記為 STALE_FALLBACK。
+var ErrServedStale = errors.New("cache: 上游失敗，回退過期 L2 值（STALE_FALLBACK）")
 
 // l2WriteMinTTL 是 L2 寫入之最短 TTL：短 TTL（盤中 4s/30s/60s）資料無持久化價值，
 // 且避免盤中磁碟 I/O（§4.2 備註：盤中 K 線查詢路徑不可進入 L2；§4.1 L2 僅收
@@ -32,12 +38,27 @@ type Cache struct {
 type Option func(*config)
 
 type config struct {
-	dataDir string
+	dataDir       string
+	l2Path        string
+	l1MaxEntries  int
+	l1MaxMemoryMB int
 }
 
-// WithDataDir 設定 L2 資料目錄（對應 config.DataDir / DATA_DIR）。
+// WithDataDir 設定 L2 資料目錄（對應 config.DataDir / DATA_DIR），資料庫檔為 <dir>/cache.db。
 func WithDataDir(dir string) Option {
 	return func(c *config) { c.dataDir = dir }
+}
+
+// WithSQLitePath 直接指定 L2 SQLite 資料庫檔路徑（對應 config.L2SQLitePath /
+// CACHE_L2_SQLITE_PATH）；與 WithDataDir 同時使用時以此為準。
+func WithSQLitePath(path string) Option {
+	return func(c *config) { c.l2Path = path }
+}
+
+// WithL1Config 設定 L1 容量（對應 CACHE_L1_MAX_ENTRIES / CACHE_L1_MAX_MEMORY_MB）；
+// 未設定時沿用內建預設值。maxEntries <= 0 或 maxMemoryMB <= 0 時沿用預設。
+func WithL1Config(maxEntries, maxMemoryMB int) Option {
+	return func(c *config) { c.l1MaxEntries, c.l1MaxMemoryMB = maxEntries, maxMemoryMB }
 }
 
 // New 建立快取引擎；L2 開啟失敗時回傳錯誤（資料目錄不可寫入即視為致命）。
@@ -48,11 +69,15 @@ func New(opts ...Option) (*Cache, error) {
 	}
 	c := &Cache{}
 	var err error
-	if c.l1, err = newL1(); err != nil {
+	if c.l1, err = newL1(cfg.l1MaxEntries, cfg.l1MaxMemoryMB); err != nil {
 		return nil, fmt.Errorf("cache: L1 初始化失敗: %w", err)
 	}
-	if cfg.dataDir != "" {
-		if c.l2, err = openL2(cfg.dataDir); err != nil {
+	l2Path := cfg.l2Path
+	if l2Path == "" && cfg.dataDir != "" {
+		l2Path = filepath.Join(cfg.dataDir, "cache.db")
+	}
+	if l2Path != "" {
+		if c.l2, err = openL2(l2Path); err != nil {
 			return nil, err
 		}
 	}
@@ -74,9 +99,10 @@ func (c *Cache) Close() error {
 type FetchOption func(*fetchConfig)
 
 type fetchConfig struct {
-	dataset  string
-	dataDate string
-	skipL2   bool
+	dataset       string
+	dataDate      string
+	skipL2        bool
+	staleFallback bool
 }
 
 // WithDataset 標註資料類別與資料日期（§4.2 資料類別欄），供 L2 資格判定與
@@ -90,6 +116,13 @@ func WithDataset(dataset, dataDate string) FetchOption {
 // SkipL2 強制略過 L2（盤中即時路徑使用；§4.2 備註：盤中 K 線查詢路徑不可進入 L2）。
 func SkipL2() FetchOption {
 	return func(f *fetchConfig) { f.skipL2 = true }
+}
+
+// WithStaleFallback 啟用 v2.1 §5.2 stale-if-error：上游 fetch 失敗時，
+// 回退「已過期但仍存在」之 L2 值並以 ErrServedStale 標記（連同有效回傳值）。
+// 未啟用時，上游失敗直接回傳錯誤。
+func WithStaleFallback() FetchOption {
+	return func(f *fetchConfig) { f.staleFallback = true }
 }
 
 // allowL2 判定本請求是否可進入 L2：政策允許、非 SkipL2、且已設定資料目錄。
@@ -137,6 +170,15 @@ func GetOrFetch[T any](ctx context.Context, c *Cache, key string, ttl time.Durat
 		}
 		v, err := fetch(ctx)
 		if err != nil {
+			// §5.2 stale-if-error：上游失敗時回退過期 L2 值（需已存在且可反序列化）。
+			if cfg.staleFallback && c.allowL2(cfg) {
+				if stale, ok, serr := c.l2.get(ctx, key); serr == nil && ok && stale.expired {
+					var sv T
+					if uerr := json.Unmarshal(stale.value, &sv); uerr == nil {
+						return cacheHit[T]{value: sv, cached: true, stale: true}, nil
+					}
+				}
+			}
 			return nil, err
 		}
 		c.store(key, v, ttl, cfg)
@@ -146,6 +188,9 @@ func GetOrFetch[T any](ctx context.Context, c *Cache, key string, ttl time.Durat
 		return zero, false, err
 	}
 	hit := res.(cacheHit[T])
+	if hit.stale {
+		return hit.value, true, ErrServedStale
+	}
 	return hit.value, hit.cached, nil
 }
 
@@ -166,10 +211,20 @@ func Get[T any](ctx context.Context, c *Cache, key string, opts ...FetchOption) 
 	return l2Get[T](ctx, c, key, cfg)
 }
 
+// L2Count 回傳指定資料類別於 L2 之列數（含過期列）。用於觀測與守門測試
+// （如確認 RingBuffer 即時資料不落入快取，§5.1）。未啟用 L2 時回傳 0。
+func (c *Cache) L2Count(ctx context.Context, dataset string) (int, error) {
+	if c.l2 == nil {
+		return 0, nil
+	}
+	return c.l2.count(ctx, dataset)
+}
+
 // cacheHit 承載 singleflight 之結果與來源（避免以 error 通道回傳標記）。
 type cacheHit[T any] struct {
 	value  T
 	cached bool
+	stale  bool // §5.2：stale-if-error 回退之過期 L2 值
 }
 
 // l1Get 讀取 L1；型別不符視為失效並清除（同鍵跨型別誤用之防護）。
@@ -187,14 +242,15 @@ func l1Get[T any](c *Cache, key string) (T, bool) {
 }
 
 // l2Get 讀取 L2（僅 policy 允許之資料類別）；命中時回填 L1 並回傳剩餘 TTL。
+// 過期項目視為 miss（保留於 L2 供 §5.2 stale-if-error 回退）。
 func l2Get[T any](ctx context.Context, c *Cache, key string, cfg fetchConfig) (T, bool, error) {
 	var zero T
 	if !c.allowL2(cfg) {
 		return zero, false, nil
 	}
 	e, ok, err := c.l2.get(ctx, key)
-	if err != nil || !ok {
-		return zero, ok, err
+	if err != nil || !ok || e.expired {
+		return zero, false, err
 	}
 	var v T
 	if err := json.Unmarshal(e.value, &v); err != nil {

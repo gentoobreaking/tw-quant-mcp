@@ -11,11 +11,26 @@ type l1 struct {
 	c *ristretto.Cache
 }
 
-// newL1 建立 Ristretto L1。NumCounters 1e7 約佔 4MB 計數器；MaxCost 256MB。
-func newL1() (*l1, error) {
+// l1Defaults 為 L1 內建容量預設值（CACHE_L1_MAX_ENTRIES / CACHE_L1_MAX_MEMORY_MB
+// 未設定或非正值時使用）。NumCounters 取 10 倍目標條目數（TinyLFU 計數器；
+// 10k 條目 → 1e5 計數器，約 0.4MB）；MaxCost 以 maxMemoryMB 換算位元組。
+const (
+	l1DefaultMaxEntries  = 10000
+	l1DefaultMaxMemoryMB = 256
+)
+
+// newL1 建立 Ristretto L1。maxEntries/maxMemoryMB <= 0 時沿用內建預設值
+// （10000 條目 / 256MB）。
+func newL1(maxEntries, maxMemoryMB int) (*l1, error) {
+	if maxEntries <= 0 {
+		maxEntries = l1DefaultMaxEntries
+	}
+	if maxMemoryMB <= 0 {
+		maxMemoryMB = l1DefaultMaxMemoryMB
+	}
 	c, err := ristretto.NewCache(&ristretto.Config{
-		NumCounters: 1e7,
-		MaxCost:     1 << 28,
+		NumCounters: int64(maxEntries) * 10,
+		MaxCost:     int64(maxMemoryMB) * 1024 * 1024,
 		BufferItems: 64,
 	})
 	if err != nil {

@@ -140,7 +140,7 @@ func WithAppTAIFEX(q TAIFEXQuerier) AppOption {
 	return func(a *App) { a.taifex = q }
 }
 
-// WithAppCache 注入快取層（測試用；預設 L1-only 快取）。
+// WithAppCache 注入快取層（測試用；預設依 cfg 之 §5.2 參數建立，未設定時 L1-only）。
 func WithAppCache(c *cache.Cache) AppOption {
 	return func(a *App) { a.cache = c }
 }
@@ -189,8 +189,20 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 		o(a)
 	}
 	if a.cache == nil {
+		// §5.2 參數化：以 cfg 之 L1 容量與 L2 SQLite path 建立快取；
+		// cfg 未設定（測試）時為 L1-only 快取。
+		var opts []cache.Option
+		if cfg.L1MaxEntries > 0 || cfg.L1MaxMemoryMB > 0 {
+			opts = append(opts, cache.WithL1Config(cfg.L1MaxEntries, cfg.L1MaxMemoryMB))
+		}
+		switch {
+		case cfg.L2SQLitePath != "":
+			opts = append(opts, cache.WithSQLitePath(cfg.L2SQLitePath))
+		case cfg.DataDir != "":
+			opts = append(opts, cache.WithDataDir(cfg.DataDir))
+		}
 		var err error
-		if a.cache, err = cache.New(); err != nil {
+		if a.cache, err = cache.New(opts...); err != nil {
 			return nil, fmt.Errorf("mcp: 快取層初始化失敗: %w", err)
 		}
 	}

@@ -19,24 +19,26 @@ type l2 struct {
 }
 
 type l2Stmts struct {
-	get  *sql.Stmt // 依 key 讀取（含 expires_at）
-	set  *sql.Stmt // upsert
-	del  *sql.Stmt // 依 key 刪除
-	list *sql.Stmt // 依 (dataset, data_date) 列出 key（§12.8 索引消費端，供預熱/清掃）
+	get   *sql.Stmt // 依 key 讀取（含 expires_at）
+	set   *sql.Stmt // upsert
+	del   *sql.Stmt // 依 key 刪除
+	list  *sql.Stmt // 依 (dataset, data_date) 列出 key（§12.8 索引消費端，供預熱/清掃）
+	count *sql.Stmt // 依 dataset 計數（RingBuffer 守門測試/觀測用）
 }
 
 // l2Entry 為 L2 讀取結果。
 type l2Entry struct {
 	value     []byte
 	expiresAt time.Time // zero 表示永久
+	expired   bool      // 已過期（僅 stale-if-error 路徑使用，§5.2）
 }
 
-// openL2 於 dir 目錄建立 SQLite 資料庫（WAL、prepared statement）。
-func openL2(dir string) (*l2, error) {
-	if err := os.MkdirAll(dir, 0o755); err != nil {
+// openL2 於 dbPath 建立 SQLite 資料庫（WAL、prepared statement）；目錄不存在時建立。
+func openL2(dbPath string) (*l2, error) {
+	if err := os.MkdirAll(filepath.Dir(dbPath), 0o755); err != nil {
 		return nil, fmt.Errorf("cache: 建立 L2 資料目錄失敗: %w", err)
 	}
-	db, err := sql.Open("sqlite", filepath.Join(dir, "cache.db"))
+	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return nil, fmt.Errorf("cache: 開啟 L2 失敗: %w", err)
 	}
@@ -98,10 +100,17 @@ func openL2(dir string) (*l2, error) {
 		db.Close()
 		return nil, fmt.Errorf("cache: 準備 L2 list 失敗: %w", err)
 	}
+	if l.stmts.count, err = db.Prepare(
+		`SELECT COUNT(*) FROM cache_entries WHERE dataset = ?`); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("cache: 準備 L2 count 失敗: %w", err)
+	}
 	return l, nil
 }
 
-// get 依 key 讀取；過期項目回傳 miss 並惰性清除。
+// get 依 key 讀取原始列；過期項目仍回傳（expired=true）且不刪除，
+// 供 v2.1 §5.2 stale-if-error 回退「已過期但仍存在」之 L2 值。
+// 過期列由後續同鍵 upsert（set）覆寫，不需惰性清除。
 func (l *l2) get(ctx context.Context, key string) (l2Entry, bool, error) {
 	var value []byte
 	var expiresAt int64
@@ -112,13 +121,10 @@ func (l *l2) get(ctx context.Context, key string) (l2Entry, bool, error) {
 	if err != nil {
 		return l2Entry{}, false, err
 	}
-	if expiresAt > 0 && time.Now().UnixMilli() >= expiresAt {
-		_, _ = l.stmts.del.ExecContext(ctx, key)
-		return l2Entry{}, false, nil
-	}
 	e := l2Entry{value: value}
 	if expiresAt > 0 {
 		e.expiresAt = time.UnixMilli(expiresAt)
+		e.expired = time.Now().UnixMilli() >= expiresAt
 	}
 	return e, true, nil
 }
@@ -159,10 +165,19 @@ func (l *l2) list(ctx context.Context, dataset, dataDate string) ([]string, erro
 	return keys, rows.Err()
 }
 
+// count 依 dataset 計數（含過期列）。
+func (l *l2) count(ctx context.Context, dataset string) (int, error) {
+	var n int
+	if err := l.stmts.count.QueryRowContext(ctx, dataset).Scan(&n); err != nil {
+		return 0, err
+	}
+	return n, nil
+}
+
 // close 關閉資料庫與 prepared statement。
 func (l *l2) close() error {
 	var err error
-	for _, s := range []*sql.Stmt{l.stmts.get, l.stmts.set, l.stmts.del, l.stmts.list} {
+	for _, s := range []*sql.Stmt{l.stmts.get, l.stmts.set, l.stmts.del, l.stmts.list, l.stmts.count} {
 		if s != nil {
 			if e := s.Close(); e != nil && err == nil {
 				err = e

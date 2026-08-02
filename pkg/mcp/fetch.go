@@ -3,6 +3,7 @@ package mcp
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -57,17 +58,19 @@ func policyDataset(dataset string) string {
 }
 
 // fetchNormalize 執行「快取讀穿 → Fetch → Validate → Normalize →
-// Unmarshal」之標準路徑，回傳資料與是否命中快取（§3.2 is_cached）。
+// Unmarshal」之標準路徑，回傳資料、是否命中快取與是否為 stale-if-error
+// 回退（§3.2 is_cached；v2.1 §5.2）。stale=true 表示上游失敗回退過期 L2
+// 值，Handler 應將 _lineage.freshness 標記為 STALE_FALLBACK。
 //   - srcID：資料源 ID（model.Source*，供快取鍵與 lineage）
 //   - dataset：資料類別（§4.2，供 TTL 政策與 L2 資格）
 //   - dataDate：資料歸屬日期（§4.2 索引，YYYY-MM-DD）
 //   - key：快取鍵（含日期/代碼等識別，見 cache.KeyString）
 //   - fetch：上游呼叫（URL 建構 + Fetch）；nil 時僅做快取讀穿
 func fetchNormalize[T any](a *App, ctx context.Context, dataset, dataDate, key string,
-	fetch func() ([]byte, error)) (T, bool, error) {
+	fetch func() ([]byte, error)) (T, bool, bool, error) {
 	var zero T
 	if a.cache == nil {
-		return zero, false, fmt.Errorf("mcp: 快取層未初始化")
+		return zero, false, false, fmt.Errorf("mcp: 快取層未初始化")
 	}
 	dataset = policyDataset(dataset)
 	ttl, cacheable := cache.TTLFor(dataset, a.now())
@@ -85,18 +88,22 @@ func fetchNormalize[T any](a *App, ctx context.Context, dataset, dataDate, key s
 	}
 	if !cacheable {
 		v, err := fn(ctx)
-		return v, false, err
+		return v, false, false, err
 	}
-	return cache.GetOrFetch(ctx, a.cache, key, ttl, fn,
-		cache.WithDataset(dataset, dataDate))
+	v, cached, err := cache.GetOrFetch(ctx, a.cache, key, ttl, fn,
+		cache.WithDataset(dataset, dataDate), cache.WithStaleFallback())
+	if errors.Is(err, cache.ErrServedStale) {
+		return v, true, true, nil
+	}
+	return v, cached, false, err
 }
 
 // fetchRaw 為 fetchNormalize 之原始版：fetch 端即做 Fetch+Validate+
 // Normalize（回傳 normalizer 產出之 []byte），僅快取鍵與 TTL 在此層管理。
 func (a *App) fetchRaw(ctx context.Context, dataset, dataDate, key string,
-	fetch func() ([]byte, error)) (cached bool, raw []byte, err error) {
+	fetch func() ([]byte, error)) (cached, stale bool, raw []byte, err error) {
 	if a.cache == nil {
-		return false, nil, fmt.Errorf("mcp: 快取層未初始化")
+		return false, false, nil, fmt.Errorf("mcp: 快取層未初始化")
 	}
 	dataset = policyDataset(dataset)
 	ttl, cacheable := cache.TTLFor(dataset, a.now())
@@ -106,11 +113,14 @@ func (a *App) fetchRaw(ctx context.Context, dataset, dataDate, key string,
 	}
 	if !cacheable {
 		b, err := fn(ctx)
-		return false, b, err
+		return false, false, b, err
 	}
 	b, fromCache, err := cache.GetOrFetch(ctx, a.cache, key, ttl, fn,
-		cache.WithDataset(dataset, dataDate))
-	return fromCache, b, err
+		cache.WithDataset(dataset, dataDate), cache.WithStaleFallback())
+	if errors.Is(err, cache.ErrServedStale) {
+		return true, true, b, nil
+	}
+	return fromCache, false, b, err
 }
 
 // prevTradingDay 回傳 d 之前第 n 個交易日（n≥1）；搜尋上限 60 日。

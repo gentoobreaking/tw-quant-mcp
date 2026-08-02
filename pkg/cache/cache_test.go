@@ -324,6 +324,88 @@ func ctx(t *testing.T) context.Context {
 	return context.Background()
 }
 
+// §5.2 stale-if-error：L2 有過期值且上游失敗 → 回退過期值並以
+// ErrServedStale 標記（連同有效回傳值）；未啟用 WithStaleFallback 時直接報錯。
+func TestStaleFallback(t *testing.T) {
+	dir := t.TempDir()
+	ctx := ctx(t)
+	// 直接種入 L2（短 TTL 不過 l2WriteMinTTL 門檻，故不走 GetOrFetch 寫入）。
+	c := newTestCache(t, WithDataDir(dir))
+	if err := c.l2.set(ctx, "stale-k", DatasetDailyKLine, "2026-07-31", []byte(`"v1"`), 100*time.Millisecond); err != nil {
+		t.Fatal(err)
+	}
+	time.Sleep(150 * time.Millisecond) // 等待 L2 過期
+
+	var calls atomic.Int32
+	fail := func(ctx context.Context) (string, error) {
+		calls.Add(1)
+		return "", errors.New("上游掛點")
+	}
+
+	// 未啟用 stale fallback：上游錯誤直接回傳。
+	if _, _, err := GetOrFetch(ctx, c, "stale-k", time.Hour, fail,
+		WithDataset(DatasetDailyKLine, "2026-07-31")); err == nil || errors.Is(err, ErrServedStale) {
+		t.Fatalf("未啟用 stale fallback 時應直接回傳上游錯誤，實際 %v", err)
+	}
+
+	// 啟用 stale fallback：回退過期 L2 值 + ErrServedStale。
+	v, fromCache, err := GetOrFetch(ctx, c, "stale-k", time.Hour, fail,
+		WithDataset(DatasetDailyKLine, "2026-07-31"), WithStaleFallback())
+	if !errors.Is(err, ErrServedStale) {
+		t.Fatalf("應以 ErrServedStale 標記，實際 err=%v", err)
+	}
+	if v != "v1" || !fromCache {
+		t.Errorf("應回退過期 L2 值 v1（fromCache=true），實際 v=%q fromCache=%v", v, fromCache)
+	}
+	if calls.Load() != 2 {
+		t.Errorf("上游呼叫次數應為 2（皆失敗），實際 %d", calls.Load())
+	}
+
+	// 過期列未因 stale 讀取而消失：重啟後仍可再次回退。
+	c.Close()
+	c2 := newTestCache(t, WithDataDir(dir))
+	if v, fromCache, err := GetOrFetch(ctx, c2, "stale-k", time.Hour, fail,
+		WithDataset(DatasetDailyKLine, "2026-07-31"), WithStaleFallback()); !errors.Is(err, ErrServedStale) || v != "v1" || !fromCache {
+		t.Fatalf("重啟後仍應回退過期 L2 值，實際 v=%q fromCache=%v err=%v", v, fromCache, err)
+	}
+}
+
+// L2 無過期值且上游失敗：即使啟用 stale fallback 亦直接回傳上游錯誤。
+func TestStaleFallbackNoEntry(t *testing.T) {
+	c := newTestCache(t, WithDataDir(t.TempDir()))
+	fail := func(ctx context.Context) (string, error) {
+		return "", errors.New("上游掛點")
+	}
+	_, _, err := GetOrFetch(ctx(t), c, "stale-miss", time.Hour, fail,
+		WithDataset(DatasetDailyKLine, "2026-07-31"), WithStaleFallback())
+	if err == nil || errors.Is(err, ErrServedStale) {
+		t.Fatalf("無過期 L2 值時應回傳上游錯誤，實際 %v", err)
+	}
+}
+
+// L2Count：未啟用 L2 時回傳 0；MIS 資料（AllowL2=false）不寫入 L2。
+func TestL2Count(t *testing.T) {
+	c := newTestCache(t) // L1-only
+	n, err := c.L2Count(ctx(t), DatasetDailyKLine)
+	if err != nil || n != 0 {
+		t.Fatalf("L1-only 時 L2Count 應為 0，實際 %d/%v", n, err)
+	}
+
+	c2 := newTestCache(t, WithDataDir(t.TempDir()))
+	fetch := func(ctx context.Context) (string, error) { return "v", nil }
+	if _, _, err := GetOrFetch(ctx(t), c2, "cnt-k", time.Hour, fetch, WithDataset(DatasetDailyKLine, "2026-07-31")); err != nil {
+		t.Fatal(err)
+	}
+	n, err = c2.L2Count(ctx(t), DatasetDailyKLine)
+	if err != nil || n != 1 {
+		t.Fatalf("L2Count(daily_kline) 應為 1，實際 %d/%v", n, err)
+	}
+	n, err = c2.L2Count(ctx(t), DatasetMISSnapshot)
+	if err != nil || n != 0 {
+		t.Fatalf("MIS 不得寫入 L2，實際 %d/%v", n, err)
+	}
+}
+
 // T020 發布檢查：Close 後 L1 背景 goroutine 應停止（無 Leak）。
 func TestCloseStopsL1Goroutines(t *testing.T) {
 	before := runtime.NumGoroutine()

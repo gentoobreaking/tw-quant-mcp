@@ -3,13 +3,14 @@ package cache
 import (
 	"context"
 	"database/sql"
+	"path/filepath"
 	"testing"
 	"time"
 )
 
 func openTestL2(t *testing.T) *l2 {
 	t.Helper()
-	l, err := openL2(t.TempDir())
+	l, err := openL2(filepath.Join(t.TempDir(), "cache.db"))
 	if err != nil {
 		t.Fatalf("openL2 失敗: %v", err)
 	}
@@ -70,7 +71,7 @@ func TestL2Upsert(t *testing.T) {
 	}
 }
 
-// TTL 過期：過期項目回傳 miss 且惰性清除。
+// TTL 過期：過期項目仍回傳（expired=true，供 §5.2 stale-if-error），不刪除。
 func TestL2Expiry(t *testing.T) {
 	l := openTestL2(t)
 	ctx := context.Background()
@@ -82,12 +83,19 @@ func TestL2Expiry(t *testing.T) {
 		t.Fatalf("未過期應命中，實際 ok=%v err=%v", ok, err)
 	}
 	time.Sleep(150 * time.Millisecond)
-	if _, ok, err := l.get(ctx, "k1"); err != nil || ok {
-		t.Fatalf("過期應 miss，實際 ok=%v err=%v", ok, err)
+	e, ok, err := l.get(ctx, "k1")
+	if err != nil || !ok {
+		t.Fatalf("過期項目應保留回傳（stale-if-error），實際 ok=%v err=%v", ok, err)
 	}
-	// 惰性清除後再次確認已自表格刪除。
-	if _, ok, err := l.get(ctx, "k1"); err != nil || ok {
-		t.Fatalf("惰性清除後仍應 miss，實際 ok=%v err=%v", ok, err)
+	if !e.expired {
+		t.Error("過期項目應標記 expired=true")
+	}
+	if string(e.value) != "v1" {
+		t.Errorf("過期項目值應保留，實際 %q", e.value)
+	}
+	// 過期列未被惰性刪除：upsert 覆寫為唯一清除途徑。
+	if _, ok, err := l.get(ctx, "k1"); err != nil || !ok {
+		t.Fatalf("過期列不應被刪除，實際 ok=%v err=%v", ok, err)
 	}
 }
 

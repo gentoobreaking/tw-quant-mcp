@@ -11,7 +11,7 @@ func tp(y, m, d, hh, mm int) time.Time {
 	return time.Date(y, time.Month(m), d, hh, mm, 0, 0, model.Taipei())
 }
 
-// TTLFor 盤中（16:30 前）測試：對應 §4.2 政策表「盤中」欄。
+// TTLFor 盤中（16:30 前）測試：對應 §4.2 政策表「盤中」欄 + v2.1 §5.2 矩陣。
 func TestTTLForIntraday(t *testing.T) {
 	now := tp(2026, 7, 31, 10, 0)
 	cases := []struct {
@@ -23,11 +23,12 @@ func TestTTLForIntraday(t *testing.T) {
 		{DatasetInstitutional, 60 * time.Second},
 		{DatasetMargin, 60 * time.Second},
 		{DatasetAlertStock, 30 * time.Second},
-		{DatasetMonthlyRevenue, 12 * time.Hour},
-		{DatasetFinancials, 12 * time.Hour},
+		{DatasetMonthlyRevenue, 30 * 24 * time.Hour}, // §5.2：30 天
+		{DatasetFinancials, 90 * 24 * time.Hour},     // §5.2：90 天
 		{DatasetMaterialNews, 5 * time.Minute},
 		{DatasetCalendar, 24 * time.Hour},
-		{DatasetTAIFEXHistory, ForeverTTL},
+		{DatasetTAIFEXHistory, 7 * 24 * time.Hour}, // §5.2：7 天
+		{DatasetExDivCalendar, 6 * time.Hour},      // §5.2：6 小時
 	}
 	for _, c := range cases {
 		ttl, ok := TTLFor(c.dataset, now)
@@ -58,12 +59,13 @@ func TestTTLForPostMarket(t *testing.T) {
 		}
 	}
 
-	// 盤後固定 TTL：月營收/財報 12h、重大訊息 5min、行事曆 24h。
+	// 盤後固定 TTL：月營收 30d、財報 90d、重大訊息 5min、行事曆 24h、除權息 6h（§5.2）。
 	for ds, want := range map[string]time.Duration{
-		DatasetMonthlyRevenue: 12 * time.Hour,
-		DatasetFinancials:     12 * time.Hour,
+		DatasetMonthlyRevenue: 30 * 24 * time.Hour,
+		DatasetFinancials:     90 * 24 * time.Hour,
 		DatasetMaterialNews:   5 * time.Minute,
 		DatasetCalendar:       24 * time.Hour,
+		DatasetExDivCalendar:  6 * time.Hour,
 	} {
 		ttl, ok := TTLFor(ds, now)
 		if !ok || ttl != want {
@@ -76,9 +78,9 @@ func TestTTLForPostMarket(t *testing.T) {
 		t.Errorf("TTLFor(mis_snapshot) 盤後應為不可快取，實際 %v/%v", ttl, ok)
 	}
 
-	// TAIFEX 歷史永久。
-	if ttl, ok := TTLFor(DatasetTAIFEXHistory, now); !ok || ttl != ForeverTTL {
-		t.Errorf("TTLFor(taifex_history) 盤後 = %v/%v，預期永久", ttl, ok)
+	// TAIFEX 歷史 7 天（v2.1 §5.2，原 §4.2「永久」已改）。
+	if ttl, ok := TTLFor(DatasetTAIFEXHistory, now); !ok || ttl != 7*24*time.Hour {
+		t.Errorf("TTLFor(taifex_history) 盤後 = %v/%v，預期 7 天", ttl, ok)
 	}
 }
 
@@ -115,10 +117,11 @@ func TestTTLForUnknown(t *testing.T) {
 	}
 }
 
-// AllowL2：§4.1 L2 用途（TAIFEX 歷史/盤後快照/行事曆/代碼表等），MIS 不可入 L2。
+// AllowL2：§4.1 L2 用途（TAIFEX 歷史/盤後快照/行事曆/代碼表等），
+// MIS 與注意/處置股（v2.1 §5.2：僅 L1）不可入 L2。
 func TestAllowL2(t *testing.T) {
 	for _, ds := range []string{DatasetDailyKLine, DatasetInstitutional, DatasetMargin,
-		DatasetAlertStock, DatasetMonthlyRevenue, DatasetFinancials, DatasetMaterialNews,
+		DatasetMonthlyRevenue, DatasetFinancials, DatasetMaterialNews,
 		DatasetCalendar, DatasetTAIFEXHistory} {
 		if !AllowL2(ds) {
 			t.Errorf("AllowL2(%s) 應為 true", ds)
@@ -126,6 +129,9 @@ func TestAllowL2(t *testing.T) {
 	}
 	if AllowL2(DatasetMISSnapshot) {
 		t.Error("AllowL2(mis_snapshot) 應為 false（盤中即時路徑不可入 L2，§4.2 備註）")
+	}
+	if AllowL2(DatasetAlertStock) {
+		t.Error("AllowL2(alert_stock) 應為 false（v2.1 §5.2：注意/處置股僅 L1）")
 	}
 	if AllowL2("no_such_dataset") {
 		t.Error("AllowL2 對未登錄類別應為 false")

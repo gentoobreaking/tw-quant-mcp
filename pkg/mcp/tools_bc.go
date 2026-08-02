@@ -19,15 +19,19 @@ import (
 // 全部為 POST_MARKET 資料：統一經 fetchRaw/fetchNormalize
 //（§4.2 快取 TTL + §12.2 讀穿），並於 lineage 標明資料源（v2.1 §4）。
 
-// postLineage 建構盤後工具之 lineage 預設值；cached/ttl 由 handler 依快取
-// 結果填入。
-func postLineage(source, dataDate string, cached bool, ttl time.Duration) *model.Lineage {
+// postLineage 建構盤後工具之 lineage 預設值；cached/stale/ttl 由 handler 依快取
+// 結果填入。stale=true（§5.2 stale-if-error）時 freshness=STALE_FALLBACK。
+func postLineage(source, dataDate string, cached, stale bool, ttl time.Duration) *model.Lineage {
+	freshness := model.FreshnessPostMarket
+	if stale {
+		freshness = model.FreshnessStaleFallback
+	}
 	return &model.Lineage{
 		Source:     source,
 		SourceRole: model.SourceRoleCanonical,
 		DataDate:   dataDate,
-		Freshness:  model.FreshnessPostMarket,
-		IsCached:   cached,
+		Freshness:  freshness,
+		IsCached:   cached || stale,
 		CacheTTL:   int(ttl.Seconds()),
 	}
 }
@@ -65,15 +69,17 @@ func (a *App) quoteTSE(ctx context.Context, sym model.Symbol, date string) (Hand
 	months := monthStarts(start, 3)
 	var all []model.Candle
 	cachedAny := false
+	staleAny := false
 	for _, ms := range months {
 		params := url.Values{"date": {ms.Format("20060102")}, "stockNo": {sym.Code}}
-		rows, cached, err := fetchNormalize[[]model.Candle](a, ctx, string(provider.TWSEWDDailyK),
+		rows, cached, stale, err := fetchNormalize[[]model.Candle](a, ctx, string(provider.TWSEWDDailyK),
 			date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDDailyK), date, sym.Code, vals(params)),
 			func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDDailyK, params) })
 		if err != nil {
 			return HandlerResult{}, err
 		}
 		cachedAny = cachedAny || cached
+		staleAny = staleAny || stale
 		all = append(all, rows...)
 	}
 	byDay := make(map[string]model.Candle, len(all))
@@ -101,7 +107,7 @@ func (a *App) quoteTSE(ctx context.Context, sym model.Symbol, date string) (Hand
 		Volume: target.Volume, Amount: target.Amount,
 		Indicators: ind,
 	}
-	lg := postLineage(model.SourceTWSEWeb, date, cachedAny, ttl)
+	lg := postLineage(model.SourceTWSEWeb, date, cachedAny || staleAny, staleAny, ttl)
 	lg.DerivedFrom = []string{"TWSE_WEB:daily_k"}
 	lg.SourceRole = model.SourceRoleCanonical
 	return HandlerResult{Data: q, Lineage: lg}, nil
@@ -110,7 +116,7 @@ func (a *App) quoteTSE(ctx context.Context, sym model.Symbol, date string) (Hand
 // quoteOTC 以上櫃收盤行情取單日報價。
 func (a *App) quoteOTC(ctx context.Context, sym model.Symbol, date string) (HandlerResult, error) {
 	params := url.Values{"date": {dateYMD(date)}}
-	rows, _, err := fetchNormalize[[]provider.TPExDailyCloseRow](a, ctx, string(provider.TPExDailyClose),
+	rows, _, stale, err := fetchNormalize[[]provider.TPExDailyCloseRow](a, ctx, string(provider.TPExDailyClose),
 		date, cache.KeyString(model.SourceTPExAPI, string(provider.TPExDailyClose), date, sym.Code, vals(params)),
 		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExDailyClose, params) })
 	if err != nil {
@@ -133,7 +139,7 @@ func (a *App) quoteOTC(ctx context.Context, sym model.Symbol, date string) (Hand
 		Volume: row.Volume,
 		Note:   "上櫃指標暫缺：歷史 K 線資料源未接線（T018）",
 	}
-	return HandlerResult{Data: q, Lineage: postLineage(model.SourceTPExAPI, date, false, ttl)}, nil
+	return HandlerResult{Data: q, Lineage: postLineage(model.SourceTPExAPI, date, stale, stale, ttl)}, nil
 }
 
 // handlerGetStockDailyKline：個股日/週/月 K 線（§10.B）。
@@ -167,7 +173,7 @@ func handlerGetStockDailyKline(a *App, args map[string]any) (HandlerResult, erro
 	if adjust {
 		params.Set("adjust", "Y")
 	}
-	rows, cached, err := fetchNormalize[[]model.Candle](a, ctx, string(provider.TWSEWDDailyK),
+	rows, cached, stale, err := fetchNormalize[[]model.Candle](a, ctx, string(provider.TWSEWDDailyK),
 		date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDDailyK), date, sym.Code, vals(params)),
 		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDDailyK, params) })
 	if err != nil {
@@ -177,7 +183,7 @@ func handlerGetStockDailyKline(a *App, args map[string]any) (HandlerResult, erro
 		return HandlerResult{}, fmt.Errorf("代碼 %s 於 %s 無日 K 資料（非交易日或無成交）", sym.Code, date)
 	}
 	ttl, _ := a.ttlOf(string(provider.TWSEWDDailyK))
-	lg := postLineage(model.SourceTWSEWeb, date, cached, ttl)
+	lg := postLineage(model.SourceTWSEWeb, date, cached || stale, stale, ttl)
 	lg.SamplingSec = 0
 	return HandlerResult{Data: rows, Lineage: lg}, nil
 }
@@ -189,28 +195,28 @@ func handlerGetMarketSummary(a *App, args map[string]any) (HandlerResult, error)
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	tse, err := a.marketStatsTSE(ctx, date)
+	tse, staleTSE, err := a.marketStatsTSE(ctx, date)
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	otc, err := a.marketStatsOTC(ctx, date)
+	otc, staleOTC, err := a.marketStatsOTC(ctx, date)
 	if err != nil {
 		return HandlerResult{}, err
 	}
 	ttl, _ := a.ttlOf(string(provider.TWSEWDMarketClose))
-	lg := postLineage(model.SourceTWSEWeb, date, false, ttl)
+	lg := postLineage(model.SourceTWSEWeb, date, staleTSE || staleOTC, staleTSE || staleOTC, ttl)
 	lg.SourceRole = model.SourceRoleCanonical
 	return HandlerResult{Data: model.MarketSummary{Date: date, TSE: tse, OTC: otc}, Lineage: lg}, nil
 }
 
-func (a *App) marketStatsTSE(ctx context.Context, date string) (model.MarketStats, error) {
+func (a *App) marketStatsTSE(ctx context.Context, date string) (model.MarketStats, bool, error) {
 	// MI_INDEX 需 type=ALL 才回傳「每日收盤行情」表（§12.4 全市場彙總）。
 	params := url.Values{"date": {dateYMD(date)}, "type": {"ALL"}}
-	rows, _, err := fetchNormalize[[]provider.MarketCloseRow](a, ctx, string(provider.TWSEWDMarketClose),
+	rows, _, stale, err := fetchNormalize[[]provider.MarketCloseRow](a, ctx, string(provider.TWSEWDMarketClose),
 		date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDMarketClose), date, "", vals(params)),
 		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDMarketClose, params) })
 	if err != nil {
-		return model.MarketStats{}, err
+		return model.MarketStats{}, false, err
 	}
 	var st model.MarketStats
 	for _, r := range rows {
@@ -231,16 +237,16 @@ func (a *App) marketStatsTSE(ctx context.Context, date string) (model.MarketStat
 			st.Unchanged++
 		}
 	}
-	return st, nil
+	return st, stale, nil
 }
 
-func (a *App) marketStatsOTC(ctx context.Context, date string) (model.MarketStats, error) {
+func (a *App) marketStatsOTC(ctx context.Context, date string) (model.MarketStats, bool, error) {
 	params := url.Values{"date": {dateYMD(date)}}
-	rows, _, err := fetchNormalize[[]provider.TPExDailyCloseRow](a, ctx, string(provider.TPExDailyClose),
+	rows, _, stale, err := fetchNormalize[[]provider.TPExDailyCloseRow](a, ctx, string(provider.TPExDailyClose),
 		date, cache.KeyString(model.SourceTPExAPI, string(provider.TPExDailyClose), date, "", vals(params)),
 		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExDailyClose, params) })
 	if err != nil {
-		return model.MarketStats{}, err
+		return model.MarketStats{}, false, err
 	}
 	var st model.MarketStats
 	for _, r := range rows {
@@ -260,7 +266,7 @@ func (a *App) marketStatsOTC(ctx context.Context, date string) (model.MarketStat
 			st.Unchanged++
 		}
 	}
-	return st, nil
+	return st, stale, nil
 }
 
 // handlerGetInstitutionalInvestors：三大法人買賣超（個股+彙總，§10.B）。
@@ -275,7 +281,7 @@ func handlerGetInstitutionalInvestors(a *App, args map[string]any) (HandlerResul
 	switch market {
 	case model.MarketTSE:
 		params := url.Values{"date": {dateYMD(date)}}
-		rows, cached, err := fetchNormalize[[]provider.InstitutionalRow](a, ctx, string(provider.TWSEWDInstitutional),
+		rows, cached, stale, err := fetchNormalize[[]provider.InstitutionalRow](a, ctx, string(provider.TWSEWDInstitutional),
 			date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDInstitutional), date, "", vals(params)),
 			func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDInstitutional, params) })
 		if err != nil {
@@ -288,10 +294,10 @@ func handlerGetInstitutionalInvestors(a *App, args map[string]any) (HandlerResul
 		return HandlerResult{Data: model.InstitutionalSummary{
 			Market: market, Date: date, Rows: rows, TotalNet: total,
 			Note: institutionalNote(a.now(), date),
-		}, Lineage: postLineage(model.SourceTWSEWeb, date, cached, ttl)}, nil
+		}, Lineage: postLineage(model.SourceTWSEWeb, date, cached || stale, stale, ttl)}, nil
 	case model.MarketOTC:
 		params := url.Values{"date": {dateYMD(date)}}
-		rows, cached, err := fetchNormalize[[]provider.TPExInstitutionalRow](a, ctx, string(provider.TPExInstitutional),
+		rows, cached, stale, err := fetchNormalize[[]provider.TPExInstitutionalRow](a, ctx, string(provider.TPExInstitutional),
 			date, cache.KeyString(model.SourceTPExAPI, string(provider.TPExInstitutional), date, "", vals(params)),
 			func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExInstitutional, params) })
 		if err != nil {
@@ -304,7 +310,7 @@ func handlerGetInstitutionalInvestors(a *App, args map[string]any) (HandlerResul
 		return HandlerResult{Data: model.InstitutionalSummary{
 			Market: market, Date: date, Rows: rows, TotalNet: total,
 			Note: institutionalNote(a.now(), date),
-		}, Lineage: postLineage(model.SourceTPExAPI, date, cached, ttl)}, nil
+		}, Lineage: postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)}, nil
 	}
 	return HandlerResult{}, fmt.Errorf("參數 market 僅允許 tse|otc")
 }
@@ -324,14 +330,14 @@ func handlerGetForeignIndustryHoldings(a *App, args map[string]any) (HandlerResu
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	rows, cached, err := fetchNormalize[[]provider.ForeignHoldingRow](a, ctx, string(provider.TWSEAPIForeignHoldings),
+	rows, cached, stale, err := fetchNormalize[[]provider.ForeignHoldingRow](a, ctx, string(provider.TWSEAPIForeignHoldings),
 		date, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIForeignHoldings), date, "", nil),
 		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIForeignHoldings, nil) })
 	if err != nil {
 		return HandlerResult{}, err
 	}
 	ttl, _ := a.ttlOf(string(provider.TWSEAPIForeignHoldings))
-	return HandlerResult{Data: rows, Lineage: postLineage(model.SourceTWSEAPI, date, cached, ttl)}, nil
+	return HandlerResult{Data: rows, Lineage: postLineage(model.SourceTWSEAPI, date, cached || stale, stale, ttl)}, nil
 }
 
 // handlerGetForeignShareholdingHistory：外資持股歷史（§10.B，逐日快照）。
@@ -357,17 +363,19 @@ func handlerGetForeignShareholdingHistory(a *App, args map[string]any) (HandlerR
 	}
 	series := make([]model.ForeignHoldingPoint, 0, rnge)
 	cachedAny := false
+	staleAny := false
 	day, _ := model.ParseDate(date)
 	for i := 0; i < rnge; i++ {
 		d := model.FormatDate(day)
 		params := url.Values{"dayDate": {dateYMD(d)}}
-		rows, cached, err := fetchNormalize[[]provider.ForeignHoldingPointRow](a, ctx, string(provider.TWSEWDForeignQFIIS),
+		rows, cached, stale, err := fetchNormalize[[]provider.ForeignHoldingPointRow](a, ctx, string(provider.TWSEWDForeignQFIIS),
 			d, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDForeignQFIIS), d, sym.Code, vals(params)),
 			func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDForeignQFIIS, params) })
 		if err != nil {
 			return HandlerResult{}, err
 		}
 		cachedAny = cachedAny || cached
+		staleAny = staleAny || stale
 		for _, r := range rows {
 			if r.Code == sym.Code {
 				series = append(series, model.ForeignHoldingPoint{
@@ -385,7 +393,7 @@ func handlerGetForeignShareholdingHistory(a *App, args map[string]any) (HandlerR
 		return HandlerResult{}, fmt.Errorf("代碼 %s 於 %s 起 %d 個交易日無外資持股資料", sym.Code, date, rnge)
 	}
 	ttl, _ := a.ttlOf(string(provider.TWSEWDForeignQFIIS))
-	lg := postLineage(model.SourceTWSEWeb, date, cachedAny, ttl)
+	lg := postLineage(model.SourceTWSEWeb, date, cachedAny || staleAny, staleAny, ttl)
 	return HandlerResult{Data: model.ForeignShareholdingHistory{
 		Symbol: sym.Code, Name: sym.Name, Range: rnge, Series: series,
 	}, Lineage: lg}, nil
@@ -405,7 +413,7 @@ func handlerGetMarginTrading(a *App, args map[string]any) (HandlerResult, error)
 	}
 	if sym.Market == model.MarketOTC {
 		params := url.Values{"date": {dateYMD(date)}}
-		rows, cached, err := fetchNormalize[[]provider.TPExMarginRow](a, ctx, string(provider.TPExMargin),
+		rows, cached, stale, err := fetchNormalize[[]provider.TPExMarginRow](a, ctx, string(provider.TPExMargin),
 			date, cache.KeyString(model.SourceTPExAPI, string(provider.TPExMargin), date, sym.Code, vals(params)),
 			func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExMargin, params) })
 		if err != nil {
@@ -414,13 +422,13 @@ func handlerGetMarginTrading(a *App, args map[string]any) (HandlerResult, error)
 		for _, r := range rows {
 			if r.Code == sym.Code {
 				ttl, _ := a.ttlOf(string(provider.TPExMargin))
-				return HandlerResult{Data: r, Lineage: postLineage(model.SourceTPExAPI, date, cached, ttl)}, nil
+				return HandlerResult{Data: r, Lineage: postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)}, nil
 			}
 		}
 		return HandlerResult{}, fmt.Errorf("代碼 %s 於 %s 無上櫃融資融券資料", sym.Code, date)
 	}
 	params := url.Values{"date": {dateYMD(date)}, "selectType": {"ALL"}}
-	rows, cached, err := fetchNormalize[[]provider.MarginRow](a, ctx, string(provider.TWSEWDMargin),
+	rows, cached, stale, err := fetchNormalize[[]provider.MarginRow](a, ctx, string(provider.TWSEWDMargin),
 		date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDMargin), date, sym.Code, vals(params)),
 		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDMargin, params) })
 	if err != nil {
@@ -429,7 +437,7 @@ func handlerGetMarginTrading(a *App, args map[string]any) (HandlerResult, error)
 	for _, r := range rows {
 		if r.Code == sym.Code {
 			ttl, _ := a.ttlOf(string(provider.TWSEWDMargin))
-			return HandlerResult{Data: r, Lineage: postLineage(model.SourceTWSEWeb, date, cached, ttl)}, nil
+			return HandlerResult{Data: r, Lineage: postLineage(model.SourceTWSEWeb, date, cached || stale, stale, ttl)}, nil
 		}
 	}
 	return HandlerResult{}, fmt.Errorf("代碼 %s 於 %s 無融資融券資料", sym.Code, date)
@@ -452,7 +460,7 @@ func handlerGetAbnormalTrading(a *App, args map[string]any) (HandlerResult, erro
 	ttl, _ := a.ttlOf(string(provider.TWSEWDAbnormal))
 	if market == model.MarketOTC {
 		params := url.Values{"date": {dateYMD(date)}}
-		rows, cached, err := fetchNormalize[[]provider.TPExAttentionRow](a, ctx, string(provider.TPExAttention),
+		rows, cached, stale, err := fetchNormalize[[]provider.TPExAttentionRow](a, ctx, string(provider.TPExAttention),
 			date, cache.KeyString(model.SourceTPExAPI, string(provider.TPExAttention), date, "", vals(params)),
 			func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExAttention, params) })
 		if err != nil {
@@ -465,10 +473,10 @@ func handlerGetAbnormalTrading(a *App, args map[string]any) (HandlerResult, erro
 		if len(out) > topN {
 			out = out[:topN]
 		}
-		return HandlerResult{Data: out, Lineage: postLineage(model.SourceTPExAPI, date, cached, ttl)}, nil
+		return HandlerResult{Data: out, Lineage: postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)}, nil
 	}
 	params := url.Values{"date": {dateYMD(date)}}
-	rows, cached, err := fetchNormalize[[]provider.AbnormalVolumeRow](a, ctx, string(provider.TWSEWDAbnormal),
+	rows, cached, stale, err := fetchNormalize[[]provider.AbnormalVolumeRow](a, ctx, string(provider.TWSEWDAbnormal),
 		date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDAbnormal), date, "", vals(params)),
 		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDAbnormal, params) })
 	if err != nil {
@@ -483,7 +491,7 @@ func handlerGetAbnormalTrading(a *App, args map[string]any) (HandlerResult, erro
 	if len(out) > topN {
 		out = out[:topN]
 	}
-	return HandlerResult{Data: out, Lineage: postLineage(model.SourceTWSEWeb, date, cached, ttl)}, nil
+	return HandlerResult{Data: out, Lineage: postLineage(model.SourceTWSEWeb, date, cached || stale, stale, ttl)}, nil
 }
 
 // handlerGetWarrantActivity：權證活躍度（成交金額/張數排名，§10.B）。
@@ -493,7 +501,7 @@ func handlerGetWarrantActivity(a *App, args map[string]any) (HandlerResult, erro
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	rows, cached, err := fetchNormalize[[]provider.WarrantRow](a, ctx, string(provider.TWSEAPIWarrants),
+	rows, cached, stale, err := fetchNormalize[[]provider.WarrantRow](a, ctx, string(provider.TWSEAPIWarrants),
 		date, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIWarrants), date, "", nil),
 		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIWarrants, nil) })
 	if err != nil {
@@ -518,7 +526,7 @@ func handlerGetWarrantActivity(a *App, args map[string]any) (HandlerResult, erro
 	ttl, _ := a.ttlOf(string(provider.TWSEAPIWarrants))
 	return HandlerResult{Data: model.WarrantSummary{
 		Date: date, AmountTop: toAny(amount), VolumeTop: toAny(volume),
-	}, Lineage: postLineage(model.SourceTWSEAPI, date, cached, ttl)}, nil
+	}, Lineage: postLineage(model.SourceTWSEAPI, date, cached || stale, stale, ttl)}, nil
 }
 
 // ************** C. 重大訊息與風險 **************
@@ -544,7 +552,7 @@ func handlerGetMajorAnnouncements(a *App, args map[string]any) (HandlerResult, e
 
 	key := cache.KeyString(model.SourceMOPS, dataset, dataDate, "", nil)
 
-	cached, raw, err := a.fetchRaw(ctx, dataset, dataDate, key, func() ([]byte, error) {
+	cached, stale, raw, err := a.fetchRaw(ctx, dataset, dataDate, key, func() ([]byte, error) {
 		req := provider.RawRequest{
 			URL: a.mops.URL(provider.MOPSAnnouncements, nil),
 		}
@@ -569,7 +577,7 @@ func handlerGetMajorAnnouncements(a *App, args map[string]any) (HandlerResult, e
 	ttl, _ := a.ttlOf(dataset)
 	return HandlerResult{
 		Data:    filterAnnouncements(all, date, symbol, keyword),
-		Lineage: postLineage(model.SourceMOPS, dataDate, cached, ttl),
+		Lineage: postLineage(model.SourceMOPS, dataDate, cached || stale, stale, ttl),
 	}, nil
 }
 
@@ -608,14 +616,14 @@ func handlerGetAttentionDispositionStocks(a *App, args map[string]any) (HandlerR
 	var alerts []AlertList
 	if market == model.MarketOTC {
 		ap := url.Values{"date": {dateYMD(date)}}
-		att, cached, err := fetchNormalize[[]provider.TPExAttentionRow](a, ctx, string(provider.TPExAttention),
+		att, cached, stale, err := fetchNormalize[[]provider.TPExAttentionRow](a, ctx, string(provider.TPExAttention),
 			date, cache.KeyString(model.SourceTPExAPI, string(provider.TPExAttention), date, "", vals(ap)),
 			func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExAttention, ap) })
 		if err != nil {
 			return HandlerResult{}, err
 		}
 		dp := url.Values{"date": {dateYMD(date)}}
-		disp, dCached, err := fetchNormalize[[]provider.TPExDispositionRow](a, ctx, string(provider.TPExDisposition),
+		disp, dCached, dStale, err := fetchNormalize[[]provider.TPExDispositionRow](a, ctx, string(provider.TPExDisposition),
 			date, cache.KeyString(model.SourceTPExAPI, string(provider.TPExDisposition), date, "", vals(dp)),
 			func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExDisposition, dp) })
 		if err != nil {
@@ -632,17 +640,17 @@ func handlerGetAttentionDispositionStocks(a *App, args map[string]any) (HandlerR
 			alerts = append(alerts, AlertList{Scope: market, Kind: "disposition", Code: r.Code, Info: r.Reasons, Period: r.Period})
 		}
 		a.risk.AddLists(date, market, alerts)
-		return HandlerResult{Data: out, Lineage: postLineage(model.SourceTPExAPI, date, cached || dCached, ttl)}, nil
+		return HandlerResult{Data: out, Lineage: postLineage(model.SourceTPExAPI, date, cached || dCached || stale || dStale, stale || dStale, ttl)}, nil
 	}
 	ap := url.Values{"date": {dateYMD(date)}}
-	att, cached, err := fetchNormalize[[]provider.AbnormalVolumeRow](a, ctx, string(provider.TWSEWDAbnormal),
+	att, cached, stale, err := fetchNormalize[[]provider.AbnormalVolumeRow](a, ctx, string(provider.TWSEWDAbnormal),
 		date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDAbnormal), date, "", vals(ap)),
 		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDAbnormal, ap) })
 	if err != nil {
 		return HandlerResult{}, err
 	}
 	dp := url.Values{"date": {dateYMD(date)}}
-	disp, dCached, err := fetchNormalize[[]provider.PunishRow](a, ctx, string(provider.TWSEAPIPunish),
+	disp, dCached, dStale, err := fetchNormalize[[]provider.PunishRow](a, ctx, string(provider.TWSEAPIPunish),
 		date, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIPunish), date, "", vals(dp)),
 		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIPunish, dp) })
 	if err != nil {
@@ -661,7 +669,7 @@ func handlerGetAttentionDispositionStocks(a *App, args map[string]any) (HandlerR
 	}
 	out.Note = "上市處置股來源 TWSE-API announcement/punish；注意股來源 TWSE-WEB announcement/notice"
 	a.risk.AddLists(date, market, alerts)
-	return HandlerResult{Data: out, Lineage: postLineage(model.SourceTWSEWeb, date, cached || dCached, ttl)}, nil
+	return HandlerResult{Data: out, Lineage: postLineage(model.SourceTWSEWeb, date, cached || dCached || stale || dStale, stale || dStale, ttl)}, nil
 }
 
 // ************** 共用 fetch / 工具 **************

@@ -25,13 +25,13 @@ import (
 
 // mopsRows 取得 MOPS Open Data CSV 全量資料（一次下載，快取鍵不含過濾參數，
 // 各 symbol/過濾組合共用同一份快取，§12.4）。
-func mopsRows[T any](a *App, ctx context.Context, ds provider.MOPSDataset) ([]T, bool, error) {
+func mopsRows[T any](a *App, ctx context.Context, ds provider.MOPSDataset) ([]T, bool, bool, error) {
 	if a.mops == nil {
-		return nil, false, fmt.Errorf("MOPS 資料源尚未接線")
+		return nil, false, false, fmt.Errorf("MOPS 資料源尚未接線")
 	}
 	dataDate := a.now().Format("2006-01-02")
 	key := cache.KeyString(model.SourceMOPS, string(ds), dataDate, "", nil)
-	cached, raw, err := a.fetchRaw(ctx, string(ds), dataDate, key, func() ([]byte, error) {
+	cached, stale, raw, err := a.fetchRaw(ctx, string(ds), dataDate, key, func() ([]byte, error) {
 		req := provider.RawRequest{URL: a.mops.URL(ds, nil)}
 		resp, err := a.mops.Fetch(ctx, req)
 		if err != nil {
@@ -43,22 +43,22 @@ func mopsRows[T any](a *App, ctx context.Context, ds provider.MOPSDataset) ([]T,
 		return a.mops.Normalize(resp)
 	})
 	if err != nil {
-		return nil, false, fmt.Errorf("MOPS %s 取得失敗: %w", ds, err)
+		return nil, false, false, fmt.Errorf("MOPS %s 取得失敗: %w", ds, err)
 	}
 	var rows []T
 	if err := json.Unmarshal(raw, &rows); err != nil {
-		return nil, false, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+		return nil, false, false, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
 	}
-	return rows, cached, nil
+	return rows, cached, stale, nil
 }
 
 // mopsStatement 取得 MOPS AJAX 財報三表（POST form-encoded，T012 discovery
 // 規格：ajax_t164sb0{3|4|5}，year 為西元、season 1-4、isnew=true）。
 func mopsStatement[T any](a *App, ctx context.Context, ds provider.MOPSDataset,
-	code string, year, quarter int) (T, bool, error) {
+	code string, year, quarter int) (T, bool, bool, error) {
 	var zero T
 	if a.mops == nil {
-		return zero, false, fmt.Errorf("MOPS 資料源尚未接線")
+		return zero, false, false, fmt.Errorf("MOPS 資料源尚未接線")
 	}
 	form := url.Values{
 		"step": {"1"}, "firstin": {"1"}, "off": {"1"}, "TYPEK": {"all"},
@@ -71,7 +71,7 @@ func mopsStatement[T any](a *App, ctx context.Context, ds provider.MOPSDataset,
 	}
 	dataDate := a.now().Format("2006-01-02")
 	key := cache.KeyString(model.SourceMOPS, string(ds), dataDate, code, vals(params))
-	cached, raw, err := a.fetchRaw(ctx, string(ds), dataDate, key, func() ([]byte, error) {
+	cached, stale, raw, err := a.fetchRaw(ctx, string(ds), dataDate, key, func() ([]byte, error) {
 		req := provider.RawRequest{
 			URL:     a.mops.URL(ds, params),
 			Body:    []byte(form.Encode()),
@@ -87,45 +87,45 @@ func mopsStatement[T any](a *App, ctx context.Context, ds provider.MOPSDataset,
 		return a.mops.Normalize(resp)
 	})
 	if err != nil {
-		return zero, false, err
+		return zero, false, false, err
 	}
 	if err := json.Unmarshal(raw, &zero); err != nil {
-		return zero, false, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+		return zero, false, false, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
 	}
-	return zero, cached, nil
+	return zero, cached, stale, nil
 }
 
 // valuationTSE 取得上市估值快照（BWIBBU_ALL，全市場，快取共用）。
-func (a *App) valuationTSE(ctx context.Context) ([]provider.ValuationRow, bool, error) {
-	rows, cached, err := apiRows[provider.ValuationRow](a, ctx, provider.TWSEAPIValuation)
+func (a *App) valuationTSE(ctx context.Context) ([]provider.ValuationRow, bool, bool, error) {
+	rows, cached, stale, err := apiRows[provider.ValuationRow](a, ctx, provider.TWSEAPIValuation)
 	if err != nil {
-		return nil, false, fmt.Errorf("上市估值資料取得失敗: %w", err)
+		return nil, false, false, fmt.Errorf("上市估值資料取得失敗: %w", err)
 	}
-	return rows, cached, nil
+	return rows, cached, stale, nil
 }
 
 // apiRows 取得 TWSE-API 全市場快照（無參數資料集，快取共用，§12.4）。
-func apiRows[T any](a *App, ctx context.Context, ds provider.TWSEAPIDataset) ([]T, bool, error) {
+func apiRows[T any](a *App, ctx context.Context, ds provider.TWSEAPIDataset) ([]T, bool, bool, error) {
 	dataDate := a.now().Format("2006-01-02")
-	rows, cached, err := fetchNormalize[[]T](a, ctx, string(ds), dataDate,
+	rows, cached, stale, err := fetchNormalize[[]T](a, ctx, string(ds), dataDate,
 		cache.KeyString(model.SourceTWSEAPI, string(ds), dataDate, "", nil),
 		func() ([]byte, error) { return a.fetchAPIRaw(ctx, ds, nil) })
 	if err != nil {
-		return nil, false, fmt.Errorf("%s 取得失敗: %w", ds, err)
+		return nil, false, false, fmt.Errorf("%s 取得失敗: %w", ds, err)
 	}
-	return rows, cached, nil
+	return rows, cached, stale, nil
 }
 
 // valuationOTC 取得上櫃估值快照（TPEx 本益比/殖利率/淨值比，全市場）。
-func (a *App) valuationOTC(ctx context.Context) ([]provider.TPExPEValuationRow, bool, error) {
+func (a *App) valuationOTC(ctx context.Context) ([]provider.TPExPEValuationRow, bool, bool, error) {
 	dataDate := a.now().Format("2006-01-02")
-	rows, cached, err := fetchNormalize[[]provider.TPExPEValuationRow](a, ctx, string(provider.TPExPEValuation),
+	rows, cached, stale, err := fetchNormalize[[]provider.TPExPEValuationRow](a, ctx, string(provider.TPExPEValuation),
 		dataDate, cache.KeyString(model.SourceTPExAPI, string(provider.TPExPEValuation), dataDate, "", nil),
 		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExPEValuation, nil) })
 	if err != nil {
-		return nil, false, fmt.Errorf("上櫃估值資料取得失敗: %w", err)
+		return nil, false, false, fmt.Errorf("上櫃估值資料取得失敗: %w", err)
 	}
-	return rows, cached, nil
+	return rows, cached, stale, nil
 }
 
 // ************** D. 基本面與篩選 **************
@@ -147,7 +147,7 @@ func handlerGetFinancialStatements(a *App, args map[string]any) (HandlerResult, 
 		return HandlerResult{}, fmt.Errorf("參數 statement 僅允許 income|balance|cashflow")
 	}
 
-	income, _, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
+	income, _, _, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
 	if err != nil {
 		return HandlerResult{}, err
 	}
@@ -170,10 +170,11 @@ func handlerGetFinancialStatements(a *App, args map[string]any) (HandlerResult, 
 		Income: incomeRows,
 	}
 	cachedAny := false
+	staleAny := false
 	var profit []model.ProfitabilityRatio
 	switch statement {
 	case "", "income":
-		profit, cachedAny, err = mopsRows[model.ProfitabilityRatio](a, ctx, provider.MOPSProfitRatios)
+		profit, cachedAny, staleAny, err = mopsRows[model.ProfitabilityRatio](a, ctx, provider.MOPSProfitRatios)
 		if err != nil {
 			return HandlerResult{}, err
 		}
@@ -181,24 +182,26 @@ func handlerGetFinancialStatements(a *App, args map[string]any) (HandlerResult, 
 	}
 	switch statement {
 	case "", "balance":
-		bs, cached, err := mopsStatement[model.BalanceSheet](a, ctx, provider.MOPSBalanceSheet, sym.Code, year, quarter)
+		bs, cached, stale, err := mopsStatement[model.BalanceSheet](a, ctx, provider.MOPSBalanceSheet, sym.Code, year, quarter)
 		if err != nil {
 			return HandlerResult{}, fmt.Errorf("資產負債表取得失敗: %w", err)
 		}
 		cachedAny = cachedAny || cached
+		staleAny = staleAny || stale
 		out.BalanceSheet = &bs
 	}
 	switch statement {
 	case "", "cashflow":
-		cf, cached, err := mopsStatement[model.CashFlowStatement](a, ctx, provider.MOPSCashFlow, sym.Code, year, quarter)
+		cf, cached, stale, err := mopsStatement[model.CashFlowStatement](a, ctx, provider.MOPSCashFlow, sym.Code, year, quarter)
 		if err != nil {
 			return HandlerResult{}, fmt.Errorf("現金流量表取得失敗: %w", err)
 		}
 		cachedAny = cachedAny || cached
+		staleAny = staleAny || stale
 		out.CashFlow = &cf
 	}
 	ttl, _ := a.ttlOf(string(provider.MOPSIncomeSummary))
-	lg := postLineage(model.SourceMOPS, a.now().Format("2006-01-02"), cachedAny, ttl)
+	lg := postLineage(model.SourceMOPS, a.now().Format("2006-01-02"), cachedAny || staleAny, staleAny, ttl)
 	lg.SourceRole = model.SourceRoleCanonical
 	return HandlerResult{Data: out, Lineage: lg}, nil
 }
@@ -275,7 +278,7 @@ func handlerGetMonthlyRevenue(a *App, args map[string]any) (HandlerResult, error
 			years = n
 		}
 	}
-	rows, cached, err := mopsRows[model.MonthlyRevenueRow](a, ctx, provider.MOPSMonthlyRevenue)
+	rows, cached, stale, err := mopsRows[model.MonthlyRevenueRow](a, ctx, provider.MOPSMonthlyRevenue)
 	if err != nil {
 		return HandlerResult{}, err
 	}
@@ -296,7 +299,7 @@ func handlerGetMonthlyRevenue(a *App, args map[string]any) (HandlerResult, error
 	ttl, _ := a.ttlOf(string(provider.MOPSMonthlyRevenue))
 	return HandlerResult{Data: model.MonthlyRevenueBundle{
 		Symbol: sym.Code, Name: sym.Name, Market: sym.Market, Rows: bySym,
-	}, Lineage: postLineage(model.SourceMOPS, a.now().Format("2006-01-02"), cached, ttl)}, nil
+	}, Lineage: postLineage(model.SourceMOPS, a.now().Format("2006-01-02"), cached || stale, stale, ttl)}, nil
 }
 
 // handlerGetFinancialHealthCheck：五面向評分（§10.D，T017 composite engine）。
@@ -318,13 +321,13 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 	derived := []string{}
 
 	// 獲利能力 + 成長性：MOPS 損益表摘要（整批）＋獲利能力指標（整批）
-	income, cachedI, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
+	income, cachedI, staleI, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
 	if err != nil {
 		return HandlerResult{}, err
 	}
 	derived = append(derived, "MOPS:income_summary")
 	in.Income = incomeOf(income, sym.Code)
-	profit, cachedP, err := mopsRows[model.ProfitabilityRatio](a, ctx, provider.MOPSProfitRatios)
+	profit, cachedP, staleP, err := mopsRows[model.ProfitabilityRatio](a, ctx, provider.MOPSProfitRatios)
 	if err != nil {
 		return HandlerResult{}, err
 	}
@@ -344,25 +347,28 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 		year, quarter = latest.Year, latest.Quarter
 	}
 	if year > 0 {
-		if bs, cached, berr := mopsStatement[model.BalanceSheet](a, ctx, provider.MOPSBalanceSheet, sym.Code, year, quarter); berr == nil {
+		if bs, cached, stale, berr := mopsStatement[model.BalanceSheet](a, ctx, provider.MOPSBalanceSheet, sym.Code, year, quarter); berr == nil {
 			in.Balance = &bs
 			derived = append(derived, "MOPS:balance_sheet")
 			cachedI = cachedI || cached
+			staleI = staleI || stale
 		}
-		if cf, cached, cerr := mopsStatement[model.CashFlowStatement](a, ctx, provider.MOPSCashFlow, sym.Code, year, quarter); cerr == nil {
+		if cf, cached, stale, cerr := mopsStatement[model.CashFlowStatement](a, ctx, provider.MOPSCashFlow, sym.Code, year, quarter); cerr == nil {
 			in.CashFlow = &cf
 			derived = append(derived, "MOPS:cash_flow")
 			cachedI = cachedI || cached
+			staleI = staleI || stale
 		}
 	}
 
 	// 配息政策 + 殖利率：上市 t187ap45_L 整批 / 上櫃 TPEx 估值
 	if sym.Market == model.MarketOTC {
-		otc, cached, oerr := a.valuationOTC(ctx)
+		otc, cached, stale, oerr := a.valuationOTC(ctx)
 		if oerr != nil {
 			return HandlerResult{}, err
 		}
 		cachedI = cachedI || cached
+		staleI = staleI || stale
 		derived = append(derived, "TPEx_API:pe_valuation")
 		for _, r := range otc {
 			if r.Code == sym.Code {
@@ -374,11 +380,12 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 			}
 		}
 	} else {
-		divRows, cached, derr := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend)
+		divRows, cached, stale, derr := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend)
 		if derr != nil {
 			return HandlerResult{}, err
 		}
 		cachedI = cachedI || cached
+		staleI = staleI || stale
 		derived = append(derived, "TWSE_API:dividend")
 		byCode := make([]provider.DividendRow, 0)
 		for _, r := range divRows {
@@ -390,7 +397,7 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 		for _, r := range byCode {
 			in.DividendYears = append(in.DividendYears, composite.DividendYear{Year: r.DividendYear, Cash: r.CashDividend})
 		}
-		valRows, _, verr := a.valuationTSE(ctx)
+		valRows, _, _, verr := a.valuationTSE(ctx)
 		if verr == nil {
 			derived = append(derived, "TWSE_API:valuation")
 			for _, r := range valRows {
@@ -410,7 +417,7 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 	derived = append(derived, "TWSE_API:esg")
 	in.ESGDisclosed = esgSet[sym.Code]
 	dataDate := a.now().Format("2006-01-02")
-	govRows, cachedG, gerr := fetchNormalize[[]provider.GovernanceRow](a, ctx, string(provider.TWSEAPIGovernance),
+	govRows, cachedG, staleG, gerr := fetchNormalize[[]provider.GovernanceRow](a, ctx, string(provider.TWSEAPIGovernance),
 		dataDate, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIGovernance), dataDate, "", nil),
 		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIGovernance, nil) })
 	if gerr == nil {
@@ -427,7 +434,7 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 	score.DataDate = dataDate
 	score.Note = "評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）"
 	ttl, _ := a.ttlOf(string(provider.MOPSIncomeSummary))
-	lg := postLineage(model.SourceMOPS, dataDate, cachedI || cachedP || cachedG, ttl)
+	lg := postLineage(model.SourceMOPS, dataDate, cachedI || cachedP || cachedG || staleI || staleP || staleG, staleI || staleP || staleG, ttl)
 	lg.DerivedFrom = derived
 	return HandlerResult{Data: score, Lineage: lg}, nil
 }
@@ -465,7 +472,7 @@ func handlerGetValuationRatios(a *App, args map[string]any) (HandlerResult, erro
 	out := model.ValuationRatios{Symbol: sym.Code, Name: sym.Name, Market: sym.Market}
 	var ttl time.Duration
 	if sym.Market == model.MarketOTC {
-		rows, cached, err := a.valuationOTC(ctx)
+		rows, cached, stale, err := a.valuationOTC(ctx)
 		if err != nil {
 			return HandlerResult{}, err
 		}
@@ -486,13 +493,13 @@ func handlerGetValuationRatios(a *App, args map[string]any) (HandlerResult, erro
 		out.PB = row.PriceBookRatio
 		out.DividendYield = row.YieldRatio
 		out.DividendPerShare = row.DividendPerShare
-		lg := postLineage(model.SourceTPExAPI, row.Date, cached, ttl)
+		lg := postLineage(model.SourceTPExAPI, row.Date, cached || stale, stale, ttl)
 		if err := a.fillROE(ctx, sym.Code, &out); err != nil {
 			out.Note = "ROE 計算失敗：" + err.Error()
 		}
 		return HandlerResult{Data: out, Lineage: lg}, nil
 	}
-	rows, cached, err := a.valuationTSE(ctx)
+	rows, cached, stale, err := a.valuationTSE(ctx)
 	if err != nil {
 		return HandlerResult{}, err
 	}
@@ -513,12 +520,12 @@ func handlerGetValuationRatios(a *App, args map[string]any) (HandlerResult, erro
 	out.PB = row.PB
 	out.DividendYield = row.DividendYield
 	// 每股現金股利（最新年度，t187ap45_L）
-	if div, _, err := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend); err == nil {
+	if div, _, _, err := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend); err == nil {
 		if d := latestDividend(div, sym.Code); d != nil {
 			out.DividendPerShare = d.CashDividend
 		}
 	}
-	lg := postLineage(model.SourceTWSEAPI, row.Date, cached, ttl)
+	lg := postLineage(model.SourceTWSEAPI, row.Date, cached || stale, stale, ttl)
 	if err := a.fillROE(ctx, sym.Code, &out); err != nil {
 		out.Note = "ROE 計算失敗：" + err.Error()
 	}
@@ -527,7 +534,7 @@ func handlerGetValuationRatios(a *App, args map[string]any) (HandlerResult, erro
 
 // fillROE 以 MOPS 損益表摘要（最新一季，年化）÷ 資產負債表權益計算 ROE。
 func (a *App) fillROE(ctx context.Context, code string, out *model.ValuationRatios) error {
-	income, _, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
+	income, _, _, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
 	if err != nil {
 		return err
 	}
@@ -549,7 +556,7 @@ func (a *App) fillROE(ctx context.Context, code string, out *model.ValuationRati
 	if latest == nil || latest.NetIncome == 0 {
 		return fmt.Errorf("損益表摘要無淨利")
 	}
-	bs, _, err := mopsStatement[model.BalanceSheet](a, ctx, provider.MOPSBalanceSheet, code, year, quarter)
+	bs, _, _, err := mopsStatement[model.BalanceSheet](a, ctx, provider.MOPSBalanceSheet, code, year, quarter)
 	if err != nil {
 		return err
 	}
@@ -586,7 +593,7 @@ func handlerGetESGReport(a *App, args map[string]any) (HandlerResult, error) {
 		return HandlerResult{}, err
 	}
 	dataDate := a.now().Format("2006-01-02")
-	esgRows, cachedESG, err := fetchNormalize[[]provider.ESGRow](a, ctx, string(provider.TWSEAPIESG),
+	esgRows, cachedESG, staleESG, err := fetchNormalize[[]provider.ESGRow](a, ctx, string(provider.TWSEAPIESG),
 		dataDate, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIESG), dataDate, "", map[string]string{"topic": "1"}),
 		func() ([]byte, error) {
 			return a.fetchAPIRaw(ctx, provider.TWSEAPIESG, url.Values{"topic": {"1"}})
@@ -594,7 +601,7 @@ func handlerGetESGReport(a *App, args map[string]any) (HandlerResult, error) {
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	govRows, cachedGov, err := fetchNormalize[[]provider.GovernanceRow](a, ctx, string(provider.TWSEAPIGovernance),
+	govRows, cachedGov, staleGov, err := fetchNormalize[[]provider.GovernanceRow](a, ctx, string(provider.TWSEAPIGovernance),
 		dataDate, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIGovernance), dataDate, "", nil),
 		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIGovernance, nil) })
 	if err != nil {
@@ -620,7 +627,7 @@ func handlerGetESGReport(a *App, args map[string]any) (HandlerResult, error) {
 		return HandlerResult{}, fmt.Errorf("代碼 %s 無 ESG/公司治理揭露資料", sym.Code)
 	}
 	ttl, _ := a.ttlOf(string(provider.TWSEAPIESG))
-	lg := postLineage(model.SourceTWSEAPI, dataDate, cachedESG || cachedGov, ttl)
+	lg := postLineage(model.SourceTWSEAPI, dataDate, cachedESG || cachedGov || staleESG || staleGov, staleESG || staleGov, ttl)
 	return HandlerResult{Data: out, Lineage: lg}, nil
 }
 
@@ -632,14 +639,14 @@ func handlerGetCompanyProfile(a *App, args map[string]any) (HandlerResult, error
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	rows, cached, err := mopsRows[model.CompanyProfile](a, ctx, provider.MOPSCompanyProfile)
+	rows, cached, stale, err := mopsRows[model.CompanyProfile](a, ctx, provider.MOPSCompanyProfile)
 	if err != nil {
 		return HandlerResult{}, err
 	}
 	for _, r := range rows {
 		if r.Code == sym.Code {
 			ttl, _ := a.ttlOf(string(provider.MOPSCompanyProfile))
-			return HandlerResult{Data: r, Lineage: postLineage(model.SourceMOPS, r.TableDate, cached, ttl)}, nil
+			return HandlerResult{Data: r, Lineage: postLineage(model.SourceMOPS, r.TableDate, cached || stale, stale, ttl)}, nil
 		}
 	}
 	return HandlerResult{}, fmt.Errorf("代碼 %s 無公司基本資料", sym.Code)
@@ -752,7 +759,7 @@ func handlerGetDividendHistory(a *App, args map[string]any) (HandlerResult, erro
 	out := model.DividendHistory{Symbol: sym.Code, Name: sym.Name, Market: sym.Market}
 	var ttl time.Duration
 	if sym.Market == model.MarketOTC {
-		rows, cached, err := a.valuationOTC(ctx)
+		rows, cached, stale, err := a.valuationOTC(ctx)
 		if err != nil {
 			return HandlerResult{}, err
 		}
@@ -770,12 +777,12 @@ func handlerGetDividendHistory(a *App, args map[string]any) (HandlerResult, erro
 				out.AvgCashDividend = r.DividendPerShare
 				out.LastYield = r.YieldRatio
 				out.Note = "上櫃多年配息歷史（TPEx 歷史除息資料）尚未接線；僅提供最新年度每股股利與殖利率"
-				return HandlerResult{Data: out, Lineage: postLineage(model.SourceTPExAPI, r.Date, cached, ttl)}, nil
+				return HandlerResult{Data: out, Lineage: postLineage(model.SourceTPExAPI, r.Date, cached || stale, stale, ttl)}, nil
 			}
 		}
 		return HandlerResult{}, fmt.Errorf("代碼 %s 無上櫃估值資料", sym.Code)
 	}
-	divRows, cached, err := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend)
+	divRows, cached, stale, err := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend)
 	if err != nil {
 		return HandlerResult{}, err
 	}
@@ -804,7 +811,7 @@ func handlerGetDividendHistory(a *App, args map[string]any) (HandlerResult, erro
 	}
 	out.AvgCashDividend = sum / float64(len(years))
 	// 最新殖利率（上市估值快照）
-	valRows, _, err := a.valuationTSE(ctx)
+	valRows, _, _, err := a.valuationTSE(ctx)
 	if err == nil {
 		for _, r := range valRows {
 			if r.Code == sym.Code {
@@ -815,7 +822,7 @@ func handlerGetDividendHistory(a *App, args map[string]any) (HandlerResult, erro
 	}
 	out.Note = "股利年度以官方（民國）為準；連續配息年數僅以官方現行提供之年度計算"
 	ttl, _ = a.ttlOf(string(provider.TWSEAPIDividend))
-	return HandlerResult{Data: out, Lineage: postLineage(model.SourceTWSEAPI, a.now().Format("2006-01-02"), cached, ttl)}, nil
+	return HandlerResult{Data: out, Lineage: postLineage(model.SourceTWSEAPI, a.now().Format("2006-01-02"), cached || stale, stale, ttl)}, nil
 }
 
 // handlerGetExdividendCalendar：除權息行事曆（§10.E）。
@@ -838,7 +845,7 @@ func handlerGetExdividendCalendar(a *App, args map[string]any) (HandlerResult, e
 	out := model.ExDivCalendar{RangeStart: startS, RangeEnd: endS, Events: make([]model.ExDivEvent, 0)}
 
 	// 上市
-	tseRows, cachedTSE, err := fetchNormalize[[]provider.ExDivEventRow](a, ctx, string(provider.TWSEAPIExDiv),
+	tseRows, cachedTSE, staleTSE, err := fetchNormalize[[]provider.ExDivEventRow](a, ctx, string(provider.TWSEAPIExDiv),
 		now.Format("2006-01-02"), cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIExDiv), now.Format("2006-01-02"), "", nil),
 		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIExDiv, nil) })
 	if err != nil {
@@ -853,7 +860,7 @@ func handlerGetExdividendCalendar(a *App, args map[string]any) (HandlerResult, e
 		}
 	}
 	// 上櫃
-	otcRows, cachedOTC, err := fetchNormalize[[]provider.TPExExRightRow](a, ctx, string(provider.TPExExRights),
+	otcRows, cachedOTC, staleOTC, err := fetchNormalize[[]provider.TPExExRightRow](a, ctx, string(provider.TPExExRights),
 		now.Format("2006-01-02"), cache.KeyString(model.SourceTPExAPI, string(provider.TPExExRights), now.Format("2006-01-02"), "", nil),
 		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExExRights, nil) })
 	if err != nil {
@@ -869,7 +876,7 @@ func handlerGetExdividendCalendar(a *App, args map[string]any) (HandlerResult, e
 	}
 	sort.Slice(out.Events, func(i, j int) bool { return out.Events[i].Date < out.Events[j].Date })
 	ttl, _ := a.ttlOf(string(provider.TWSEAPIExDiv))
-	lg := postLineage(model.SourceTWSEAPI, now.Format("2006-01-02"), cachedTSE || cachedOTC, ttl)
+	lg := postLineage(model.SourceTWSEAPI, now.Format("2006-01-02"), cachedTSE || cachedOTC || staleTSE || staleOTC, staleTSE || staleOTC, ttl)
 	if len(out.Events) == 0 {
 		return HandlerResult{Data: out, Lineage: lg}, nil
 	}
@@ -937,12 +944,13 @@ type screenMeta struct {
 	source   string
 	dataDate string
 	cached   bool
+	stale    bool // v2.1 §5.2 stale-if-error
 	ttl      time.Duration
 	derived  []string
 }
 
 func (m *screenMeta) lineage() *model.Lineage {
-	lg := postLineage(m.source, m.dataDate, m.cached, m.ttl)
+	lg := postLineage(m.source, m.dataDate, m.cached || m.stale, m.stale, m.ttl)
 	lg.SourceRole = model.SourceRoleCanonical
 	lg.DerivedFrom = m.derived
 	return lg
@@ -952,14 +960,15 @@ func (m *screenMeta) lineage() *model.Lineage {
 // 分批，全部整批快取，§12.4）。
 func (a *App) screenMetrics(ctx context.Context, market string) ([]composite.ValuationMetrics, *screenMeta, error) {
 	var metrics []composite.ValuationMetrics
-	meta := &screenMeta{cached: false}
+	meta := &screenMeta{}
 	switch market {
 	case "", model.MarketTSE:
-		tse, cached, err := a.valuationTSE(ctx)
+		tse, cached, stale, err := a.valuationTSE(ctx)
 		if err != nil {
 			return nil, nil, err
 		}
 		meta.cached = meta.cached || cached
+		meta.stale = meta.stale || stale
 		meta.derived = append(meta.derived, "TWSE_API:valuation")
 		for _, r := range tse {
 			metrics = append(metrics, composite.ValuationMetrics{
@@ -970,11 +979,12 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]composite.Val
 	}
 	switch market {
 	case "", model.MarketOTC:
-		otc, cached, err := a.valuationOTC(ctx)
+		otc, cached, stale, err := a.valuationOTC(ctx)
 		if err != nil {
 			return nil, nil, err
 		}
 		meta.cached = meta.cached || cached
+		meta.stale = meta.stale || stale
 		meta.derived = append(meta.derived, "TPEx_API:pe_valuation")
 		for _, r := range otc {
 			metrics = append(metrics, composite.ValuationMetrics{
@@ -988,7 +998,7 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]composite.Val
 		return nil, nil, fmt.Errorf("參數 market 僅允許 tse|otc")
 	}
 	// 月營收 YoY（最近月份，整批 CSV）
-	revenue, _, err := mopsRows[model.MonthlyRevenueRow](a, ctx, provider.MOPSMonthlyRevenue)
+	revenue, _, _, err := mopsRows[model.MonthlyRevenueRow](a, ctx, provider.MOPSMonthlyRevenue)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1005,7 +1015,7 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]composite.Val
 		}
 	}
 	// 獲利成長（淨利 YoY，MOPS 損益表摘要整批；最新季 vs 去年同期）
-	income, _, ierr := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
+	income, _, _, ierr := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
 	if ierr == nil {
 		latest, prev := latestIncomeOf(income), incomeAgoOf(income)
 		meta.derived = append(meta.derived, "MOPS:income_summary")
@@ -1020,7 +1030,7 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]composite.Val
 	}
 	// 上市每股現金股利（t187ap45_L 整批）＋連年配息年數（配息穩定性，§10.E）
 	if market != model.MarketOTC {
-		divRows, _, err := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend)
+		divRows, _, _, err := apiRows[provider.DividendRow](a, ctx, provider.TWSEAPIDividend)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -1106,7 +1116,7 @@ func consecutiveDividendYears(rows []provider.DividendRow) int {
 // esgCodes 回傳具 ESG 揭露之代碼集合（topic=1 溫室氣體排放，全市場）。
 func (a *App) esgCodes(ctx context.Context) (map[string]bool, error) {
 	dataDate := a.now().Format("2006-01-02")
-	rows, _, err := fetchNormalize[[]provider.ESGRow](a, ctx, string(provider.TWSEAPIESG),
+	rows, _, _, err := fetchNormalize[[]provider.ESGRow](a, ctx, string(provider.TWSEAPIESG),
 		dataDate, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIESG), dataDate, "", map[string]string{"topic": "1"}),
 		func() ([]byte, error) {
 			return a.fetchAPIRaw(ctx, provider.TWSEAPIESG, url.Values{"topic": {"1"}})

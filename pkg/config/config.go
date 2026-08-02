@@ -4,9 +4,13 @@
 //
 //	MCP_TRANSPORT  "stdio"（預設）| "streamable-http"
 //	MCP_HTTP_ADDR  streamable-http 的監聽位址（預設 127.0.0.1:8787）
-//	DATA_DIR       L2 SQLite 資料目錄（預設 ~/.tw-quant-mcp/data）
+//	DATA_DIR       L2 SQLite 資料目錄（預設 ~/.tw-quant-mcp/data，相容舊版）
 //	LOG_LEVEL      debug | info | warn | error（預設 info）
 //	MCP_SCORING_CONFIG  五面向評分規則 JSON 檔路徑（選填，預設 v1 內建規則）
+//	CACHE_L1_MAX_ENTRIES   L1 最大條目數（v2.1 §5.2，預設 10000）
+//	CACHE_L1_MAX_MEMORY_MB L1 最大記憶體 MB（v2.1 §5.2，預設 256）
+//	CACHE_L2_SQLITE_PATH   L2 SQLite 資料庫檔路徑（v2.1 §5.2，預設 ./data/cache.db）
+//	CACHE_HIT_RATE_TARGET  快取命中率目標（v2.1 §5.2，預設 0.8）
 package config
 
 import (
@@ -15,6 +19,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"tw-quant-mcp/pkg/engine/composite"
@@ -35,6 +40,15 @@ const (
 	DefaultHTTPAddr = "127.0.0.1:8787"
 	// DefaultLogLevel 是預設 log level。
 	DefaultLogLevel = "info"
+
+	// DefaultL1MaxEntries 是 CACHE_L1_MAX_ENTRIES 預設值（v2.1 §5.2）。
+	DefaultL1MaxEntries = 10000
+	// DefaultL1MaxMemoryMB 是 CACHE_L1_MAX_MEMORY_MB 預設值（v2.1 §5.2）。
+	DefaultL1MaxMemoryMB = 256
+	// DefaultL2SQLitePath 是 CACHE_L2_SQLITE_PATH 預設值（v2.1 §5.2）。
+	DefaultL2SQLitePath = "./data/cache.db"
+	// DefaultCacheHitRateTarget 是 CACHE_HIT_RATE_TARGET 預設值（v2.1 §5.2）。
+	DefaultCacheHitRateTarget = 0.8
 )
 
 // Config 是伺服器執行所需的全部設定。
@@ -44,15 +58,25 @@ type Config struct {
 	DataDir     string
 	LogLevel    string
 	ScoringFile string // MCP_SCORING_CONFIG：五面向評分規則 JSON 檔（選填）
+
+	// v2.1 §5.2 快取參數化。
+	L1MaxEntries       int     // CACHE_L1_MAX_ENTRIES
+	L1MaxMemoryMB      int     // CACHE_L1_MAX_MEMORY_MB
+	L2SQLitePath       string  // CACHE_L2_SQLITE_PATH
+	CacheHitRateTarget float64 // CACHE_HIT_RATE_TARGET
 }
 
 // Load 從環境變數讀取設定並填入預設值。
 func Load() (*Config, error) {
 	cfg := &Config{
-		Transport: TransportStdio,
-		HTTPAddr:  DefaultHTTPAddr,
-		DataDir:   defaultDataDir(),
-		LogLevel:  DefaultLogLevel,
+		Transport:          TransportStdio,
+		HTTPAddr:           DefaultHTTPAddr,
+		DataDir:            defaultDataDir(),
+		LogLevel:           DefaultLogLevel,
+		L1MaxEntries:       DefaultL1MaxEntries,
+		L1MaxMemoryMB:      DefaultL1MaxMemoryMB,
+		L2SQLitePath:       DefaultL2SQLitePath,
+		CacheHitRateTarget: DefaultCacheHitRateTarget,
 	}
 
 	if v := os.Getenv("MCP_TRANSPORT"); v != "" {
@@ -69,6 +93,30 @@ func Load() (*Config, error) {
 	}
 	if v := os.Getenv("MCP_SCORING_CONFIG"); v != "" {
 		cfg.ScoringFile = strings.TrimSpace(v)
+	}
+	if v := os.Getenv("CACHE_L1_MAX_ENTRIES"); v != "" {
+		n, err := strconv.Atoi(strings.TrimSpace(v))
+		if err != nil {
+			return nil, fmt.Errorf("config: CACHE_L1_MAX_ENTRIES 須為整數，實際 %q", v)
+		}
+		cfg.L1MaxEntries = n
+	}
+	if v := os.Getenv("CACHE_L1_MAX_MEMORY_MB"); v != "" {
+		n, err := strconv.Atoi(strings.TrimSpace(v))
+		if err != nil {
+			return nil, fmt.Errorf("config: CACHE_L1_MAX_MEMORY_MB 須為整數，實際 %q", v)
+		}
+		cfg.L1MaxMemoryMB = n
+	}
+	if v := os.Getenv("CACHE_L2_SQLITE_PATH"); v != "" {
+		cfg.L2SQLitePath = strings.TrimSpace(v)
+	}
+	if v := os.Getenv("CACHE_HIT_RATE_TARGET"); v != "" {
+		f, err := strconv.ParseFloat(strings.TrimSpace(v), 64)
+		if err != nil {
+			return nil, fmt.Errorf("config: CACHE_HIT_RATE_TARGET 須為數字，實際 %q", v)
+		}
+		cfg.CacheHitRateTarget = f
 	}
 
 	if err := cfg.Validate(); err != nil {
@@ -104,6 +152,24 @@ func (c *Config) Validate() error {
 
 	if err := os.MkdirAll(c.DataDir, 0o755); err != nil {
 		return fmt.Errorf("config: 建立 DATA_DIR %q 失敗: %w", c.DataDir, err)
+	}
+
+	if c.L1MaxEntries <= 0 {
+		return fmt.Errorf("config: CACHE_L1_MAX_ENTRIES 須為正整數，實際 %d", c.L1MaxEntries)
+	}
+	if c.L1MaxMemoryMB <= 0 {
+		return fmt.Errorf("config: CACHE_L1_MAX_MEMORY_MB 須為正整數，實際 %d", c.L1MaxMemoryMB)
+	}
+	if c.CacheHitRateTarget <= 0 || c.CacheHitRateTarget > 1 {
+		return fmt.Errorf("config: CACHE_HIT_RATE_TARGET 須在 (0, 1]，實際 %v", c.CacheHitRateTarget)
+	}
+	l2, err := expandPath(c.L2SQLitePath)
+	if err != nil {
+		return fmt.Errorf("config: CACHE_L2_SQLITE_PATH 無法解析: %w", err)
+	}
+	c.L2SQLitePath = l2
+	if err := os.MkdirAll(filepath.Dir(l2), 0o755); err != nil {
+		return fmt.Errorf("config: 建立 L2 SQLite 目錄 %q 失敗: %w", filepath.Dir(l2), err)
 	}
 	return nil
 }

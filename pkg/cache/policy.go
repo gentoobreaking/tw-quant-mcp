@@ -25,9 +25,10 @@ const (
 	DatasetDividend       = "dividend"        // 股利分派資料（t187ap45_L，T014）
 )
 
-// 特殊 TTL 值（§4.2）。
+// 特殊 TTL 值（§4.2 / v2.1 §5.2）。
 const (
-	// ForeverTTL 表示永久快取（TAIFEX 歷史回溯，存 L2；§4.2「永久」欄）。
+	// ForeverTTL 表示永久快取（僅存 L2；§4.2「永久」欄）。v2.1 §5.2 已將
+	// TAIFEX 歷史回溯由永久改為 7 天，本值保留供其他永久性資料使用。
 	ForeverTTL time.Duration = 0
 
 	// PostUntilNext8AM 標記盤後 TTL 為「至隔日 08:00」（§4.2 盤後欄）。
@@ -44,25 +45,27 @@ type Policy struct {
 	AllowL2  bool          // 是否允許落入 L2（§4.1 L2 用途）
 }
 
-// policies 為 §4.2 快取 TTL 政策表之唯一真值來源。此表新增/修改一律同步本 map。
+// policies 為快取 TTL 政策表之唯一真值來源：v1.3 §4.2 盤中細分 +
+// v2.1 §5.2 TTL 矩陣（月營收 30d / 財報 90d / 除權息行事曆 6h /
+// TAIFEX 歷史回溯 7d / 注意處置股僅 L1）。此表新增/修改一律同步本 map。
 var policies = map[string]Policy{
 	DatasetMISSnapshot:    {Intraday: 4 * time.Second, Post: PostNotCached, AllowL2: false},
 	DatasetDailyKLine:     {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
 	DatasetInstitutional:  {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
 	DatasetMargin:         {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
-	DatasetAlertStock:     {Intraday: 30 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
-	DatasetMonthlyRevenue: {Intraday: 12 * time.Hour, Post: 12 * time.Hour, AllowL2: true},
-	DatasetFinancials:     {Intraday: 12 * time.Hour, Post: 12 * time.Hour, AllowL2: true},
+	DatasetAlertStock:     {Intraday: 30 * time.Second, Post: PostUntilNext8AM, AllowL2: false},      // §5.2：僅 L1
+	DatasetMonthlyRevenue: {Intraday: 30 * 24 * time.Hour, Post: 30 * 24 * time.Hour, AllowL2: true}, // §5.2：30 天
+	DatasetFinancials:     {Intraday: 90 * 24 * time.Hour, Post: 90 * 24 * time.Hour, AllowL2: true}, // §5.2：90 天
 	DatasetMaterialNews:   {Intraday: 5 * time.Minute, Post: 5 * time.Minute, AllowL2: true},
 	DatasetCalendar:       {Intraday: 24 * time.Hour, Post: 24 * time.Hour, AllowL2: true},
-	DatasetTAIFEXHistory:  {Intraday: ForeverTTL, Post: ForeverTTL, AllowL2: true},
+	DatasetTAIFEXHistory:  {Intraday: 7 * 24 * time.Hour, Post: 7 * 24 * time.Hour, AllowL2: true}, // §5.2：7 天
 	DatasetForeignHold:    {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
 	DatasetWarrants:       {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
 	// T014：估值/除權息行事曆為日級資料（同 daily_kline 盤後 TTL）；行事曆
-	// L2 持久（§4.2「L2 持久」），L1 24h 內重取以免遺漏新公告事件。
+	// L2 持久（§4.2「L2 持久」），v2.1 §5.2 縮短至 6h 以免遺漏新公告事件。
 	DatasetValuation:     {Intraday: 60 * time.Second, Post: PostUntilNext8AM, AllowL2: true},
 	DatasetESG:           {Intraday: 24 * time.Hour, Post: 24 * time.Hour, AllowL2: true},
-	DatasetExDivCalendar: {Intraday: 24 * time.Hour, Post: 24 * time.Hour, AllowL2: true},
+	DatasetExDivCalendar: {Intraday: 6 * time.Hour, Post: 6 * time.Hour, AllowL2: true}, // §5.2：6 小時
 	DatasetDividend:      {Intraday: 12 * time.Hour, Post: 12 * time.Hour, AllowL2: true},
 }
 

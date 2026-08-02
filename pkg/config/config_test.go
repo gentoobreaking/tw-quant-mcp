@@ -6,7 +6,10 @@ import (
 	"testing"
 )
 
-var envKeys = []string{"MCP_TRANSPORT", "MCP_HTTP_ADDR", "DATA_DIR", "LOG_LEVEL", "MCP_SCORING_CONFIG"}
+var envKeys = []string{
+	"MCP_TRANSPORT", "MCP_HTTP_ADDR", "DATA_DIR", "LOG_LEVEL", "MCP_SCORING_CONFIG",
+	"CACHE_L1_MAX_ENTRIES", "CACHE_L1_MAX_MEMORY_MB", "CACHE_L2_SQLITE_PATH", "CACHE_HIT_RATE_TARGET",
+}
 
 func clearEnv(t *testing.T) {
 	t.Helper()
@@ -38,6 +41,23 @@ func TestLoadDefaults(t *testing.T) {
 	if err != nil || !info.IsDir() {
 		t.Errorf("DATA_DIR %q 應已被建立: %v", cfg.DataDir, err)
 	}
+	// v2.1 §5.2 快取參數預設值。
+	if cfg.L1MaxEntries != DefaultL1MaxEntries {
+		t.Errorf("L1MaxEntries 預設應為 %d，實際 %d", DefaultL1MaxEntries, cfg.L1MaxEntries)
+	}
+	if cfg.L1MaxMemoryMB != DefaultL1MaxMemoryMB {
+		t.Errorf("L1MaxMemoryMB 預設應為 %d，實際 %d", DefaultL1MaxMemoryMB, cfg.L1MaxMemoryMB)
+	}
+	if cfg.CacheHitRateTarget != DefaultCacheHitRateTarget {
+		t.Errorf("CacheHitRateTarget 預設應為 %v，實際 %v", DefaultCacheHitRateTarget, cfg.CacheHitRateTarget)
+	}
+	wantL2, err := filepath.Abs(DefaultL2SQLitePath)
+	if err != nil || cfg.L2SQLitePath != wantL2 {
+		t.Errorf("L2SQLitePath 預設應為 %q，實際 %q", wantL2, cfg.L2SQLitePath)
+	}
+	if _, err := os.Stat(filepath.Dir(cfg.L2SQLitePath)); err != nil {
+		t.Errorf("L2 SQLite 目錄 %q 應已被建立: %v", filepath.Dir(cfg.L2SQLitePath), err)
+	}
 }
 
 func TestLoadEnvOverrides(t *testing.T) {
@@ -47,6 +67,10 @@ func TestLoadEnvOverrides(t *testing.T) {
 	t.Setenv("MCP_HTTP_ADDR", "127.0.0.1:9000")
 	t.Setenv("DATA_DIR", "$HOME/custom-data")
 	t.Setenv("LOG_LEVEL", "debug")
+	t.Setenv("CACHE_L1_MAX_ENTRIES", "50000")
+	t.Setenv("CACHE_L1_MAX_MEMORY_MB", "512")
+	t.Setenv("CACHE_L2_SQLITE_PATH", "$HOME/cache-test.db")
+	t.Setenv("CACHE_HIT_RATE_TARGET", "0.9")
 
 	cfg, err := Load()
 	if err != nil {
@@ -68,6 +92,22 @@ func TestLoadEnvOverrides(t *testing.T) {
 	if _, err := os.Stat(cfg.DataDir); err != nil {
 		t.Errorf("DATA_DIR 應已被建立: %v", err)
 	}
+	// v2.1 §5.2 快取參數覆寫。
+	if cfg.L1MaxEntries != 50000 {
+		t.Errorf("L1MaxEntries 應為 50000，實際 %d", cfg.L1MaxEntries)
+	}
+	if cfg.L1MaxMemoryMB != 512 {
+		t.Errorf("L1MaxMemoryMB 應為 512，實際 %d", cfg.L1MaxMemoryMB)
+	}
+	if cfg.L2SQLitePath != filepath.Join(home, "cache-test.db") {
+		t.Errorf("L2SQLitePath 應為 %q，實際 %q", filepath.Join(home, "cache-test.db"), cfg.L2SQLitePath)
+	}
+	if cfg.CacheHitRateTarget != 0.9 {
+		t.Errorf("CacheHitRateTarget 應為 0.9，實際 %v", cfg.CacheHitRateTarget)
+	}
+	if _, err := os.Stat(filepath.Dir(cfg.L2SQLitePath)); err != nil {
+		t.Errorf("L2 SQLite 目錄應已被建立: %v", err)
+	}
 }
 
 func TestValidateRejects(t *testing.T) {
@@ -82,6 +122,14 @@ func TestValidateRejects(t *testing.T) {
 		}},
 		{"DATA_DIR 環境變數未定義", map[string]string{"DATA_DIR": "$NOT_DEFINED_XYZ/data"}},
 		{"DATA_DIR 無法建立", map[string]string{"DATA_DIR": "/dev/null/child"}},
+		{"CACHE_L1_MAX_ENTRIES 非整數", map[string]string{"CACHE_L1_MAX_ENTRIES": "abc"}},
+		{"CACHE_L1_MAX_ENTRIES 非正數", map[string]string{"CACHE_L1_MAX_ENTRIES": "0"}},
+		{"CACHE_L1_MAX_MEMORY_MB 非整數", map[string]string{"CACHE_L1_MAX_MEMORY_MB": "2.5"}},
+		{"CACHE_HIT_RATE_TARGET 非數字", map[string]string{"CACHE_HIT_RATE_TARGET": "high"}},
+		{"CACHE_HIT_RATE_TARGET 超出範圍", map[string]string{"CACHE_HIT_RATE_TARGET": "1.5"}},
+		{"CACHE_HIT_RATE_TARGET 為零", map[string]string{"CACHE_HIT_RATE_TARGET": "0"}},
+		{"CACHE_L2_SQLITE_PATH 環境變數未定義", map[string]string{"CACHE_L2_SQLITE_PATH": "$NOT_DEFINED_XYZ/cache.db"}},
+		{"CACHE_L2_SQLITE_PATH 無法建立", map[string]string{"CACHE_L2_SQLITE_PATH": "/dev/null/child/cache.db"}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

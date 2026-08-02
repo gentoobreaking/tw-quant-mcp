@@ -108,13 +108,14 @@ func (q *TAIFEXQuery) queryKey(ds model.TAIFEXDataset, date, contract string) st
 }
 
 // Fetch 依 §9.3 流程取得 (dataset, date) 之 Normalized 資料。
-// fromCache=true 表示資料來自快取（L1/L2）。
+// fromCache=true 表示資料來自快取（L1/L2）。TTL 依 §5.2 政策（7 天）。
 func (q *TAIFEXQuery) Fetch(ctx context.Context, ds model.TAIFEXDataset, date, contract string) (TAIFEXQueryResult, bool, error) {
 	if q.cache == nil {
 		return TAIFEXQueryResult{}, false, fmt.Errorf("provider: 快取層未初始化")
 	}
 	key := q.queryKey(ds, date, contract)
-	res, fromCache, err := cache.GetOrFetch(ctx, q.cache, key, cache.ForeverTTL,
+	ttl, _ := cache.TTLFor(cache.DatasetTAIFEXHistory, q.now())
+	res, fromCache, err := cache.GetOrFetch(ctx, q.cache, key, ttl,
 		q.loadFn(ctx, ds, date, contract),
 		cache.WithDataset(cache.DatasetTAIFEXHistory, date))
 	if err != nil {
@@ -277,7 +278,7 @@ func normalizeDLByDate(raw *RawResponse) (map[string]json.RawMessage, error) {
 
 // FetchRange 依範圍取得多日資料（§9.2 範圍參數，一次 DL 請求覆蓋 [start, end]）。
 // 回傳 map[YYYY-MM-DD]結果；範圍內非交易日以缺口（Note）標記。
-// 各日結果皆寫入 L2（永久 TTL）。
+// 各日結果皆寫入 L2（§5.2 TTL：7 天）。
 func (q *TAIFEXQuery) FetchRange(ctx context.Context, ds model.TAIFEXDataset, start, end, contract string) (map[string]TAIFEXQueryResult, error) {
 	if !dlSupported(ds) {
 		return nil, fmt.Errorf("provider: 資料集 %q 之範圍查詢需 DL 支援", ds)
@@ -329,7 +330,8 @@ func (q *TAIFEXQuery) FetchRange(ctx context.Context, ds model.TAIFEXDataset, st
 			}
 		}
 		key := q.queryKey(ds, d, contract)
-		_, _, err := cache.GetOrFetch(ctx, q.cache, key, cache.ForeverTTL,
+		ttl, _ := cache.TTLFor(cache.DatasetTAIFEXHistory, q.now())
+		_, _, err := cache.GetOrFetch(ctx, q.cache, key, ttl,
 			func(context.Context) (TAIFEXQueryResult, error) { return res, nil },
 			cache.WithDataset(cache.DatasetTAIFEXHistory, d))
 		if err != nil {
