@@ -226,6 +226,58 @@ func TestRebuildScreenerIndexSnapshot(t *testing.T) {
 	}
 }
 
+// TestPrewarmIndexAndEODCoexist：15:00 索引排程與 16:45 盤後預熱併存。
+// 同一交易日先重建 Materialized Index（成功寫入 L2 索引快照），
+// 再執行盤後彙總預熱；兩者各自完成、互不覆蓋、不重複觸發，
+// 併存後查詢零上游 HTTP（§13 驗收：併存不衝突）。
+func TestPrewarmIndexAndEODCoexist(t *testing.T) {
+	f := newFake(t)
+	stubDE(f)
+	stubEOD(f)
+	// 週五交易日：排程器時鐘與注入時鐘皆為 2026-07-31 15:00
+	now := time.Date(2026, 7, 31, 15, 0, 0, 0, model.Taipei())
+	app := indexDeApp(t, f, func() time.Time { return now })
+	s := NewPrewarmScheduler(app)
+	ctx := context.Background()
+
+	// 15:00 後：索引重建一次並成功寫入
+	s.TickOnce(ctx, time.Date(2026, 7, 31, 15, 1, 0, 0, model.Taipei()))
+	_, ok, err := app.index.BuiltAt(ctx, "2026-07-31")
+	if err != nil || !ok {
+		t.Fatalf("15:00 索引應已建立並寫入（ok=%v err=%v）", ok, err)
+	}
+	if !s.indexDone {
+		t.Error("indexDone 應為 true（15:00 索引已執行）")
+	}
+	if s.eodDone {
+		t.Error("15:00 時點不應觸發 16:45 盤後預熱")
+	}
+
+	// 16:45：盤後預熱併存執行；索引不重複重建
+	s.TickOnce(ctx, time.Date(2026, 7, 31, 16, 45, 0, 0, model.Taipei()))
+	if !s.eodDone {
+		t.Error("eodDone 應為 true（16:45 盤後已執行）")
+	}
+	// 同日 17:00 再 tick：兩者皆不重複
+	s.TickOnce(ctx, time.Date(2026, 7, 31, 17, 0, 0, 0, model.Taipei()))
+
+	// 併存後查詢零上游：盤後彙總（market_summary）
+	env := callEnv(t, app, "get_market_summary", map[string]any{})
+	if env.HTTPCalls != 0 {
+		t.Errorf("盤後預熱後 market_summary http_calls 應為 0，實際 %d", env.HTTPCalls)
+	}
+	// 併存後查詢零上游：materialized index（screen_high_yield）
+	env = callEnv(t, app, "screen_high_yield", map[string]any{"min_yield": 3})
+	if env.HTTPCalls != 0 {
+		t.Errorf("索引就緒後 screen_high_yield http_calls 應為 0，實際 %d", env.HTTPCalls)
+	}
+	if res, ok := env.Data.(model.ScreenResult); ok {
+		if len(res.Rows) != 3 {
+			t.Errorf("索引查詢應命中 3 檔（6147/2317/1101），實際 %d", len(res.Rows))
+		}
+	}
+}
+
 type row2330 struct{ screener.IndexRow }
 
 // TestScreenHighYieldServesFromIndex：索引就緒時 screen_high_yield

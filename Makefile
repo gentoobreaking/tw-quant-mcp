@@ -58,7 +58,7 @@ e2e:
 soak:
 	TW_QUANT_SOAK=1 go test -tags=soak ./pkg/mcp/ -run TestSoakContinuousRun -v
 
-# 發布檢查：CGO-free 建置 + tools/list 36 工具
+# 發布檢查：CGO-free 建置 + tools/list 37 工具
 release-check:
 	./scripts/release_check.sh $(VERSION)
 

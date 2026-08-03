@@ -39,10 +39,21 @@ MCP_TRANSPORT=streamable-http ./bin/tw-quant-mcp   # Streamable HTTP 傳輸
 |---|---|---|
 | `MCP_TRANSPORT` | `stdio` | `stdio` 或 `streamable-http` |
 | `MCP_HTTP_ADDR` | `127.0.0.1:8787` | streamable-http 監聽位址 |
-| `DATA_DIR` | `~/.tw-quant-mcp/data` | L2 SQLite 快取資料目錄 |
+| `DATA_DIR` | `~/.tw-quant-mcp/data` | L2 SQLite 快取資料目錄（含 Materialized Index） |
 | `LOG_LEVEL` | `info` | `debug` / `info` / `warn` / `error` |
 | `MCP_SCORING_CONFIG` | 內建 v1 規則 | 五面向評分規則 JSON 檔路徑 |
 | `RATE_LIMIT_<HOST>_EVERY` | §4.4 預設表 | 覆寫特定主機請求級間隔（秒） |
+| `RATE_LIMIT_ENABLED` | `true` | 啟用 Per-Source 限流（§5.3） |
+| `RATE_LIMIT_BULK_CONCURRENCY` | `8` | 篩選類操作最大併發數（§10） |
+| `CACHE_L1_MAX_ENTRIES` | `10000` | Ristretto L1 最大條目數（§5.3） |
+| `CACHE_L1_MAX_MEMORY_MB` | `256` | Ristretto L1 最大記憶體（MB，§5.3） |
+| `CACHE_L2_SQLITE_PATH` | `<DATA_DIR>/cache.db` | L2 SQLite 檔案路徑（§5.3） |
+| `CACHE_HIT_RATE_TARGET` | `0.8` | 監控目標命中率（§10） |
+| `MIS_JITTER_MIN_MS` | `7000` | 盤中引擎抖動區間下限（§5.3、§8） |
+| `MIS_JITTER_MAX_MS` | `9000` | 盤中引擎抖動區間上限（§5.3、§8） |
+
+> 測試專用：`TW_QUANT_LIVE=1`（live smoke）、`TW_QUANT_SOAK=1`（4.5h 連續運行）、
+> `TW_QUANT_SOAK_DURATION=10m`（soak 縮短）。
 
 ## MCP 客戶端設定
 
@@ -128,6 +139,47 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 ```
 
 > 提示：以上皆為 stdio 傳輸範例，請將 `/absolute/path/to/bin/tw-quant-mcp` 換成實際執行檔路徑。若需 HTTP 傳輸，可先以 `MCP_TRANSPORT=streamable-http MCP_HTTP_ADDR=127.0.0.1:8787 ./bin/tw-quant-mcp` 啟動服務，再將客戶端指向 `http://127.0.0.1:8787/mcp`（客戶端需支援 streamable-http）。
+
+## v2.1 系統架構（§2）
+
+三層架構之上新增 **Domain Analysis Layer**（承載十大投資分析情境）與
+**Normalization Layer**（欄位歸一化，§6），使「盤中即時」與「盤後／基本面／
+籌碼面」兩種資料節奏在同一套架構下並存：
+
+```text
+┌───────────────────────────────────────────────────────────────────┐
+│                    MCP Clients / External Program                  │
+│        (Claude Desktop, OpenClaw, Hermes, 排程程式, 回測系統)       │
+└──────────────────────────────────┬────────────────────────────────┘
+                                   │ JSON-RPC（Stdio / Streamable HTTP）
+┌──────────────────────────────────▼────────────────────────────────┐
+│                     MCP Engine Layer（37 Tool Router）             │
+│              Handler Routers + Schema Validation（§9/§10）         │
+└──────────────────────────────────┬────────────────────────────────┘
+                                   │ Normalized Query
+┌──────────────────────────────────▼────────────────────────────────┐
+│            Domain Analysis Layer（pkg/domain/，§7 六大模組）        │
+│     趨勢綜合 │ 外資解讀 │ 熱點捕捉 │ 股利規劃 │ 標的篩選 │ 期貨選擇權 │
+└──────────────────────────────────┬────────────────────────────────┘
+                                   │ Normalized Read
+┌──────────────────────────────────▼────────────────────────────────┐
+│     Core Infra Services（Rate Limit / Cache / Lineage / 盤中引擎） │
+│  • Per-Source Token Bucket ×7 + Jitter（§5.3，MIS 8s±1s）          │
+│  • Ristretto L1 + SQLite L2 + Single-flight（TTL 矩陣 §5.2）       │
+│  • Intraday 1分K 引擎（8s 採樣 RingBuffer，≤15 檔，§8）            │
+│  • Prewarm Scheduler（08:00 / 08:45 / 15:00 Index / 16:45，§12.9） │
+└──────────────────────────────────┬────────────────────────────────┘
+                                   │ Fetch（Resilient HTTP，整批 §12.4）
+┌──────────────────────────────────▼────────────────────────────────┐
+│          Normalization Layer（pkg/model/normalize，§6）            │
+│       7 種上游格式 → §6 正規化 Schema，並附加 Lineage（§4）        │
+└──────────────────────────────────┬────────────────────────────────┘
+                                   │ Source-Specific Parsing
+┌──────────────────────────────────▼────────────────────────────────┐
+│              Official Provider Adapters（官方來源唯一）             │
+│ TWSE OpenAPI │ TWSE Web │ MIS Worker │ TPEx │ MOPS │ TAIFEX ×2     │
+└───────────────────────────────────────────────────────────────────┘
+```
 
 ## 工具清單（37 個，§10）
 
@@ -226,6 +278,16 @@ v2.1 工具目錄（25 工具）與 v1.3 既有工具（36 工具）比對結論
 - v2.1 標 `get_warrant_activity` 為 `NOT_YET_AVAILABLE`（Roadmap）；v1.3 已實作（TWSE-API 權證每日成交 Top N），本專案標 `AVAILABLE`（超前實作）。
 - `get_stock_trend_composite` 為 v2.1 §9.1 首發新工具，標 `PREVIEW`（欄位/準確度仍可能調整）。
 
+## daybrain 相依契約確認（v2.1 發布）
+
+`tw-quant-daybrain`（v1.1 規格，Client 端）§2.2 契約子集與本 v2.1 發布比對：
+
+- **工具名稱（15 依賴）**：12 個存在且未變更（`set_active_watchlist`、`get_intraday_vwap`、`detect_volume_surge`、`get_intraday_quote`、`get_intraday_kline`、`get_market_summary`、`get_futures_daily_ohlc`、`get_put_call_ratio`、`get_institutional_investors`、`get_major_announcements`、`get_abnormal_trading`、`get_stock_daily_kline`、`scan_daytrade_eligibility`、`get_trading_calendar`、`get_symbol_list`）。`get_pre_market_quote` / `get_taifex_night` / `get_us_market` 不在本服務工具目錄（v1.3 起即不存在，非 v2.1 造成）——需 daybrain 側對齊，夜盤可用 `get_futures_daily_ohlc` + `get_futures_history` 替代。
+- **Envelope 結構**：`data` / `_lineage` / `_chart_meta` 不變；v2.1 新增 `source_role`、`grade`、`cache_age_sec` 欄位（向後相容）。
+- **Lineage 欄位變更（T021 決策，2026-08-01 確認）**：`derived_from` / `cache_ttl` / `source_url` 正式 JSON 不再輸出（內部保留，debug/log 模式可輸出）。daybrain §3.1 守門規則之 `cache_ttl ≤ 4s` 檢查需改以 `cache_age_sec`（資料已存活秒）＋`sampling_sec` 判斷，或於 daybrain 端開啟 debug 模式；其餘守門欄位（`freshness` / `fetched_at` / `is_cached` / `sampling_sec` / `source`）皆仍輸出。
+
+**結論**：工具名稱與 Envelope 契約未破壞；唯一變更為 `cache_ttl` 輸出（T021 已確認之決策，於本發布說明中列為已知變更）。
+
 ## v2.1 §14 需求對照表（Traceability）
 
 v2.1 §14 之 **7 項優化需求**、**十大投資情境（§9，25 Tool）** 與本專案實作位置／
@@ -273,6 +335,10 @@ v2.1 §14 之 **7 項優化需求**、**十大投資情境（§9，25 Tool）** 
 | TAIFEX-API | openapi.taifex.com.tw | 期貨/選擇權行情、PCR、大額交易人、保證金（最新交易日） |
 | TAIFEX-DL | www.taifex.com.tw/cht/3/*DateDown* | 歷史回溯 CSV（T-1 起） |
 
+**免責聲明（官方來源政策）**：本服務 100% 僅使用上述官方免費來源（§2 Source
+Registry），不連線任何第三方行情供應商；所有輸出僅供研究與程式化測試參考，
+**不構成投資建議**。使用者應自行核對官方原始資料。
+
 ## 開發
 
 ```bash
@@ -283,7 +349,7 @@ make loadtest     # 壓力測試（20 併發，快取命中率 + 延遲分位數
 make fixtures     # 錄製官方 raw response fixtures（-host all -date YYYYMMDD）
 make e2e          # 端到端驗證（MCP client 依序呼叫 A→G 代表工具）
 make soak         # 4.5h 連續運行測試（需實際交易日開盤時段）
-scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 36 工具
+scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 37 工具
 ```
 
 ## 授權

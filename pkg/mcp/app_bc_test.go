@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"sync"
 	"testing"
 	"time"
 
@@ -18,8 +19,11 @@ import (
 
 // fakeFetch 為 WebFetcher/APIFetcher/TPExFetcher 之測試替身：
 // bodies 依「ds|params」鍵回傳已 normalize 之 JSON；不存在的鍵回 404 錯誤。
+// 以 mutex 保護 map：rebuildScreenerIndex 之 bounded concurrency 掃描
+// 會由多個 goroutine 併發 Fetch（§10.2）。
 type fakeFetch struct {
 	t        *testing.T
+	mu       sync.Mutex
 	bodies   map[string]string // key → normalized JSON body
 	calls    map[string]int
 	notFound map[string]bool // key → 模擬官方查無資料（404）
@@ -35,14 +39,20 @@ func fakeKey(ds string, params url.Values) string {
 }
 
 func (f *fakeFetch) stub(ds string, params url.Values, body string) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	f.bodies[fakeKey(ds, params)] = body
 }
 
 func (f *fakeFetch) stub404(ds string, params url.Values) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	f.notFound[fakeKey(ds, params)] = true
 }
 
 func (f *fakeFetch) called(ds string, params url.Values) int {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	return f.calls[fakeKey(ds, params)]
 }
 
@@ -97,13 +107,17 @@ func (w fakeMOPS) RawNormalize(raw *provider.RawResponse) ([]byte, error) {
 
 func (f *fakeFetch) Fetch(ctx context.Context, req provider.RawRequest) (*provider.RawResponse, error) {
 	key := req.URL
+	f.mu.Lock()
 	f.calls[key]++
-	if f.notFound[key] {
+	nf := f.notFound[key]
+	body, ok := f.bodies[key]
+	n := len(f.bodies)
+	f.mu.Unlock()
+	if nf {
 		return nil, fmt.Errorf("provider: 上游 404（查無資料）")
 	}
-	body, ok := f.bodies[key]
 	if !ok {
-		f.t.Fatalf("fakeFetch: 未 stub 之請求鍵 %q（已 stub: %d）", key, len(f.bodies))
+		f.t.Fatalf("fakeFetch: 未 stub 之請求鍵 %q（已 stub: %d）", key, n)
 	}
 	return &provider.RawResponse{Body: []byte(body), SourceURL: key, StatusCode: 200}, nil
 }
