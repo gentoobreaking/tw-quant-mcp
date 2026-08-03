@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/url"
+	"path/filepath"
 	"sync/atomic"
 	"time"
 
@@ -13,6 +14,7 @@ import (
 	"tw-quant-mcp/pkg/cache"
 	"tw-quant-mcp/pkg/calendar"
 	"tw-quant-mcp/pkg/config"
+	"tw-quant-mcp/pkg/domain/screener"
 	"tw-quant-mcp/pkg/engine"
 	"tw-quant-mcp/pkg/model"
 	"tw-quant-mcp/pkg/provider"
@@ -72,10 +74,13 @@ type App struct {
 	mops      MOPSFetcher
 	taifex    TAIFEXQuerier
 	cache     *cache.Cache
-	core      *Core
-	registry  *Registry
-	now       func() time.Time
-	logger    *slog.Logger
+	index     *screener.Store // §10.3 Materialized Screener Index（L2 SQLite；nil＝未啟用）
+	// indexBuilder 為每日 15:00 之索引重建（測試可注入替身；預設 rebuildScreenerIndex）。
+	indexBuilder func(context.Context) error
+	core         *Core
+	registry     *Registry
+	now          func() time.Time
+	logger       *slog.Logger
 	// 預熱排程（§12.9，T018）之資料源：行事曆（www.twse.com.tw）、
 	// 代碼表載入器（openapi.twse.com.tw / www.tpex.org.tw）、MIS Session
 	// 預熱（mis.twse.com.tw）。測試可注入替身。
@@ -145,6 +150,18 @@ func WithAppCache(c *cache.Cache) AppOption {
 	return func(a *App) { a.cache = c }
 }
 
+// WithAppIndex 注入 §10.3 Materialized Screener Index（測試用；未注入時依 cfg
+// 資料目錄自動建立）。
+func WithAppIndex(s *screener.Store) AppOption {
+	return func(a *App) { a.index = s }
+}
+
+// WithAppIndexBuilder 覆寫每日 15:00 之索引重建函式（測試用；預設為
+// rebuildScreenerIndex）。
+func WithAppIndexBuilder(fn func(context.Context) error) AppOption {
+	return func(a *App) { a.indexBuilder = fn }
+}
+
 // WithAppLogger 注入 slog logger（預設 discard）。
 func WithAppLogger(l *slog.Logger) AppOption {
 	return func(a *App) { a.logger = l }
@@ -188,6 +205,10 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 	for _, o := range opts {
 		o(a)
 	}
+	// §10.3 索引重建預設實作（測試可經 WithAppIndexBuilder 覆寫）。
+	if a.indexBuilder == nil {
+		a.indexBuilder = a.rebuildScreenerIndex
+	}
 	if a.cache == nil {
 		// §5.2 參數化：以 cfg 之 L1 容量與 L2 SQLite path 建立快取；
 		// cfg 未設定（測試）時為 L1-only 快取。
@@ -204,6 +225,16 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 		var err error
 		if a.cache, err = cache.New(opts...); err != nil {
 			return nil, fmt.Errorf("mcp: 快取層初始化失敗: %w", err)
+		}
+	}
+	// §10.3 Materialized Screener Index：依 cfg 資料目錄自動開啟 L2 index.db。
+	// 未設定資料目錄（測試）時 index=nil，篩選工具退回既有即時引擎路徑。
+	if a.index == nil {
+		if p := a.indexPath(cfg); p != "" {
+			var ierr error
+			if a.index, ierr = screener.NewStore(p); ierr != nil {
+				return nil, fmt.Errorf("mcp: 開啟 Screener Index 失敗: %w", ierr)
+			}
 		}
 	}
 	if a.watchlist == nil {
@@ -247,12 +278,26 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 	return a, nil
 }
 
-// Close 釋放 App 資源（快取層 L2 連線）。
+// Close 釋放 App 資源（快取層 L2 連線 + Materialized Index）。
 func (a *App) Close() error {
+	if a.index != nil {
+		_ = a.index.Close()
+	}
 	if a.cache != nil {
 		return a.cache.Close()
 	}
 	return nil
+}
+
+// indexPath 回傳 §10.3 索引資料庫路徑（依 cfg 資料目錄/L2 路徑；未設定回空）。
+func (a *App) indexPath(cfg *config.Config) string {
+	switch {
+	case cfg.L2SQLitePath != "":
+		return filepath.Join(filepath.Dir(cfg.L2SQLitePath), "index.db")
+	case cfg.DataDir != "":
+		return screener.DefaultIndexPath(cfg.DataDir)
+	}
+	return ""
 }
 
 // Registry 回傳 Tool 登錄表。

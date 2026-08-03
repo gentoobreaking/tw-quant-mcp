@@ -884,7 +884,9 @@ func handlerGetExdividendCalendar(a *App, args map[string]any) (HandlerResult, e
 	return HandlerResult{Data: out, Lineage: lg}, nil
 }
 
-// handlerScreenHighYield：高殖利率排行（§10.E，T017 引擎）。
+// handlerScreenHighYield：高殖利率排行（§9.4/§10.E）。
+// §10.3 優先自 Materialized Screener Index 直接 SELECT（零即時 Adapter 請求，
+// _lineage.freshness=索引建立時間）；索引未建立時退回 T017 引擎即時整批路徑（§12.4）。
 func handlerScreenHighYield(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	market, _ := args["market"].(string)
@@ -919,6 +921,11 @@ func handlerScreenHighYield(a *App, args map[string]any) (HandlerResult, error) 
 		}
 	}
 	c.TopN = limit
+
+	if res, used, err := a.queryHighYieldIndex(ctx, market, c); used {
+		return res, err
+	}
+
 	metrics, meta, err := a.screenMetrics(ctx, market)
 	if err != nil {
 		return HandlerResult{}, err
@@ -935,6 +942,69 @@ func handlerScreenHighYield(a *App, args map[string]any) (HandlerResult, error) 
 		})
 	}
 	return HandlerResult{Data: out, Lineage: meta.lineage()}, nil
+}
+
+// queryHighYieldIndex 自 §10.3 materialized index 直接 SELECT 高殖利率工具；
+// used=true 表示索引已建立並完成查詢（零即時 Adapter 請求，freshness=索引建立時間）。
+// used=false 時呼叫端退回既有即時引擎路徑（索引未啟用/該日期尚未建立）。
+func (a *App) queryHighYieldIndex(ctx context.Context, market string, c screener.HighYieldCriterion) (HandlerResult, bool, error) {
+	if a.index == nil {
+		return HandlerResult{}, false, nil
+	}
+	date := a.now().Format("2006-01-02")
+	if _, ok, err := a.index.BuiltAt(ctx, date); err != nil || !ok {
+		return HandlerResult{}, false, nil
+	}
+	hit, err := a.index.Query(ctx, screener.IndexQuery{
+		Date:           date,
+		Market:         screener.IndexMarket(market),
+		MinYield:       c.MinYield,
+		MinDividend:    c.MinDividend,
+		MaxPE:          c.MaxPE,
+		MinConsecutive: c.MinConsecutive,
+		Rows:           c.TopN,
+	})
+	if err != nil {
+		return HandlerResult{}, false, err
+	}
+	total, err := a.index.Count(ctx, date, screener.IndexMarket(market))
+	if err != nil {
+		return HandlerResult{}, false, err
+	}
+	out := model.ScreenResult{Total: total, Matched: len(hit.Rows), Limit: c.TopN}
+	for _, r := range hit.Rows {
+		out.Rows = append(out.Rows, model.ScreenStock{
+			Code: r.Symbol, Name: r.Name, Market: r.Market,
+			PE: r.PE, PEAvailable: r.PEAvailable, PB: r.PB,
+			DividendYield: r.DividendYieldPct, DividendShare: r.CashDividend,
+			ConsecutiveYears: r.ConsecutiveYears,
+			Matched:          indexMatchedReasons(r, c),
+		})
+	}
+	ttl, _ := a.ttlOf(cache.DatasetValuation)
+	lg := postLineage(model.SourceTWSEAPI, date, true, false, ttl)
+	lg.FetchedAt = model.NewTaipeiTime(hit.BuiltAt) // §10.3：freshness=索引建立時間
+	lg.DerivedFrom = []string{"screener_index"}
+	lg.CacheAgeSec = int64(a.now().Sub(hit.BuiltAt).Seconds())
+	return HandlerResult{Data: out, Lineage: lg}, true, nil
+}
+
+// indexMatchedReasons 依條件說明索引命中理由（與 T017 引擎 matched 同語意）。
+func indexMatchedReasons(r screener.IndexRow, c screener.HighYieldCriterion) []string {
+	var m []string
+	if c.MinYield > 0 {
+		m = append(m, "高殖利率")
+	}
+	if c.MinDividend > 0 {
+		m = append(m, "高每股股利")
+	}
+	if c.MaxPE > 0 {
+		m = append(m, "低本益比")
+	}
+	if c.MinConsecutive > 0 {
+		m = append(m, "配息穩定")
+	}
+	return m
 }
 
 // ************** 篩選共用 **************

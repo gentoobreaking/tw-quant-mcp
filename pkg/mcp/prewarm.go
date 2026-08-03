@@ -31,6 +31,7 @@ import (
 var (
 	prewarmMorningSecs = 8 * 3600         // 08:00
 	prewarmPreOpenSecs = 8*3600 + 45*60   // 08:45 開盤前
+	prewarmIndexSecs   = 15 * 3600        // 15:00 §10.3 Materialized Screener Index 重建
 	prewarmEODSecs     = 16*3600 + 45*60  // 16:45 盤後
 	prewarmTick        = 30 * time.Second // 排程器檢查間隔
 )
@@ -45,6 +46,7 @@ type PrewarmScheduler struct {
 	day         string
 	morningDone bool
 	preOpenDone bool
+	indexDone   bool // §10.3 每日 15:00 索引重建
 	eodDone     bool
 }
 
@@ -97,7 +99,7 @@ func (s *PrewarmScheduler) TickOnce(ctx context.Context, now time.Time) {
 	day := model.FormatDate(now)
 	if day != s.day {
 		s.day = day
-		s.morningDone, s.preOpenDone, s.eodDone = false, false, false
+		s.morningDone, s.preOpenDone, s.indexDone, s.eodDone = false, false, false, false
 	}
 	// 非交易日（T005 行事曆）：僅執行基礎設施預熱（交易日曆 + 公司代碼表，
 	// 兩者皆 24h TTL 之官方基礎資料，週末/假日亦應可載入供查詢使用）；
@@ -117,6 +119,10 @@ func (s *PrewarmScheduler) TickOnce(ctx context.Context, now time.Time) {
 	if !s.preOpenDone && sec >= prewarmPreOpenSecs {
 		s.preOpenDone = true
 		s.prewarmPreOpen(ctx)
+	}
+	if !s.indexDone && sec >= prewarmIndexSecs {
+		s.indexDone = true
+		s.prewarmIndex(ctx)
 	}
 	if !s.eodDone && sec >= prewarmEODSecs {
 		s.eodDone = true
@@ -153,6 +159,24 @@ func (s *PrewarmScheduler) prewarmPreOpen(ctx context.Context) {
 	}
 	if err := provider.WarmupMISSession(ctx, s.app.misClient); err != nil {
 		s.log.Warn("預熱失敗：MIS Session（cookie 未取得，繼續採樣）", "err", err)
+	}
+}
+
+// prewarmIndex：每交易日 15:00 重建 §10.3 Materialized Screener Index。
+// 與 16:45 盤後預熱（prewarmEOD）併存：索引早於盤後彙總，使用同一批
+// 整批快取路徑（估值/股利/月營收），財報三表逐檔以 bounded concurrency
+// 掃描（§10.2）。失敗僅記錄，不阻塞其餘階段與查詢（查詢自動退回
+// T017 引擎即時整批路徑）。
+func (s *PrewarmScheduler) prewarmIndex(ctx context.Context) {
+	if s.app.index == nil {
+		return // 未啟用（無資料目錄）
+	}
+	fn := s.app.indexBuilder
+	if fn == nil {
+		fn = s.app.rebuildScreenerIndex
+	}
+	if err := fn(ctx); err != nil {
+		s.log.Warn("預熱失敗：Materialized Screener Index 重建", "err", err)
 	}
 }
 
