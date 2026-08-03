@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"tw-quant-mcp/pkg/cache"
 	"tw-quant-mcp/pkg/model"
 	"tw-quant-mcp/pkg/provider"
 )
@@ -113,11 +114,18 @@ func taifexRows[T any](ds model.TAIFEXDataset, date string, res provider.TAIFEXQ
 	return rows, nil
 }
 
+// taifexTTL TAIFEX 資料類別 TTL（§4.2/§5.2：TAIFEX 歷史 7 天；與
+// taifex_query.go 之 L2 政策一致）。
+func (a *App) taifexTTL() time.Duration {
+	ttl, _ := cache.TTLFor(cache.DatasetTAIFEXHistory, a.now())
+	return ttl
+}
+
 // taifexLineage 依查詢結果建立 lineage（v2.1 §3/§4）：TAIFEX 資料為每日盤後
 // 公布，freshness 一律 POST_MARKET；source_role 依實際使用來源標註
 // （TAIFEX-API → CANONICAL，TAIFEX-DL → FALLBACK，§3 表）；補檔標
 // derived_from（僅 debug/log 輸出）。
-func taifexLineage(res provider.TAIFEXQueryResult, date string, fromCache bool) *model.Lineage {
+func taifexLineage(res provider.TAIFEXQueryResult, date string, fromCache bool, ttl time.Duration) *model.Lineage {
 	role := model.SourceRoleCanonical
 	if res.Source == model.SourceTAIFEXDL {
 		role = model.SourceRoleFallback
@@ -128,6 +136,7 @@ func taifexLineage(res provider.TAIFEXQueryResult, date string, fromCache bool) 
 		Freshness:  model.FreshnessPostMarket,
 		DataDate:   date,
 		IsCached:   fromCache || res.IsCached,
+		CacheTTL:   int(ttl.Seconds()),
 	}
 	if res.DerivedFrom != "" {
 		lg.DerivedFrom = []string{res.DerivedFrom}
@@ -160,7 +169,7 @@ func handlerGetFuturesDailyOHLC(a *App, args map[string]any) (HandlerResult, err
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	return HandlerResult{Data: rows, Lineage: taifexLineage(res, date, fromCache)}, nil
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, date, fromCache, a.taifexTTL())}, nil
 }
 
 // handlerGetFuturesHistory：期貨 OHLC 歷史（TAIFEX-DL 回溯，§10.F）。
@@ -192,7 +201,7 @@ func handlerGetFuturesHistory(a *App, args map[string]any) (HandlerResult, error
 		}
 		return rows[i].ContractMonth < rows[j].ContractMonth
 	})
-	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, end)}, nil
+	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, end, a.taifexTTL())}, nil
 }
 
 // handlerGetPutCallRatio：買賣權比（date 或 range，支援歷史，§10.F）。
@@ -217,7 +226,7 @@ func handlerGetPutCallRatio(a *App, args map[string]any) (HandlerResult, error) 
 			return HandlerResult{}, err
 		}
 		sort.Slice(rows, func(i, j int) bool { return rows[i].Date < rows[j].Date })
-		return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, e)}, nil
+		return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, e, a.taifexTTL())}, nil
 	}
 	d, err := taifexDate(a, q, ctx, date)
 	if err != nil {
@@ -231,7 +240,7 @@ func handlerGetPutCallRatio(a *App, args map[string]any) (HandlerResult, error) 
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache)}, nil
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
 // handlerGetLargeTraderPositions：大額交易人未沖銷部位（期貨+選擇權，§10.F）。
@@ -266,7 +275,7 @@ func handlerGetLargeTraderPositions(a *App, args map[string]any) (HandlerResult,
 		}
 		sort.Slice(out.Futures, func(i, j int) bool { return out.Futures[i].Date < out.Futures[j].Date })
 		sort.Slice(out.Options, func(i, j int) bool { return out.Options[i].Date < out.Options[j].Date })
-		return HandlerResult{Data: out, Lineage: rangeLineage(fut, e)}, nil
+		return HandlerResult{Data: out, Lineage: rangeLineage(fut, e, a.taifexTTL())}, nil
 	}
 
 	d, err := taifexDate(a, q, ctx, date)
@@ -288,7 +297,7 @@ func handlerGetLargeTraderPositions(a *App, args map[string]any) (HandlerResult,
 	if out.Options, err = taifexRows[model.LargeTraderRow](model.TALargeTraderOpt, d, optRes); err != nil {
 		return HandlerResult{}, err
 	}
-	return HandlerResult{Data: out, Lineage: taifexLineage(futRes, d, futCached)}, nil
+	return HandlerResult{Data: out, Lineage: taifexLineage(futRes, d, futCached, a.taifexTTL())}, nil
 }
 
 // handlerGetInstitutionalFuturesPositions：三大法人期貨部位（§10.F）。
@@ -320,7 +329,7 @@ func instiPositions(a *App, args map[string]any, ds model.TAIFEXDataset) (Handle
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache)}, nil
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
 // handlerGetInstitutionalFuturesHistory：三大法人期貨部位歷史（DL 回溯，§10.F）。
@@ -351,7 +360,7 @@ func handlerGetInstitutionalFuturesHistory(a *App, args map[string]any) (Handler
 		}
 		return rows[i].Contract < rows[j].Contract
 	})
-	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, end)}, nil
+	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, end, a.taifexTTL())}, nil
 }
 
 // collectRangeRows 合併範圍內各日結果；全範圍無資料時回明確錯誤。
@@ -379,7 +388,7 @@ func collectRangeRows[T any](ds model.TAIFEXDataset, byDay map[string]provider.T
 
 // rangeLineage 範圍查詢之 lineage：DL 歷史資料（freshness=POST_MARKET，
 // source_role=FALLBACK，§3 表）。
-func rangeLineage(byDay map[string]provider.TAIFEXQueryResult, end string) *model.Lineage {
+func rangeLineage(byDay map[string]provider.TAIFEXQueryResult, end string, ttl time.Duration) *model.Lineage {
 	source := model.SourceTAIFEXDL
 	derived := []string{}
 	cached := false
@@ -397,6 +406,7 @@ func rangeLineage(byDay map[string]provider.TAIFEXQueryResult, end string) *mode
 		Freshness:  model.FreshnessPostMarket,
 		DataDate:   end,
 		IsCached:   cached,
+		CacheTTL:   int(ttl.Seconds()),
 	}
 	if len(derived) > 0 {
 		lg.DerivedFrom = derived

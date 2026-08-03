@@ -24,17 +24,22 @@ import (
 
 // fakeTAIFEX 為 TAIFEXQuerier 之測試替身：
 // single 依 "ds|date|contract" 鍵；ranges 依 "ds|start|end|contract" 鍵。
+// 每次 Fetch/FetchRange 會累計呼叫次數：第二次起視為快取命中
+// （模擬 TAIFEXQuery 之 L1/L2 行為，§9.3），回傳 cached=true 且
+// 結果 IsCached=true（range 亦同步標記各日）。
 type fakeTAIFEX struct {
-	t        *testing.T
-	latest   string
-	single   map[string]provider.TAIFEXQueryResult
-	ranges   map[string]map[string]provider.TAIFEXQueryResult
-	cached   map[string]bool // single 鍵 → 模擬快取命中
-	latestFn func() string
+	t           *testing.T
+	latest      string
+	single      map[string]provider.TAIFEXQueryResult
+	ranges      map[string]map[string]provider.TAIFEXQueryResult
+	cached      map[string]bool // single 鍵 → 強制快取命中
+	singleCalls map[string]int  // single 鍵 → 累計呼叫次數
+	rangeCalls  map[string]int  // range 鍵 → 累計呼叫次數
+	latestFn    func() string
 }
 
 func newFakeTAIFEX(t *testing.T, latest string) *fakeTAIFEX {
-	return &fakeTAIFEX{t: t, latest: latest, single: map[string]provider.TAIFEXQueryResult{}, ranges: map[string]map[string]provider.TAIFEXQueryResult{}, cached: map[string]bool{}}
+	return &fakeTAIFEX{t: t, latest: latest, single: map[string]provider.TAIFEXQueryResult{}, ranges: map[string]map[string]provider.TAIFEXQueryResult{}, cached: map[string]bool{}, singleCalls: map[string]int{}, rangeCalls: map[string]int{}}
 }
 
 func tfKey(ds model.TAIFEXDataset, date, contract string) string {
@@ -63,7 +68,12 @@ func (f *fakeTAIFEX) Fetch(_ context.Context, ds model.TAIFEXDataset, date, cont
 	if !ok {
 		f.t.Fatalf("fakeTAIFEX: 未 stub 之查詢鍵 %q", key)
 	}
-	return res, f.cached[key], nil
+	f.singleCalls[key]++
+	if f.singleCalls[key] > 1 || f.cached[key] {
+		res.IsCached = true // 快取命中：lineage is_cached=true（§3.2）
+		return res, true, nil
+	}
+	return res, false, nil
 }
 
 func (f *fakeTAIFEX) FetchRange(_ context.Context, ds model.TAIFEXDataset, start, end, contract string) (map[string]provider.TAIFEXQueryResult, error) {
@@ -71,6 +81,16 @@ func (f *fakeTAIFEX) FetchRange(_ context.Context, ds model.TAIFEXDataset, start
 	byDay, ok := f.ranges[key]
 	if !ok {
 		f.t.Fatalf("fakeTAIFEX: 未 stub 之範圍鍵 %q", key)
+	}
+	f.rangeCalls[key]++
+	if f.rangeCalls[key] > 1 {
+		// 第二次起模擬 L2 命中：範圍內各日皆標記快取（§3.2）
+		hit := make(map[string]provider.TAIFEXQueryResult, len(byDay))
+		for d, res := range byDay {
+			res.IsCached = true
+			hit[d] = res
+		}
+		return hit, nil
 	}
 	return byDay, nil
 }

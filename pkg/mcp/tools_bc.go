@@ -195,28 +195,28 @@ func handlerGetMarketSummary(a *App, args map[string]any) (HandlerResult, error)
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	tse, staleTSE, err := a.marketStatsTSE(ctx, date)
+	tse, cachedTSE, staleTSE, err := a.marketStatsTSE(ctx, date)
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	otc, staleOTC, err := a.marketStatsOTC(ctx, date)
+	otc, cachedOTC, staleOTC, err := a.marketStatsOTC(ctx, date)
 	if err != nil {
 		return HandlerResult{}, err
 	}
 	ttl, _ := a.ttlOf(string(provider.TWSEWDMarketClose))
-	lg := postLineage(model.SourceTWSEWeb, date, staleTSE || staleOTC, staleTSE || staleOTC, ttl)
+	lg := postLineage(model.SourceTWSEWeb, date, cachedTSE || cachedOTC, staleTSE || staleOTC, ttl)
 	lg.SourceRole = model.SourceRoleCanonical
 	return HandlerResult{Data: model.MarketSummary{Date: date, TSE: tse, OTC: otc}, Lineage: lg}, nil
 }
 
-func (a *App) marketStatsTSE(ctx context.Context, date string) (model.MarketStats, bool, error) {
+func (a *App) marketStatsTSE(ctx context.Context, date string) (model.MarketStats, bool, bool, error) {
 	// MI_INDEX 需 type=ALL 才回傳「每日收盤行情」表（§12.4 全市場彙總）。
 	params := url.Values{"date": {dateYMD(date)}, "type": {"ALL"}}
-	rows, _, stale, err := fetchNormalize[[]provider.MarketCloseRow](a, ctx, string(provider.TWSEWDMarketClose),
+	rows, cached, stale, err := fetchNormalize[[]provider.MarketCloseRow](a, ctx, string(provider.TWSEWDMarketClose),
 		date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDMarketClose), date, "", vals(params)),
 		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDMarketClose, params) })
 	if err != nil {
-		return model.MarketStats{}, false, err
+		return model.MarketStats{}, false, false, err
 	}
 	var st model.MarketStats
 	for _, r := range rows {
@@ -237,16 +237,16 @@ func (a *App) marketStatsTSE(ctx context.Context, date string) (model.MarketStat
 			st.Unchanged++
 		}
 	}
-	return st, stale, nil
+	return st, cached, stale, nil
 }
 
-func (a *App) marketStatsOTC(ctx context.Context, date string) (model.MarketStats, bool, error) {
+func (a *App) marketStatsOTC(ctx context.Context, date string) (model.MarketStats, bool, bool, error) {
 	params := url.Values{"date": {dateYMD(date)}}
-	rows, _, stale, err := fetchNormalize[[]provider.TPExDailyCloseRow](a, ctx, string(provider.TPExDailyClose),
+	rows, cached, stale, err := fetchNormalize[[]provider.TPExDailyCloseRow](a, ctx, string(provider.TPExDailyClose),
 		date, cache.KeyString(model.SourceTPExAPI, string(provider.TPExDailyClose), date, "", vals(params)),
 		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExDailyClose, params) })
 	if err != nil {
-		return model.MarketStats{}, false, err
+		return model.MarketStats{}, false, false, err
 	}
 	var st model.MarketStats
 	for _, r := range rows {
@@ -266,7 +266,7 @@ func (a *App) marketStatsOTC(ctx context.Context, date string) (model.MarketStat
 			st.Unchanged++
 		}
 	}
-	return st, stale, nil
+	return st, cached, stale, nil
 }
 
 // handlerGetInstitutionalInvestors：三大法人買賣超（個股+彙總，§10.B）。

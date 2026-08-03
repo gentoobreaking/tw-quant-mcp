@@ -7,8 +7,8 @@
 # 驗證項目：
 #   1. CGO_ENABLED=0 go build 產出單一執行檔（CGO-free，無動態 cgo 依賴）
 #   2. 啟動執行檔（stdio）→ initialize 握手成功
-#   3. tools/list 回傳 36 工具（§10 總數），全部含 inputSchema
-#   4. set_active_watchlist 為唯一可寫工具（其餘 35 個 readOnly）
+#  3. tools/list 回傳 37 工具（§10 總數，含 T029 新增 get_stock_trend_composite），全部含 inputSchema
+#  4. set_active_watchlist 為唯一可寫工具（其餘 36 個 readOnly）
 #
 # 此腳本不連網，僅驗證執行檔層級（§13 錄製回放原則）。
 
@@ -48,14 +48,14 @@ for line in sys.stdin:
 COUNT=$(echo "$OUT" | sed -n 1p)
 HAS_SCHEMA=$(echo "$OUT" | sed -n 2p)
 READONLY=$(echo "$OUT" | sed -n 3p)
-[ "$COUNT" = "36" ] || { echo "    ✗ 工具數 $COUNT ≠ 36"; exit 1; }
+[ "$COUNT" = "37" ] || { echo "    ✗ 工具數 $COUNT ≠ 37"; exit 1; }
 [ "$HAS_SCHEMA" = "True" ] || { echo "    ✗ 工具缺 inputSchema"; exit 1; }
-[ "$READONLY" = "35" ] || { echo "    ✗ readOnly 數 $READONLY ≠ 35"; exit 1; }
-echo "    ✓ 36 工具全數註冊（§10），全部含 inputSchema，35 readOnly + set_active_watchlist 可寫"
+[ "$READONLY" = "36" ] || { echo "    ✗ readOnly 數 $READONLY ≠ 36"; exit 1; }
+echo "    ✓ 37 工具全數註冊（§10，含 T029 新增 get_stock_trend_composite），全部含 inputSchema，36 readOnly + set_active_watchlist 可寫"
 
 echo "==> 4. 單一執行檔（CGO-free）確認"
 nm_check="$(go tool nm "$BIN" 2>/dev/null | grep -c 'cgo')" || true
 echo "    cgo 符號數: ${nm_check}（runtime 內建 traceback 符號，非 cgo 連結；CGO_ENABLED=0 建置已保證無 cgo 依賴）"
 
 echo ""
-echo "✓ release check PASS（v$VERSION）"
+echo "✓ release check PASS (v${VERSION})"

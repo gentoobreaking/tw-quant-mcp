@@ -226,6 +226,11 @@ v2.1 工具目錄（25 工具）與 v1.3 既有工具（36 工具）比對結論
 - v2.1 標 `get_warrant_activity` 為 `NOT_YET_AVAILABLE`（Roadmap）；v1.3 已實作（TWSE-API 權證每日成交 Top N），本專案標 `AVAILABLE`（超前實作）。
 - `get_stock_trend_composite` 為 v2.1 §9.1 首發新工具，標 `PREVIEW`（欄位/準確度仍可能調整）。
 
+## v2.1 §14 需求對照表（Traceability）
+
+v2.1 §14 之 **7 項優化需求**、**十大投資情境（§9，25 Tool）** 與本專案實作位置／
+驗收測試之逐條核對，見 [docs/TRACEABILITY-v2.1.md](docs/TRACEABILITY-v2.1.md)（T030）。
+
 ## 回傳結構（Envelope）
 
 所有工具回傳統一 Envelope（§3.3）：
