@@ -11,15 +11,16 @@ import (
 	"time"
 
 	"tw-quant-mcp/pkg/cache"
-	"tw-quant-mcp/pkg/engine/composite"
+	"tw-quant-mcp/pkg/domain/fundamental"
+	"tw-quant-mcp/pkg/domain/screener"
 	"tw-quant-mcp/pkg/model"
 	"tw-quant-mcp/pkg/provider"
 )
 
 // tools_de.go 實作 §10.D（基本面與篩選）與 §10.E（股利）工具（T014）。
 // 篩選類工具遵循 §12.4：整批以快取 + 記憶體計算，不逐股打上游。
-// 五面向評分（get_financial_health_check）由 T017 composite engine 提供，
-// 本檔不實作評分邏輯。
+// 五面向評分（get_financial_health_check）由 pkg/domain/fundamental 入口
+// 委託 T017 composite engine 提供，本檔不實作評分邏輯。
 
 // ************** 共用整批取得 helpers（§12.4） **************
 
@@ -317,7 +318,7 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	in := composite.HealthInput{Code: sym.Code, Name: sym.Name, Market: sym.Market}
+	in := fundamental.HealthInput{Code: sym.Code, Name: sym.Name, Market: sym.Market}
 	derived := []string{}
 
 	// 獲利能力 + 成長性：MOPS 損益表摘要（整批）＋獲利能力指標（整批）
@@ -374,7 +375,7 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 			if r.Code == sym.Code {
 				in.Yield = r.YieldRatio
 				if r.DividendPerShare > 0 {
-					in.DividendYears = []composite.DividendYear{{Year: "最新", Cash: r.DividendPerShare}}
+					in.DividendYears = []fundamental.DividendYear{{Year: "最新", Cash: r.DividendPerShare}}
 				}
 				break
 			}
@@ -395,7 +396,7 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 		}
 		sort.Slice(byCode, func(i, j int) bool { return byCode[i].DividendYear > byCode[j].DividendYear })
 		for _, r := range byCode {
-			in.DividendYears = append(in.DividendYears, composite.DividendYear{Year: r.DividendYear, Cash: r.CashDividend})
+			in.DividendYears = append(in.DividendYears, fundamental.DividendYear{Year: r.DividendYear, Cash: r.CashDividend})
 		}
 		valRows, _, _, verr := a.valuationTSE(ctx)
 		if verr == nil {
@@ -430,7 +431,7 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 		}
 	}
 
-	score := composite.ScoreHealth(in, cfg)
+	score := fundamental.ScoreHealth(in, cfg)
 	score.DataDate = dataDate
 	score.Note = "評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）"
 	ttl, _ := a.ttlOf(string(provider.MOPSIncomeSummary))
@@ -440,9 +441,9 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 }
 
 // scoringConfig 回傳五面向評分規則（預設 v1；config 可覆寫）。
-func (a *App) scoringConfig() (composite.ScoringConfig, error) {
+func (a *App) scoringConfig() (fundamental.ScoringConfig, error) {
 	if a.cfg == nil {
-		return composite.DefaultScoringConfig(), nil
+		return fundamental.DefaultScoringConfig(), nil
 	}
 	return a.cfg.Scoring()
 }
@@ -658,7 +659,7 @@ func handlerGetCompanyProfile(a *App, args map[string]any) (HandlerResult, error
 func handlerScreenStocks(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	market, _ := args["market"].(string)
-	c := composite.ValueCriterion{}
+	c := screener.ValueCriterion{}
 	if v, ok := args["max_pe"]; ok {
 		if f, e := asFloat(v); e == nil && f > 0 {
 			c.MaxPE = f
@@ -695,13 +696,13 @@ func handlerScreenStocks(a *App, args map[string]any) (HandlerResult, error) {
 	// 排序（T017）：pe（預設）| yield | pb | growth
 	switch strVal(args["sort"]) {
 	case "yield":
-		c.Sort = composite.ScreenSortYield
+		c.Sort = screener.SortByYield
 	case "pb":
-		c.Sort = composite.ScreenSortPB
+		c.Sort = screener.SortByPB
 	case "growth":
-		c.Sort = composite.ScreenSortGrowth
+		c.Sort = screener.SortByGrowth
 	case "", "pe":
-		c.Sort = composite.ScreenSortPE
+		c.Sort = screener.SortByPE
 	default:
 		return HandlerResult{}, fmt.Errorf("參數 sort 僅允許 pe|yield|pb|growth")
 	}
@@ -722,7 +723,7 @@ func handlerScreenStocks(a *App, args map[string]any) (HandlerResult, error) {
 		}
 		metrics = filtered
 	}
-	matches := composite.ScreenValue(metrics, c)
+	matches := screener.ScreenValue(metrics, c)
 	out := model.ScreenResult{Total: len(metrics), Matched: len(matches), Limit: limit}
 	for _, m := range matches {
 		out.Rows = append(out.Rows, model.ScreenStock{
@@ -887,7 +888,7 @@ func handlerGetExdividendCalendar(a *App, args map[string]any) (HandlerResult, e
 func handlerScreenHighYield(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	market, _ := args["market"].(string)
-	c := composite.HighYieldCriterion{}
+	c := screener.HighYieldCriterion{}
 	if v, ok := args["min_yield"]; ok {
 		if f, e := asFloat(v); e == nil && f > 0 {
 			c.MinYield = f
@@ -922,7 +923,7 @@ func handlerScreenHighYield(a *App, args map[string]any) (HandlerResult, error) 
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	matches := composite.ScreenHighYield(metrics, c)
+	matches := screener.ScreenHighYield(metrics, c)
 	out := model.ScreenResult{Total: len(metrics), Matched: len(matches), Limit: limit}
 	for _, m := range matches {
 		out.Rows = append(out.Rows, model.ScreenStock{
@@ -940,7 +941,7 @@ func handlerScreenHighYield(a *App, args map[string]any) (HandlerResult, error) 
 
 // screenMeta 記錄篩選工具之資料源與快取狀態（供 lineage 聚合）。
 type screenMeta struct {
-	rows     []composite.ValuationMetrics
+	rows     []screener.ValuationMetrics
 	source   string
 	dataDate string
 	cached   bool
@@ -958,8 +959,8 @@ func (m *screenMeta) lineage() *model.Lineage {
 
 // screenMetrics 建立篩選輸入（估值 + 月營收成長 + 每股現金股利；上市/上櫃
 // 分批，全部整批快取，§12.4）。
-func (a *App) screenMetrics(ctx context.Context, market string) ([]composite.ValuationMetrics, *screenMeta, error) {
-	var metrics []composite.ValuationMetrics
+func (a *App) screenMetrics(ctx context.Context, market string) ([]screener.ValuationMetrics, *screenMeta, error) {
+	var metrics []screener.ValuationMetrics
 	meta := &screenMeta{}
 	switch market {
 	case "", model.MarketTSE:
@@ -971,7 +972,7 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]composite.Val
 		meta.stale = meta.stale || stale
 		meta.derived = append(meta.derived, "TWSE_API:valuation")
 		for _, r := range tse {
-			metrics = append(metrics, composite.ValuationMetrics{
+			metrics = append(metrics, screener.ValuationMetrics{
 				Code: r.Code, Name: r.Name, Market: model.MarketTSE,
 				PE: r.PE, PEAvailable: r.PE > 0, PB: r.PB, DividendYield: r.DividendYield,
 			})
@@ -987,7 +988,7 @@ func (a *App) screenMetrics(ctx context.Context, market string) ([]composite.Val
 		meta.stale = meta.stale || stale
 		meta.derived = append(meta.derived, "TPEx_API:pe_valuation")
 		for _, r := range otc {
-			metrics = append(metrics, composite.ValuationMetrics{
+			metrics = append(metrics, screener.ValuationMetrics{
 				Code: r.Code, Name: r.Name, Market: model.MarketOTC,
 				PE: r.PE, PEAvailable: r.PE > 0, PB: r.PriceBookRatio,
 				DividendYield: r.YieldRatio, DividendShare: r.DividendPerShare,

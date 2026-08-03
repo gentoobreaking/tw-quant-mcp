@@ -2,6 +2,11 @@
 // 篩選（screen_stocks / screen_high_yield）與五面向評分
 // （get_financial_health_check，見 health.go）。
 //
+// 本包為 §7 模組化邊界之「domain 層下層」引擎（T026 對齊）：業務入口
+// 由 pkg/domain/screener、pkg/domain/fundamental 承載，composite 僅被
+// 下層/設定層引用（domain/screener、domain/fundamental、pkg/config），
+// 不屬於「已知九情境」，不重複產生業務入口。
+//
 // 引擎僅接受「已由呼叫端透過快取取得」之 raw 資料輸入，禁止直接呼叫
 // Adapter（§12.4 記憶體計算、§6 架構圖）。輸出為 helper 資料，
 // 由呼叫端以 source_role=helper + derived_from 標明父資料集。
