@@ -2,6 +2,7 @@ package mcp
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"regexp"
 	"testing"
@@ -57,6 +58,11 @@ func stubBCEnvelope(f *fakeFetch) {
 	// get_institutional_investors
 	f.stub("institutional", url.Values{"date": {"20260730"}},
 		`[{"code":"2330","name":"台積電","foreign_buy":1000,"foreign_sell":400,"foreign_net":600,"foreign_dealer_buy":0,"foreign_dealer_sell":0,"foreign_dealer_net":0,"investment_buy":0,"investment_sell":0,"investment_net":0}]`)
+	// get_stock_trend_composite 法人回溯（2026-07-29/28/27/24/23：short 5 日，跳過週末）
+	for _, d := range []string{"20260729", "20260728", "20260727", "20260724", "20260723"} {
+		f.stub("institutional", url.Values{"date": {d}},
+			`[{"code":"2330","name":"台積電","foreign_buy":500,"foreign_sell":300,"foreign_net":200,"foreign_dealer_buy":0,"foreign_dealer_sell":0,"foreign_dealer_net":0,"investment_buy":100,"investment_sell":50,"investment_net":50}]`)
+	}
 	// get_foreign_industry_holdings
 	f.stub("foreign_holdings", nil,
 		`[{"industry":"半導體業","company_count":10,"share_number":1000,"foreign_share":500,"percentage":50.0}]`)
@@ -82,7 +88,7 @@ func stubBCEnvelope(f *fakeFetch) {
 "clause":"第14款","fact_date":"2026-07-30","description":"每股配發新台幣8元"}]`)
 }
 
-// allToolProbes 為全部 36 個註冊工具之呼叫探針。
+// allToolProbes 為全部 37 個註冊工具之呼叫探針。
 func allToolProbes() []envelopeProbe {
 	return []envelopeProbe{
 		// ── A 組（盤中，6；以 newTestApp 交易時段執行）──
@@ -105,6 +111,8 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_margin_trading", args: map[string]any{"symbol": "2330", "date": "2026-07-30"}},
 		{name: "get_major_announcements", args: map[string]any{}},
 		{name: "get_attention_disposition_stocks", args: map[string]any{"market": "tse", "date": "2026-07-30"}},
+		// ── T029 缺口工具（跨來源聚合，Grade PREVIEW）──
+		{name: "get_stock_trend_composite", args: map[string]any{"symbol": "2330", "horizon": "short"}},
 		// ── D 組（基本面，6）──
 		{name: "get_financial_statements", args: map[string]any{"symbol": "2330", "period": "2026Q1"}},
 		{name: "get_monthly_revenue", args: map[string]any{"symbol": "2330"}},
@@ -131,7 +139,7 @@ func allToolProbes() []envelopeProbe {
 	}
 }
 
-// TestAllToolsEnvelopeConsistent 對全部 36 個註冊工具驗證 Envelope 一致性。
+// TestAllToolsEnvelopeConsistent 對全部 37 個註冊工具驗證 Envelope 一致性。
 func TestAllToolsEnvelopeConsistent(t *testing.T) {
 	// 盤後 App（B–G 工具）：fake 資料替身
 	f := newFake(t)
@@ -145,8 +153,8 @@ func TestAllToolsEnvelopeConsistent(t *testing.T) {
 	intraday := newTestApp(t)
 
 	names := intraday.Registry().Names()
-	if len(names) != 36 {
-		t.Fatalf("前置：應登錄 36 工具，實際 %d", len(names))
+	if len(names) != 37 {
+		t.Fatalf("前置：應登錄 37 工具，實際 %d", len(names))
 	}
 	covered := map[string]bool{}
 	for _, p := range allToolProbes() {
@@ -157,8 +165,8 @@ func TestAllToolsEnvelopeConsistent(t *testing.T) {
 			t.Errorf("探針清單缺漏工具 %q（驗收要求覆蓋所有已註冊 Tool）", n)
 		}
 	}
-	if len(covered) != 36 {
-		t.Fatalf("探針應覆蓋 36 工具，實際 %d", len(covered))
+	if len(covered) != 37 {
+		t.Fatalf("探針應覆蓋 37 工具，實際 %d", len(covered))
 	}
 
 	for _, p := range allToolProbes() {
@@ -188,7 +196,29 @@ func checkEnvelopeConsistency(t *testing.T, name string, e *model.Envelope) {
 	if e.Disclaimer != model.DisclaimerText {
 		t.Errorf("%s: 缺免責欄位（附錄 A），實際 %q", name, e.Disclaimer)
 	}
-	lg := e.Lineage
+	// 多來源聚合工具（v2.1 §4 設計規則 2）：_lineage 為 []Lineage，逐一驗證
+	//（lineage 陣列存在時，primary Lineage 僅為 first() 之檢視）。
+	if len(e.Lineage.Multi) > 0 {
+		for i, sub := range e.Lineage.Multi {
+			checkLineageFields(t, fmt.Sprintf("%s[%d]", name, i), sub)
+		}
+	} else {
+		checkLineageFields(t, name, e.Lineage.Lineage)
+	}
+	if e.Data == nil {
+		t.Errorf("%s: data 不得為 nil", name)
+	}
+	if e.HTTPCalls < 0 {
+		t.Errorf("%s: http_calls 應 ≥ 0，實際 %d", name, e.HTTPCalls)
+	}
+	if e.ChartMeta != nil && e.ChartMeta.RecommendedType == "" {
+		t.Errorf("%s: _chart_meta.recommended_type 不得為空", name)
+	}
+}
+
+// checkLineageFields 驗證單一 lineage 之必填語意欄位（§3.2 附錄 A）。
+func checkLineageFields(t *testing.T, name string, lg model.Lineage) {
+	t.Helper()
 	if lg.Source == "" {
 		t.Errorf("%s: source 不得為空", name)
 	}
@@ -225,15 +255,6 @@ func checkEnvelopeConsistency(t *testing.T, name string, e *model.Envelope) {
 	}
 	if lg.CacheAgeSec < 0 {
 		t.Errorf("%s: cache_age_sec 應 ≥ 0，實際 %d", name, lg.CacheAgeSec)
-	}
-	if e.Data == nil {
-		t.Errorf("%s: data 不得為 nil", name)
-	}
-	if e.HTTPCalls < 0 {
-		t.Errorf("%s: http_calls 應 ≥ 0，實際 %d", name, e.HTTPCalls)
-	}
-	if e.ChartMeta != nil && e.ChartMeta.RecommendedType == "" {
-		t.Errorf("%s: _chart_meta.recommended_type 不得為空", name)
 	}
 }
 

@@ -12,6 +12,7 @@ package mcp
 import (
 	"context"
 	"fmt"
+	"sync"
 
 	"tw-quant-mcp/pkg/domain/fundamental"
 	"tw-quant-mcp/pkg/domain/screener"
@@ -117,10 +118,13 @@ func (a *App) scoreUniverse(ctx context.Context, metrics []screener.ValuationMet
 	for _, m := range metrics {
 		symbols = append(symbols, m.Code)
 	}
+	var mu sync.Mutex
 	_ = screener.ScanUniverse(ctx, symbols, concurrency, func(code string) error {
 		li, ok := latest[code]
 		if !ok {
+			mu.Lock()
 			out[code] = 0
+			mu.Unlock()
 			return nil
 		}
 		in := fundamental.HealthInput{
@@ -146,7 +150,9 @@ func (a *App) scoreUniverse(ctx context.Context, metrics []screener.ValuationMet
 			in.ESGDisclosed = esgSet[code]
 		}
 		score := fundamental.ScoreHealth(in, cfg)
+		mu.Lock()
 		out[code] = score.Total
+		mu.Unlock()
 		return nil
 	})
 	return out

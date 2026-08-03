@@ -178,4 +178,23 @@ func registerDETools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerScreenHighYield,
 	})
+	r.Register(ToolDef{
+		Symbol: "get_stock_trend_composite",
+		Name:   "get_stock_trend_composite",
+		Description: "短中長期「技術面+基本面+籌碼面」綜合研判（v2.1 §9.1，Grade PREVIEW）。" +
+			"horizon 為 short（近 1 月 MA5/MA20 + 法人 5 日）/mid（近 3 月 MA20/MA60 + " +
+			"法人 20 日）/long（近 6 月 MA20/MA60 + 法人 60 日）。跨來源聚合（TWSE Web API " +
+			"日K/法人 + TWSE-API/TPEx 估值 + MOPS 損益表），_lineage 為 []Lineage 陣列；" +
+			"上櫃無歷史 K 線，技術面從缺（note 標註）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"symbol":  map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+				"horizon": map[string]any{"type": "string", "enum": []string{"short", "mid", "long"}, "description": "研判窗口（預設 mid）"},
+			},
+			"required": []string{"symbol"},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetStockTrendComposite,
+	})
 }

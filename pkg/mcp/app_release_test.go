@@ -50,6 +50,18 @@ func TestAppendixAMISIntradayOnly(t *testing.T) {
 			}
 			continue
 		}
+		if len(lg.Multi) > 0 {
+			// 多來源聚合工具：任一子來源不得為 MIS（§3：MIS 僅供盤中引擎）
+			for i, sub := range lg.Multi {
+				if sub.Source == model.SourceTWSEMIS {
+					t.Errorf("%s[%d]（非 A 組）不得以 TWSE_MIS 為資料來源（§3：MIS 僅供盤中引擎）", p.name, i)
+				}
+				if sub.SourceRole == model.SourceRoleRealtime {
+					t.Errorf("%s[%d]（非 A 組）source_role 不得為 SEMI_OFFICIAL_REALTIME", p.name, i)
+				}
+			}
+			continue
+		}
 		if lg.Source == model.SourceTWSEMIS {
 			t.Errorf("%s（非 A 組）不得以 TWSE_MIS 為資料來源（§3：MIS 僅供盤中引擎）", p.name)
 		}
@@ -93,7 +105,7 @@ func TestAppendixAOfficialSourcesOnly(t *testing.T) {
 			t.Errorf("發現非官方來源 %q（附錄 A：僅官方免費來源）", src)
 		}
 	}
-	t.Logf("36 工具 lineage.source 全數為官方登錄值（%d 種）", len(seen))
+	t.Logf("37 工具 lineage.source 全數為官方登錄值（%d 種）", len(seen))
 }
 
 // TestAppendixALineageComplete 附錄 A 檢查 2：lineage 必填欄位齊全（§3.2）。

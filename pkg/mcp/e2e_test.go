@@ -5,7 +5,7 @@ package mcp
 // T020 發布驗收：端到端驗證腳本（E2E，-tags=e2e）。
 //
 // 以 MCP client（in-memory transport）依序呼叫 §10 A→G 每組代表性工具，驗證：
-//  1. tools/list 回傳 36 工具且欄位齊全（§10 總數）；
+//  1. tools/list 回傳 37 工具且欄位齊全（§10 總數）；
 //  2. 每組（A/B/C/D/E/F/G）至少一個代表工具 Call 成功；
 //  3. 回傳皆為 §3.3 Envelope 結構（data + _lineage + http_calls）且 JSON 可解析。
 //
@@ -142,11 +142,11 @@ func TestE2EAllGroups(t *testing.T) {
 	}
 }
 
-// TestE2EListTools36 端到端確認 tools/list 總數 36（§10）。
-func TestE2EListTools36(t *testing.T) {
+// TestE2EListTools37 端到端確認 tools/list 總數 37（§10 + §9.1）。
+func TestE2EListTools37(t *testing.T) {
 	ctx := context.Background()
 	srv := e2eServer()
-	app := e2eGroupApp(t, "B") // 任一 App 皆註冊全部 36 工具
+	app := e2eGroupApp(t, "B") // 任一 App 皆註冊全部 37 工具
 	app.Wire(srv)
 
 	clientT, serverT := mcp.NewInMemoryTransports()
@@ -167,8 +167,8 @@ func TestE2EListTools36(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ListTools 失敗: %v", err)
 	}
-	if len(res.Tools) != 36 {
-		t.Fatalf("tools/list 應回傳 36 個工具（§10），實際 %d", len(res.Tools))
+	if len(res.Tools) != 37 {
+		t.Fatalf("tools/list 應回傳 37 個工具（§10 + §9.1），實際 %d", len(res.Tools))
 	}
-	t.Logf("tools/list 36 工具全數註冊正確")
+	t.Logf("tools/list 37 工具全數註冊正確")
 }

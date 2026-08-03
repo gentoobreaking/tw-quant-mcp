@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"time"
 
+	"tw-quant-mcp/pkg/chart"
 	"tw-quant-mcp/pkg/model"
 )
 
@@ -65,6 +66,14 @@ type HandlerResult struct {
 	//（source/source_role/derived_from/freshness/data_date/sampling_sec）。
 	// 空欄位由 Core 以 ToolDef.Response（或盤中預設）補齊。
 	Lineage *model.Lineage
+	// MultiLineage 非 nil 時輸出 _lineage 為 []Lineage（多來源聚合工具，
+	// v2.1 §4 設計規則 2：例如 get_stock_trend_composite 同時使用
+	// TWSE Web API 與 MOPS）。優先於單一 Lineage；機制欄位
+	//（FetchedAt/LatencyMS/DataDate 缺省）仍由 Core 補齊。
+	MultiLineage []model.Lineage
+	// ChartMeta 非 nil 時直接覆寫 _chart_meta（handler 依資料內容組建，
+	// 例如趨勢研判之複合線圖）。nil 時由 Core 依 §11.3 ForTool 注入。
+	ChartMeta *chart.Meta
 }
 
 // Call 執行單一工具呼叫，回傳 §3.3 Envelope（以 interface{} 承載，
@@ -101,8 +110,25 @@ func (c *Core) Call(ctx context.Context, name string, args map[string]any) (inte
 	}
 	lg.LatencyMS = time.Since(started).Milliseconds()
 
-	env := &model.Envelope{Data: hr.Data, Lineage: model.Lineages{Lineage: lg}, HTTPCalls: a.httpCalls.Load(), Disclaimer: model.DisclaimerText}
-	if opt.Chart && c.chart != nil {
+	ls := model.Lineages{Lineage: lg}
+	if len(hr.MultiLineage) > 0 {
+		// 多來源聚合：逐一補齊機制欄位（v2.1 §4 設計規則 2）。
+		multi := make([]model.Lineage, len(hr.MultiLineage))
+		for i, sub := range hr.MultiLineage {
+			sub.FetchedAt = model.NewTaipeiTime(started)
+			if sub.DataDate == "" {
+				sub.DataDate = model.FormatDate(started)
+			}
+			sub.LatencyMS = time.Since(started).Milliseconds()
+			multi[i] = sub
+		}
+		ls.Multi = multi
+	}
+
+	env := &model.Envelope{Data: hr.Data, Lineage: ls, HTTPCalls: a.httpCalls.Load(), Disclaimer: model.DisclaimerText}
+	if hr.ChartMeta != nil {
+		env.ChartMeta = hr.ChartMeta // handler 自組 _chart_meta（優先）
+	} else if opt.Chart && c.chart != nil {
 		if err := c.chart.UpdateEnvelope(env, def, opt, hr.Data); err != nil {
 			return nil, fmt.Errorf("mcp: 工具 %s chart 注入失敗: %w", name, err)
 		}
@@ -155,6 +181,11 @@ func lineageFor(def *ToolDef, hr HandlerResult) model.Lineage {
 		if o.Grade != "" {
 			lg.Grade = o.Grade
 		}
+	}
+	if lg.Grade == "" {
+		// Data Grade 預設 AVAILABLE（T029：36 既有工具全數標註；
+		// PREVIEW/NOT_YET_AVAILABLE 由 ToolDef.Response 或 Handler 覆寫）。
+		lg.Grade = model.GradeAvailable
 	}
 	return lg
 }
