@@ -12,11 +12,12 @@ import "fmt"
 // Meta 為 §11.2 `_chart_meta` 標準結構。ChartMeta 請求含 chart=true
 // （預設）時輸出；chart=false 時以 nil 省略（omitempty，§12.7）。
 type Meta struct {
-	RecommendedType string       `json:"recommended_type"` // candlestick/line/bar/heatmap/pie/scatter/radar
-	XAxis           *Axis        `json:"x_axis,omitempty"` // 橫軸（時間序列必填）
-	YAxis           *YAxis       `json:"y_axis,omitempty"` // 縱軸（radar 以 Axes 表示）
-	Axes            []string     `json:"axes,omitempty"`   // radar 之面向軸
-	Series          []Series     `json:"series,omitempty"` // 輔助序列描述（volume/分色…）
+	RecommendedType string       `json:"recommended_type"`  // candlestick/line/bar/heatmap/table/pie/scatter/radar
+	XAxis           *Axis        `json:"x_axis,omitempty"`  // 橫軸（時間序列必填）
+	YAxis           *YAxis       `json:"y_axis,omitempty"`  // 縱軸（radar 以 Axes 表示）
+	Axes            []string     `json:"axes,omitempty"`    // radar 之面向軸
+	Series          []Series     `json:"series,omitempty"`  // 輔助序列描述（volume/分色…）
+	Columns         []Column     `json:"columns,omitempty"` // table 型別之欄位描述（§11.3）
 	Annotations     []Annotation `json:"annotations,omitempty"`
 	Note            string       `json:"note,omitempty"`
 }
@@ -39,11 +40,19 @@ type YAxis struct {
 }
 
 // Series 描述輔助/次要序列之渲染方式。
-// Style 為 diverging（正負分色，§11.3 bar）或 volume（K 線成交量）。
+// Style 為 diverging（正負分色，§11.3 bar）或 volume（K 線成交量）；
+// Type 為 bar/line/bubble/radar/table（table 型別之系列標記）。
 type Series struct {
 	Key   string `json:"key,omitempty"`
-	Type  string `json:"type,omitempty"` // bar/line/bubble/radar
+	Type  string `json:"type,omitempty"` // bar/line/bubble/radar/table
 	Style string `json:"style,omitempty"`
+}
+
+// Column 為 table 型別之欄位描述（§11.3 table：除權息行事曆、風險旗標）。
+// Key 對應資料列之物件欄位名；Label 為欄位標題（可省略，前端可用 Key 直出）。
+type Column struct {
+	Key   string `json:"key"`
+	Label string `json:"label,omitempty"`
 }
 
 // Annotation 為圖表註記（§11.2 annotations）。
@@ -137,6 +146,23 @@ func Bar(title, xKey, yKey string, opts ...Option) *Meta {
 	}
 	for _, o := range opts {
 		o(m)
+	}
+	return m
+}
+
+// Table 產出表格型 _chart_meta（§11.3 table：除權息行事曆、風險旗標比對）。
+// 表格資料無座標軸語意：XAxis/YAxis 省略，columns 描述欄位順序與標題，
+// 供前端依資料結構直接渲染（SeriesData 之 Values map 鍵與 columns.key 對應）。
+func Table(columns []Column, opts ...Option) *Meta {
+	m := &Meta{
+		RecommendedType: "table",
+		Series:          []Series{{Type: "table"}},
+	}
+	for _, o := range opts {
+		o(m)
+	}
+	if len(columns) > 0 {
+		m.Columns = columns
 	}
 	return m
 }

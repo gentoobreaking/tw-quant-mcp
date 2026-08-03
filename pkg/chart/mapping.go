@@ -64,6 +64,32 @@ func ForTool(tool string, limit int) *Meta {
 	case "get_financial_health_check":
 		return Radar("財務健康五面向",
 			[]string{"profit", "growth", "structure", "dividend", "governance"})
+
+	// table：除權息行事曆（§11.3：以日期/代碼/名稱/股利欄位直出表格）
+	case "get_exdividend_calendar":
+		return Table([]Column{
+			{Key: "date", Label: "除權息日"},
+			{Key: "code", Label: "代碼"},
+			{Key: "name", Label: "名稱"},
+			{Key: "market", Label: "市場"},
+			{Key: "kind", Label: "種類"},
+			{Key: "cash_dividend", Label: "現金股利"},
+			{Key: "stock_dividend", Label: "股票股利"},
+		}, WithNote("Events 為 ExDivEvent 陣列；省略 start/end 時為今日起 6 個月"))
+
+	// table：買前風險掃描（§11.3 風險旗標比對；T029 對應 v2.1 get_risk_flags）
+	case "scan_daytrade_eligibility":
+		return Table([]Column{
+			{Key: "symbol", Label: "代碼"},
+			{Key: "name", Label: "名稱"},
+			{Key: "date", Label: "名單日期"},
+			{Key: "daytrade_allowed", Label: "當沖允許"},
+			{Key: "is_attention", Label: "注意股"},
+			{Key: "is_disposition", Label: "處置股"},
+			{Key: "margin_suspended", Label: "停資"},
+			{Key: "short_suspended", Label: "停券"},
+			{Key: "summary", Label: "風險摘要"},
+		}, WithNote("單一標的之風險旗標比對（對應 v2.1 §9.9 get_risk_flags）"))
 	}
 	return nil
 }

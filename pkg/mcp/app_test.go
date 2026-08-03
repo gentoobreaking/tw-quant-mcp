@@ -354,6 +354,15 @@ func TestCallScanDaytradeEligibility(t *testing.T) {
 	if _, err := app.Core().Call(context.Background(), "scan_daytrade_eligibility", map[string]any{"symbol": "9999"}); err == nil {
 		t.Fatalf("未知代號應為錯誤")
 	}
+
+	// chart：table（§11.3 風險旗標比對，對應 v2.1 get_risk_flags）
+	env = callCore(t, app, "scan_daytrade_eligibility", map[string]any{"symbol": "2330"})
+	if chartType(env) != "table" {
+		t.Errorf("風險旗標 chart 應為 table，實際 %s", chartType(env))
+	}
+	if env.ChartMeta == nil || len(env.ChartMeta.Columns) == 0 {
+		t.Errorf("table chart 應含 columns 欄位描述，實際 %+v", env.ChartMeta)
+	}
 }
 
 func TestCallErrors(t *testing.T) {

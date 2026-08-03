@@ -493,6 +493,13 @@ func TestDEGetExdividendCalendar(t *testing.T) {
 	if cal.Events[1].Code != "6147" || cal.Events[1].Date != "2026-08-10" || cal.Events[1].Market != model.MarketOTC {
 		t.Errorf("次事件應為頎邦 08-10: %+v", cal.Events[1])
 	}
+	// chart：table（§11.3 除權息行事曆）
+	if chartType(env) != "table" {
+		t.Errorf("除權息行事曆 chart 應為 table，實際 %s", chartType(env))
+	}
+	if env.ChartMeta == nil || len(env.ChartMeta.Columns) == 0 {
+		t.Errorf("table chart 應含 columns 欄位描述，實際 %+v", env.ChartMeta)
+	}
 }
 
 // 邊界：範圍內無事件 → 空清單（非錯誤）

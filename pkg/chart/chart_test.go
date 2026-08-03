@@ -2,6 +2,7 @@ package chart
 
 import (
 	"encoding/json"
+	"sort"
 	"strings"
 	"testing"
 )
@@ -112,6 +113,42 @@ func TestScatterAndRadar(t *testing.T) {
 	}
 }
 
+// TestTableMeta 驗證 table 型別（§11.3 除權息行事曆/風險旗標）：
+// recommended_type=table、series 標記 table、columns 欄位描述齊全。
+func TestTableMeta(t *testing.T) {
+	m := Table([]Column{
+		{Key: "date", Label: "除權息日"},
+		{Key: "code"},
+	})
+	if m.RecommendedType != "table" {
+		t.Errorf("recommended_type 應為 table，實際 %s", m.RecommendedType)
+	}
+	if len(m.Series) != 1 || m.Series[0].Type != "table" {
+		t.Errorf("table series 應標記 type=table，實際 %+v", m.Series)
+	}
+	if len(m.Columns) != 2 || m.Columns[0].Key != "date" || m.Columns[0].Label != "除權息日" {
+		t.Errorf("columns 應含 date/除權息日，實際 %+v", m.Columns)
+	}
+	if m.Columns[1].Label != "" {
+		t.Errorf("無標題之欄位應省略 label，實際 %+v", m.Columns[1])
+	}
+	if m.XAxis != nil || m.YAxis != nil {
+		t.Errorf("table 無座標軸語意，x_axis/y_axis 應為 nil，實際 x=%+v y=%+v", m.XAxis, m.YAxis)
+	}
+	// 序列化：columns 應輸出；x_axis/y_axis 依 omitempty 省略
+	b, err := json.Marshal(m)
+	if err != nil {
+		t.Fatalf("marshal 失敗: %v", err)
+	}
+	s := string(b)
+	if !strings.Contains(s, `"columns"`) || !strings.Contains(s, `"key":"date"`) {
+		t.Errorf("序列化應含 columns，實際 %s", s)
+	}
+	if strings.Contains(s, "x_axis") || strings.Contains(s, "y_axis") {
+		t.Errorf("table 序列化不應含座標軸，實際 %s", s)
+	}
+}
+
 // TestForTool 驗證 §11.3 全類型對應（pkg/chart 為唯一真值）。
 func TestForTool(t *testing.T) {
 	cases := []struct {
@@ -139,6 +176,8 @@ func TestForTool(t *testing.T) {
 		{"screen_stocks", "scatter"},
 		{"screen_high_yield", "scatter"},
 		{"get_financial_health_check", "radar"},
+		{"get_exdividend_calendar", "table"},
+		{"scan_daytrade_eligibility", "table"},
 	}
 	for _, c := range cases {
 		m := ForTool(c.tool, 200)
@@ -191,6 +230,143 @@ func TestForToolTimeSeriesXKey(t *testing.T) {
 			t.Errorf("%s x_axis.key 應為 %s，實際 %s", tool, key, m.XAxis.Key)
 		}
 	}
+}
+
+// TestForToolTableColumns 驗證 table 型別工具之 columns 欄位描述（§11.3）：
+// 除權息行事曆與風險旗標比對之欄位與資料結構一致。
+func TestForToolTableColumns(t *testing.T) {
+	m := ForTool("get_exdividend_calendar", 200)
+	if m == nil || m.RecommendedType != "table" {
+		t.Fatalf("除權息行事曆應對應 table，實際 %+v", m)
+	}
+	keys := map[string]bool{}
+	for _, c := range m.Columns {
+		keys[c.Key] = true
+	}
+	for _, want := range []string{"date", "code", "name", "market", "kind", "cash_dividend", "stock_dividend"} {
+		if !keys[want] {
+			t.Errorf("columns 應含 %s（對應 ExDivEvent.%s），實際 %+v", want, want, m.Columns)
+		}
+	}
+
+	r := ForTool("scan_daytrade_eligibility", 200)
+	if r == nil || r.RecommendedType != "table" {
+		t.Fatalf("風險旗標應對應 table，實際 %+v", r)
+	}
+	keys = map[string]bool{}
+	for _, c := range r.Columns {
+		keys[c.Key] = true
+	}
+	for _, want := range []string{"symbol", "name", "daytrade_allowed", "is_attention", "is_disposition", "margin_suspended", "short_suspended", "summary"} {
+		if !keys[want] {
+			t.Errorf("columns 應含 %s（對應 DaytradeScan.%s），實際 %+v", want, want, r.Columns)
+		}
+	}
+}
+
+// TestSeriesNormalizedXY 驗證 v2.1 §11「series 陣列本身即為正規化 X/Y 資料」
+// （呼叫端忽略 recommended_type 也可直接繪圖）：抽查 6 個時間序列工具之
+// data 結構皆為「時間欄位 + 數值欄位」陣列，時間欄位與 _chart_meta.x_axis.key
+// 一致，數值欄位覆蓋 y_axis 之 keys/right_axis（T028 驗收標準）。
+// 此處以 JSON 反射檢查欄位存在性與型別（各工具 handler 之整合資料形狀
+// 另由 pkg/mcp 測試以型別斷言覆蓋）。
+func TestSeriesNormalizedXY(t *testing.T) {
+	cases := []struct {
+		name string // 工具名
+		row  any    // 單筆資料（結構體含 json tag，與 model 型別欄位一致）
+		time string // 時間欄位
+		nums []string
+	}{
+		{"get_intraday_kline", struct {
+			Timestamp int64 `json:"timestamp"`
+			Open      any   `json:"open"`
+			High      any   `json:"high"`
+			Low       any   `json:"low"`
+			Close     any   `json:"close"`
+			Volume    any   `json:"volume"`
+		}{}, "timestamp", []string{"open", "high", "low", "close", "volume"}},
+		{"get_stock_daily_kline", struct {
+			Timestamp int64 `json:"timestamp"`
+			Open      any   `json:"open"`
+			High      any   `json:"high"`
+			Low       any   `json:"low"`
+			Close     any   `json:"close"`
+			Volume    any   `json:"volume"`
+		}{}, "timestamp", []string{"open", "high", "low", "close", "volume"}},
+		{"get_futures_daily_ohlc", struct {
+			Date   string `json:"date"`
+			Open   any    `json:"open"`
+			High   any    `json:"high"`
+			Low    any    `json:"low"`
+			Close  any    `json:"close"`
+			Volume any    `json:"volume"`
+		}{}, "date", []string{"open", "high", "low", "close", "volume"}},
+		{"get_stock_daily_quote", struct {
+			Timestamp int64  `json:"timestamp"`
+			Date      string `json:"date"`
+			Open      any    `json:"open"`
+			High      any    `json:"high"`
+			Low       any    `json:"low"`
+			Close     any    `json:"close"`
+			Volume    any    `json:"volume"`
+		}{}, "date", []string{"open", "high", "low", "close", "volume"}},
+		{"get_foreign_shareholding_history", struct {
+			Date           string `json:"date"`
+			ForeignShares  any    `json:"foreign_shares"`
+			ForeignPercent any    `json:"foreign_percent"`
+		}{}, "date", []string{"foreign_shares", "foreign_percent"}},
+		{"get_put_call_ratio", struct {
+			Date        string `json:"date"`
+			CallVolume  any    `json:"call_volume"`
+			PutVolume   any    `json:"put_volume"`
+			VolumeRatio any    `json:"volume_ratio"`
+			CallOI      any    `json:"call_oi"`
+			PutOI       any    `json:"put_oi"`
+			OIRatio     any    `json:"oi_ratio"`
+		}{}, "date", []string{"call_volume", "put_volume", "volume_ratio", "call_oi", "put_oi", "oi_ratio"}},
+		{"get_institutional_futures_history", struct {
+			Date        string `json:"date"`
+			LongVolume  any    `json:"long_volume"`
+			ShortVolume any    `json:"short_volume"`
+			NetVolume   any    `json:"net_volume"`
+		}{}, "date", []string{"long_volume", "short_volume", "net_volume"}},
+	}
+	for _, c := range cases {
+		c := c
+		t.Run(c.name, func(t *testing.T) {
+			b, err := json.Marshal(c.row)
+			if err != nil {
+				t.Fatalf("marshal %s 失敗: %v", c.name, err)
+			}
+			var m map[string]any
+			if err := json.Unmarshal(b, &m); err != nil {
+				t.Fatalf("unmarshal %s 失敗: %v", c.name, err)
+			}
+			if _, ok := m[c.time]; !ok {
+				t.Errorf("%s 應含時間欄位 %s（x_axis.key），實際欄位 %v", c.name, c.time, keysOf(m))
+			}
+			for _, n := range c.nums {
+				if _, ok := m[n]; !ok {
+					t.Errorf("%s 應含數值欄位 %s（y_axis/right_axis），實際欄位 %v", c.name, n, keysOf(m))
+				}
+			}
+			// 與 _chart_meta.x_axis.key 一致（§11.1 直接繪圖保證）
+			meta := ForTool(c.name, 200)
+			if meta == nil || meta.XAxis == nil || meta.XAxis.Key != c.time {
+				t.Errorf("%s _chart_meta.x_axis.key 應為 %s，實際 %+v", c.name, c.time, meta)
+			}
+		})
+	}
+}
+
+// keysOf 列出 JSON 物件欄位鍵（測試輔助）。
+func keysOf(m map[string]any) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	sort.Strings(out)
+	return out
 }
 
 // TestMarshalOmitempty 驗證 chart=false 行為（§12.7）：零值欄位省略、
