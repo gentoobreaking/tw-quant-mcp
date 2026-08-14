@@ -86,9 +86,14 @@ func stubBCEnvelope(f *fakeFetch) {
 {"table_date":"2026-07-30","announce_date":"2026-07-30","announce_time":"18:30:00",
 "code":"2330","name":"台積電","subject":"本公司董事會決議配發現金股利",
 "clause":"第14款","fact_date":"2026-07-30","description":"每股配發新台幣8元"}]`)
+	// get_twse_index (stub normalized JSON for fakeFetch)
+	f.stub("indices", nil,
+		`[{"date":"2026-07-30","index_name":"發行量加權股價指數","close":17000.0,"change":-50.0,"change_percent":-0.29,"change_dir":"-","note":""}]`)
+	f.stub("index_history", url.Values{"date": {"20260701"}},
+		`[{"date":"2026-07-01","open":17000.0,"high":17100.0,"low":16900.0,"close":17050.0},{"date":"2026-07-02","open":17050.0,"high":17150.0,"low":16950.0,"close":17100.0}]`)
 }
 
-// allToolProbes 為全部 37 個註冊工具之呼叫探針。
+// allToolProbes 為全部 38 個註冊工具之呼叫探針。
 func allToolProbes() []envelopeProbe {
 	return []envelopeProbe{
 		// ── A 組（盤中，6；以 newTestApp 交易時段執行）──
@@ -98,12 +103,13 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_intraday_vwap", args: map[string]any{"symbol": "2330"}},
 		{name: "detect_volume_surge", args: map[string]any{"symbol": "2330", "minutes": float64(5)}},
 		{name: "scan_daytrade_eligibility", args: map[string]any{"symbol": "2330"}},
-		// ── B 組（盤後行情，5）──
+		// ── B 組（盤後行情，6）──
 		{name: "get_stock_daily_quote", args: map[string]any{"symbol": "2330", "date": "2026-07-30"}},
 		{name: "get_stock_daily_kline", args: map[string]any{"symbol": "2330", "date": "2026-07-30"}},
 		{name: "get_market_summary", args: map[string]any{"date": "2026-07-30"}},
 		{name: "get_abnormal_trading", args: map[string]any{"market": "tse", "date": "2026-07-30"}},
 		{name: "get_warrant_activity", args: map[string]any{"date": "2026-07-30"}},
+		{name: "get_twse_index", args: map[string]any{"symbol": "發行量加權股價指數", "date": "2026-07-30"}},
 		// ── C 組（籌碼/法人，6）──
 		{name: "get_institutional_investors", args: map[string]any{"market": "tse", "date": "2026-07-30"}},
 		{name: "get_foreign_industry_holdings", args: map[string]any{"date": "2026-07-30"}},
@@ -153,8 +159,8 @@ func TestAllToolsEnvelopeConsistent(t *testing.T) {
 	intraday := newTestApp(t)
 
 	names := intraday.Registry().Names()
-	if len(names) != 37 {
-		t.Fatalf("前置：應登錄 37 工具，實際 %d", len(names))
+	if len(names) != 38 {
+		t.Fatalf("前置：應登錄 38 工具，實際 %d", len(names))
 	}
 	covered := map[string]bool{}
 	for _, p := range allToolProbes() {
@@ -165,8 +171,8 @@ func TestAllToolsEnvelopeConsistent(t *testing.T) {
 			t.Errorf("探針清單缺漏工具 %q（驗收要求覆蓋所有已註冊 Tool）", n)
 		}
 	}
-	if len(covered) != 37 {
-		t.Fatalf("探針應覆蓋 37 工具，實際 %d", len(covered))
+	if len(covered) != 38 {
+		t.Fatalf("探針應覆蓋 38 工具，實際 %d", len(covered))
 	}
 
 	for _, p := range allToolProbes() {

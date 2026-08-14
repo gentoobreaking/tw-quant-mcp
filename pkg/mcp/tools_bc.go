@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"tw-quant-mcp/pkg/cache"
+	"tw-quant-mcp/pkg/model/domain"
 	"tw-quant-mcp/pkg/engine"
 	"tw-quant-mcp/pkg/model"
 	"tw-quant-mcp/pkg/provider"
@@ -776,4 +777,95 @@ func vals(v url.Values) map[string]string {
 		}
 	}
 	return out
+}
+
+// ************** 指數工具 **************
+
+// handlerGetTWSEIndex：查詢 TWSE 指數盤後行情與歷史日 K（§10.B）。
+// symbol 為指數名稱（省略預設「發行量加權股價指數」）；
+// date 省略時為最近交易日。
+// 資料路徑 1（單日指數收盤）：TWSE-API MI_INDEX（openapi.twse.com.tw/v1/exchangeReport/MI_INDEX），
+//   依 IndexName 過濾，輸出 IndexQuoteRow（收盤指數/漲跌/漲跌百分比）。
+// 資料路徑 2（歷史日 K）：TWSE-WEB MI_5MINS_HIST（www.twse.com.tw/indicesReport/MI_5MINS_HIST?date=YYYYMMDD），
+//   請求月份資料，回傳該月每日 OHLC（IndexRow）。
+// 輸出：domain.IndexView，含 _chart_meta（line 型別，history 序列）。
+func handlerGetTWSEIndex(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	symbol, _ := args["symbol"].(string)
+	if symbol == "" {
+		symbol = "發行量加權股價指數" // 預設加權指數
+	}
+	date, err := a.resolveDate(strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+
+	// 路徑 1：單日指數收盤（TWSE-API MI_INDEX）
+	params := url.Values{}
+	rowsIdx, cachedIdx, staleIdx, err := fetchNormalize[[]provider.IndexQuoteRow](a, ctx, string(provider.TWSEAPIIndices),
+		date, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIIndices), date, "", nil),
+		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIIndices, params) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+
+	var quote *provider.IndexQuoteRow
+	for i := range rowsIdx {
+		if rowsIdx[i].IndexName == symbol {
+			quote = &rowsIdx[i]
+			break
+		}
+	}
+	if quote == nil {
+		return HandlerResult{}, fmt.Errorf("指數 %q 於 %s 無收盤資料", symbol, date)
+	}
+
+	// 路徑 2：歷史日 K（TWSE-WEB MI_5MINS_HIST，整月請求）
+	// 以 date 所在月份為請求參數
+	histDate, _ := model.ParseDate(date)
+	monthParam := histDate.Format("200601") + "01" // 該月第一天
+	histParams := url.Values{"date": {monthParam}}
+	rowsHist, cachedHist, staleHist, err := fetchNormalize[[]provider.IndexRow](a, ctx, string(provider.TWSEWDIndexHistory),
+		date, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDIndexHistory), date, "", vals(histParams)),
+		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDIndexHistory, histParams) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+
+	// 轉為 domain.IndexDay
+	history := make([]domain.IndexDay, 0, len(rowsHist))
+	for _, r := range rowsHist {
+		history = append(history, domain.IndexDay{
+			Date:  r.Date,
+			Open:  r.Open,
+			High:  r.High,
+			Low:   r.Low,
+			Close: r.Close,
+		})
+	}
+
+	cachedAny := cachedIdx || cachedHist
+	staleAny := staleIdx || staleHist
+	ttl, _ := a.ttlOf(string(provider.TWSEAPIIndices)) // 兩資料集同 TTL 政策
+
+	view := domain.IndexView{
+		Name:          quote.IndexName,
+		Date:          quote.Date,
+		Close:         quote.Close,
+		Change:        quote.Change,
+		ChangePercent: quote.ChangePercent,
+		ChangeDir:     quote.ChangeDir,
+		Note:          quote.Note,
+		History:       history,
+		ChartMeta: &domain.IndexChartMeta{
+			Type:  "line",
+			Series: []string{"date", "open", "high", "low", "close"},
+		},
+	}
+
+	lg := postLineage(model.SourceTWSEWeb, date, cachedAny || staleAny, staleAny, ttl)
+	lg.DerivedFrom = []string{"TWSE_WEB:index_history", "TWSE_API:indices"}
+	lg.SourceRole = model.SourceRoleCanonical
+
+	return HandlerResult{Data: view, Lineage: lg}, nil
 }

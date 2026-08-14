@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台積電 2330 日 K 線(ECharts 互動圖)</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  body { margin: 0; background: #1e1e2e; font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 16px; }
+  .header { color: #cdd6f4; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .header h1 { font-size: 20px; margin: 0; }
+  .header .sub { color: #89b4fa; font-size: 13px; }
+  .header .src { color: #6c7086; font-size: 12px; }
+  #chart { width: 100%; height: 620px; margin-top: 12px; }
+  .footer { color: #6c7086; font-size: 11px; margin-top: 10px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>台積電 2330</h1>
+    <span class="sub">日 K 線 · 2026-07</span>
+    <span class="src">資料來源:TWSE-WEB 官方公開資料</span>
+  </div>
+  <div id="chart"></div>
+  <div class="footer">
+    互動操作:滑鼠 hover 看數值 | 滾輪縮放 | 拖曳平移 | 右上角工具列可切換 K 線/成交量/數據縮放
+    <br>資料日期 2026-07-31 收 2,425 | 本圖僅供研究參考,不構成投資建議
+  </div>
+</div>
+
+<script>
+const candles = [
+  {timestamp:"2026-07-01",open:2495,high:2505,low:2475,close:2505,volume:37544470},
+  {timestamp:"2026-07-02",open:2450,high:2480,low:2445,close:2465,volume:35919290},
+  {timestamp:"2026-07-03",open:2415,high:2465,low:2415,close:2445,volume:32905868},
+  {timestamp:"2026-07-06",open:2465,high:2500,low:2455,close:2460,volume:21041918},
+  {timestamp:"2026-07-07",open:2480,high:2500,low:2440,close:2440,volume:31400854},
+  {timestamp:"2026-07-08",open:2445,high:2465,low:2420,close:2465,volume:25519599},
+  {timestamp:"2026-07-09",open:2450,high:2460,low:2415,close:2415,volume:34681018},
+  {timestamp:"2026-07-13",open:2460,high:2480,low:2440,close:2440,volume:35310380},
+  {timestamp:"2026-07-14",open:2410,high:2430,low:2390,close:2420,volume:42857055},
+  {timestamp:"2026-07-15",open:2425,high:2460,low:2415,close:2440,volume:33665566},
+  {timestamp:"2026-07-16",open:2430,high:2470,low:2420,close:2470,volume:30538604},
+  {timestamp:"2026-07-17",open:2375,high:2395,low:2290,close:2290,volume:97362670},
+  {timestamp:"2026-07-20",open:2300,high:2345,low:2300,close:2320,volume:55790346},
+  {timestamp:"2026-07-21",open:2350,high:2410,low:2345,close:2410,volume:31605663},
+  {timestamp:"2026-07-22",open:2440,high:2445,low:2385,close:2400,volume:31653123},
+  {timestamp:"2026-07-23",open:2385,high:2405,low:2370,close:2405,volume:28001492},
+  {timestamp:"2026-07-24",open:2355,high:2365,low:2345,close:2350,volume:24810509},
+  {timestamp:"2026-07-27",open:2330,high:2365,low:2330,close:2350,volume:28939466},
+  {timestamp:"2026-07-28",open:2270,high:2305,low:2270,close:2280,volume:45333029},
+  {timestamp:"2026-07-29",open:2260,high:2280,low:2180,close:2200,volume:68139691},
+  {timestamp:"2026-07-30",open:2205,high:2260,low:2190,close:2205,volume:51372177},
+  {timestamp:"2026-07-31",open:2350,high:2425,low:2345,close:2425,volume:69478145}
+];
+
+const dates = candles.map(c => c.timestamp);
+const kline = candles.map(c => [c.open, c.close, c.low, c.high]);
+const volumes = candles.map(c => c.volume);
+
+const chart = echarts.init(document.getElementById('chart'));
+
+chart.setOption({
+  backgroundColor: 'transparent',
+  animation: false,
+  legend: {
+    data: ['日K', 'MA5', 'MA10', 'MA20'],
+    textStyle: { color: '#cdd6f4' },
+    top: 4
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: { type: 'cross' },
+    backgroundColor: 'rgba(30,30,46,0.92)',
+    borderColor: '#45475a',
+    textStyle: { color: '#cdd6f4', fontSize: 12 },
+    formatter: function (params) {
+      const i = params[0].dataIndex;
+      const c = candles[i];
+      let s = `<b>${c.timestamp}</b><br/>`;
+      s += `開 ${c.open.toLocaleString()} 高 ${c.high.toLocaleString()}<br/>`;
+      s += `低 ${c.low.toLocaleString()} 收 <b>${c.close.toLocaleString()}</b><br/>`;
+      s += `量 ${(c.volume/10000).toFixed(1)} 萬股`;
+      return s;
+    }
+  },
+  axisPointer: { link: [{ xAxisIndex: 'all' }] },
+  grid: [
+    { left: 70, right: 24, top: 40, height: '58%' },
+    { left: 70, right: 24, top: '72%', height: '18%' }
+  ],
+  xAxis: [
+    {
+      type: 'category', data: dates, gridIndex: 0,
+      axisLabel: { color: '#a6adc8', fontSize: 11 },
+      axisLine: { lineStyle: { color: '#45475a' } },
+      axisTick: { show: false },
+      splitLine: { show: false }
+    },
+    {
+      type: 'category', data: dates, gridIndex: 1,
+      axisLabel: { show: false },
+      axisLine: { lineStyle: { color: '#45475a' } },
+      axisTick: { show: false }
+    }
+  ],
+  yAxis: [
+    {
+      scale: true, gridIndex: 0,
+      splitNumber: 6,
+      axisLabel: { color: '#a6adc8', fontSize: 11 },
+      splitLine: { lineStyle: { color: '#313244' } },
+      axisLine: { show: false }
+    },
+    {
+      scale: true, gridIndex: 1,
+      axisLabel: { color: '#6c7086', fontSize: 10 },
+      splitLine: { show: false },
+      axisLine: { show: false }
+    }
+  ],
+  dataZoom: [
+    { type: 'inside', xAxisIndex: [0, 1], start: 0, end: 100 },
+    { type: 'slider', xAxisIndex: [0, 1], bottom: 4, height: 18, borderColor: '#45475a', fillerColor: 'rgba(137,180,250,0.15)', textStyle: { color: '#6c7086', fontSize: 10 } }
+  ],
+  series: [
+    {
+      name: '日K', type: 'candlestick', data: kline, xAxisIndex: 0, yAxisIndex: 0,
+      itemStyle: {
+        color: '#f38ba8',       // 跌(收 < 開):紅
+        color0: '#a6e3a1',      // 漲(收 > 開):綠
+        borderColor: '#f38ba8',
+        borderColor0: '#a6e3a1'
+      }
+    },
+    { name: 'MA5', type: 'line', data: ma(5), xAxisIndex: 0, yAxisIndex: 0, smooth: false, connectNulls: true, symbol: 'none', lineStyle: { width: 1.2, color: '#f9e2af' } },
+    { name: 'MA10', type: 'line', data: ma(10), xAxisIndex: 0, yAxisIndex: 0, smooth: false, connectNulls: true, symbol: 'none', lineStyle: { width: 1.2, color: '#89b4fa' } },
+    { name: 'MA20', type: 'line', data: ma(20), xAxisIndex: 0, yAxisIndex: 0, smooth: false, connectNulls: true, symbol: 'none', lineStyle: { width: 1.2, color: '#cba6f7' } },
+    {
+      name: '成交量', type: 'bar', data: volumes, xAxisIndex: 1, yAxisIndex: 1,
+      itemStyle: {
+        color: function (p) {
+          const c = candles[p.dataIndex];
+          return c.close >= c.open ? 'rgba(166,227,161,0.55)' : 'rgba(243,139,168,0.55)';
+        }
+      }
+    }
+  ]
+});
+
+function ma(n) {
+  return candles.map((_, i) => {
+    if (i < n - 1) return null;
+    let s = 0;
+    for (let j = i - n + 1; j <= i; j++) s += candles[j].close;
+    return +(s / n).toFixed(1);
+  });
+}
+
+// 滑鼠離開圖表時清除十字準星殘留
+chart.on('globalout', () => chart.dispatchAction({ type: 'hideAxisPointer' }));
+
+window.addEventListener('resize', () => chart.resize());
+</script>
+</body>
+</html>

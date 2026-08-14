@@ -149,8 +149,8 @@ func TestTrendCompositeOTC(t *testing.T) {
 	}
 }
 
-// TestDataGradeAllTools 全 37 工具 Envelope 皆有 grade 標註：
-// 既有 36 工具 AVAILABLE；get_stock_trend_composite PREVIEW。
+// TestDataGradeAllTools 全 38 工具 Envelope 皆有 grade 標註：
+// 既有 37 工具 AVAILABLE；get_stock_trend_composite PREVIEW。
 func TestDataGradeAllTools(t *testing.T) {
 	f := newFake(t)
 	stubBCEnvelope(f)

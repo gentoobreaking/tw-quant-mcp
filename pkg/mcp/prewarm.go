@@ -198,6 +198,7 @@ func (s *PrewarmScheduler) prewarmEOD(ctx context.Context) {
 		{"abnormal_trading_tse", s.taskAbnormalTrading(model.MarketTSE)},
 		{"abnormal_trading_otc", s.taskAbnormalTrading(model.MarketOTC)},
 		{"attention_disposition", s.taskAttentionDisposition},
+		{"twse_index", s.taskTWSEIndex},
 	}
 	for _, t := range tasks {
 		if err := t.run(ctx); err != nil {
@@ -232,5 +233,11 @@ func (s *PrewarmScheduler) taskAbnormalTrading(market string) func(context.Conte
 
 func (s *PrewarmScheduler) taskAttentionDisposition(ctx context.Context) error {
 	_, err := handlerGetAttentionDispositionStocks(s.app, map[string]any{})
+	return err
+}
+
+func (s *PrewarmScheduler) taskTWSEIndex(ctx context.Context) error {
+	// 預熱加權指數單日收盤（使用預設 symbol）
+	_, err := handlerGetTWSEIndex(s.app, map[string]any{})
 	return err
 }

@@ -63,8 +63,8 @@ func scheduleServer(t *testing.T) *httptest.Server {
 	return srv
 }
 
-// listServers 回傳 TWSE/TPEx 代碼表之 httptest 伺服器。
-func listServers(t *testing.T) *httptest.Server {
+// listServers 回傳 TWSE/TPEx/ETF 代碼表之 httptest 伺服器。
+func listServers(t *testing.T) (string, string, string) {
 	t.Helper()
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
@@ -72,13 +72,19 @@ func listServers(t *testing.T) *httptest.Server {
 			_, _ = w.Write([]byte(`[{"公司代號":"2330","公司名稱":"台積電","產業別":"半導體"}]`))
 		case "/tpex":
 			_, _ = w.Write([]byte(`[{"SecuritiesCompanyCode":"6147","CompanyName":"頎邦"}]`))
+		case "/etf":
+			_, _ = w.Write([]byte(`[]`)) // 空 ETF 清單
 		default:
 			http.NotFound(w, r)
 		}
 	}))
 	t.Cleanup(srv.Close)
-	registry.SetListURLs(srv.URL+"/tse", srv.URL+"/tpex")
-	return srv
+	twseURL := srv.URL + "/tse"
+	tpexURL := srv.URL + "/tpex"
+	etfURL := srv.URL + "/etf"
+	registry.SetListURLs(twseURL, tpexURL)
+	registry.SetETFListURL(etfURL)
+	return twseURL, tpexURL, etfURL
 }
 
 // misServer 回傳 MIS index.jsp 之 httptest 伺服器（統計請求次數）。
@@ -114,6 +120,11 @@ func stubEOD(f *fakeFetch) {
 		`[{"code":"6147","name":"頎邦","info":"最近六個營業日累積收盤價跌幅達標準"}]`)
 	f.stub("disposition", url.Values{"date": {"20260731"}},
 		`[{"code":"6547","name":"高端疫苗","info":"處置","disposition_period":"115/07/31～115/08/13"}]`)
+	// Index endpoints for get_twse_index prewarm
+	f.stub("indices", nil,
+		`[{"date":"1150731","index_name":"發行量加權股價指數","close":17000.0,"change":-50.0,"change_percent":-0.29,"change_dir":"-","note":""}]`)
+	f.stub("index_history", url.Values{"date": {"20260701"}},
+		`{"stat":"OK","fields":["日期","開盤指數","最高指數","最低指數","收盤指數"],"data":[["115/07/01","17000.0","17100.0","16900.0","17050.0"],["115/07/02","17050.0","17150.0","16950.0","17100.0"]],"total":2}`)
 }
 
 // TestPrewarmMorning：08:00 後行事曆 + 代碼表入 L2，並載入 Symbol Registry。
@@ -139,7 +150,7 @@ func TestPrewarmMorning(t *testing.T) {
 	if app.calendar.IsTradingDay(time.Date(2026, 9, 14, 0, 0, 0, 0, model.Taipei())) {
 		t.Error("官方休市日 2026-09-14 應為非交易日")
 	}
-	// 兩者皆入 L2（24h TTL ≥ l2WriteMinTTL；鍵日期依 Loader/Calendar 之
+	// 行事曆入 L2（24h TTL ≥ l2WriteMinTTL；鍵日期依 Loader/Calendar 之
 	// 當日鍵（model.Now），與注入時鐘一致之交易日）
 	ctx := context.Background()
 	date := model.FormatDate(model.Now().Time)
@@ -148,10 +159,12 @@ func TestPrewarmMorning(t *testing.T) {
 		cache.WithDataset(cache.DatasetCalendar, date)); err != nil || !ok {
 		t.Errorf("行事曆應已入 L2（ok=%v err=%v）", ok, err)
 	}
-	if _, ok, err := cache.Get[[]model.Symbol](ctx, app.cache,
-		cache.KeyString(model.SourceTWSEAPI, cache.DatasetCalendar, date, "", nil),
-		cache.WithDataset(cache.DatasetCalendar, date)); err != nil || !ok {
-		t.Errorf("上市代碼表應已入 L2（ok=%v err=%v）", ok, err)
+	// Symbol Registry 已載入驗證（替代 L2 快取檢查，因快取鍵含 URL）
+	if _, ok := app.symbols.Lookup("2330"); !ok {
+		t.Error("預熱後 2330 應註冊於 Symbol Registry")
+	}
+	if _, ok := app.symbols.Lookup("6147"); !ok {
+		t.Error("預熱後上櫃 6147 應註冊於 Symbol Registry")
 	}
 	// 每日一次：再次 tick 不重複抓取（Symbol 數不變，無額外狀態變化）
 	s.TickOnce(context.Background(), prewarmAt(10, 0))

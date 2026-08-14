@@ -20,6 +20,19 @@ const twseFixture = `[
 	{"公司代號":"3045","公司名稱":"台灣大哥大","產業別":"通信網路業"}
 ]`
 
+// etfFixture 為 TWSE openapi STOCK_DAY_ALL 之欄位格式樣本（含 ETF/ETN/股票混雜）。
+// 僅 6 碼且以 00 開頭者為上市 ETF/ETN，應被 parseTWSEETFList 擷取。
+// 上市 ETF 代碼為 6 碼 0 開頭（如 000050=0050, 000056=0056, 006208, 00400A）。
+const etfFixture = `[
+	{"Code":"000050","Name":"元大台灣50","Date":"1150811","ClosingPrice":"123.45"},
+	{"Code":"000056","Name":"元大高股息","Date":"1150811","ClosingPrice":"32.10"},
+	{"Code":"006208","Name":"富邦台50","Date":"1150811","ClosingPrice":"125.00"},
+	{"Code":"2330","Name":"台積電","Date":"1150811","ClosingPrice":"920.00"},
+	{"Code":"00679B","Name":"反一","Date":"1150811","ClosingPrice":"15.50"},
+	{"Code":"00400A","Name":"主動型ETF","Date":"1150811","ClosingPrice":"50.00"},
+	{"Code":"1101","Name":"台泥","Date":"1150811","ClosingPrice":"40.50"}
+]`
+
 // tpexFixture 為 TPEx openapi tpex_mainboard_daily_close_quotes 之欄位格式樣本
 // （SecuritiesCompanyCode/CompanyName；含 6 碼 ETF 與 4 碼股票）。
 const tpexFixture = `[
@@ -33,11 +46,12 @@ type listServer struct {
 	calls atomic.Int32
 }
 
-// newListServers 建立 TWSE/TPEx 兩個官方清單 httptest server。
-func newListServers(t *testing.T) (*httptest.Server, *listServer, *httptest.Server, *listServer) {
+// newListServers 建立 TWSE/TPEx/ETF 三個官方清單 httptest server。
+func newListServers(t *testing.T) (*httptest.Server, *listServer, *httptest.Server, *listServer, *httptest.Server, *listServer) {
 	t.Helper()
 	twse := &listServer{body: []byte(twseFixture)}
 	tpex := &listServer{body: []byte(tpexFixture)}
+	etf := &listServer{body: []byte(etfFixture)}
 	s1 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		twse.calls.Add(1)
 		w.Header().Set("Content-Type", "application/json")
@@ -48,15 +62,20 @@ func newListServers(t *testing.T) (*httptest.Server, *listServer, *httptest.Serv
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(tpex.body)
 	}))
-	return s1, twse, s2, tpex
+	s3 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		etf.calls.Add(1)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(etf.body)
+	}))
+	return s1, twse, s2, tpex, s3, etf
 }
 
 // withURLs 以 httptest URL 覆寫官方清單端點（測試用），回傳還原函式。
-func withURLs(t *testing.T, twseURL, tpexURL string) func() {
+func withURLs(t *testing.T, twseURL, tpexURL, etfURL string) func() {
 	t.Helper()
-	otwse, otpex := twseListURL, tpexListURL
-	twseListURL, tpexListURL = twseURL, tpexURL
-	return func() { twseListURL, tpexListURL = otwse, otpex }
+	otwse, otpex, oetf := twseListURL, tpexListURL, twseETFListURL
+	twseListURL, tpexListURL, twseETFListURL = twseURL, tpexURL, etfURL
+	return func() { twseListURL, tpexListURL, twseETFListURL = otwse, otpex, oetf }
 }
 
 func testClient() *provider.BaseClient {
@@ -64,12 +83,13 @@ func testClient() *provider.BaseClient {
 		provider.WithRateInterval(time.Microsecond), provider.WithJitterRatio(0))
 }
 
-// 載入後：上市/上櫃判定正確、ex_ch 組裝、未知代碼 miss。
+// 載入後：上市/上櫃/ETF 判定正確、ex_ch 組裝、未知代碼 miss。
 func TestLoaderLoad(t *testing.T) {
-	s1, _, s2, _ := newListServers(t)
+	s1, _, s2, _, s3, _ := newListServers(t)
 	defer s1.Close()
 	defer s2.Close()
-	defer withURLs(t, s1.URL, s2.URL)()
+	defer s3.Close()
+	defer withURLs(t, s1.URL, s2.URL, s3.URL)()
 
 	l := NewLoader(testClient(), nil)
 	reg, err := l.Load(context.Background())
@@ -77,8 +97,9 @@ func TestLoaderLoad(t *testing.T) {
 		t.Fatalf("Load 失敗: %v", err)
 	}
 
-	if reg.Len() != 6 {
-		t.Errorf("應載入 6 檔（3 上市 + 3 上櫃），實際 %d", reg.Len())
+	// 3 上市 + 3 上櫃 + 5 ETF (000050, 000056, 006208, 00400A, 00679B)
+	if reg.Len() != 11 {
+		t.Errorf("應載入 11 檔（3 上市 + 3 上櫃 + 5 ETF），實際 %d", reg.Len())
 	}
 	if s, ok := reg.Lookup("2330"); !ok || s.Market != model.MarketTSE || s.Name != "台積電" {
 		t.Errorf("2330 = %+v", s)
@@ -92,6 +113,22 @@ func TestLoaderLoad(t *testing.T) {
 	if s, ok := reg.Lookup("006201"); !ok || s.Market != model.MarketOTC || s.Exch() != "otc_006201.tw" {
 		t.Errorf("6 碼上櫃 ETF = %+v ok=%v", s, ok)
 	}
+	// ETF 驗證
+	if s, ok := reg.Lookup("000050"); !ok || s.Market != model.MarketTSE || s.Name != "元大台灣50" {
+		t.Errorf("000050 = %+v ok=%v", s, ok)
+	}
+	if s, ok := reg.Lookup("000056"); !ok || s.Market != model.MarketTSE || s.Name != "元大高股息" {
+		t.Errorf("000056 = %+v ok=%v", s, ok)
+	}
+	if s, ok := reg.Lookup("006208"); !ok || s.Market != model.MarketTSE || s.Name != "富邦台50" {
+		t.Errorf("006208 = %+v ok=%v", s, ok)
+	}
+	if s, ok := reg.Lookup("00400A"); !ok || s.Market != model.MarketTSE || s.Name != "主動型ETF" {
+		t.Errorf("00400A = %+v ok=%v", s, ok)
+	}
+	if s, ok := reg.Lookup("00679B"); !ok || s.Market != model.MarketTSE || s.Name != "反一" {
+		t.Errorf("00679B = %+v ok=%v", s, ok)
+	}
 	if _, ok := reg.Lookup("9999"); ok {
 		t.Error("未知代碼應 miss")
 	}
@@ -102,10 +139,11 @@ func TestLoaderLoad(t *testing.T) {
 
 // 24h TTL 快取：同鍵僅一次上游呼叫；L2 持久化（重啟 cache 後仍命中）。
 func TestLoaderCacheAndL2Persistence(t *testing.T) {
-	s1, twse, s2, tpex := newListServers(t)
+	s1, twse, s2, tpex, s3, etf := newListServers(t)
 	defer s1.Close()
 	defer s2.Close()
-	defer withURLs(t, s1.URL, s2.URL)()
+	defer s3.Close()
+	defer withURLs(t, s1.URL, s2.URL, s3.URL)()
 
 	dir := t.TempDir()
 	cch, err := cache.New(cache.WithDataDir(dir))
@@ -117,15 +155,15 @@ func TestLoaderCacheAndL2Persistence(t *testing.T) {
 	if _, err := l.Load(context.Background()); err != nil {
 		t.Fatal(err)
 	}
-	if twse.calls.Load() != 1 || tpex.calls.Load() != 1 {
-		t.Fatalf("首次應各 1 次上游呼叫，實際 twse=%d tpex=%d", twse.calls.Load(), tpex.calls.Load())
+	if twse.calls.Load() != 1 || tpex.calls.Load() != 1 || etf.calls.Load() != 1 {
+		t.Fatalf("首次應各 1 次上游呼叫，實際 twse=%d tpex=%d etf=%d", twse.calls.Load(), tpex.calls.Load(), etf.calls.Load())
 	}
 	// 24h 內第二次：L1 命中。
 	if _, err := l.Load(context.Background()); err != nil {
 		t.Fatal(err)
 	}
-	if twse.calls.Load() != 1 || tpex.calls.Load() != 1 {
-		t.Errorf("24h 內第二次應命中快取，實際 twse=%d tpex=%d", twse.calls.Load(), tpex.calls.Load())
+	if twse.calls.Load() != 1 || tpex.calls.Load() != 1 || etf.calls.Load() != 1 {
+		t.Errorf("24h 內第二次應命中快取，實際 twse=%d tpex=%d etf=%d", twse.calls.Load(), tpex.calls.Load(), etf.calls.Load())
 	}
 	// 模擬進程重啟（L1 消失、L2 仍在）：仍不觸發上游。
 	cch.Close()
@@ -139,20 +177,21 @@ func TestLoaderCacheAndL2Persistence(t *testing.T) {
 	if err != nil {
 		t.Fatalf("重啟後 Load 失敗: %v", err)
 	}
-	if reg.Len() != 6 {
-		t.Errorf("重啟後應自 L2 回復 6 檔，實際 %d", reg.Len())
+	if reg.Len() != 11 {
+		t.Errorf("重啟後應自 L2 回復 11 檔，實際 %d", reg.Len())
 	}
-	if twse.calls.Load() != 1 || tpex.calls.Load() != 1 {
-		t.Errorf("重啟後應命中 L2，實際 twse=%d tpex=%d", twse.calls.Load(), tpex.calls.Load())
+	if twse.calls.Load() != 1 || tpex.calls.Load() != 1 || etf.calls.Load() != 1 {
+		t.Errorf("重啟後應命中 L2，實際 twse=%d tpex=%d etf=%d", twse.calls.Load(), tpex.calls.Load(), etf.calls.Load())
 	}
 }
 
 // 無 cache：每次 Load 直接抓取。
 func TestLoaderNoCache(t *testing.T) {
-	s1, twse, s2, tpex := newListServers(t)
+	s1, twse, s2, tpex, s3, etf := newListServers(t)
 	defer s1.Close()
 	defer s2.Close()
-	defer withURLs(t, s1.URL, s2.URL)()
+	defer s3.Close()
+	defer withURLs(t, s1.URL, s2.URL, s3.URL)()
 
 	l := NewLoader(testClient(), nil)
 	for i := 0; i < 2; i++ {
@@ -160,20 +199,22 @@ func TestLoaderNoCache(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if twse.calls.Load() != 2 || tpex.calls.Load() != 2 {
-		t.Errorf("無 cache 應每次抓取，實際 twse=%d tpex=%d", twse.calls.Load(), tpex.calls.Load())
+	if twse.calls.Load() != 2 || tpex.calls.Load() != 2 || etf.calls.Load() != 2 {
+		t.Errorf("無 cache 應每次抓取，實際 twse=%d tpex=%d etf=%d", twse.calls.Load(), tpex.calls.Load(), etf.calls.Load())
 	}
 }
 
 // 官方清單格式變更（全數無效）：回傳明確錯誤。
 func TestLoaderParseAllInvalid(t *testing.T) {
-	s1, twse, s2, tpex := newListServers(t)
+	s1, twse, s2, tpex, s3, etf := newListServers(t)
 	defer s1.Close()
 	defer s2.Close()
-	defer withURLs(t, s1.URL, s2.URL)()
+	defer s3.Close()
+	defer withURLs(t, s1.URL, s2.URL, s3.URL)()
 
 	twse.body = []byte(`[{"公司代號":"","公司名稱":"","產業別":""}]`)
 	tpex.body = []byte(`[{"SecuritiesCompanyCode":"abc","CompanyName":""}]`)
+	etf.body = []byte(`[{"Code":"0050","Name":""}]`) // ETF 名稱為空，會被過濾
 
 	l := NewLoader(testClient(), nil)
 	if _, err := l.Load(context.Background()); err == nil {
@@ -197,14 +238,15 @@ func TestParseSkipsInvalid(t *testing.T) {
 }
 
 // 任一市場失敗即 Load 失敗（Registry 為核心基礎設施，缺市場別可能導致路由錯誤）。
+// ETF 清單失敗不阻擋整體 Registry。
 func TestLoaderPartialFailure(t *testing.T) {
-	s1, _, _, _ := newListServers(t)
+	s1, _, _, _, _, _ := newListServers(t)
 	defer s1.Close()
 	bad := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 	defer bad.Close()
-	defer withURLs(t, s1.URL, bad.URL)()
+	defer withURLs(t, s1.URL, bad.URL, bad.URL)()
 
 	l := NewLoader(testClient(), nil)
 	_, err := l.Load(context.Background())
@@ -212,6 +254,28 @@ func TestLoaderPartialFailure(t *testing.T) {
 		t.Error("TPEx 失敗時 Load 應回傳錯誤")
 	} else {
 		t.Logf("預期錯誤：%v", err)
+	}
+}
+
+// ETF 端點失敗時，整體 Registry 仍成功（僅缺 ETF）。
+func TestLoaderETFFailureDoesNotBlock(t *testing.T) {
+	s1, _, s2, _, _, _ := newListServers(t)
+	defer s1.Close()
+	defer s2.Close()
+	bad := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer bad.Close()
+	defer withURLs(t, s1.URL, s2.URL, bad.URL)()
+
+	l := NewLoader(testClient(), nil)
+	reg, err := l.Load(context.Background())
+	if err != nil {
+		t.Fatalf("ETF 失敗不應阻擋 Registry: %v", err)
+	}
+	// 應有 6 檔（3 上市 + 3 上櫃），無 ETF
+	if reg.Len() != 6 {
+		t.Errorf("ETF 失敗時應載入 6 檔（3 上市 + 3 上櫃），實際 %d", reg.Len())
 	}
 }
 
@@ -223,11 +287,71 @@ func TestLoaderNilClient(t *testing.T) {
 	}
 }
 
+// parseTWSEETFList 測試：僅 6 碼 00 開頭入列、4 碼股票/權證排除、名稱正確。
+func TestParseTWSEETFList(t *testing.T) {
+	symbols, err := parseTWSEETFList([]byte(etfFixture))
+	if err != nil {
+		t.Fatal(err)
+	}
+	// 僅 000050, 000056, 006208, 00400A, 00679B 為 6 碼 00 開頭（fixture 包含 OTC ETF 00679B，實際 API 可能不同）
+	if len(symbols) != 5 {
+		t.Errorf("應解析 5 檔 ETF，實際 %d", len(symbols))
+	}
+	found := map[string]bool{}
+	for _, s := range symbols {
+		found[s.Code] = true
+		if s.Market != model.MarketTSE {
+			t.Errorf("%s 市場別應為 tse，實際 %s", s.Code, s.Market)
+		}
+		if s.Category != "" {
+			t.Errorf("%s 產業別應為空，實際 %q", s.Code, s.Category)
+		}
+	}
+	want := []string{"000050", "000056", "006208", "00400A", "00679B"}
+	for _, c := range want {
+		if !found[c] {
+			t.Errorf("缺少 ETF %s", c)
+		}
+	}
+	// 非 ETF 代碼不應入列
+	if found["2330"] || found["1101"] {
+		t.Error("非 ETF 代碼（4 碼）不應入列")
+	}
+	// 名稱正確
+	for _, s := range symbols {
+		switch s.Code {
+		case "000050":
+			if s.Name != "元大台灣50" {
+				t.Errorf("000050 名稱錯誤: %s", s.Name)
+			}
+		case "000056":
+			if s.Name != "元大高股息" {
+				t.Errorf("000056 名稱錯誤: %s", s.Name)
+			}
+		case "006208":
+			if s.Name != "富邦台50" {
+				t.Errorf("006208 名稱錯誤: %s", s.Name)
+			}
+		case "00400A":
+			if s.Name != "主動型ETF" {
+				t.Errorf("00400A 名稱錯誤: %s", s.Name)
+			}
+		case "00679B":
+			if s.Name != "反一" {
+				t.Errorf("00679B 名稱錯誤: %s", s.Name)
+			}
+		}
+	}
+}
+
 func TestSourceIDFor(t *testing.T) {
 	if got := sourceIDFor(twseListURL); got != model.SourceTWSEAPI {
 		t.Errorf("sourceIDFor(twse) = %s", got)
 	}
 	if got := sourceIDFor(tpexListURL); got != model.SourceTPExAPI {
 		t.Errorf("sourceIDFor(tpex) = %s", got)
+	}
+	if got := sourceIDFor(twseETFListURL); got != model.SourceTWSEAPI {
+		t.Errorf("sourceIDFor(etf) = %s", got)
 	}
 }

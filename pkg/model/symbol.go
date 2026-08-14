@@ -25,11 +25,18 @@ func ValidMarket(m string) bool {
 	return m == MarketTSE || m == MarketOTC
 }
 
-// Validate 檢查 Symbol 是否符合 §5.2 契約（代碼為 4~6 位數字字串，
-// 上市/上櫃公司代碼實際長度不同，統一以數字字串規範之）。
+// Validate 檢查 Symbol 是否符合 §5.2 契約（代碼為 4~6 位字串，
+// 4~5 碼為純數字（股票），6 碼允許英數混合（ETF/ETN 如 00400A））。
 func (s Symbol) Validate() error {
-	if len(s.Code) < 4 || len(s.Code) > 6 || !isDigits(s.Code) {
-		return fmt.Errorf("model: code %q 必須為 4~6 碼數字字串", s.Code)
+	if len(s.Code) < 4 || len(s.Code) > 6 {
+		return fmt.Errorf("model: code %q 長度必須為 4~6 碼", s.Code)
+	}
+	// 4~5 碼必須為純數字；6 碼允許英數混合（ETF/ETN）
+	if len(s.Code) <= 5 && !isDigits(s.Code) {
+		return fmt.Errorf("model: code %q 必須為數字字串", s.Code)
+	}
+	if len(s.Code) == 6 && !isAlphanumeric(s.Code) {
+		return fmt.Errorf("model: code %q 必須為英數字串", s.Code)
 	}
 	if !ValidMarket(s.Market) {
 		return fmt.Errorf("model: market %q 必須為 %q 或 %q", s.Market, MarketTSE, MarketOTC)
@@ -40,6 +47,15 @@ func (s Symbol) Validate() error {
 	return nil
 }
 
+func isAlphanumeric(s string) bool {
+	for _, r := range s {
+		if (r < '0' || r > '9') && (r < 'A' || r > 'Z') && (r < 'a' || r > 'z') {
+			return false
+		}
+	}
+	return true
+}
+
 // Exch 組裝 MIS 用之 ex_ch 參數（§5.2）。
 // 一律由 Symbol 組裝（tse_2330.tw / otc_6547.tw），禁止簡易猜測市場別。
 func (s Symbol) Exch() string {
@@ -47,6 +63,11 @@ func (s Symbol) Exch() string {
 		return "otc_" + s.Code + ".tw"
 	}
 	return "tse_" + s.Code + ".tw"
+}
+
+// IsETF 判斷是否為上市 ETF（代碼 6 碼且以 00 開頭，與 pkg/engine/composite/screen.go isETF 一致）。
+func (s Symbol) IsETF() bool {
+	return len(s.Code) == 6 && s.Code[:2] == "00"
 }
 
 func isDigits(s string) bool {

@@ -105,7 +105,7 @@ func TestAppendixAOfficialSourcesOnly(t *testing.T) {
 			t.Errorf("發現非官方來源 %q（附錄 A：僅官方免費來源）", src)
 		}
 	}
-	t.Logf("37 工具 lineage.source 全數為官方登錄值（%d 種）", len(seen))
+	t.Logf("38 工具 lineage.source 全數為官方登錄值（%d 種）", len(seen))
 }
 
 // TestAppendixALineageComplete 附錄 A 檢查 2：lineage 必填欄位齊全（§3.2）。

@@ -34,7 +34,7 @@ var memoryOnlyTools = map[string]bool{
 	"get_trading_calendar":      true,
 }
 
-// TestAllToolsCacheConsistency 全量 37 工具之 Cache 一致性：
+// TestAllToolsCacheConsistency 全量 38 工具之 Cache 一致性：
 //   - 記憶體工具：http_calls=0、is_cached=false
 //   - 快取路徑工具：二次呼叫 is_cached=true、cache_ttl>0、http_calls 不增
 func TestAllToolsCacheConsistency(t *testing.T) {

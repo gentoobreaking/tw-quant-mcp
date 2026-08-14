@@ -2,7 +2,7 @@
 
 > T030 驗收 #4：依 v2.1 §14 逐條核對 **7 項優化需求**、**10 項投資情境（§9，25 Tool）**
 > 與章節對應關係。本表列示「規格需求 → 本專案實作位置 → 驗收測試 → 狀態」。
-> 核對基準：`T021–T029` 已交付、`T030` 全量回歸通過（`go test ./...`）。
+> 核對基準：`T021–T032` 已交付、`T030` 全量回歸通過（`go test ./...`）。
 
 ## 一、7 項優化需求
 
@@ -96,23 +96,24 @@
 | `get_institutional_derivatives_history` | 三大法人期貨部位歷史 | `product`,`date_range` | AVAILABLE | `get_institutional_futures_history`（TAIFEX-DL，FALLBACK） | AVAILABLE | ✅ 完成 |
 
 ### 盤中即時／盤後基礎（§9.11 既有 Tool 維持）
-
+ 
 | v2.1 Tool | 說明 | 參數 | Grade(v2.1) | 本專案對應工具 | Grade(本專案) | 狀態 |
 |---|---|---|---|---|---|---|
 | `set_active_watchlist` | 盤中即時監控清單（≤15 檔） | `symbols` | AVAILABLE | `set_active_watchlist`（同名） | AVAILABLE | ✅ 完成 |
 | `get_intraday_kline` | 盤中 1分K/5分K | `symbol`,`timeframe` | AVAILABLE | `get_intraday_kline`（同名） | AVAILABLE | ✅ 完成 |
 | `get_stock_daily_quote` | 盤後歷史日K與籌碼 | `symbol`,`date_range` | AVAILABLE | `get_stock_daily_quote`（同名） | AVAILABLE | ✅ 完成 |
+| `get_twse_index` | TWSE 指數盤後行情與歷史日K（新增 T032） | `symbol`(指數名稱),`date` | AVAILABLE | `get_twse_index`（同名，T032 新增） | AVAILABLE | ✅ 完成 |
 
-> 25 Tool 全數對應完成；本專案共登錄 **37 工具**（25 涵蓋 + 12 個 v1.3 既有工具
+> 25 Tool 全數對應完成；本專案共登錄 **38 工具**（25 涵蓋 + 13 個 v1.3 既有工具
 > 如 `get_stock_daily_kline`、`get_market_summary`、`get_margin_trading`、
-> `get_monthly_revenue`、`get_trading_calendar` 等），無缺漏。
+> `get_monthly_revenue`、`get_trading_calendar`、`get_twse_index` 等），無缺漏。
 
 ## 三、驗收對應（T030）
 
 | T030 驗收項目 | 對應文件/測試 | 狀態 |
 |---|---|---|
 | ① 七 Adapter 契約測試（golden fixtures） | `pkg/provider/contract_test.go`＋`testdata/`（TWSE-WEB/API、TPEx、MOPS、TAIFEX-API/DL、MIS） | ✅ `go test ./pkg/provider/` 通過 |
-| ② 全量工具 Lineage/Cache/Chart 欄位一致性 | `pkg/mcp/app_envelope_test.go`、`cache_consistency_test.go`、`app_release_test.go` | ✅ 37 工具全覆蓋 |
+| ② 全量工具 Lineage/Cache/Chart 欄位一致性 | `pkg/mcp/app_envelope_test.go`、`cache_consistency_test.go`、`app_release_test.go` | ✅ 38 工具全覆蓋 |
 | ③ 全量工具回歸 | `go test ./...`（含 T021–T029 測試） | ✅ 通過 |
 | ④ §14 需求對照表（本文件） | `docs/TRACEABILITY-v2.1.md`＋README 連結 | ✅ 完成 |
 | ⑤ 壓測 20 併發熱門股、命中率 ≥ 80% | `cmd/loadtest/main.go`（CI 可執行）、`pkg/mcp/stress_test.go`（`go test` 內建） | ✅ 通過（100% 命中率、Single-flight 併流） |

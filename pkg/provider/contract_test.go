@@ -261,6 +261,7 @@ func twseContractCases() []contractCase {
 		web(TWSEWDForeignQFIIS, "/rwd/fund/MI_QFIIS", "date=20260731&response=json", "qfiis.json"),
 		web(TWSEWDMonthlyAvg, "/rwd/afterTrading/STOCK_DAY_AVG", "date=20260731&stockNo=2330&response=json", "day_avg.json"),
 		web(TWSEWDBlockTrades, "/rwd/block/BFIAUU_d", "response=json", "block_trades.json"),
+		web(TWSEWDIndexHistory, "/indicesReport/MI_5MINS_HIST", "date=20260731&response=json", "index_history.json"),
 		api(TWSEAPIDailyClose, "/exchangeReport/STOCK_DAY_ALL", "daily_close.json"),
 		api(TWSEAPIForeignHoldings, "/fund/MI_QFIIS_cat", "foreign_holdings.json"),
 		api(TWSEAPIPunish, "/announcement/punish", "punish.json"),
@@ -268,6 +269,7 @@ func twseContractCases() []contractCase {
 		api(TWSEAPIExDiv, "/exchangeReport/TWT48U_ALL", "twt48u_all.json"),
 		api(TWSEAPIDividend, "/opendata/t187ap45_L", "t187ap45.json"),
 		api(TWSEAPIWarrants, "/opendata/t187ap42_L", "warrants.json"),
+		api(TWSEAPIIndices, "/exchangeReport/MI_INDEX", "indices.json"),
 	}
 }
 

@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"tw-quant-mcp/pkg/cache"
@@ -19,12 +20,16 @@ import (
 // 官方資料源（§5.2：TWSE/TPEx 官方上市上櫃公司清單 openapi）。
 // 以變數而非 const 提供，供測試以 httptest 注入。
 var (
-	twseListURL = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L" // 上市股票公司基本資料
+	twseListURL = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"           // 上市股票公司基本資料
 	tpexListURL = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
+	twseETFListURL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL" // 全市場收盤（含 ETF）
 )
 
 // SetListURLs 覆寫官方清單 URL（僅測試用：httptest 注入，T018 預熱排程測試）。
 func SetListURLs(twse, tpex string) { twseListURL, tpexListURL = twse, tpex }
+
+// SetETFListURL 覆寫 ETF 清單 URL（僅測試用）。
+func SetETFListURL(url string) { twseETFListURL = url }
 
 // registryTTL 對應 §4.2「交易日曆 / 公司代碼表」24h 盤中/盤後 TTL。
 const registryTTL = 24 * time.Hour
@@ -42,8 +47,9 @@ func NewLoader(client *provider.BaseClient, c *cache.Cache) *Loader {
 	return &Loader{client: client, cache: c}
 }
 
-// Load 回傳最新 Registry 快照（上市 + 上櫃合併）。任一市場清單載入失敗即回傳錯誤：
+// Load 回傳最新 Registry 快照（上市 + 上櫃 + ETF 合併）。任一市場清單載入失敗即回傳錯誤：
 // Registry 為核心基礎設施，缺市場別可能導致 ex_ch 路由錯誤，寧可快速失敗。
+// ETF 清單載入失敗不阻擋整體 Registry（記 warning，log 輸出）——避免 ETF 端點異常時影響既有股票工具。
 func (l *Loader) Load(ctx context.Context) (*model.Registry, error) {
 	if l.client == nil {
 		return nil, fmt.Errorf("registry: client 為 nil")
@@ -59,8 +65,21 @@ func (l *Loader) Load(ctx context.Context) (*model.Registry, error) {
 		return nil, fmt.Errorf("registry: TPEx 上櫃清單載入失敗: %w", err)
 	}
 
+	// 載入 ETF 清單（失敗不阻擋整體 Registry）
+	etfs, err := l.loadMarket(ctx, twseETFListURL, date, parseTWSEETFList)
+	if err != nil {
+		// 僅記錄警告，不回傳錯誤
+		fmt.Printf("registry: ETF 清單載入失敗（不影響既有工具）: %v\n", err)
+		etfs = nil
+	}
+
+	all := append(tse, otc...)
+	if len(etfs) > 0 {
+		all = append(all, etfs...)
+	}
+
 	reg := model.NewRegistry()
-	if err := reg.Set(append(tse, otc...)); err != nil {
+	if err := reg.Set(all); err != nil {
 		return nil, err
 	}
 	return reg, nil
@@ -79,7 +98,7 @@ func (l *Loader) loadMarket(ctx context.Context, url, date string,
 	if l.cache == nil {
 		return fetch(ctx)
 	}
-	key := cache.KeyString(sourceIDFor(url), cache.DatasetCalendar, date, "", nil)
+	key := cache.KeyString(sourceIDFor(url), cache.DatasetCalendar, date, "", map[string]string{"url": url})
 	opts := []cache.FetchOption{cache.WithDataset(cache.DatasetCalendar, date)}
 	symbols, _, err := cache.GetOrFetch(ctx, l.cache, key, registryTTL, fetch, opts...)
 	return symbols, err
@@ -91,6 +110,42 @@ func sourceIDFor(url string) string {
 		return model.SourceTPExAPI
 	}
 	return model.SourceTWSEAPI
+}
+
+// twseETFListRow 對應 TWSE openapi STOCK_DAY_ALL 之欄位（ETF 篩選用）。
+type twseETFListRow struct {
+	Code  string `json:"Code"`
+	Name  string `json:"Name"`
+	Date  string `json:"Date"`  // 民國年日期
+	Close string `json:"ClosingPrice"` // 收盤價（用於判斷是否有效交易）
+}
+
+// parseTWSEETFList 解析 TWSE 全市場收盤清單（STOCK_DAY_ALL），
+// 僅保留 6 碼且以 00 開頭之上市 ETF/ETN（0050, 0056, 006208 等）。
+// 4 碼股票、權證、2 碼代號等一律排除。產業別留空（官方未提供）。
+func parseTWSEETFList(body []byte) ([]model.Symbol, error) {
+	var rows []twseETFListRow
+	if err := json.Unmarshal(body, &rows); err != nil {
+		return nil, fmt.Errorf("registry: STOCK_DAY_ALL JSON 解析失敗: %w", err)
+	}
+	symbols := make([]model.Symbol, 0, len(rows))
+	for _, r := range rows {
+		code := strings.TrimSpace(r.Code)
+		name := strings.TrimSpace(r.Name)
+		// 僅保留 6 碼且以 00 開頭之代號（上市 ETF/ETN）
+		if len(code) != 6 || code[:2] != "00" {
+			continue
+		}
+		if name == "" {
+			continue
+		}
+		s := model.Symbol{Code: code, Market: model.MarketTSE, Name: name, Category: ""}
+		if err := s.Validate(); err != nil {
+			continue
+		}
+		symbols = append(symbols, s)
+	}
+	return symbols, nil
 }
 
 // twseListRow 對應 TWSE openapi t187ap05_L 之欄位（§5.2 Registry 來源）。

@@ -165,6 +165,22 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetMajorAnnouncements,
 	})
 	r.Register(ToolDef{
+		Symbol: "get_twse_index",
+		Name:   "get_twse_index",
+		Description: "查詢 TWSE 指數盤後行情與歷史日 K（加權指數、寶島、臺灣50 等）。" +
+			"symbol 為指數名稱（省略預設「發行量加權股價指數」）；date 省略時為最近交易日。" +
+			"資料來源：TWSE-API MI_INDEX（單日收盤）+ TWSE-WEB MI_5MINS_HIST（歷史日 K）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"symbol": map[string]any{"type": "string", "description": "指數名稱（如：發行量加權股價指數、寶島股價指數、臺灣50指數），預設發行量加權股價指數"},
+				"date":   map[string]any{"type": "string", "description": "交易日 YYYY-MM-DD（預設最近交易日）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetTWSEIndex,
+	})
+	r.Register(ToolDef{
 		Symbol: "get_attention_disposition_stocks",
 		Name:   "get_attention_disposition_stocks",
 		Description: "查詢注意股/處置股清單（買前風險掃描）。" +
