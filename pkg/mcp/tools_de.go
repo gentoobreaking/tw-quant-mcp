@@ -133,6 +133,7 @@ func (a *App) valuationOTC(ctx context.Context) ([]provider.TPExPEValuationRow, 
 
 // handlerGetFinancialStatements：財報三表（§10.D）。
 // period 支援 "2026Q1"（或 "2026" 年度）；statement 省略時回傳全部。
+// income 走 t187ap14 CSV 優先（省呼叫數），缺代碼時 fallback 到 AJAX（ajax_t164sb04）。
 func handlerGetFinancialStatements(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	code, _ := args["symbol"].(string)
@@ -148,23 +149,35 @@ func handlerGetFinancialStatements(a *App, args map[string]any) (HandlerResult, 
 		return HandlerResult{}, fmt.Errorf("參數 statement 僅允許 income|balance|cashflow")
 	}
 
-	income, _, _, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
-	if err != nil {
-		return HandlerResult{}, err
+	// 先解析 period 以取得年季（若指定）
+	var reqYear, reqQuarter int
+	if period != "" {
+		// 暫存：先從 CSV 取一次以解析期間（若 CSV 無此代碼則需 AJAX 解析）
+		incomeCSV, _, _, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
+		if err != nil {
+			return HandlerResult{}, err
+		}
+		bySymCSV := incomeOf(incomeCSV, sym.Code)
+		if len(bySymCSV) > 0 {
+			reqYear, reqQuarter, err = parsePeriod(period, bySymCSV)
+			if err != nil {
+				return HandlerResult{}, err
+			}
+		}
 	}
-	bySym := incomeOf(income, sym.Code)
-	if len(bySym) == 0 {
-		return HandlerResult{}, fmt.Errorf("代碼 %s 無損益表摘要資料", sym.Code)
-	}
-	year, quarter, err := parsePeriod(period, bySym)
+
+	// 取損益表摘要：CSV 優先，無代碼則 AJAX fallback
+	incomeRows, err := incomeOfWithAJAXFallback(a, ctx, sym.Code, reqYear, reqQuarter)
 	if err != nil {
 		return HandlerResult{}, err
 	}
 	// 財報缺期邊界：請求期間無對應列（資料未釋出）
-	incomeRows := filterPeriod(bySym, year, quarter)
 	if len(incomeRows) == 0 {
-		return HandlerResult{}, fmt.Errorf("代碼 %s 無 %dQ%d 財報（資料未釋出或期間不存在）", sym.Code, year, quarter)
+		return HandlerResult{}, fmt.Errorf("代碼 %s 無 %dQ%d 財報（資料未釋出或期間不存在）", sym.Code, reqYear, reqQuarter)
 	}
+
+	// 以取得之 incomeRows 重新解析年季（優先用 incomeRows[0]）
+	year, quarter := incomeRows[0].Year, incomeRows[0].Quarter
 
 	out := model.FinancialStatements{
 		Symbol: sym.Code, Name: sym.Name, Year: year, Quarter: quarter,
@@ -204,6 +217,13 @@ func handlerGetFinancialStatements(a *App, args map[string]any) (HandlerResult, 
 	ttl, _ := a.ttlOf(string(provider.MOPSIncomeSummary))
 	lg := postLineage(model.SourceMOPS, a.now().Format("2006-01-02"), cachedAny || staleAny, staleAny, ttl)
 	lg.SourceRole = model.SourceRoleCanonical
+	// 區分 CSV vs AJAX 來源
+	if len(incomeRows) == 1 && incomeRows[0].Code == "" {
+		// AJAX 來源（IncomeStatementRow 來自 AJAX 無 Code/Name/Industry/EPS/ParValue）
+		lg.DerivedFrom = []string{"MOPS:ajax_income_statement"}
+	} else {
+		lg.DerivedFrom = []string{"MOPS:income_summary"}
+	}
 	return HandlerResult{Data: out, Lineage: lg}, nil
 }
 
@@ -216,6 +236,58 @@ func incomeOf(rows []model.IncomeStatementRow, code string) []model.IncomeStatem
 		}
 	}
 	return out
+}
+
+// incomeOfWithAJAXFallback 取得代碼之損益表摘要：優先 CSV（t187ap14），
+// 缺代碼時 fallback 到 AJAX（ajax_t164sb04，逐股逐季）。
+// 回傳的列已按年季排序（新→舊）。
+func incomeOfWithAJAXFallback(a *App, ctx context.Context, code string, year, quarter int) ([]model.IncomeStatementRow, error) {
+	// 嘗試 CSV（t187ap14_L）
+	income, _, _, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
+	if err != nil {
+		return nil, err
+	}
+	bySym := incomeOf(income, code)
+	if len(bySym) > 0 {
+		// CSV 有資料：篩選指定期間（若有指定）
+		if year > 0 && quarter > 0 {
+			return filterPeriod(bySym, year, quarter), nil
+		}
+		return bySym, nil
+	}
+
+	// CSV 無該代碼：走 AJAX fallback（單股逐季）
+	// 若未指定期間，取最新季（從當前年季往前推，最多 8 季）
+	if year == 0 || quarter == 0 {
+		now := a.now()
+		// MOPS 通常有 2 個月延遲，取前一季為最新可用
+		year = now.Year()
+		quarter = (int(now.Month()) - 1) / 3
+		if quarter == 0 {
+			quarter = 4
+			year--
+		}
+		// 最多往前找 8 季
+		for i := 0; i < 8; i++ {
+			is, _, _, err := mopsStatement[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeStatement, code, year, quarter)
+			if err == nil && (is.Revenue != 0 || is.NetIncome != 0 || is.OperatingProfit != 0) {
+				return []model.IncomeStatementRow{is}, nil
+			}
+			quarter--
+			if quarter == 0 {
+				quarter = 4
+				year--
+			}
+		}
+		return nil, fmt.Errorf("代碼 %s 無損益表摘要資料（CSV+AJAX 均無）", code)
+	}
+
+	// 指定期間：直接查該季
+	is, _, _, err := mopsStatement[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeStatement, code, year, quarter)
+	if err != nil {
+		return nil, fmt.Errorf("代碼 %s 無 %dQ%d 損益表摘要（AJAX）", code, year, quarter)
+	}
+	return []model.IncomeStatementRow{is}, nil
 }
 
 // filterPeriod 篩選指定（年, 季）之列。
@@ -322,12 +394,21 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 	derived := []string{}
 
 	// 獲利能力 + 成長性：MOPS 損益表摘要（整批）＋獲利能力指標（整批）
+	// 支援 AJAX fallback（CSV 無代碼時走 ajax_t164sb04）
 	income, cachedI, staleI, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
 	if err != nil {
 		return HandlerResult{}, err
 	}
 	derived = append(derived, "MOPS:income_summary")
 	in.Income = incomeOf(income, sym.Code)
+	// 若 CSV 無該代碼，走 AJAX fallback 取最新季
+	if len(in.Income) == 0 {
+		isRows, ferr := incomeOfWithAJAXFallback(a, ctx, sym.Code, 0, 0)
+		if ferr == nil && len(isRows) > 0 {
+			in.Income = isRows
+			derived = append(derived, "MOPS:ajax_income_statement")
+		}
+	}
 	profit, cachedP, staleP, err := mopsRows[model.ProfitabilityRatio](a, ctx, provider.MOPSProfitRatios)
 	if err != nil {
 		return HandlerResult{}, err
@@ -339,6 +420,10 @@ func handlerGetFinancialHealthCheck(a *App, args map[string]any) (HandlerResult,
 		if perr == nil {
 			in.Profit = filterProfit(profit, sym.Code, year, quarter)
 		}
+	} else if len(in.Income) > 0 {
+		// CSV 無代碼但 AJAX 有資料：用 AJAX 的年季
+		year, quarter := in.Income[0].Year, in.Income[0].Quarter
+		in.Profit = filterProfit(profit, sym.Code, year, quarter)
 	}
 
 	// 財務結構：最新一季資產負債表/現金流量表（快取共用）
@@ -534,27 +619,42 @@ func handlerGetValuationRatios(a *App, args map[string]any) (HandlerResult, erro
 }
 
 // fillROE 以 MOPS 損益表摘要（最新一季，年化）÷ 資產負債表權益計算 ROE。
+// 支援 AJAX fallback（CSV 無代碼時走 ajax_t164sb04）。
 func (a *App) fillROE(ctx context.Context, code string, out *model.ValuationRatios) error {
+	// 先用 CSV 取最新期間
 	income, _, _, err := mopsRows[model.IncomeStatementRow](a, ctx, provider.MOPSIncomeSummary)
 	if err != nil {
 		return err
 	}
 	bySym := incomeOf(income, code)
-	if len(bySym) == 0 {
-		return fmt.Errorf("無損益表摘要")
-	}
-	year, quarter, err := parsePeriod("", bySym)
-	if err != nil {
-		return err
-	}
 	var latest *model.IncomeStatementRow
-	for i := range bySym {
-		if bySym[i].Year == year && bySym[i].Quarter == quarter {
-			latest = &bySym[i]
-			break
+	var year, quarter int
+
+	if len(bySym) > 0 {
+		// CSV 有資料：取最新季
+		year, quarter, err = parsePeriod("", bySym)
+		if err != nil {
+			return err
+		}
+		for i := range bySym {
+			if bySym[i].Year == year && bySym[i].Quarter == quarter {
+				latest = &bySym[i]
+				break
+			}
 		}
 	}
+
 	if latest == nil || latest.NetIncome == 0 {
+		// CSV 無資料或無淨利：走 AJAX fallback 取最新季
+		isRows, err := incomeOfWithAJAXFallback(a, ctx, code, 0, 0)
+		if err != nil || len(isRows) == 0 {
+			return fmt.Errorf("無損益表摘要（CSV+AJAX 均無）")
+		}
+		latest = &isRows[0]
+		year, quarter = latest.Year, latest.Quarter
+	}
+
+	if latest.NetIncome == 0 {
 		return fmt.Errorf("損益表摘要無淨利")
 	}
 	bs, _, _, err := mopsStatement[model.BalanceSheet](a, ctx, provider.MOPSBalanceSheet, code, year, quarter)

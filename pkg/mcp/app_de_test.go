@@ -93,6 +93,12 @@ func stubDE(f *fakeFetch) {
 	// MOPS 現金流量表 AJAX（1101 2026Q1，供結構評分）
 	f.stub("cash_flow", url.Values{"co_id": {"1101"}, "year": {"2026"}, "season": {"1"}}, `{
 		"table_date":"2026-07-31","year":2026,"quarter":1,"operating_cash_flow":10000000000,"investing_cash_flow":-20000000000,"financing_cash_flow":5000000000,"ending_cash_balance":30000000000}`)
+	// MOPS 損益表 AJAX（6147 2026Q2，供上櫃 ROE fallback）
+	f.stub("income_statement", url.Values{"co_id": {"6147"}, "year": {"2026"}, "season": {"2"}}, `{
+		"table_date":"2026-10-31","year":2026,"quarter":2,"revenue":3000000000,"operating_profit":1000000000,"non_operating_items":100000000,"net_income":800000000}`)
+	// MOPS 資產負債表 AJAX（6147 2026Q2，供上櫃 ROE fallback）
+	f.stub("balance_sheet", url.Values{"co_id": {"6147"}, "year": {"2026"}, "season": {"2"}}, `{
+		"table_date":"2026-10-31","year":2026,"quarter":2,"total_assets":20000000000,"current_assets":10000000000,"non_current_assets":10000000000,"total_liabilities":8000000000,"current_liabilities":5000000000,"non_current_liabilities":3000000000,"total_equity":12000000000}`)
 	// MOPS 月營收（YoY）
 	f.stub("monthly_revenue", nil, `[
 		{"table_date":"2026-07-10","data_year_month":"202606","code":"2330","name":"台積電","industry":"半導體","revenue":300000000000,"last_month_revenue":280000000000,"last_year_revenue":250000000000,"mom_change_pct":7.1,"yoy_change_pct":20.0,"cum_revenue":1700000000000,"cum_last_year":1500000000000,"cum_change_pct":13.3},

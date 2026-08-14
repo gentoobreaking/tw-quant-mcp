@@ -100,6 +100,9 @@ type contractCase struct {
 	// 僅用於 TAIFEX 價差契約（如 CHF 202608/202609 開盤價 -0.04）：
 	// 價差為兩契約之價差，官方本就可能為負，§5.1 負價格攔截在此不適用。
 	allowNegPrice bool
+	// allowEmptyStringFields 允許特定欄位為空字串（而非 null）。
+	// 用於 AJAX income_statement：CSV 欄位如 Code/Name/Industry/EPS/ParValue 在 HTML 無對應。
+	allowEmptyStringFields []string
 }
 
 // contractRaw 由 fixture 建構 RawResponse。
@@ -133,7 +136,7 @@ func runContractCases(t *testing.T, cases []contractCase) {
 			if err := json.Unmarshal(out, &data); err != nil {
 				t.Fatalf("Normalize 輸出非合法 JSON: %v", err)
 			}
-			if err := checkContract(data, tc.allowNegPrice); err != nil {
+			if err := checkContract(data, tc.allowNegPrice, tc.allowEmptyStringFields); err != nil {
 				t.Errorf("§5 契約違反: %v", err)
 			}
 			if tc.extra != nil {
@@ -144,20 +147,20 @@ func runContractCases(t *testing.T, cases []contractCase) {
 }
 
 // checkContract 遞迴驗證 §5 規則（欄位命名/型別/單位/日期格式）。
-func checkContract(v any, allowNegPrice bool) error {
+func checkContract(v any, allowNegPrice bool, allowEmptyStringFields []string) error {
 	switch n := v.(type) {
 	case map[string]any:
 		for k, val := range n {
 			if !snakeRE.MatchString(k) {
 				return fmt.Errorf("欄位名稱非 snake_case: %q", k)
 			}
-			if err := checkValue(k, val, allowNegPrice); err != nil {
+			if err := checkValue(k, val, allowNegPrice, allowEmptyStringFields); err != nil {
 				return err
 			}
 		}
 	case []any:
 		for _, item := range n {
-			if err := checkContract(item, allowNegPrice); err != nil {
+			if err := checkContract(item, allowNegPrice, allowEmptyStringFields); err != nil {
 				return err
 			}
 		}
@@ -166,13 +169,13 @@ func checkContract(v any, allowNegPrice bool) error {
 }
 
 // checkValue 驗證單一欄位之型別/單位/日期格式。
-func checkValue(key string, v any, allowNegPrice bool) error {
+func checkValue(key string, v any, allowNegPrice bool, allowEmptyStringFields []string) error {
 	switch val := v.(type) {
 	case map[string]any:
-		return checkContract(val, allowNegPrice)
+		return checkContract(val, allowNegPrice, allowEmptyStringFields)
 	case []any:
 		for _, item := range val {
-			if err := checkValue(key, item, allowNegPrice); err != nil {
+			if err := checkValue(key, item, allowNegPrice, allowEmptyStringFields); err != nil {
 				return err
 			}
 		}
@@ -180,6 +183,12 @@ func checkValue(key string, v any, allowNegPrice bool) error {
 	case string:
 		if val == "" {
 			// §5.1：禁止空字串代表缺值（缺值用 null）
+			// 但 allowEmptyStringFields 中的欄位允許空字串（如 AJAX income_statement 缺 Code/Name/Industry/EPS/ParValue）
+			for _, f := range allowEmptyStringFields {
+				if f == key {
+					return nil
+				}
+			}
 			return fmt.Errorf("欄位 %q 以空字串代表缺值（應為 null）", key)
 		}
 		if dateKeys[key] {
@@ -308,16 +317,23 @@ func tpexContractCases() []contractCase {
 // mopsContractCases 涵蓋 MOPS OpenData CSV 資料集。
 func mopsContractCases() []contractCase {
 	byDS := map[MOPSDataset]string{
-		MOPSMonthlyRevenue: "monthly_revenue.csv",
-		MOPSIncomeSummary:  "income_summary.csv",
-		MOPSProfitRatios:   "profit_ratios.csv",
-		MOPSCompanyProfile: "company_profile.csv",
-		MOPSAnnouncements:  "announcements.csv",
+		MOPSMonthlyRevenue:  "monthly_revenue.csv",
+		MOPSIncomeSummary:   "income_summary.csv",
+		MOPSProfitRatios:    "profit_ratios.csv",
+		MOPSCompanyProfile:  "company_profile.csv",
+		MOPSAnnouncements:   "announcements.csv",
+		MOPSBalanceSheet:    "balance_sheet_2330_2026Q1.html",
+		MOPSCashFlow:        "cash_flow_2330_2026Q1.html",
+		MOPSIncomeStatement: "income_statement_2330_115Q2.html",
 	}
 	var cases []contractCase
 	for ds, fixture := range byDS {
 		ds := ds
 		fixture := fixture
+		allowEmpty := []string{}
+		if ds == MOPSIncomeStatement {
+			allowEmpty = []string{"code", "name", "industry", "eps", "par_value"}
+		}
 		cases = append(cases, contractCase{
 			name:    string(ds),
 			dataset: string(ds),
@@ -327,6 +343,7 @@ func mopsContractCases() []contractCase {
 				raw.SourceURL = mopsOpenDataBase + mopsPaths[ds]
 				return normalizeMOPSRaw(raw)
 			},
+			allowEmptyStringFields: allowEmpty,
 		})
 	}
 	return cases
@@ -434,22 +451,22 @@ func TestContractFrameworkRules(t *testing.T) {
 		}
 	}
 	// 空字串缺值攔截
-	if err := checkValue("data_date", "", false); err == nil {
+	if err := checkValue("data_date", "", false, nil); err == nil {
 		t.Error("空字串代表缺值應被攔截")
 	}
 	// 價格為負攔截
-	if err := checkValue("close", -1.0, false); err == nil {
+	if err := checkValue("close", -1.0, false, nil); err == nil {
 		t.Error("負價格應被攔截")
 	}
 	// 成交量為負攔截
-	if err := checkValue("volume", int64(-5), false); err == nil {
+	if err := checkValue("volume", int64(-5), false, nil); err == nil {
 		t.Error("負成交量應被攔截")
 	}
 	// 價格/量非負不攔截
-	if err := checkValue("close", 0.0, false); err != nil {
+	if err := checkValue("close", 0.0, false, nil); err != nil {
 		t.Errorf("零價格不應攔截: %v", err)
 	}
-	if err := checkValue("volume", int64(0), false); err != nil {
+	if err := checkValue("volume", int64(0), false, nil); err != nil {
 		t.Errorf("零成交量不應攔截: %v", err)
 	}
 	_ = time.Now // keep time import for date reference
