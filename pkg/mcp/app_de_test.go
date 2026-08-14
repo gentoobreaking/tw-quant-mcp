@@ -58,7 +58,8 @@ func stubDE(f *fakeFetch) {
 	// 除權除息預告（TWT48U_ALL）
 	f.stub("ex_div", nil, `[
 		{"date":"2026-08-07","code":"1210","name":"大成","kind":"息","cash_dividend":3.0,"stock_ratio":0},
-		{"date":"2026-07-30","code":"1231","name":"聯華食","kind":"權息","cash_dividend":1.5,"stock_ratio":0.1}]`)
+		{"date":"2026-07-30","code":"1231","name":"聯華食","kind":"權息","cash_dividend":1.5,"stock_ratio":0.1},
+		{"date":"2026-08-10","code":"2330","name":"台積電","kind":"息","cash_dividend":7.0,"stock_ratio":0}]`)
 	// 上櫃估值（TPEx peratio）
 	f.stub("pe_valuation", nil, `[
 		{"date":"2026-07-31","code":"6147","name":"頎邦","pe":15,"dividend_per_share":4.0,"yield_ratio":4.0,"price_book_ratio":2.0},
@@ -473,8 +474,75 @@ func TestDEGetDividendHistoryZeroDividend(t *testing.T) {
 	if dh.ConsecutiveYears != 0 {
 		t.Errorf("不分派公司連續配息應為 0，實際 %d", dh.ConsecutiveYears)
 	}
-	if dh.Note == "" {
-		t.Error("上櫃深度限制應以 note 說明")
+	if chartType(env) != "bar" {
+		t.Errorf("股利歷史 chart 應為 bar，實際 %s", chartType(env))
+	}
+}
+
+// TSE 股利歷史 ex_date 來源 TWT48U 行事曆
+func TestDEGetDividendHistoryExDateTSE(t *testing.T) {
+	f := newFake(t)
+	stubDE(f)
+	app := deApp(t, f)
+
+	env := callEnv(t, app, "get_dividend_history", map[string]any{"symbol": "2330"})
+	dh := env.Data.(model.DividendHistory)
+	if dh.TotalYears != 2 {
+		t.Fatalf("應有 2 年度股利，實際 %d", dh.TotalYears)
+	}
+	// 115 年度應有 ex_date（TWT48U stub 有 2026-08-10 2330 除息）
+	found115 := false
+	for _, y := range dh.Years {
+		if y.DividendYear == "115" {
+			found115 = true
+			if y.ExDate == "" {
+				t.Errorf("115 年度應有 ex_date，實際為空")
+			} else if y.ExDate != "2026-08-10" {
+				t.Errorf("115 年度 ex_date 應為 2026-08-10，實際 %s", y.ExDate)
+			}
+		}
+	}
+	if !found115 {
+		t.Error("應找到 115 年度股利")
+	}
+}
+
+// OTC 股利歷史 ex_date 來源 TPEx ex_rights
+func TestDEGetDividendHistoryExDateOTC(t *testing.T) {
+	f := newFake(t)
+	stubDE(f)
+	app := deApp(t, f)
+
+	env := callEnv(t, app, "get_dividend_history", map[string]any{"symbol": "6147"})
+	dh := env.Data.(model.DividendHistory)
+	if dh.TotalYears != 1 {
+		t.Fatalf("OTC 應有 1 年度股利，實際 %d", dh.TotalYears)
+	}
+	// "最新" 年度對應 115 年（2026），ex_rights stub 有 2026-08-10 6147 除息
+	if dh.Years[0].ExDate == "" {
+		t.Error("OTC 最新年度應有 ex_date")
+	} else if dh.Years[0].ExDate != "2026-08-10" {
+		t.Errorf("OTC 最新年度 ex_date 應為 2026-08-10，實際 %s", dh.Years[0].ExDate)
+	}
+	if dh.Note == "" || !strings.Contains(dh.Note, "ex_date") {
+		t.Errorf("Note 應說明 ex_date 來源: %s", dh.Note)
+	}
+}
+
+// 股利年份與行事曆對不上時 ex_date 為空
+func TestDEGetDividendHistoryExDateMissing(t *testing.T) {
+	f := newFake(t)
+	stubDE(f)
+	app := deApp(t, f)
+
+	// 1101 在 TWT48U stub 中無除息事件
+	env := callEnv(t, app, "get_dividend_history", map[string]any{"symbol": "1101"})
+	dh := env.Data.(model.DividendHistory)
+	if dh.TotalYears != 1 {
+		t.Fatalf("1101 應有 1 年度股利，實際 %d", dh.TotalYears)
+	}
+	if dh.Years[0].ExDate != "" {
+		t.Errorf("1101 無 TWT48U 除息事件，ex_date 應為空，實際 %s", dh.Years[0].ExDate)
 	}
 }
 
@@ -489,15 +557,28 @@ func TestDEGetExdividendCalendar(t *testing.T) {
 	if !ok {
 		t.Fatalf("Data 應為 ExDivCalendar，實際 %T", env.Data)
 	}
-	// 08-07 大成（上市）+ 08-10 頎邦（上櫃）；07-30 聯華食在範圍外
-	if len(cal.Events) != 2 {
-		t.Fatalf("應命中 2 事件，實際 %+v", cal.Events)
+	// 08-07 大成（上市）+ 08-10 台積電（上市）+ 08-10 頎邦（上櫃）；07-30 聯華食在範圍外
+	if len(cal.Events) != 3 {
+		t.Fatalf("應命中 3 事件，實際 %+v", cal.Events)
 	}
 	if cal.Events[0].Code != "1210" || cal.Events[0].Date != "2026-08-07" || cal.Events[0].Market != model.MarketTSE {
 		t.Errorf("首事件應為大成 08-07: %+v", cal.Events[0])
 	}
-	if cal.Events[1].Code != "6147" || cal.Events[1].Date != "2026-08-10" || cal.Events[1].Market != model.MarketOTC {
-		t.Errorf("次事件應為頎邦 08-10: %+v", cal.Events[1])
+	// 08-10 有兩筆：台積電(上市) + 頎邦(上櫃)
+	found2330, found6147 := false, false
+	for _, e := range cal.Events {
+		if e.Code == "2330" && e.Date == "2026-08-10" && e.Market == model.MarketTSE {
+			found2330 = true
+		}
+		if e.Code == "6147" && e.Date == "2026-08-10" && e.Market == model.MarketOTC {
+			found6147 = true
+		}
+	}
+	if !found2330 {
+		t.Error("應包含台積電 08-10 事件")
+	}
+	if !found6147 {
+		t.Error("應包含頎邦 08-10 事件")
 	}
 	// chart：table（§11.3 除權息行事曆）
 	if chartType(env) != "table" {

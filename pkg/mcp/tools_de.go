@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -865,11 +866,60 @@ func handlerGetDividendHistory(a *App, args map[string]any) (HandlerResult, erro
 			return HandlerResult{}, err
 		}
 		ttl, _ = a.ttlOf(string(provider.TPExPEValuation))
+
+		// 取得 TPEx 除權息預告（用於填入 ex_date）
+		now := a.now()
+		exRightRows, cachedEx, staleEx, err := fetchNormalize[[]provider.TPExExRightRow](a, ctx, string(provider.TPExExRights),
+			now.Format("2006-01-02"), cache.KeyString(model.SourceTPExAPI, string(provider.TPExExRights), now.Format("2006-01-02"), "", nil),
+			func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExExRights, nil) })
+		if err != nil {
+			// 除權息失敗不阻擋主流程，ex_date 留空
+			cachedEx, staleEx = false, false
+			exRightRows = nil
+		}
+
+		// 建立代碼 -> 民國年度 -> 除息日 對映（TPEx ex_rights 含未來與近期已過事件）
+		exDateMap := make(map[string]map[int]string) // code -> rocYear -> exDate
+		if exRightRows != nil {
+			for _, r := range exRightRows {
+				if r.Code != sym.Code {
+					continue
+				}
+				// 僅處理「除息」類型
+				if r.Kind != "除息" {
+					continue
+				}
+				if r.Date == "" {
+					continue
+				}
+				// 解析除息日年份（西元），轉民國年
+				ts, err := model.ParseDate(r.Date)
+				if err != nil {
+					continue
+				}
+				rocYear := ts.Year() - 1911
+				if _, ok := exDateMap[r.Code]; !ok {
+					exDateMap[r.Code] = make(map[int]string)
+				}
+				if _, exists := exDateMap[r.Code][rocYear]; !exists {
+					exDateMap[r.Code][rocYear] = r.Date
+				}
+			}
+		}
+
 		for _, r := range rows {
 			if r.Code == sym.Code {
+				// 嘗試從 TPEx ex_rights 取得對應年度之除息日
+				exDate := ""
+				if codeMap, ok := exDateMap[r.Code]; ok {
+					// "最新" 年度對應當前民國年
+					currentRocYear := now.Year() - 1911
+					exDate = codeMap[currentRocYear]
+				}
 				out.Years = []model.DividendYear{{
 					DividendYear: "最新", Progress: "官方現行資料",
 					CashDividend: r.DividendPerShare,
+					ExDate:       exDate,
 				}}
 				out.TotalYears = 1
 				if r.DividendPerShare > 0 {
@@ -877,7 +927,9 @@ func handlerGetDividendHistory(a *App, args map[string]any) (HandlerResult, erro
 				}
 				out.AvgCashDividend = r.DividendPerShare
 				out.LastYield = r.YieldRatio
-				out.Note = "上櫃多年配息歷史（TPEx 歷史除息資料）尚未接線；僅提供最新年度每股股利與殖利率"
+				cached = cached || cachedEx
+				stale = stale || staleEx
+				out.Note = "上櫃多年配息歷史（TPEx 歷史除息資料）尚未接線；僅提供最新年度每股股利與殖利率。ex_date 來源 TPEx 除權息預告"
 				return HandlerResult{Data: out, Lineage: postLineage(model.SourceTPExAPI, r.Date, cached || stale, stale, ttl)}, nil
 			}
 		}
@@ -887,13 +939,62 @@ func handlerGetDividendHistory(a *App, args map[string]any) (HandlerResult, erro
 	if err != nil {
 		return HandlerResult{}, err
 	}
+
+	// 取得 TWT48U 除權息行事曆（含未來與近期已過事件），用於填入 ex_date
+	now := a.now()
+	exDivRows, cachedEx, staleEx, err := fetchNormalize[[]provider.ExDivEventRow](a, ctx, string(provider.TWSEAPIExDiv),
+		now.Format("2006-01-02"), cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIExDiv), now.Format("2006-01-02"), "", nil),
+		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIExDiv, nil) })
+	if err != nil {
+		// 行事曆失敗不阻擋主流程，ex_date 留空
+		cachedEx, staleEx = false, false
+		exDivRows = nil
+	}
+
+	// 建立代碼 -> 民國年度 -> 除息日 對映（TWT48U 含未來與近期已過事件）
+	exDateMap := make(map[string]map[int]string) // code -> rocYear -> exDate
+	if exDivRows != nil {
+		for _, r := range exDivRows {
+			if r.Code != sym.Code {
+				continue
+			}
+			// 僅處理「息」或「權息」類型
+			if r.Kind != "息" && r.Kind != "權息" {
+				continue
+			}
+			if r.Date == "" {
+				continue
+			}
+			// 解析除息日年份（西元），轉民國年
+			ts, err := model.ParseDate(r.Date)
+			if err != nil {
+				continue
+			}
+			rocYear := ts.Year() - 1911
+			if _, ok := exDateMap[r.Code]; !ok {
+				exDateMap[r.Code] = make(map[int]string)
+			}
+			// 優先保留較早的除息日（同一年度可能有多筆，取第一筆）
+			if _, exists := exDateMap[r.Code][rocYear]; !exists {
+				exDateMap[r.Code][rocYear] = r.Date
+			}
+		}
+	}
+
 	years := make([]model.DividendYear, 0)
 	for _, r := range divRows {
 		if r.Code == sym.Code {
+			// 嘗試從 TWT48U 取得對應年度之除息日
+			rocYear, _ := strconv.Atoi(r.DividendYear)
+			exDate := ""
+			if codeMap, ok := exDateMap[r.Code]; ok {
+				exDate = codeMap[rocYear]
+			}
 			years = append(years, model.DividendYear{
 				DividendYear: r.DividendYear, Progress: r.Progress,
 				CashDividend: r.CashDividend, StockDividend: r.StockDividend,
 				CashTotal: int64(r.CashTotal), NetIncome: int64(r.NetIncome), Retained: int64(r.Retained),
+				ExDate: exDate,
 			})
 		}
 	}
@@ -902,6 +1003,8 @@ func handlerGetDividendHistory(a *App, args map[string]any) (HandlerResult, erro
 	}
 	sort.Slice(years, func(i, j int) bool { return years[i].DividendYear > years[j].DividendYear })
 	out.Years = years
+	cached = cached || cachedEx
+	stale = stale || staleEx
 	out.TotalYears = len(years)
 	var sum float64
 	for _, y := range years {

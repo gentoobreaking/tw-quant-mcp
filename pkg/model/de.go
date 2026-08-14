@@ -29,6 +29,7 @@ type DividendYear struct {
 	CashTotal     int64   `json:"cash_total"`     // 現金股利總金額（元）
 	NetIncome     int64   `json:"net_income"`     // 本期淨利（元）
 	Retained      int64   `json:"retained"`       // 可分配盈餘（元）
+	ExDate        string  `json:"ex_date,omitempty"` // 除息日 YYYY-MM-DD（來源 TWT48U 行事曆）
 }
 
 // DividendHistory 為 get_dividend_history（§10.E）之 data。
