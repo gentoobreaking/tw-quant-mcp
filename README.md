@@ -352,6 +352,16 @@ make soak         # 4.5h 連續運行測試（需實際交易日開盤時段）
 scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 37 工具
 ```
 
-## 授權
+---
+## License
 
-Apache License 2.0（見 [LICENSE](LICENSE)）。
+本專案採用 **Apache License 2.0** 授權。
+
+- 完整授權條款見 [`LICENSE`](LICENSE)（專案根目錄）
+- Apache-2.0 官方條款：<https://www.apache.org/licenses/LICENSE-2.0>
+- 版權與貢獻者資訊以 LICENSE 檔案為準
+
+> 本專案為研究/模擬用途，授權條款不構成任何投資建議或保證；
+> 使用/修改/再散佈前請詳閱 LICENSE 全文。
+
+本專案僅供個人量化研究與教育用途。資料來源（FinMind、TWSE、TPEX）之使用請遵守各平台之服務條款。
