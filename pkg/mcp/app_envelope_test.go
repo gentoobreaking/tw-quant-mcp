@@ -46,6 +46,9 @@ var intradayTools = map[string]bool{
 
 // stubBCEnvelope 建立 B/C 組探針所需之 fake 資料（與既有 B/C 測試同款）。
 func stubBCEnvelope(f *fakeFetch) {
+	// get_etf_nav（§30.1：fundPric netPrice+atmps / close 市價）
+	f.bodies["etf|0050|fundPric"] = `{"netPrice":[{"date":"2026/07/30","count":101.0},{"date":"2026/07/29","count":100.0}],"atmps":[{"date":"2026/07/30","count":0.15},{"date":"2026/07/29","count":-0.1}]}`
+	f.bodies["etf|0050|close"] = `[{"date":"2026/07/30","count":101.15},{"date":"2026/07/29","count":99.9}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
 	f.stub("daily_k", url.Values{"date": {"20260601"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "06", 20, 20)))
@@ -93,7 +96,7 @@ func stubBCEnvelope(f *fakeFetch) {
 		`[{"date":"2026-07-01","open":17000.0,"high":17100.0,"low":16900.0,"close":17050.0},{"date":"2026-07-02","open":17050.0,"high":17150.0,"low":16950.0,"close":17100.0}]`)
 }
 
-// allToolProbes 為全部 38 個註冊工具之呼叫探針。
+// allToolProbes 為全部 39 個註冊工具之呼叫探針。
 func allToolProbes() []envelopeProbe {
 	return []envelopeProbe{
 		// ── A 組（盤中，6；以 newTestApp 交易時段執行）──
@@ -110,6 +113,8 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_abnormal_trading", args: map[string]any{"market": "tse", "date": "2026-07-30"}},
 		{name: "get_warrant_activity", args: map[string]any{"date": "2026-07-30"}},
 		{name: "get_twse_index", args: map[string]any{"symbol": "發行量加權股價指數", "date": "2026-07-30"}},
+		// ── ETF（§30.1，1）──
+		{name: "get_etf_nav", args: map[string]any{"symbol": "0050"}},
 		// ── C 組（籌碼/法人，6）──
 		{name: "get_institutional_investors", args: map[string]any{"market": "tse", "date": "2026-07-30"}},
 		{name: "get_foreign_industry_holdings", args: map[string]any{"date": "2026-07-30"}},
@@ -159,8 +164,8 @@ func TestAllToolsEnvelopeConsistent(t *testing.T) {
 	intraday := newTestApp(t)
 
 	names := intraday.Registry().Names()
-	if len(names) != 38 {
-		t.Fatalf("前置：應登錄 38 工具，實際 %d", len(names))
+	if len(names) != 39 {
+		t.Fatalf("前置：應登錄 39 工具，實際 %d", len(names))
 	}
 	covered := map[string]bool{}
 	for _, p := range allToolProbes() {
@@ -171,8 +176,8 @@ func TestAllToolsEnvelopeConsistent(t *testing.T) {
 			t.Errorf("探針清單缺漏工具 %q（驗收要求覆蓋所有已註冊 Tool）", n)
 		}
 	}
-	if len(covered) != 38 {
-		t.Fatalf("探針應覆蓋 38 工具，實際 %d", len(covered))
+	if len(covered) != 39 {
+		t.Fatalf("探針應覆蓋 39 工具，實際 %d", len(covered))
 	}
 
 	for _, p := range allToolProbes() {

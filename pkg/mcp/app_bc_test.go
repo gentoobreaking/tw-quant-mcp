@@ -56,6 +56,21 @@ func (f *fakeFetch) called(ds string, params url.Values) int {
 	return f.calls[fakeKey(ds, params)]
 }
 
+// fakeETF 為 etfFetcher 之測試替身（§30.1；依 code+chartType 回傳對應 body）。
+type fakeETF struct{ f *fakeFetch }
+
+func (e fakeETF) ChartFetch(_ context.Context, code string, chartType provider.ETFChartType, _, _ string) ([]byte, error) {
+	key := fmt.Sprintf("etf|%s|%s", code, chartType)
+	e.f.mu.Lock()
+	e.f.calls[key]++
+	body, ok := e.f.bodies[key]
+	e.f.mu.Unlock()
+	if !ok {
+		e.f.t.Fatalf("fakeETF: 未 stub 之請求鍵 %q", key)
+	}
+	return []byte(body), nil
+}
+
 // fakeWeb/fakeAPI/fakeTPEx 為 fakeFetch 之介面適配（URL 參數型別各異）。
 type fakeWeb struct{ f *fakeFetch }
 

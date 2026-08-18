@@ -173,6 +173,7 @@ func fgApp(t *testing.T, f *fakeFetch, tq TAIFEXQuerier) *App {
 		WithAppSources(fakeWeb{f}, fakeAPI{f}, fakeTPEx{f}),
 		WithAppMOPS(fakeMOPS{f}),
 		WithAppTAIFEX(tq),
+		WithAppETF(fakeETF{f}),
 	)
 	if err != nil {
 		t.Fatalf("NewApp 失敗: %v", err)
@@ -426,10 +427,10 @@ func TestFGGetSymbolList(t *testing.T) {
 	if !ok {
 		t.Fatalf("Data 應為 []Symbol，實際 %T", env.Data)
 	}
-	if len(symbols) != 4 {
-		t.Fatalf("應回傳全部 4 檔，實際 %d", len(symbols))
+	if len(symbols) != 5 {
+		t.Fatalf("應回傳全部 5 檔，實際 %d", len(symbols))
 	}
-	if symbols[0].Code != "2317" || symbols[0].Market != model.MarketTSE {
+	if symbols[0].Code != "0050" || symbols[0].Market != model.MarketTSE {
 		t.Errorf("代碼應依 Code 排序: %+v", symbols[0])
 	}
 

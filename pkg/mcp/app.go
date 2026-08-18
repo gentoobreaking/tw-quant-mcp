@@ -72,6 +72,7 @@ type App struct {
 	twseAPI   APIFetcher
 	tpex      TPExFetcher
 	mops      MOPSFetcher
+	etf       etfFetcher // ETF e添富平台（§30.1 L1，get_etf_nav）
 	taifex    TAIFEXQuerier
 	cache     *cache.Cache
 	index     *screener.Store // §10.3 Materialized Screener Index（L2 SQLite；nil＝未啟用）
@@ -140,6 +141,11 @@ func WithAppMOPS(m MOPSFetcher) AppOption {
 	return func(a *App) { a.mops = m }
 }
 
+// WithAppETF 注入 e添富資料源（測試用；預設建立真實 ETFortune source）。
+func WithAppETF(e etfFetcher) AppOption {
+	return func(a *App) { a.etf = e }
+}
+
 // WithAppTAIFEX 注入 TAIFEX 查詢層（測試用；預設以真實 API/DL 來源建立）。
 func WithAppTAIFEX(q TAIFEXQuerier) AppOption {
 	return func(a *App) { a.taifex = q }
@@ -199,6 +205,7 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 		twseAPI:   provider.NewTWSEAPISource(),
 		tpex:      provider.NewTPExSource(),
 		mops:      provider.NewMOPSSource(),
+		etf:       provider.NewETFortuneSource(),
 		now:       func() time.Time { return model.Now().Time },
 		logger:    slog.New(slog.NewTextHandler(discard, nil)),
 	}
@@ -453,5 +460,6 @@ func buildRegistry() *Registry {
 	registerBCTools(r)
 	registerDETools(r)
 	registerFGTools(r)
+	registerETFTools(r)
 	return r
 }

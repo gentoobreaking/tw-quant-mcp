@@ -45,7 +45,11 @@ const etfFixture = `[
 const tpexFixture = `[
 	{"SecuritiesCompanyCode":"006201","CompanyName":"元大富櫃50"},
 	{"SecuritiesCompanyCode":"6547","CompanyName":"高端疫苗"},
-	{"SecuritiesCompanyCode":"3226","CompanyName":"至寶電"}
+	{"SecuritiesCompanyCode":"3226","CompanyName":"至寶電"},
+	{"SecuritiesCompanyCode":"711012","CompanyName":"權證範例一"},
+	{"SecuritiesCompanyCode":"709001","CompanyName":"權證範例二"},
+	{"SecuritiesCompanyCode":"020001","CompanyName":"富邦存股雙十N"},
+	{"SecuritiesCompanyCode":"8349A","CompanyName":"恒耀甲特"}
 ]`
 
 type listServer struct {
@@ -104,9 +108,11 @@ func TestLoaderLoad(t *testing.T) {
 		t.Fatalf("Load 失敗: %v", err)
 	}
 
-	// 上市 3 + 上櫃 3 + ETF 8 (0050, 0056, 006208, 00636, 00679B, 00400A, 00899, 006201)
-	if reg.Len() != 13 {
-		t.Errorf("應載入 13 檔（3 上市 + 3 上櫃 + 7 上市 ETF + 1 上櫃 ETF），實際 %d", reg.Len())
+	// 上市 3 + 上櫃 4 (006201, 6547, 3226, 020001；711012/709001 權證排除、8349A 特別股 5 碼含字母被 Validate 拒絕)
+	// + ETF 8 (0050, 0056, 006208, 00636, 00679B, 00400A, 00899, 006201)
+	// 其中 006201 重複（tpexFixture 與 etfFixture 皆有）→ 去重後 14
+	if reg.Len() != 14 {
+		t.Errorf("應載入 14 檔（3 上市 + 4 上櫃 + 7 上市 ETF + 1 上櫃 ETF − 1 重複），實際 %d", reg.Len())
 	}
 	if s, ok := reg.Lookup("2330"); !ok || s.Market != model.MarketTSE || s.Name != "台積電" {
 		t.Errorf("2330 = %+v", s)
@@ -193,8 +199,8 @@ func TestLoaderCacheAndL2Persistence(t *testing.T) {
 	if err != nil {
 		t.Fatalf("重啟後 Load 失敗: %v", err)
 	}
-	if reg.Len() != 13 {
-		t.Errorf("重啟後應自 L2 回復 13 檔，實際 %d", reg.Len())
+	if reg.Len() != 14 {
+		t.Errorf("重啟後應自 L2 回復 14 檔，實際 %d", reg.Len())
 	}
 	if twse.calls.Load() != 1 || tpex.calls.Load() != 1 || etf.calls.Load() != 1 {
 		t.Errorf("重啟後應命中 L2，實際 twse=%d tpex=%d etf=%d", twse.calls.Load(), tpex.calls.Load(), etf.calls.Load())
@@ -289,9 +295,9 @@ func TestLoaderETFFailureDoesNotBlock(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ETF 失敗不應阻擋 Registry: %v", err)
 	}
-	// 應有 6 檔（3 上市 + 3 上櫃），無 ETF
-	if reg.Len() != 6 {
-		t.Errorf("ETF 失敗時應載入 6 檔（3 上市 + 3 上櫃），實際 %d", reg.Len())
+	// 應有 7 檔（3 上市 + 4 上櫃），無 ETF
+	if reg.Len() != 7 {
+		t.Errorf("ETF 失敗時應載入 7 檔（3 上市 + 4 上櫃），實際 %d", reg.Len())
 	}
 }
 

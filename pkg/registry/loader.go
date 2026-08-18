@@ -190,6 +190,13 @@ type tpexListRow struct {
 }
 
 // parseTPExList 解析 TPEx 上櫃清單（同 parseTWSEList 之跳過/全滅規則）。
+// 資料源（tpex_mainboard_daily_close_quotes）為全市場收盤行情，含大量
+// 權證（6 碼 7xx 開頭，約 9,600 檔）與 ETN（6 碼 02 開頭）；此處僅保留
+// 可交易標的：
+//   - 4 碼：上櫃股票（含興櫃股票代號區間）
+//   - 5 碼：上櫃 ETF（00858 等）與特別股（8349A 等）
+//   - 6 碼 00/02 開頭：上櫃 ETF/ETN（006201、00679B、020001 等）
+// 排除 6 碼 7xx 開頭之權證（約 9,600 檔）。
 func parseTPExList(body []byte) ([]model.Symbol, error) {
 	var rows []tpexListRow
 	if err := json.Unmarshal(body, &rows); err != nil {
@@ -197,7 +204,12 @@ func parseTPExList(body []byte) ([]model.Symbol, error) {
 	}
 	symbols := make([]model.Symbol, 0, len(rows))
 	for _, r := range rows {
-		s := model.Symbol{Code: r.Code, Market: model.MarketOTC, Name: r.Name}
+		code := strings.TrimSpace(r.Code)
+		if len(code) == 6 && strings.HasPrefix(code, "7") {
+			// 6 碼 7xx 開頭：權證，排除
+			continue
+		}
+		s := model.Symbol{Code: code, Market: model.MarketOTC, Name: r.Name}
 		if err := s.Validate(); err != nil {
 			continue
 		}

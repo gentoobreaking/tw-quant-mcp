@@ -25,6 +25,7 @@ func seedSymbols() *model.Registry {
 		{Code: "2317", Name: "鴻海", Market: model.MarketTSE},
 		{Code: "6147", Name: "頎邦", Market: model.MarketOTC},
 		{Code: "6547", Name: "高端疫苗", Market: model.MarketOTC},
+		{Code: "0050", Name: "元大台灣50", Market: model.MarketTSE},
 	})
 	return reg
 }
@@ -126,11 +127,11 @@ func callCore(t *testing.T, app *App, name string, args map[string]any) *model.E
 func TestRegistryContains6Tools(t *testing.T) {
 	app := newTestApp(t)
 	names := app.Registry().Names()
-	if len(names) != 38 {
-		t.Fatalf("應登錄 38 個工具（A 6 + B/C 11 + D/E 10 + F/G 9 + T029 缺口 1 + get_twse_index），實際 %d: %v", len(names), names)
+	if len(names) != 39 {
+		t.Fatalf("應登錄 39 個工具（A 6 + B/C 11 + D/E 10 + F/G 9 + T029 缺口 1 + get_twse_index + get_etf_nav），實際 %d: %v", len(names), names)
 	}
-	if len(app.Registry().Tools()) != 38 {
-		t.Fatalf("Tools() 應回傳 38 個 mcp.Tool")
+	if len(app.Registry().Tools()) != 39 {
+		t.Fatalf("Tools() 應回傳 39 個 mcp.Tool")
 	}
 	if !strings.Contains(app.Registry().BuildTOML(), "set_active_watchlist") {
 		t.Fatalf("BuildTOML 應含工具清單")
@@ -140,6 +141,9 @@ func TestRegistryContains6Tools(t *testing.T) {
 	}
 	if !strings.Contains(app.Registry().BuildTOML(), "get_futures_daily_ohlc") {
 		t.Fatalf("BuildTOML 應含 F/G 工具清單")
+	}
+	if !strings.Contains(app.Registry().BuildTOML(), "get_etf_nav") {
+		t.Fatalf("BuildTOML 應含 ETF 工具清單")
 	}
 }
 
