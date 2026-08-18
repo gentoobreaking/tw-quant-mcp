@@ -65,9 +65,10 @@ func (s Symbol) Exch() string {
 	return "tse_" + s.Code + ".tw"
 }
 
-// IsETF 判斷是否為上市 ETF（代碼 6 碼且以 00 開頭，與 pkg/engine/composite/screen.go isETF 一致）。
+// IsETF 判斷是否為上市 ETF（代碼 00 開頭，4~6 碼皆有可能：0050/00636/006208/00400A）。
+// 與 pkg/engine/composite/screen.go isETF 一致。
 func (s Symbol) IsETF() bool {
-	return len(s.Code) == 6 && s.Code[:2] == "00"
+	return len(s.Code) >= 4 && len(s.Code) <= 6 && s.Code[:2] == "00"
 }
 
 func isDigits(s string) bool {

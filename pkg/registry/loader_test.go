@@ -20,17 +20,24 @@ const twseFixture = `[
 	{"公司代號":"3045","公司名稱":"台灣大哥大","產業別":"通信網路業"}
 ]`
 
-// etfFixture 為 TWSE openapi STOCK_DAY_ALL 之欄位格式樣本（含 ETF/ETN/股票混雜）。
-// 僅 6 碼且以 00 開頭者為上市 ETF/ETN，應被 parseTWSEETFList 擷取。
-// 上市 ETF 代碼為 6 碼 0 開頭（如 000050=0050, 000056=0056, 006208, 00400A）。
+// etfFixture 為 TWSE openapi STOCK_DAY_ALL 之欄位格式樣本（含 ETF/ETN/股票/特別股混雜）。
+// 依 2026-08-18 實測：上市 ETF 代碼為 4 碼（0050）、5 碼（00636）、6 碼（006208/00400A/00679B）
+// 且均以 00 開頭；4 碼一般股票（2330/1101）、6 碼非 00 開頭（02000L ETN、2887Z1 特別股、910322 DR）
+// 應被 parseTWSEETFList 排除。00899 為 STOCK_DAY_ALL 中唯一可能非 ETF 之 00 開頭列（官方未提供
+// 類型欄位，規則先保留，見 TestParseTWSEETFList）。
 const etfFixture = `[
-	{"Code":"000050","Name":"元大台灣50","Date":"1150811","ClosingPrice":"123.45"},
-	{"Code":"000056","Name":"元大高股息","Date":"1150811","ClosingPrice":"32.10"},
-	{"Code":"006208","Name":"富邦台50","Date":"1150811","ClosingPrice":"125.00"},
-	{"Code":"2330","Name":"台積電","Date":"1150811","ClosingPrice":"920.00"},
-	{"Code":"00679B","Name":"反一","Date":"1150811","ClosingPrice":"15.50"},
-	{"Code":"00400A","Name":"主動型ETF","Date":"1150811","ClosingPrice":"50.00"},
-	{"Code":"1101","Name":"台泥","Date":"1150811","ClosingPrice":"40.50"}
+	{"Code":"0050","Name":"元大台灣50","Date":"1150818","ClosingPrice":"104.90"},
+	{"Code":"0056","Name":"元大高股息","Date":"1150818","ClosingPrice":"32.10"},
+	{"Code":"006208","Name":"富邦台50","Date":"1150818","ClosingPrice":"125.00"},
+	{"Code":"00636","Name":"國泰中國A50","Date":"1150818","ClosingPrice":"21.30"},
+	{"Code":"2330","Name":"台積電","Date":"1150818","ClosingPrice":"920.00"},
+	{"Code":"00679B","Name":"元大美債20年","Date":"1150818","ClosingPrice":"30.20"},
+	{"Code":"00400A","Name":"國泰台灣高股息","Date":"1150818","ClosingPrice":"50.00"},
+	{"Code":"1101","Name":"台泥","Date":"1150818","ClosingPrice":"40.50"},
+	{"Code":"02000L","Name":"富邦蘋果正二N","Date":"1150818","ClosingPrice":"12.30"},
+	{"Code":"2887Z1","Name":"台新新光己特","Date":"1150818","ClosingPrice":"50.00"},
+	{"Code":"910322","Name":"康師傅-DR","Date":"1150818","ClosingPrice":"35.00"},
+	{"Code":"00899","Name":"FT潔淨能源","Date":"1150818","ClosingPrice":"18.50"}
 ]`
 
 // tpexFixture 為 TPEx openapi tpex_mainboard_daily_close_quotes 之欄位格式樣本
@@ -97,9 +104,9 @@ func TestLoaderLoad(t *testing.T) {
 		t.Fatalf("Load 失敗: %v", err)
 	}
 
-	// 3 上市 + 3 上櫃 + 5 ETF (000050, 000056, 006208, 00400A, 00679B)
-	if reg.Len() != 11 {
-		t.Errorf("應載入 11 檔（3 上市 + 3 上櫃 + 5 ETF），實際 %d", reg.Len())
+	// 上市 3 + 上櫃 3 + ETF 8 (0050, 0056, 006208, 00636, 00679B, 00400A, 00899, 006201)
+	if reg.Len() != 13 {
+		t.Errorf("應載入 13 檔（3 上市 + 3 上櫃 + 7 上市 ETF + 1 上櫃 ETF），實際 %d", reg.Len())
 	}
 	if s, ok := reg.Lookup("2330"); !ok || s.Market != model.MarketTSE || s.Name != "台積電" {
 		t.Errorf("2330 = %+v", s)
@@ -113,21 +120,30 @@ func TestLoaderLoad(t *testing.T) {
 	if s, ok := reg.Lookup("006201"); !ok || s.Market != model.MarketOTC || s.Exch() != "otc_006201.tw" {
 		t.Errorf("6 碼上櫃 ETF = %+v ok=%v", s, ok)
 	}
-	// ETF 驗證
-	if s, ok := reg.Lookup("000050"); !ok || s.Market != model.MarketTSE || s.Name != "元大台灣50" {
-		t.Errorf("000050 = %+v ok=%v", s, ok)
+	// ETF 驗證（4/5/6 碼 00 開頭皆應入列，含上櫃 6 碼）
+	if s, ok := reg.Lookup("0050"); !ok || s.Market != model.MarketTSE || s.Name != "元大台灣50" {
+		t.Errorf("0050 = %+v ok=%v", s, ok)
 	}
-	if s, ok := reg.Lookup("000056"); !ok || s.Market != model.MarketTSE || s.Name != "元大高股息" {
-		t.Errorf("000056 = %+v ok=%v", s, ok)
+	if s, ok := reg.Lookup("0056"); !ok || s.Market != model.MarketTSE || s.Name != "元大高股息" {
+		t.Errorf("0056 = %+v ok=%v", s, ok)
 	}
 	if s, ok := reg.Lookup("006208"); !ok || s.Market != model.MarketTSE || s.Name != "富邦台50" {
 		t.Errorf("006208 = %+v ok=%v", s, ok)
 	}
-	if s, ok := reg.Lookup("00400A"); !ok || s.Market != model.MarketTSE || s.Name != "主動型ETF" {
+	if s, ok := reg.Lookup("00636"); !ok || s.Market != model.MarketTSE || s.Name != "國泰中國A50" {
+		t.Errorf("00636 = %+v ok=%v", s, ok)
+	}
+	if s, ok := reg.Lookup("00400A"); !ok || s.Market != model.MarketTSE || s.Name != "國泰台灣高股息" {
 		t.Errorf("00400A = %+v ok=%v", s, ok)
 	}
-	if s, ok := reg.Lookup("00679B"); !ok || s.Market != model.MarketTSE || s.Name != "反一" {
+	if s, ok := reg.Lookup("00679B"); !ok || s.Market != model.MarketTSE || s.Name != "元大美債20年" {
 		t.Errorf("00679B = %+v ok=%v", s, ok)
+	}
+	if s, ok := reg.Lookup("00899"); !ok || s.Market != model.MarketTSE || s.Name != "FT潔淨能源" {
+		t.Errorf("00899 = %+v ok=%v", s, ok)
+	}
+	if s, ok := reg.Lookup("006201"); !ok || s.Market != model.MarketOTC || s.Name != "元大富櫃50" {
+		t.Errorf("006201 上櫃 ETF = %+v ok=%v", s, ok)
 	}
 	if _, ok := reg.Lookup("9999"); ok {
 		t.Error("未知代碼應 miss")
@@ -177,8 +193,8 @@ func TestLoaderCacheAndL2Persistence(t *testing.T) {
 	if err != nil {
 		t.Fatalf("重啟後 Load 失敗: %v", err)
 	}
-	if reg.Len() != 11 {
-		t.Errorf("重啟後應自 L2 回復 11 檔，實際 %d", reg.Len())
+	if reg.Len() != 13 {
+		t.Errorf("重啟後應自 L2 回復 13 檔，實際 %d", reg.Len())
 	}
 	if twse.calls.Load() != 1 || tpex.calls.Load() != 1 || etf.calls.Load() != 1 {
 		t.Errorf("重啟後應命中 L2，實際 twse=%d tpex=%d etf=%d", twse.calls.Load(), tpex.calls.Load(), etf.calls.Load())
@@ -293,9 +309,10 @@ func TestParseTWSEETFList(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// 僅 000050, 000056, 006208, 00400A, 00679B 為 6 碼 00 開頭（fixture 包含 OTC ETF 00679B，實際 API 可能不同）
-	if len(symbols) != 5 {
-		t.Errorf("應解析 5 檔 ETF，實際 %d", len(symbols))
+	// 00 開頭 4/5/6 碼共 7 檔入列（0050, 0056, 006208, 00636, 00679B, 00400A, 00899；
+	// 006201 為上櫃 ETF 由 tpexFixture 處理，不在本 fixture）
+	if len(symbols) != 7 {
+		t.Errorf("應解析 7 檔 ETF，實際 %d", len(symbols))
 	}
 	found := map[string]bool{}
 	for _, s := range symbols {
@@ -307,38 +324,53 @@ func TestParseTWSEETFList(t *testing.T) {
 			t.Errorf("%s 產業別應為空，實際 %q", s.Code, s.Category)
 		}
 	}
-	want := []string{"000050", "000056", "006208", "00400A", "00679B"}
+	want := []string{"0050", "0056", "006208", "00636", "00679B", "00400A", "00899"}
 	for _, c := range want {
 		if !found[c] {
 			t.Errorf("缺少 ETF %s", c)
 		}
 	}
 	// 非 ETF 代碼不應入列
-	if found["2330"] || found["1101"] {
-		t.Error("非 ETF 代碼（4 碼）不應入列")
+	for _, c := range []string{"2330", "1101"} {
+		if found[c] {
+			t.Errorf("非 ETF 代碼（4 碼股票）%s 不應入列", c)
+		}
+	}
+	for _, c := range []string{"02000L", "2887Z1", "910322"} {
+		if found[c] {
+			t.Errorf("非 00 開頭 6 碼（ETN/特別股/DR）%s 不應入列", c)
+		}
 	}
 	// 名稱正確
 	for _, s := range symbols {
 		switch s.Code {
-		case "000050":
+		case "0050":
 			if s.Name != "元大台灣50" {
-				t.Errorf("000050 名稱錯誤: %s", s.Name)
+				t.Errorf("0050 名稱錯誤: %s", s.Name)
 			}
-		case "000056":
+		case "0056":
 			if s.Name != "元大高股息" {
-				t.Errorf("000056 名稱錯誤: %s", s.Name)
+				t.Errorf("0056 名稱錯誤: %s", s.Name)
 			}
 		case "006208":
 			if s.Name != "富邦台50" {
 				t.Errorf("006208 名稱錯誤: %s", s.Name)
 			}
+		case "00636":
+			if s.Name != "國泰中國A50" {
+				t.Errorf("00636 名稱錯誤: %s", s.Name)
+			}
 		case "00400A":
-			if s.Name != "主動型ETF" {
+			if s.Name != "國泰台灣高股息" {
 				t.Errorf("00400A 名稱錯誤: %s", s.Name)
 			}
 		case "00679B":
-			if s.Name != "反一" {
+			if s.Name != "元大美債20年" {
 				t.Errorf("00679B 名稱錯誤: %s", s.Name)
+			}
+		case "00899":
+			if s.Name != "FT潔淨能源" {
+				t.Errorf("00899 名稱錯誤: %s", s.Name)
 			}
 		}
 	}

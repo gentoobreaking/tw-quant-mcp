@@ -121,8 +121,12 @@ type twseETFListRow struct {
 }
 
 // parseTWSEETFList 解析 TWSE 全市場收盤清單（STOCK_DAY_ALL），
-// 僅保留 6 碼且以 00 開頭之上市 ETF/ETN（0050, 0056, 006208 等）。
-// 4 碼股票、權證、2 碼代號等一律排除。產業別留空（官方未提供）。
+// 保留以 00 開頭之上市 ETF/ETN，涵蓋 4 碼（0050）、5 碼（00636）與 6 碼（006208、
+// 00400A 主動 ETF、00631L 槓反）。4 碼一般股票、權證、2 碼代號等一律排除；
+// 6 碼且非 00 開頭（020000 系列 ETN、01001T 不動產投資信託、2887Z1 特別股、
+// 910322 DR）排除（另由 TWSE 上市清單處理）。產業別留空（官方未提供）。
+// 已知限制：00899 FT潔淨能源為 STOCK_DAY_ALL 中唯一可能非 ETF 之 00 開頭列，
+// 官方未提供類型欄位，先保留（見 pkg/registry/loader_test.go TestParseTWSEETFList）。
 func parseTWSEETFList(body []byte) ([]model.Symbol, error) {
 	var rows []twseETFListRow
 	if err := json.Unmarshal(body, &rows); err != nil {
@@ -132,8 +136,8 @@ func parseTWSEETFList(body []byte) ([]model.Symbol, error) {
 	for _, r := range rows {
 		code := strings.TrimSpace(r.Code)
 		name := strings.TrimSpace(r.Name)
-		// 僅保留 6 碼且以 00 開頭之代號（上市 ETF/ETN）
-		if len(code) != 6 || code[:2] != "00" {
+		// 僅保留以 00 開頭之代號（上市 ETF/ETN：4/5/6 碼皆有可能）
+		if len(code) < 4 || len(code) > 6 || code[:2] != "00" {
 			continue
 		}
 		if name == "" {
