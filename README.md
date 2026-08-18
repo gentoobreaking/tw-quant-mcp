@@ -8,6 +8,7 @@
 
 - **盤中即時引擎**：MIS 8 秒採樣、15 檔 Watchlist、純記憶體 1 分/5 分 K 線組裝（**零 HTTP**）、VWAP、爆量偵測、當沖資格掃描
 - **盤後行情與籌碼**：日 K（含 MA/RSI/MACD 技術指標）、三大法人、融資融券、注意/處置股、權證、外資持股
+- **ETF 與指數**：ETF 歷史 NAV + 折溢價（e添富平台，§30.1 L1）、加權指數/寶島/臺灣50 盤後行情與歷史日 K
 - **基本面與股利**：財報三表、月營收、五面向健康評分、ESG、公司資料、除權息行事曆、高殖利率篩選
 - **期貨與選擇權**：台指期等 11 契約每日 OHLC、歷史回溯（TAIFEX-DL）、Put/Call Ratio、大額交易人、三大法人期權部位
 - **資料治理**：Data Lineage（`_lineage`）全程標註、三層快取（L1 Ristretto / L2 SQLite / Single-flight）、請求級 Rate Limit + Jitter + 退避 + 熔斷、圖表親和（`_chart_meta`）
@@ -153,13 +154,14 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 └──────────────────────────────────┬────────────────────────────────┘
                                    │ JSON-RPC（Stdio / Streamable HTTP）
 ┌──────────────────────────────────▼────────────────────────────────┐
-│                     MCP Engine Layer（37 Tool Router）             │
+│                     MCP Engine Layer（39 Tool Router）             │
 │              Handler Routers + Schema Validation（§9/§10）         │
 └──────────────────────────────────┬────────────────────────────────┘
                                    │ Normalized Query
 ┌──────────────────────────────────▼────────────────────────────────┐
 │            Domain Analysis Layer（pkg/domain/，§7 六大模組）        │
 │     趨勢綜合 │ 外資解讀 │ 熱點捕捉 │ 股利規劃 │ 標的篩選 │ 期貨選擇權 │
+│     ETF NAV/折溢價（§30.1 L1，get_etf_nav）                      │
 └──────────────────────────────────┬────────────────────────────────┘
                                    │ Normalized Read
 ┌──────────────────────────────────▼────────────────────────────────┐
@@ -181,9 +183,10 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 └───────────────────────────────────────────────────────────────────┘
 ```
 
-## 工具清單（37 個，§10）
+## 工具清單（39 個，§10）
 
 > 其中 `get_stock_trend_composite`（§9.1）為 v2.1 新增工具，Data Grade 為 `PREVIEW`；
+> `get_twse_index`（T032）與 `get_etf_nav`（T032-fix，§30.1 L1）為 ETF/指數支援新增工具。
 > 其餘 36 個工具自 v1.3 沿用，Data Grade 皆為 `AVAILABLE`。
 > 對照表見「v2.1 §9 ↔ v1.3 工具對照」一節。
 
@@ -198,7 +201,7 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 | `detect_volume_surge` | 偵測近 N 分鐘爆量/急拉訊號（前 20 分鐘均量滑動窗口比對，零 HTTP） |
 | `scan_daytrade_eligibility` | 買前風險掃描：當沖資格、注意/處置股風險摘要（名單來自 TWSE-WEB / TPEx 盤後名單） |
 
-### B. 盤後行情與籌碼（9）
+### B. 盤後行情與籌碼（10）
 
 | 工具 | 說明 |
 | --- | --- |
@@ -211,6 +214,7 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 | `get_margin_trading` | 盤後融資融券（上市 TWSE-WEB MI_MARGN / 上櫃 TPEx） |
 | `get_abnormal_trading` | 異常成交量（注意股）排名（上市 TWSE-WEB notice / 上櫃 TPEx 注意股；top_n 預設 20，最大 100） |
 | `get_warrant_activity` | 權證活躍度：成交金額/張數 Top N（TWSE-API；top_n 預設 10，最大 50） |
+| `get_twse_index` | TWSE 指數盤後行情與歷史日 K（加權指數、寶島、臺灣50；TWSE-API MI_INDEX + TWSE-WEB MI_5MINS_HIST） |
 
 ### C. 重大訊息與風險（2）
 
@@ -264,6 +268,12 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 | --- | --- |
 | `get_stock_trend_composite` | 短中長期「技術面+基本面+籌碼面」綜合研判（參數 `symbol`、`horizon`=short/mid/long，預設 mid；跨來源聚合 TWSE Web API + TWSE-API + TPEx-API + MOPS，_lineage 為多來源陣列；Data Grade `PREVIEW`） |
 
+### I. ETF（§30.1 L1 新增，1）
+
+| 工具 | 說明 |
+| --- | --- |
+| `get_etf_nav` | 上市 ETF 歷史淨值（NAV）與折溢價率序列（TWSE e添富平台 `POST /zh/ETFortune/ajaxEtfInfoChart`，type=fundPric；參數 `symbol`、`start`/`end` 日期範圍；上櫃 ETF 暫無資料源，回傳明確錯誤） |
+
 ## v2.1 §9 ↔ v1.3 工具對照
 
 v2.1 工具目錄（25 工具）與 v1.3 既有工具（36 工具）比對結論：
@@ -271,6 +281,7 @@ v2.1 工具目錄（25 工具）與 v1.3 既有工具（36 工具）比對結論
 - **A 組（同名同功能，12 個）**：`get_intraday_kline`、`get_intraday_quote`、`get_stock_daily_kline`、`get_institutional_investors`、`get_foreign_shareholding_history`、`get_margin_trading`、`get_financial_statements`、`get_monthly_revenue`、`get_valuation_ratios`、`get_exdividend_calendar`、`get_futures_history`、`get_put_call_ratio`。零修改。
 - **B 組（功能相同、名稱不同，12 個）**：以 v1.3 名稱沿用、不更名不 alias。包括 `get_stock_daily_quote`（v2.1 `get_stock_quote`）、`get_market_summary`（v2.1 `get_market_overview`）、`get_foreign_industry_holdings`（v2.1 `get_foreign_industry_holdings`）、`get_abnormal_trading`（v2.1 `get_volume_anomalies`）、`get_attention_disposition_stocks`（v2.1 `get_risk_flags` 之一）、`screen_stocks`/`screen_high_yield`（v2.1 `screen_value_stocks`/`screen_high_dividend_yield`）、`get_financial_health_check`（v2.1 `get_financial_health_score`）、`get_dividend_history`（v2.1 `get_dividend_history`）、`get_company_profile`（v2.1 `get_company_profile`）、`get_esg_report`（v2.1 `get_esg_report`）、`get_futures_daily_ohlc`/`get_large_trader_positions`/`get_institutional_*`（v2.1 同名）。
 - **C 組（v2.1 新增，1 個）**：`get_stock_trend_composite`（§9.1）——本次新增實作。
+- **ETF/指數（T032/T032-fix 新增，2 個）**：`get_twse_index`（T032，加權指數/寶島/臺灣50 盤後行情與歷史日 K）、`get_etf_nav`（T032-fix，上市 ETF 歷史 NAV + 折溢價，§30.1 L1；e添富平台）。
 
 **Data Grade 註記**：
 
@@ -329,6 +340,7 @@ v2.1 §14 之 **7 項優化需求**、**十大投資情境（§9，25 Tool）** 
 |---|---|---|
 | TWSE-API | openapi.twse.com.tw | 公司治理、ESG、日收盤、外資持股、權證、指數 |
 | TWSE-WEB | www.twse.com.tw/exchangeReport/* | 日 K、融資融券、三大法人、收盤行情、注意股 |
+| TWSE-ETF | www.twse.com.tw/zh/ETFortune/* | ETF 歷史 NAV/折溢價（e添富平台，POST ajaxEtfInfoChart） |
 | TWSE-MIS | mis.twse.com.tw | 盤中即時 Snapshot（8 秒採樣） |
 | TPEx-API | www.tpex.org.tw/openapi | 上櫃日收盤、法人、融資融券、注意/處置股 |
 | MOPS | mops.twse.com.tw | 月營收、財報三表、重大訊息、公司資料 |
@@ -349,7 +361,7 @@ make loadtest     # 壓力測試（20 併發，快取命中率 + 延遲分位數
 make fixtures     # 錄製官方 raw response fixtures（-host all -date YYYYMMDD）
 make e2e          # 端到端驗證（MCP client 依序呼叫 A→G 代表工具）
 make soak         # 4.5h 連續運行測試（需實際交易日開盤時段）
-scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 37 工具
+scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 39 工具
 ```
 
 ---
