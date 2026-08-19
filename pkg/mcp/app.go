@@ -272,7 +272,7 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 	}
 	if a.regLoader == nil {
 		a.regLoader = registry.NewLoader(
-			provider.NewBaseClient("openapi.twse.com.tw"), a.cache)
+			provider.NewBaseClient("openapi.twse.com.tw"), a.cache, a.cfg.SymbolRegistryOverride)
 	}
 	if a.misClient == nil {
 		a.misClient = provider.NewBaseClient("mis.twse.com.tw")

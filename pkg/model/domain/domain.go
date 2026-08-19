@@ -129,16 +129,16 @@ type DerivativesSnapshot struct {
 
 // IndexView 為 TWSE 指數（加權/寶島/台灣50 等）之盤後行情與歷史日 K。
 type IndexView struct {
-	Name          string            `json:"name"`                    // 指數名稱（如「發行量加權股價指數」）
-	Date          string            `json:"date"`                    // 交易日 YYYY-MM-DD
-	Close         float64           `json:"close"`                   // 收盤指數
-	Change        float64           `json:"change"`                  // 漲跌點數
-	ChangePercent float64           `json:"change_percent"`          // 漲跌百分比（%）
-	ChangeDir     string            `json:"change_dir,omitempty"`    // 漲跌(+/-)
-	Note          string            `json:"note,omitempty"`          // 特殊處理註記
-	History       []IndexDay        `json:"history,omitempty"`       // 歷史日 K（月份每日 OHLC）
-	Lineage       model.Lineage     `json:"_lineage"`
-	ChartMeta     *IndexChartMeta   `json:"_chart_meta,omitempty"`   // 圖表中繼資料
+	Name          string          `json:"name"`                 // 指數名稱（如「發行量加權股價指數」）
+	Date          string          `json:"date"`                 // 交易日 YYYY-MM-DD
+	Close         float64         `json:"close"`                // 收盤指數
+	Change        float64         `json:"change"`               // 漲跌點數
+	ChangePercent float64         `json:"change_percent"`       // 漲跌百分比（%）
+	ChangeDir     string          `json:"change_dir,omitempty"` // 漲跌(+/-)
+	Note          string          `json:"note,omitempty"`       // 特殊處理註記
+	History       []IndexDay      `json:"history,omitempty"`    // 歷史日 K（月份每日 OHLC）
+	Lineage       model.Lineage   `json:"_lineage"`
+	ChartMeta     *IndexChartMeta `json:"_chart_meta,omitempty"` // 圖表中繼資料
 }
 
 // IndexDay 為指數歷史之單日 OHLC。
@@ -152,6 +152,6 @@ type IndexDay struct {
 
 // IndexChartMeta 為指數圖表中繼資料（line 型別）。
 type IndexChartMeta struct {
-	Type  string   `json:"type"`            // "line"
-	Series []string `json:"series"`         // 欄位序列：["date", "open", "high", "low", "close"]
+	Type   string   `json:"type"`   // "line"
+	Series []string `json:"series"` // 欄位序列：["date", "open", "high", "low", "close"]
 }

@@ -22,13 +22,13 @@ type ValuationRatios struct {
 
 // DividendYear 為單一年度之股利分派決議（t187ap45_L）。
 type DividendYear struct {
-	DividendYear  string  `json:"dividend_year"`  // 股利年度（官方民國年）
-	Progress      string  `json:"progress"`       // 決議（擬議）進度
-	CashDividend  float64 `json:"cash_dividend"`  // 每股現金股利合計（盈餘+公積+法定，元/股）
-	StockDividend float64 `json:"stock_dividend"` // 每股股票股利合計（元/股）
-	CashTotal     int64   `json:"cash_total"`     // 現金股利總金額（元）
-	NetIncome     int64   `json:"net_income"`     // 本期淨利（元）
-	Retained      int64   `json:"retained"`       // 可分配盈餘（元）
+	DividendYear  string  `json:"dividend_year"`     // 股利年度（官方民國年）
+	Progress      string  `json:"progress"`          // 決議（擬議）進度
+	CashDividend  float64 `json:"cash_dividend"`     // 每股現金股利合計（盈餘+公積+法定，元/股）
+	StockDividend float64 `json:"stock_dividend"`    // 每股股票股利合計（元/股）
+	CashTotal     int64   `json:"cash_total"`        // 現金股利總金額（元）
+	NetIncome     int64   `json:"net_income"`        // 本期淨利（元）
+	Retained      int64   `json:"retained"`          // 可分配盈餘（元）
 	ExDate        string  `json:"ex_date,omitempty"` // 除息日 YYYY-MM-DD（來源 TWT48U 行事曆）
 }
 

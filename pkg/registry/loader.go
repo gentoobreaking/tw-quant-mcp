@@ -3,12 +3,14 @@
 // 檢查）→ 24h TTL 快取（§4.2「交易日曆 / 公司代碼表」）並每日預熱入 L2。
 // 盤中引擎與預熱排程（T018）皆以本套件之 Registry 判定市場別（§5.2）：
 // MIS ex_ch 組裝一律經 Registry，禁止猜測市場別（v1.2 已知缺失）。
+// 另支援手動覆寫檔（manual_overrides.json）補齊官方清單缺漏代碼（T035/T036）。
 package registry
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -20,8 +22,8 @@ import (
 // 官方資料源（§5.2：TWSE/TPEx 官方上市上櫃公司清單 openapi）。
 // 以變數而非 const 提供，供測試以 httptest 注入。
 var (
-	twseListURL = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"           // 上市股票公司基本資料
-	tpexListURL = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
+	twseListURL    = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L" // 上市股票公司基本資料
+	tpexListURL    = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 	twseETFListURL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL" // 全市場收盤（含 ETF）
 )
 
@@ -34,22 +36,33 @@ func SetETFListURL(url string) { twseETFListURL = url }
 // registryTTL 對應 §4.2「交易日曆 / 公司代碼表」24h 盤中/盤後 TTL。
 const registryTTL = 24 * time.Hour
 
+// ManualOverride 代表手動覆寫的 Symbol 資料（T035/T036）。
+type ManualOverride struct {
+	Code     string `json:"code"`
+	Market   string `json:"market"` // "tse" | "otc"
+	Name     string `json:"name"`
+	Category string `json:"category,omitempty"`
+}
+
 // Loader 自官方清單載入 Registry，並以 cache.GetOrFetch（§12.2 Single-flight）
 // 合流：24h 內同鍵僅一次上游呼叫，資料落入 L2（24h ≥ l2WriteMinTTL）。
 type Loader struct {
-	client *provider.BaseClient
-	cache  *cache.Cache
+	client             *provider.BaseClient
+	cache              *cache.Cache
+	manualOverridePath string
 }
 
 // NewLoader 建立 Registry 載入器。client 為必要（官方清單抓取）；
-// cache 為選用（nil 時直接抓取、不快取）。
-func NewLoader(client *provider.BaseClient, c *cache.Cache) *Loader {
-	return &Loader{client: client, cache: c}
+// cache 為選用（nil 時直接抓取、不快取）；
+// manualOverridePath 為選用的手動覆寫檔路徑（JSON 陣列）。
+func NewLoader(client *provider.BaseClient, c *cache.Cache, manualOverridePath string) *Loader {
+	return &Loader{client: client, cache: c, manualOverridePath: manualOverridePath}
 }
 
 // Load 回傳最新 Registry 快照（上市 + 上櫃 + ETF 合併）。任一市場清單載入失敗即回傳錯誤：
 // Registry 為核心基礎設施，缺市場別可能導致 ex_ch 路由錯誤，寧可快速失敗。
 // ETF 清單載入失敗不阻擋整體 Registry（記 warning，log 輸出）——避免 ETF 端點異常時影響既有股票工具。
+// 載入完成後套用手動覆寫檔（若有），補齊官方清單缺漏代碼（T035/T036）。
 func (l *Loader) Load(ctx context.Context) (*model.Registry, error) {
 	if l.client == nil {
 		return nil, fmt.Errorf("registry: client 為 nil")
@@ -82,7 +95,48 @@ func (l *Loader) Load(ctx context.Context) (*model.Registry, error) {
 	if err := reg.Set(all); err != nil {
 		return nil, err
 	}
+
+	// 套用手動覆寫檔
+	if l.manualOverridePath != "" {
+		if err := l.applyManualOverrides(reg); err != nil {
+			return nil, fmt.Errorf("registry: 手動覆寫檔套用失敗: %w", err)
+		}
+	}
+
 	return reg, nil
+}
+
+// applyManualOverrides 讀取手動覆寫檔並合併至 Registry。
+func (l *Loader) applyManualOverrides(reg *model.Registry) error {
+	data, err := os.ReadFile(l.manualOverridePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			// 檔案不存在視為無覆寫，不報錯
+			return nil
+		}
+		return fmt.Errorf("讀取手動覆寫檔失敗: %w", err)
+	}
+
+	var overrides []ManualOverride
+	if err := json.Unmarshal(data, &overrides); err != nil {
+		return fmt.Errorf("解析手動覆寫檔失敗: %w", err)
+	}
+
+	symbols := make([]model.Symbol, 0, len(overrides))
+	for _, o := range overrides {
+		s := model.Symbol{
+			Code:     o.Code,
+			Market:   o.Market,
+			Name:     o.Name,
+			Category: o.Category,
+		}
+		symbols = append(symbols, s)
+	}
+
+	if err := reg.UpsertBatch(symbols); err != nil {
+		return err
+	}
+	return nil
 }
 
 // loadMarket 載入單一市場清單；24h TTL 快取鍵依 §4.3 建構（dataset=calendar）。
@@ -116,7 +170,7 @@ func sourceIDFor(url string) string {
 type twseETFListRow struct {
 	Code  string `json:"Code"`
 	Name  string `json:"Name"`
-	Date  string `json:"Date"`  // 民國年日期
+	Date  string `json:"Date"`         // 民國年日期
 	Close string `json:"ClosingPrice"` // 收盤價（用於判斷是否有效交易）
 }
 
@@ -196,6 +250,7 @@ type tpexListRow struct {
 //   - 4 碼：上櫃股票（含興櫃股票代號區間）
 //   - 5 碼：上櫃 ETF（00858 等）與特別股（8349A 等）
 //   - 6 碼 00/02 開頭：上櫃 ETF/ETN（006201、00679B、020001 等）
+//
 // 排除 6 碼 7xx 開頭之權證（約 9,600 檔）。
 func parseTPExList(body []byte) ([]model.Symbol, error) {
 	var rows []tpexListRow

@@ -79,6 +79,9 @@ type Config struct {
 	// v2.1 §5.3 限流參數化。
 	RateLimitEnabled         bool // RATE_LIMIT_ENABLED（provider 亦直接讀取同一變數）
 	RateLimitBulkConcurrency int  // RATE_LIMIT_BULK_CONCURRENCY（§10.2 篩選類併發）
+
+	// T035/T036 Symbol Registry 手動覆寫檔路徑。
+	SymbolRegistryOverride string // SYMBOL_REGISTRY_OVERRIDE
 }
 
 // Load 從環境變數讀取設定並填入預設值。
@@ -110,6 +113,9 @@ func Load() (*Config, error) {
 	}
 	if v := os.Getenv("MCP_SCORING_CONFIG"); v != "" {
 		cfg.ScoringFile = strings.TrimSpace(v)
+	}
+	if v := os.Getenv("SYMBOL_REGISTRY_OVERRIDE"); v != "" {
+		cfg.SymbolRegistryOverride = strings.TrimSpace(v)
 	}
 	if v := os.Getenv("CACHE_L1_MAX_ENTRIES"); v != "" {
 		n, err := strconv.Atoi(strings.TrimSpace(v))

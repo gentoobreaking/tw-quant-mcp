@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -102,7 +104,7 @@ func TestLoaderLoad(t *testing.T) {
 	defer s3.Close()
 	defer withURLs(t, s1.URL, s2.URL, s3.URL)()
 
-	l := NewLoader(testClient(), nil)
+	l := NewLoader(testClient(), nil, "")
 	reg, err := l.Load(context.Background())
 	if err != nil {
 		t.Fatalf("Load 失敗: %v", err)
@@ -173,7 +175,7 @@ func TestLoaderCacheAndL2Persistence(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	l := NewLoader(testClient(), cch)
+	l := NewLoader(testClient(), cch, "")
 	if _, err := l.Load(context.Background()); err != nil {
 		t.Fatal(err)
 	}
@@ -194,7 +196,7 @@ func TestLoaderCacheAndL2Persistence(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer cch2.Close()
-	l2 := NewLoader(testClient(), cch2)
+	l2 := NewLoader(testClient(), cch2, "")
 	reg, err := l2.Load(context.Background())
 	if err != nil {
 		t.Fatalf("重啟後 Load 失敗: %v", err)
@@ -215,7 +217,7 @@ func TestLoaderNoCache(t *testing.T) {
 	defer s3.Close()
 	defer withURLs(t, s1.URL, s2.URL, s3.URL)()
 
-	l := NewLoader(testClient(), nil)
+	l := NewLoader(testClient(), nil, "")
 	for i := 0; i < 2; i++ {
 		if _, err := l.Load(context.Background()); err != nil {
 			t.Fatal(err)
@@ -238,7 +240,7 @@ func TestLoaderParseAllInvalid(t *testing.T) {
 	tpex.body = []byte(`[{"SecuritiesCompanyCode":"abc","CompanyName":""}]`)
 	etf.body = []byte(`[{"Code":"0050","Name":""}]`) // ETF 名稱為空，會被過濾
 
-	l := NewLoader(testClient(), nil)
+	l := NewLoader(testClient(), nil, "")
 	if _, err := l.Load(context.Background()); err == nil {
 		t.Error("全數無效之官方清單應回傳錯誤")
 	}
@@ -270,7 +272,7 @@ func TestLoaderPartialFailure(t *testing.T) {
 	defer bad.Close()
 	defer withURLs(t, s1.URL, bad.URL, bad.URL)()
 
-	l := NewLoader(testClient(), nil)
+	l := NewLoader(testClient(), nil, "")
 	_, err := l.Load(context.Background())
 	if err == nil {
 		t.Error("TPEx 失敗時 Load 應回傳錯誤")
@@ -290,7 +292,7 @@ func TestLoaderETFFailureDoesNotBlock(t *testing.T) {
 	defer bad.Close()
 	defer withURLs(t, s1.URL, s2.URL, bad.URL)()
 
-	l := NewLoader(testClient(), nil)
+	l := NewLoader(testClient(), nil, "")
 	reg, err := l.Load(context.Background())
 	if err != nil {
 		t.Fatalf("ETF 失敗不應阻擋 Registry: %v", err)
@@ -303,7 +305,7 @@ func TestLoaderETFFailureDoesNotBlock(t *testing.T) {
 
 // client 為 nil 時直接回傳錯誤。
 func TestLoaderNilClient(t *testing.T) {
-	l := NewLoader(nil, nil)
+	l := NewLoader(nil, nil, "")
 	if _, err := l.Load(context.Background()); err == nil {
 		t.Error("client 為 nil 應回傳錯誤")
 	}
@@ -391,5 +393,91 @@ func TestSourceIDFor(t *testing.T) {
 	}
 	if got := sourceIDFor(twseETFListURL); got != model.SourceTWSEAPI {
 		t.Errorf("sourceIDFor(etf) = %s", got)
+	}
+}
+
+// 手動覆寫檔套用測試（T035/T036）。
+func TestLoaderManualOverride(t *testing.T) {
+	s1, _, s2, _, s3, _ := newListServers(t)
+	defer s1.Close()
+	defer s2.Close()
+	defer s3.Close()
+	defer withURLs(t, s1.URL, s2.URL, s3.URL)()
+
+	// 建立暫存手動覆寫檔
+	tmpDir := t.TempDir()
+	overridePath := filepath.Join(tmpDir, "manual_overrides.json")
+	overrideData := `[
+		{"code": "6518", "market": "tse", "name": "長春", "category": "生技醫療業"},
+		{"code": "9999", "market": "otc", "name": "測試股票", "category": "測試類"}
+	]`
+	if err := os.WriteFile(overridePath, []byte(overrideData), 0644); err != nil {
+		t.Fatalf("建立覆寫檔失敗: %v", err)
+	}
+
+	l := NewLoader(testClient(), nil, overridePath)
+	reg, err := l.Load(context.Background())
+	if err != nil {
+		t.Fatalf("Load 失敗: %v", err)
+	}
+
+	// 原有 14 檔 + 2 個覆寫 = 16 檔（9999 為新增，6518 原本不在 fixture 中）
+	if reg.Len() != 16 {
+		t.Errorf("應載入 16 檔（14 官方 + 2 覆寫），實際 %d", reg.Len())
+	}
+
+	// 驗證 6518 已補齊
+	if s, ok := reg.Lookup("6518"); !ok || s.Market != model.MarketTSE || s.Name != "長春" {
+		t.Errorf("6518 = %+v ok=%v", s, ok)
+	}
+
+	// 驗證 9999 已新增
+	if s, ok := reg.Lookup("9999"); !ok || s.Market != model.MarketOTC || s.Name != "測試股票" {
+		t.Errorf("9999 = %+v ok=%v", s, ok)
+	}
+
+	// 驗證現有代碼未受影響
+	if s, ok := reg.Lookup("2330"); !ok || s.Name != "台積電" {
+		t.Errorf("2330 受影響: %+v ok=%v", s, ok)
+	}
+}
+
+// 手動覆寫檔不存在時不報錯。
+func TestLoaderManualOverrideFileNotExist(t *testing.T) {
+	s1, _, s2, _, s3, _ := newListServers(t)
+	defer s1.Close()
+	defer s2.Close()
+	defer s3.Close()
+	defer withURLs(t, s1.URL, s2.URL, s3.URL)()
+
+	l := NewLoader(testClient(), nil, "/不存在的路徑/manual_overrides.json")
+	reg, err := l.Load(context.Background())
+	if err != nil {
+		t.Fatalf("Load 失敗: %v", err)
+	}
+	// 應正常載入官方 14 檔
+	if reg.Len() != 14 {
+		t.Errorf("檔案不存在時應載入 14 檔，實際 %d", reg.Len())
+	}
+}
+
+// 手動覆寫檔格式錯誤時回傳錯誤。
+func TestLoaderManualOverrideInvalidJSON(t *testing.T) {
+	s1, _, s2, _, s3, _ := newListServers(t)
+	defer s1.Close()
+	defer s2.Close()
+	defer s3.Close()
+	defer withURLs(t, s1.URL, s2.URL, s3.URL)()
+
+	tmpDir := t.TempDir()
+	overridePath := filepath.Join(tmpDir, "manual_overrides.json")
+	if err := os.WriteFile(overridePath, []byte(`{invalid json`), 0644); err != nil {
+		t.Fatalf("建立覆寫檔失敗: %v", err)
+	}
+
+	l := NewLoader(testClient(), nil, overridePath)
+	_, err := l.Load(context.Background())
+	if err == nil {
+		t.Error("JSON 格式錯誤時應回傳錯誤")
 	}
 }

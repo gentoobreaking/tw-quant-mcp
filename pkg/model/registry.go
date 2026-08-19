@@ -76,3 +76,30 @@ func (r *Registry) Len() int {
 	defer r.mu.RUnlock()
 	return len(r.symbols)
 }
+
+// Upsert 新增或更新單一 Symbol（供同步機制補齊 watch_stocks 缺漏代碼）。
+// 通過 Symbol.Validate 驗證，失敗回傳錯誤；成功則合併至現有 Registry。
+func (r *Registry) Upsert(s Symbol) error {
+	if err := s.Validate(); err != nil {
+		return fmt.Errorf("model: registry upsert 失效: %w", err)
+	}
+	r.mu.Lock()
+	r.symbols[s.Code] = s
+	r.mu.Unlock()
+	return nil
+}
+
+// UpsertBatch 批次新增或更新多個 Symbol。
+func (r *Registry) UpsertBatch(symbols []Symbol) error {
+	for _, s := range symbols {
+		if err := s.Validate(); err != nil {
+			return fmt.Errorf("model: registry upsert batch 失效(%s): %w", s.Code, err)
+		}
+	}
+	r.mu.Lock()
+	for _, s := range symbols {
+		r.symbols[s.Code] = s
+	}
+	r.mu.Unlock()
+	return nil
+}

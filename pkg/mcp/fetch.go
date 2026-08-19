@@ -24,13 +24,13 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEWDMargin):           cache.DatasetMargin,        // 與 TPEx margin 同名
 	string(provider.TWSEWDAbnormal):         cache.DatasetAlertStock,
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
-	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine,    // 指數歷史同 daily_kline 政策
+	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,
 	string(provider.TWSEAPIWarrants):        cache.DatasetWarrants,
 	string(provider.TWSEAPIPunish):          cache.DatasetAlertStock,
 	string(provider.TWSEAPIESG):             cache.DatasetESG,
 	string(provider.TWSEAPIGovernance):      cache.DatasetESG,
-	string(provider.TWSEAPIIndices):         cache.DatasetDailyKLine,    // 指數收盤同 daily_kline 政策
+	string(provider.TWSEAPIIndices):         cache.DatasetDailyKLine, // 指數收盤同 daily_kline 政策
 	string(provider.TPExDailyClose):         cache.DatasetDailyKLine,
 	string(provider.TPExAttention):          cache.DatasetAlertStock,
 	string(provider.TPExDisposition):        cache.DatasetAlertStock,

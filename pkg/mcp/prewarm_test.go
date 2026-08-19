@@ -42,7 +42,7 @@ func prewarmApp(t *testing.T, f *fakeFetch, now func() time.Time) *App {
 		WithAppSources(fakeWeb{f}, fakeAPI{f}, fakeTPEx{f}),
 		WithAppCalendarClient(provider.NewBaseClient("www.twse.com.tw", provider.WithRateInterval(time.Millisecond))),
 		WithAppRegistryLoader(registry.NewLoader(
-			provider.NewBaseClient("openapi.twse.com.tw", provider.WithRateInterval(time.Millisecond)), cch)),
+			provider.NewBaseClient("openapi.twse.com.tw", provider.WithRateInterval(time.Millisecond)), cch, "")),
 		WithAppMISClient(provider.NewBaseClient("mis.twse.com.tw", provider.WithRateInterval(time.Millisecond))),
 	)
 	if err != nil {

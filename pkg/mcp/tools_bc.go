@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"tw-quant-mcp/pkg/cache"
-	"tw-quant-mcp/pkg/model/domain"
 	"tw-quant-mcp/pkg/engine"
 	"tw-quant-mcp/pkg/model"
+	"tw-quant-mcp/pkg/model/domain"
 	"tw-quant-mcp/pkg/provider"
 )
 
@@ -785,9 +785,13 @@ func vals(v url.Values) map[string]string {
 // symbol 為指數名稱（省略預設「發行量加權股價指數」）；
 // date 省略時為最近交易日。
 // 資料路徑 1（單日指數收盤）：TWSE-API MI_INDEX（openapi.twse.com.tw/v1/exchangeReport/MI_INDEX），
-//   依 IndexName 過濾，輸出 IndexQuoteRow（收盤指數/漲跌/漲跌百分比）。
+//
+//	依 IndexName 過濾，輸出 IndexQuoteRow（收盤指數/漲跌/漲跌百分比）。
+//
 // 資料路徑 2（歷史日 K）：TWSE-WEB MI_5MINS_HIST（www.twse.com.tw/indicesReport/MI_5MINS_HIST?date=YYYYMMDD），
-//   請求月份資料，回傳該月每日 OHLC（IndexRow）。
+//
+//	請求月份資料，回傳該月每日 OHLC（IndexRow）。
+//
 // 輸出：domain.IndexView，含 _chart_meta（line 型別，history 序列）。
 func handlerGetTWSEIndex(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
@@ -858,7 +862,7 @@ func handlerGetTWSEIndex(a *App, args map[string]any) (HandlerResult, error) {
 		Note:          quote.Note,
 		History:       history,
 		ChartMeta: &domain.IndexChartMeta{
-			Type:  "line",
+			Type:   "line",
 			Series: []string{"date", "open", "high", "low", "close"},
 		},
 	}
