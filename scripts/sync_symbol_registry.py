@@ -36,7 +36,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # 預設路徑
-DEFAULT_CONFIG_PATH = Path("/Users/david/Projects/tw-quant-signal/config.json")
+DEFAULT_CONFIG_PATH = Path(os.getenv("TW_QUANT_CONFIG", str(Path(__file__).parent.parent.parent / "tw-quant-signal" / "config.json")))
 DEFAULT_OVERRIDE_PATH = Path(__file__).parent.parent / "data" / "manual_overrides.json"
 DEFAULT_MCP_SERVER_URL = "http://127.0.0.1:8787"
 
