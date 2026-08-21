@@ -34,6 +34,19 @@ make build-release  # 產出 bin/tw-quant-mcp-v1.3.0（帶版本號）
 MCP_TRANSPORT=streamable-http ./bin/tw-quant-mcp   # Streamable HTTP 傳輸
 ```
 
+### 健康檢查（streamable-http）
+
+streamable-http 模式下提供 `GET /health` 端點（不經 MCP 協定層），供容器 healthcheck、負載平衡與監控探測：
+
+```bash
+curl http://localhost:8787/health
+# HTTP 200 {"status":"healthy"}
+```
+
+> MCP JSON-RPC 請求走 `http://<addr>/mcp` 或根路徑；客戶端依 MCP 規範需帶
+> `Accept: application/json, text/event-stream`。docker-compose 部署之
+> healthcheck 即使用本端點。
+
 ## 設定（環境變數）
 
 | 變數 | 預設 | 說明 |
