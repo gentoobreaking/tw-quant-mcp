@@ -1,6 +1,5 @@
 services:
   mcp:
-    container_name: tw-quant-mcp
     build:
       context: .
       dockerfile: Dockerfile
