@@ -162,6 +162,7 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 │            Domain Analysis Layer（pkg/domain/，§7 六大模組）        │
 │     趨勢綜合 │ 外資解讀 │ 熱點捕捉 │ 股利規劃 │ 標的篩選 │ 期貨選擇權 │
 │     ETF NAV/折溢價（§30.1 L1，get_etf_nav）                      │
+│     ETF 分配收益（get_etf_dividend，T040）                       │
 └──────────────────────────────────┬────────────────────────────────┘
                                    │ Normalized Read
 ┌──────────────────────────────────▼────────────────────────────────┐
@@ -183,10 +184,10 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 └───────────────────────────────────────────────────────────────────┘
 ```
 
-## 工具清單（39 個，§10）
+## 工具清單（40 個，§10）
 
 > 其中 `get_stock_trend_composite`（§9.1）為 v2.1 新增工具，Data Grade 為 `PREVIEW`；
-> `get_twse_index`（T032）與 `get_etf_nav`（T032-fix，§30.1 L1）為 ETF/指數支援新增工具。
+> `get_twse_index`（T032）、`get_etf_nav`（T032-fix，§30.1 L1）、`get_etf_dividend`（T040）為 ETF/指數支援新增工具。
 > `get_esg_report`（T037）升級為雙來源（TWSE OpenAPI / MOPS CSV）速度選源＋fallback，涵蓋 t187ap46 八主題。
 > 其餘 36 個工具自 v1.3 沿用，Data Grade 皆為 `AVAILABLE`。
 > 對照表見「v2.1 §9 ↔ v1.3 工具對照」一節。
@@ -269,11 +270,12 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 | --- | --- |
 | `get_stock_trend_composite` | 短中長期「技術面+基本面+籌碼面」綜合研判（參數 `symbol`、`horizon`=short/mid/long，預設 mid；跨來源聚合 TWSE Web API + TWSE-API + TPEx-API + MOPS，_lineage 為多來源陣列；Data Grade `PREVIEW`） |
 
-### I. ETF（§30.1 L1 新增，1）
+### I. ETF（§30.1 L1 / T040 新增，2）
 
 | 工具 | 說明 |
 | --- | --- |
 | `get_etf_nav` | 上市 ETF 歷史淨值（NAV）與折溢價率序列（TWSE e添富平台 `POST /zh/ETFortune/ajaxEtfInfoChart`，type=fundPric；參數 `symbol`、`start`/`end` 日期範圍；上櫃 ETF 暫無資料源，回傳明確錯誤） |
+| `get_etf_dividend` | 上市 ETF 歷史分配收益（配息/收益分配）（TWSE 官方 `GET /rwd/zh/ETF/etfDiv`，參數 `symbol`、`start`/`end` 日期範圍；回傳除息日、基準日、發放日、配息金額、分配標準、公告年度；上櫃 ETF 需確認資料源） |
 
 ## v2.1 §9 ↔ v1.3 工具對照
 
@@ -282,7 +284,7 @@ v2.1 工具目錄（25 工具）與 v1.3 既有工具（36 工具）比對結論
 - **A 組（同名同功能，12 個）**：`get_intraday_kline`、`get_intraday_quote`、`get_stock_daily_kline`、`get_institutional_investors`、`get_foreign_shareholding_history`、`get_margin_trading`、`get_financial_statements`、`get_monthly_revenue`、`get_valuation_ratios`、`get_exdividend_calendar`、`get_futures_history`、`get_put_call_ratio`。零修改。
 - **B 組（功能相同、名稱不同，12 個）**：以 v1.3 名稱沿用、不更名不 alias。包括 `get_stock_daily_quote`（v2.1 `get_stock_quote`）、`get_market_summary`（v2.1 `get_market_overview`）、`get_foreign_industry_holdings`（v2.1 `get_foreign_industry_holdings`）、`get_abnormal_trading`（v2.1 `get_volume_anomalies`）、`get_attention_disposition_stocks`（v2.1 `get_risk_flags` 之一）、`screen_stocks`/`screen_high_yield`（v2.1 `screen_value_stocks`/`screen_high_dividend_yield`）、`get_financial_health_check`（v2.1 `get_financial_health_score`）、`get_dividend_history`（v2.1 `get_dividend_history`）、`get_company_profile`（v2.1 `get_company_profile`）、`get_esg_report`（v2.1 `get_esg_report`）、`get_futures_daily_ohlc`/`get_large_trader_positions`/`get_institutional_*`（v2.1 同名）。
 - **C 組（v2.1 新增，1 個）**：`get_stock_trend_composite`（§9.1）——本次新增實作。
-- **ETF/指數（T032/T032-fix 新增，2 個）**：`get_twse_index`（T032，加權指數/寶島/臺灣50 盤後行情與歷史日 K）、`get_etf_nav`（T032-fix，上市 ETF 歷史 NAV + 折溢價，§30.1 L1；e添富平台）。
+- **ETF/指數（T032/T032-fix/T040 新增，3 個）**：`get_twse_index`（T032，加權指數/寶島/臺灣50 盤後行情與歷史日 K）、`get_etf_nav`（T032-fix，上市 ETF 歷史 NAV + 折溢價，§30.1 L1；e添富平台）、`get_etf_dividend`（T040，上市 ETF 歷史分配收益/配息；TWSE 官方 etfDiv API）。
 
 **Data Grade 註記**：
 
@@ -362,7 +364,7 @@ make loadtest     # 壓力測試（20 併發，快取命中率 + 延遲分位數
 make fixtures     # 錄製官方 raw response fixtures（-host all -date YYYYMMDD）
 make e2e          # 端到端驗證（MCP client 依序呼叫 A→G 代表工具）
 make soak         # 4.5h 連續運行測試（需實際交易日開盤時段）
-scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 39 工具
+scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工具
 ```
 
 ---
