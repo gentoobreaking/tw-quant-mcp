@@ -3,6 +3,7 @@ package mcp
 import (
 	"context"
 	"net/url"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -67,10 +68,18 @@ func stubDE(f *fakeFetch) {
 	// 上櫃除權除息
 	f.stub("ex_rights", nil, `[
 		{"date":"2026-08-10","code":"6147","name":"頎邦","kind":"除息","stock_dividend_ratio":0,"subscription_ratio":0,"subscription_price":0,"cash_dividend":4.0}]`)
-	// ESG（topic=1）與公司治理
-	f.stub("esg", url.Values{"topic": {"1"}}, `[
+	// ESG（topic=1..8，T037 雙來源）與公司治理
+	f.stub("esg", urlValuesTopic(1), `[
 		{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"範疇一排放量(噸CO2e)":"1234"}},
 		{"report_date":"2026-07-31","year":"2025","code":"2317","name":"鴻海","fields":{"範疇一排放量(噸CO2e)":"5678"}}]`)
+	for topic := 2; topic <= 8; topic++ {
+		f.stub("esg", urlValuesTopic(topic), `[
+			{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"指標":"topic`+strconv.Itoa(topic)+`"}}]`)
+	}
+	for _, ds := range mopsESGDatasets {
+		f.stub(string(ds), nil, `[
+			{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"指標":"MOPS"}}]`)
+	}
 	f.stub("company_governance", nil, `[
 		{"report_date":"2026-07-31","code":"2330","name":"台積電","rules":"訂有公司治理實務守則"}]`)
 	// MOPS 損益表摘要（2330：2026Q1 + 2025Q4 + 2025Q1；1101：2026Q1）
@@ -286,17 +295,19 @@ func TestDEGetESGReport(t *testing.T) {
 	if !ok {
 		t.Fatalf("Data 應為 ESGReport，實際 %T", env.Data)
 	}
-	if len(esg.Topics) != 2 {
-		t.Fatalf("應有 2 個題材（排放+治理），實際 %d", len(esg.Topics))
+	// T037：8 主題＋治理規程
+	if len(esg.Topics) != 9 {
+		t.Fatalf("應有 9 個題材（8 主題＋治理規程），實際 %d", len(esg.Topics))
 	}
 	if esg.Topics[0].Topic != "溫室氣體排放" || esg.Topics[0].Year != "2025" {
 		t.Errorf("排放題材錯誤: %+v", esg.Topics[0])
 	}
-	if esg.Topics[1].Topic != "公司治理" || esg.Topics[1].Fields["公司治理之相關規程規則"] == "" {
-		t.Errorf("治理題材錯誤: %+v", esg.Topics[1])
+	if esg.Topics[len(esg.Topics)-1].Topic != "公司治理規程" ||
+		esg.Topics[len(esg.Topics)-1].Fields["公司治理之相關規程規則"] == "" {
+		t.Errorf("治理規程題材錯誤: %+v", esg.Topics[len(esg.Topics)-1])
 	}
 	if env.Lineage.Source != model.SourceTWSEAPI {
-		t.Errorf("lineage source 應為 TWSE_API: %+v", env.Lineage)
+		t.Errorf("lineage source 應為 TWSE_API（平手勝出），實際 %q", env.Lineage.Source)
 	}
 }
 

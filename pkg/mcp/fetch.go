@@ -49,6 +49,15 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIDividend):  cache.DatasetDividend,
 	string(provider.TPExPEValuation):  cache.DatasetValuation,
 	string(provider.TPExExRights):     cache.DatasetExDivCalendar,
+	// T037：MOPS ESG 揭露八主題（與 TWSE-API ESG 同 DatasetESG 政策，24h）
+	string(provider.MOPSESGGhg):       cache.DatasetESG,
+	string(provider.MOPSESGRenewable): cache.DatasetESG,
+	string(provider.MOPSESGWater):     cache.DatasetESG,
+	string(provider.MOPSESGWaste):     cache.DatasetESG,
+	string(provider.MOPSESgEmployee):  cache.DatasetESG,
+	string(provider.MOPSESGBoard):     cache.DatasetESG,
+	string(provider.MOPSESGConf):      cache.DatasetESG,
+	string(provider.MOPSESGTcfd):      cache.DatasetESG,
 }
 
 // policyDataset 回傳資料集對應之政策類別；未登錄時回傳原字串（cacheable=false）。

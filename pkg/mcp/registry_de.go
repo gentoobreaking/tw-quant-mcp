@@ -74,12 +74,19 @@ func registerDETools(r *Registry) {
 	r.Register(ToolDef{
 		Symbol: "get_esg_report",
 		Name:   "get_esg_report",
-		Description: "查詢個股 ESG 揭露與公司治理（TWSE OpenAPI t187ap46_L_1 溫室氣體排放 + " +
-			"t187ap32_L 公司治理）。",
+		Description: "查詢個股 ESG 揭露完整報告（T037 雙來源：TWSE OpenAPI / MOPS CSV " +
+			"t187ap46_L_1~8 八主題——溫室氣體排放/再生能源/用水/廢棄物/員工薪資福利/" +
+			"董事會組成/法說會/TCFD，另附 t187ap32_L 公司治理規程）。" +
+			"首次呼叫自動速度選源（快者為主來源），主來源失敗自動 fallback。",
 		Schema: map[string]any{
 			"type": "object",
 			"properties": map[string]any{
 				"symbol": map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+				"topics": map[string]any{
+					"type":        "array",
+					"items":       map[string]any{"type": "integer", "minimum": 1, "maximum": 8},
+					"description": "揭露主題（1=溫室氣體 2=再生能源 3=用水 4=廢棄物 5=員工薪資福利 6=董事會 7=法說會 8=TCFD），省略回傳全部",
+				},
 			},
 			"required": []string{"symbol"},
 		},

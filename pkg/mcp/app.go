@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/url"
 	"path/filepath"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -72,7 +73,8 @@ type App struct {
 	twseAPI   APIFetcher
 	tpex      TPExFetcher
 	mops      MOPSFetcher
-	etf       etfFetcher // ETF e添富平台（§30.1 L1，get_etf_nav）
+	etf       etfFetcher                  // ETF e添富平台（§30.1 L1，get_etf_nav）
+	etfDiv    *provider.ETFDividendSource // ETF 分配收益（get_etf_dividend）
 	taifex    TAIFEXQuerier
 	cache     *cache.Cache
 	index     *screener.Store // §10.3 Materialized Screener Index（L2 SQLite；nil＝未啟用）
@@ -92,6 +94,11 @@ type App struct {
 	// Core.Call 於每次查詢前歸零、fetch 路徑於 miss 時累加、結束後注入
 	// Envelope.HTTPCalls。盤中 K 線等純記憶體路徑應恆為 0（§12.4）。
 	httpCalls atomic.Int64
+
+	// T037 ESG 雙來源速度選源：esgPrimary 記錄主來源偏好
+	//（"" 未測 / model.SourceTWSEAPI / model.SourceMOPS）。
+	esgMu      sync.Mutex
+	esgPrimary string
 }
 
 // AppOption 為 App 建置選項（測試用注入）。
@@ -144,6 +151,11 @@ func WithAppMOPS(m MOPSFetcher) AppOption {
 // WithAppETF 注入 e添富資料源（測試用；預設建立真實 ETFortune source）。
 func WithAppETF(e etfFetcher) AppOption {
 	return func(a *App) { a.etf = e }
+}
+
+// WithAppETFDiv 注入 ETF 分配收益資料源（測試用；預設建立真實 ETFDividendSource）。
+func WithAppETFDiv(e *provider.ETFDividendSource) AppOption {
+	return func(a *App) { a.etfDiv = e }
 }
 
 // WithAppTAIFEX 注入 TAIFEX 查詢層（測試用；預設以真實 API/DL 來源建立）。
@@ -206,6 +218,7 @@ func NewApp(cfg *config.Config, opts ...AppOption) (*App, error) {
 		tpex:      provider.NewTPExSource(),
 		mops:      provider.NewMOPSSource(),
 		etf:       provider.NewETFortuneSource(),
+		etfDiv:    provider.NewETFDividendSource(),
 		now:       func() time.Time { return model.Now().Time },
 		logger:    slog.New(slog.NewTextHandler(discard, nil)),
 	}

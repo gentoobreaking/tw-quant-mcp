@@ -51,6 +51,16 @@ const (
 	MOPSBalanceSheet    MOPSDataset = "balance_sheet"    // ajax_t164sb03：合併資產負債表
 	MOPSCashFlow        MOPSDataset = "cash_flow"        // ajax_t164sb05：合併現金流量表
 	MOPSIncomeStatement MOPSDataset = "income_statement" // ajax_t164sb04：合併綜合損益表
+
+	// T037：ESG 揭露八主題（t187ap46_L_{1..8}.csv，與 TWSE-API topic 對應）。
+	MOPSESGGhg       MOPSDataset = "esg_ghg"        // L_1 溫室氣體排放（範疇一/二/三）
+	MOPSESGRenewable MOPSDataset = "esg_renewable"  // L_2 再生能源使用率
+	MOPSESGWater     MOPSDataset = "esg_water"      // L_3 用水量＋密集度
+	MOPSESGWaste     MOPSDataset = "esg_waste"      // L_4 有害/非有害廢棄物量
+	MOPSESgEmployee  MOPSDataset = "esg_employee"   // L_5 員工薪資福利／女性主管佔比
+	MOPSESGBoard     MOPSDataset = "esg_board"      // L_6 董事會組成／獨董／女性董事
+	MOPSESGConf      MOPSDataset = "esg_conference" // L_7 年度法說會次數
+	MOPSESGTcfd      MOPSDataset = "esg_tcfd"       // L_8 TCFD 氣候風險揭露（長文字）
 )
 
 // MOPS Open Data CSV 端點（2026-07 實測）。
@@ -68,6 +78,16 @@ var mopsPaths = map[MOPSDataset]string{
 	MOPSBalanceSheet:    "/ajax_t164sb03",
 	MOPSCashFlow:        "/ajax_t164sb05",
 	MOPSIncomeStatement: "/ajax_t164sb04",
+
+	// T037：ESG 揭露八主題
+	MOPSESGGhg:       "/t187ap46_L_1.csv",
+	MOPSESGRenewable: "/t187ap46_L_2.csv",
+	MOPSESGWater:     "/t187ap46_L_3.csv",
+	MOPSESGWaste:     "/t187ap46_L_4.csv",
+	MOPSESgEmployee:  "/t187ap46_L_5.csv",
+	MOPSESGBoard:     "/t187ap46_L_6.csv",
+	MOPSESGConf:      "/t187ap46_L_7.csv",
+	MOPSESGTcfd:      "/t187ap46_L_8.csv",
 }
 
 // mopsOpenDataDatasets 為透過 Open Data CSV（mopsfin）取得之資料集。
@@ -78,6 +98,16 @@ var mopsOpenDataDatasets = map[MOPSDataset]bool{
 	MOPSMonthlyRevenue: true,
 	MOPSIncomeSummary:  true,
 	MOPSProfitRatios:   true,
+
+	// T037：ESG 揭露八主題皆為 CSV
+	MOPSESGGhg:       true,
+	MOPSESGRenewable: true,
+	MOPSESGWater:     true,
+	MOPSESGWaste:     true,
+	MOPSESgEmployee:  true,
+	MOPSESGBoard:     true,
+	MOPSESGConf:      true,
+	MOPSESGTcfd:      true,
 }
 
 // mopsNormalizeFilter 為 Normalize 階段之請求參數（從查詢工具傳入）。
@@ -213,6 +243,9 @@ func normalizeMOPSRaw(raw *RawResponse) ([]byte, error) {
 		v, err = parseIncomeSummaries(rc, header)
 	case MOPSProfitRatios:
 		v, err = parseProfitabilityRatios(rc, header)
+	case MOPSESGGhg, MOPSESGRenewable, MOPSESGWater, MOPSESGWaste,
+		MOPSESgEmployee, MOPSESGBoard, MOPSESGConf, MOPSESGTcfd:
+		v, err = parseESGCSV(rc, header)
 	default:
 		return nil, fmt.Errorf("mops: 未實作之資料集 %q", ds)
 	}
@@ -673,4 +706,53 @@ func mustDate(s string, err error) string {
 		return ""
 	}
 	return s
+}
+
+// ---------------------------------------------------------------------------
+// ESG 揭露泛用解析（T037，t187ap46_L_{1..8}.csv）
+// ---------------------------------------------------------------------------
+
+// parseESGCSV 泛用解析 ESG 揭露 CSV 八主題：核心欄位（出表日期／報告年度／
+// 公司代號／公司名稱）抽出，其餘欄位原值全收進 Fields map（與 TWSE-API
+// normalizeESG 同型別 provider.ESGRow，下游聚合零差異）。CSV 引號內多行
+// 欄位（範疇三資料邊界等）由 encoding/csv 原生處理；無效列跳過。
+func parseESGCSV(r *mopsCSVReader, header []string) ([]ESGRow, error) {
+	c := resolveMOPSCols(header, "出表日期", "報告年度", "公司代號", "公司名稱")
+	var rows []ESGRow
+	for {
+		rec, err := r.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, fmt.Errorf("mops: ESG CSV 列解析失敗: %w", err)
+		}
+		code := parseMOPSQuoted(cell(rec, c, "公司代號"))
+		name := parseMOPSQuoted(cell(rec, c, "公司名稱"))
+		if code == "" || name == "" {
+			continue
+		}
+		row := ESGRow{
+			Year:       strings.TrimSpace(parseMOPSQuoted(cell(rec, c, "報告年度"))),
+			Code:       code,
+			Name:       name,
+			ReportDate: mustDate(parseMOPSDateSimple(cell(rec, c, "出表日期"))),
+			Fields:     make(map[string]string, len(header)),
+		}
+		for i, h := range header {
+			key := strings.TrimSpace(strings.Trim(h, `"`))
+			switch key {
+			case "", "出表日期", "報告年度", "公司代號", "公司名稱":
+				continue
+			}
+			if i < len(rec) {
+				row.Fields[key] = strings.TrimSpace(rec[i])
+			}
+		}
+		rows = append(rows, row)
+	}
+	if len(rows) == 0 {
+		return nil, fmt.Errorf("mops: ESG CSV 無有效資料列")
+	}
+	return rows, nil
 }

@@ -686,53 +686,6 @@ func latestDividend(rows []provider.DividendRow, code string) *provider.Dividend
 	return best
 }
 
-// handlerGetESGReport：ESG/公司治理指標（§10.D，TWSE OpenAPI）。
-func handlerGetESGReport(a *App, args map[string]any) (HandlerResult, error) {
-	ctx := context.Background()
-	code, _ := args["symbol"].(string)
-	sym, err := a.symbolOf(code)
-	if err != nil {
-		return HandlerResult{}, err
-	}
-	dataDate := a.now().Format("2006-01-02")
-	esgRows, cachedESG, staleESG, err := fetchNormalize[[]provider.ESGRow](a, ctx, string(provider.TWSEAPIESG),
-		dataDate, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIESG), dataDate, "", map[string]string{"topic": "1"}),
-		func() ([]byte, error) {
-			return a.fetchAPIRaw(ctx, provider.TWSEAPIESG, url.Values{"topic": {"1"}})
-		})
-	if err != nil {
-		return HandlerResult{}, err
-	}
-	govRows, cachedGov, staleGov, err := fetchNormalize[[]provider.GovernanceRow](a, ctx, string(provider.TWSEAPIGovernance),
-		dataDate, cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIGovernance), dataDate, "", nil),
-		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIGovernance, nil) })
-	if err != nil {
-		return HandlerResult{}, err
-	}
-	out := model.ESGReport{Symbol: sym.Code, Name: sym.Name, Market: sym.Market, Topics: make([]model.ESGTopic, 0)}
-	for _, r := range esgRows {
-		if r.Code == sym.Code {
-			out.Topics = append(out.Topics, model.ESGTopic{
-				Topic: "溫室氣體排放", Year: r.Year, ReportDate: r.ReportDate, Fields: r.Fields,
-			})
-		}
-	}
-	for _, r := range govRows {
-		if r.Code == sym.Code {
-			out.Topics = append(out.Topics, model.ESGTopic{
-				Topic: "公司治理", ReportDate: r.ReportDate,
-				Fields: map[string]string{"公司治理之相關規程規則": r.Rules},
-			})
-		}
-	}
-	if len(out.Topics) == 0 {
-		return HandlerResult{}, fmt.Errorf("代碼 %s 無 ESG/公司治理揭露資料", sym.Code)
-	}
-	ttl, _ := a.ttlOf(string(provider.TWSEAPIESG))
-	lg := postLineage(model.SourceTWSEAPI, dataDate, cachedESG || cachedGov || staleESG || staleGov, staleESG || staleGov, ttl)
-	return HandlerResult{Data: out, Lineage: lg}, nil
-}
-
 // handlerGetCompanyProfile：公司基本資料（§10.D）。
 func handlerGetCompanyProfile(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
