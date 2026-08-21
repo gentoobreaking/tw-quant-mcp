@@ -88,10 +88,7 @@ func main() {
 			os.Exit(1)
 		}
 	case config.TransportStreamableHTTP:
-		handler := mcp.NewStreamableHTTPHandler(
-			func(*http.Request) *mcp.Server { return srv },
-			&mcp.StreamableHTTPOptions{Stateless: true, JSONResponse: true},
-		)
+		handler := newHTTPHandler(srv)
 		httpSrv := &http.Server{
 			Addr:              cfg.HTTPAddr,
 			Handler:           handler,
@@ -115,6 +112,25 @@ func main() {
 			}
 		}
 	}
+}
+
+// newHTTPHandler 組裝 streamable-http 之 HTTP 路由：
+//   - GET /health：健康檢查（回 {"status":"healthy"}，200），供容器
+//     healthcheck 與負載平衡探測；不經 MCP 協定層。
+//   - 其餘路徑：交由 MCP Streamable HTTP Handler（JSON-RPC 2.0）。
+func newHTTPHandler(srv *mcp.Server) http.Handler {
+	mcpHandler := mcp.NewStreamableHTTPHandler(
+		func(*http.Request) *mcp.Server { return srv },
+		&mcp.StreamableHTTPOptions{Stateless: true, JSONResponse: true},
+	)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"status":"healthy"}`))
+	})
+	mux.Handle("/", mcpHandler)
+	return mux
 }
 
 // newServer 建立 MCP Server 骨架；工具目錄依規格書 §10 由
