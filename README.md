@@ -9,7 +9,7 @@
 - **盤中即時引擎**：MIS 8 秒採樣、15 檔 Watchlist、純記憶體 1 分/5 分 K 線組裝（**零 HTTP**）、VWAP、爆量偵測、當沖資格掃描
 - **盤後行情與籌碼**：日 K（含 MA/RSI/MACD 技術指標）、三大法人、融資融券、注意/處置股、權證、外資持股
 - **ETF 與指數**：ETF 歷史 NAV + 折溢價（e添富平台，§30.1 L1）、加權指數/寶島/臺灣50 盤後行情與歷史日 K
-- **基本面與股利**：財報三表、月營收、五面向健康評分、ESG、公司資料、除權息行事曆、高殖利率篩選
+- **基本面與股利**：財報三表、月營收、五面向健康評分、ESG 揭露八主題（雙來源速度選源＋fallback，T037）、公司資料、除權息行事曆、高殖利率篩選
 - **期貨與選擇權**：台指期等 11 契約每日 OHLC、歷史回溯（TAIFEX-DL）、Put/Call Ratio、大額交易人、三大法人期權部位
 - **資料治理**：Data Lineage（`_lineage`）全程標註、三層快取（L1 Ristretto / L2 SQLite / Single-flight）、請求級 Rate Limit + Jitter + 退避 + 熔斷、圖表親和（`_chart_meta`）
 
@@ -187,6 +187,7 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 
 > 其中 `get_stock_trend_composite`（§9.1）為 v2.1 新增工具，Data Grade 為 `PREVIEW`；
 > `get_twse_index`（T032）與 `get_etf_nav`（T032-fix，§30.1 L1）為 ETF/指數支援新增工具。
+> `get_esg_report`（T037）升級為雙來源（TWSE OpenAPI / MOPS CSV）速度選源＋fallback，涵蓋 t187ap46 八主題。
 > 其餘 36 個工具自 v1.3 沿用，Data Grade 皆為 `AVAILABLE`。
 > 對照表見「v2.1 §9 ↔ v1.3 工具對照」一節。
 
@@ -231,7 +232,7 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 | `get_monthly_revenue` | 月營收與成長率（MOPS t187ap05_L，含 YoY/MoM/累計；years 預設 2，上限 10） |
 | `get_financial_health_check` | 財務健康五面向評分（獲利/成長/結構/配息/治理，各 0-100，評分規則版本化） |
 | `get_valuation_ratios` | 估值指標（PE/PB/殖利率/ROE/每股股利；上市 TWSE-API BWIBBU_ALL + MOPS，上櫃 TPEx） |
-| `get_esg_report` | ESG 揭露與公司治理（TWSE OpenAPI 溫室氣體排放 + 公司治理） |
+| `get_esg_report` | ESG 揭露完整報告（T037 雙來源：TWSE OpenAPI / MOPS CSV t187ap46_L_1~8 八主題——溫室氣體排放/再生能源/用水/廢棄物/員工薪資福利/董事會組成/法說會/TCFD，另附公司治理規程；`topics` 參數可過濾；首次呼叫速度選源，快者為主來源、失敗自動 fallback） |
 | `get_company_profile` | 公司基本資料（MOPS t187ap03_L：董事長、資本額、上市日期、產業別、發言人等） |
 | `screen_stocks` | 價值/成長篩選全市場股票（條件：max_pe / max_pb / min_yield / min_growth；整批快取記憶體計算） |
 
@@ -338,12 +339,12 @@ v2.1 §14 之 **7 項優化需求**、**十大投資情境（§9，25 Tool）** 
 
 | ID | 來源 | 內容 |
 |---|---|---|
-| TWSE-API | openapi.twse.com.tw | 公司治理、ESG、日收盤、外資持股、權證、指數 |
+| TWSE-API | openapi.twse.com.tw | 公司治理、ESG 揭露（t187ap46_L_1~21，T037 雙來源之一）、日收盤、外資持股、權證、指數 |
 | TWSE-WEB | www.twse.com.tw/exchangeReport/* | 日 K、融資融券、三大法人、收盤行情、注意股 |
 | TWSE-ETF | www.twse.com.tw/zh/ETFortune/* | ETF 歷史 NAV/折溢價（e添富平台，POST ajaxEtfInfoChart） |
 | TWSE-MIS | mis.twse.com.tw | 盤中即時 Snapshot（8 秒採樣） |
 | TPEx-API | www.tpex.org.tw/openapi | 上櫃日收盤、法人、融資融券、注意/處置股 |
-| MOPS | mops.twse.com.tw | 月營收、財報三表、重大訊息、公司資料 |
+| MOPS | mops.twse.com.tw | 月營收、財報三表、重大訊息、公司資料、ESG 揭露八主題（t187ap46_L_1~8，T037 雙來源之一） |
 | TAIFEX-API | openapi.taifex.com.tw | 期貨/選擇權行情、PCR、大額交易人、保證金（最新交易日） |
 | TAIFEX-DL | www.taifex.com.tw/cht/3/*DateDown* | 歷史回溯 CSV（T-1 起） |
 

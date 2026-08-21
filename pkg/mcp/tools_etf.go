@@ -1,9 +1,12 @@
 // tools_etf.go 實作 §30.1 ETF Data Adapter L1 之歷史 NAV/折溢價工具
-// （get_etf_nav）。資料源：TWSE ETF e添富平台（provider.ETFortuneSource）。
+// （get_etf_nav）與 ETF 分配收益工具（get_etf_dividend）。
+// 資料源：TWSE ETF e添富平台（provider.ETFortuneSource）與
+// TWSE ETF 分配收益 API（provider.ETFDividendSource）。
 //
 // 2026-08 實測：TWSE 舊版 NAV 端點全 404；e添富平台為現行官方入口，
 // 以 POST ajaxEtfInfoChart（type=fundPric）取得歷史淨值（netPrice）與
 // 折溢價率（atmps，%）。僅上市 ETF；上櫃 ETF 不在本平台。
+// ETF 分配收益：TWSE rwd/zh/ETF/etfDiv 提供完整歷史配息資料。
 package mcp
 
 import (
@@ -36,6 +39,11 @@ type etfPoint struct {
 // etfFetcher 為 e添富資料源之 handler 視界（測試可注入 fake）。
 type etfFetcher interface {
 	ChartFetch(ctx context.Context, code string, chartType provider.ETFChartType, start, end string) ([]byte, error)
+}
+
+// etfDivFetcher 為 ETF 分配收益資料源之 handler 視界（測試可注入 fake）。
+type etfDivFetcher interface {
+	FetchDividend(ctx context.Context, code, startDate, endDate string) ([]model.ETFDividendPoint, error)
 }
 
 // ************** get_etf_nav（§30.1 L1 歷史 NAV/折溢價） **************
@@ -197,4 +205,98 @@ func strValDate(v any) (string, error) {
 		return "", fmt.Errorf("mcp: 參數 date 格式必須為 YYYY-MM-DD: %w", err)
 	}
 	return s, nil
+}
+
+// ************** get_etf_dividend（ETF 分配收益歷史） **************
+
+// handlerGetETFDividend：ETF 歷史分配收益（收益分配/配息）。
+// 資料源：TWSE rwd/zh/ETF/etfDiv（官方 ETF 分配收益查詢 API）。
+// 僅上市 ETF；上櫃 ETF 需確認是否有資料。
+func handlerGetETFDividend(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	code, _ := args["symbol"].(string)
+	sym, err := a.symbolOf(code)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	if !sym.IsETF() {
+		return HandlerResult{}, fmt.Errorf("代碼 %s（%s）非 ETF，get_etf_dividend 僅供 ETF 使用", code, sym.Name)
+	}
+	if a.etfDiv == nil {
+		return HandlerResult{}, fmt.Errorf("ETF 分配收益資料源尚未接線")
+	}
+
+	// 日期範圍（預設近 2 年）
+	end := a.now()
+	start := end.AddDate(-2, 0, 0)
+	if s, err := strValDate(args["start"]); err != nil {
+		return HandlerResult{}, err
+	} else if s != "" {
+		start, _ = model.ParseDate(s)
+	}
+	if e, err := strValDate(args["end"]); err != nil {
+		return HandlerResult{}, err
+	} else if e != "" {
+		end, _ = model.ParseDate(e)
+	}
+	if end.Before(start) {
+		return HandlerResult{}, fmt.Errorf("start 不得晚於 end")
+	}
+	startStr := start.Format("20060102")
+	endStr := end.Format("20060102")
+	dataDate := end.Format("2006-01-02")
+
+	// 快取鍵
+	key := cache.KeyString(model.SourceTWSEWeb, "etf_dividend", dataDate, code, map[string]string{"s": startStr, "e": endStr})
+
+	// 使用 daily_kline 政策（24h TTL）
+	const etfDivDataset = cache.DatasetDailyKLine
+
+	var points []model.ETFDividendPoint
+	cached, stale, points, err := a.etfDivFetch(ctx, etfDivDataset, key, func() ([]model.ETFDividendPoint, error) {
+		return a.etfDiv.FetchDividend(ctx, code, startStr, endStr)
+	})
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("分配收益資料取得失敗: %w", err)
+	}
+
+	if len(points) == 0 {
+		return HandlerResult{}, fmt.Errorf("代碼 %s 於 %s~%s 無分配收益資料（TWSE etfDiv 無此 ETF 或期間無資料）", code, startStr, endStr)
+	}
+
+	// 依除息日由近至遠排序
+	sort.Slice(points, func(i, j int) bool { return points[i].ExDate > points[j].ExDate })
+
+	out := model.ETFDividendResult{
+		Symbol: sym.Code, Name: sym.Name, Market: sym.Market,
+		Points: points,
+	}
+	lg := postLineage(model.SourceTWSEWeb, dataDate, cached || stale, stale, 24*time.Hour)
+	lg.SourceRole = model.SourceRoleCanonical // TWSE 官方 Open Data 端點
+	lg.DerivedFrom = []string{"TWSE_ETF_DIVIDEND:etfDiv"}
+	return HandlerResult{Data: out, Lineage: lg}, nil
+}
+
+// etfDivFetch 執行快取讀穿並解碼 ETF 分配收益資料（dataset 為 §4.2 政策類別）。
+func (a *App) etfDivFetch(ctx context.Context, dataset, key string, fetch func() ([]model.ETFDividendPoint, error)) (cached, stale bool, points []model.ETFDividendPoint, err error) {
+	if a.cache == nil {
+		points, err = fetch()
+		return false, false, points, err
+	}
+	// 將 ETFDividendPoint 序列化為 JSON 快取
+	fetchWrapper := func() ([]byte, error) {
+		data, err := fetch()
+		if err != nil {
+			return nil, err
+		}
+		return json.Marshal(data)
+	}
+	cached, stale, raw, err := a.fetchRaw(ctx, dataset, a.now().Format("2006-01-02"), key, fetchWrapper)
+	if err != nil {
+		return false, false, nil, err
+	}
+	if raw == nil {
+		return cached, stale, nil, nil
+	}
+	return cached, stale, points, json.Unmarshal(raw, &points)
 }

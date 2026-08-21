@@ -103,3 +103,22 @@ type ScreenResult struct {
 	Rows    []ScreenStock `json:"rows"`
 	Note    string        `json:"note,omitempty"`
 }
+
+// ETFDividendPoint 為單一 ETF 收益分配事件。
+type ETFDividendPoint struct {
+	ExDate       string  `json:"ex_date"`        // 除息交易日 YYYY-MM-DD
+	RecordDate   string  `json:"record_date"`    // 收益分配基準日 YYYY-MM-DD
+	PayDate      string  `json:"pay_date"`       // 收益分配發放日 YYYY-MM-DD
+	Amount       float64 `json:"amount"`         // 每受益權單位配息金額（元）
+	Standard     string  `json:"standard"`       // 分配標準說明
+	AnnounceYear string  `json:"announce_year"`  // 公告年度（民國年）
+}
+
+// ETFDividendResult 為 get_etf_dividend（ETF 分配收益歷史）之 data。
+type ETFDividendResult struct {
+	Symbol string             `json:"symbol"`
+	Name   string             `json:"name"`
+	Market string             `json:"market"`
+	Points []ETFDividendPoint `json:"points"`
+	Note   string             `json:"note,omitempty"`
+}

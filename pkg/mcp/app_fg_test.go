@@ -427,8 +427,8 @@ func TestFGGetSymbolList(t *testing.T) {
 	if !ok {
 		t.Fatalf("Data 應為 []Symbol，實際 %T", env.Data)
 	}
-	if len(symbols) != 5 {
-		t.Fatalf("應回傳全部 5 檔，實際 %d", len(symbols))
+	if len(symbols) != 6 {
+		t.Fatalf("應回傳全部 6 檔，實際 %d", len(symbols))
 	}
 	if symbols[0].Code != "0050" || symbols[0].Market != model.MarketTSE {
 		t.Errorf("代碼應依 Code 排序: %+v", symbols[0])
