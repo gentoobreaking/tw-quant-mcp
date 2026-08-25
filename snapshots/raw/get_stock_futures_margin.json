@@ -1,0 +1,56 @@
+{
+  "arguments": {
+    "stock_code": "2330"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 10,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"ClearingMarginRate\":\"10.00%\",\"Contract\":\"CDF\",\"ContractName\":\"台積電期貨\",\"Date\":\"20260824\",\"GroupLevel\":\"級距1\",\"InitialMarginRate\":\"13.50%\",\"MaintenanceMarginRate\":\"10.35%\",\"UnderlyingOfSingleStockFutures\":\"台灣積體電路製造股份有限公司\",\"UnderlyingSecurityCode\":\"2330\"},{\"ClearingMarginRate\":\"10.00%\",\"Contract\":\"QFF\",\"ContractName\":\"小型台積電期貨\",\"Date\":\"20260824\",\"GroupLevel\":\"級距1\",\"InitialMarginRate\":\"13.50%\",\"MaintenanceMarginRate\":\"10.35%\",\"UnderlyingOfSingleStockFutures\":\"台灣積體電路製造股份有限公司\",\"UnderlyingSecurityCode\":\"2330\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T18:24:17+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1263,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "ClearingMarginRate": "10.00%",
+            "Contract": "CDF",
+            "ContractName": "台積電期貨",
+            "Date": "20260824",
+            "GroupLevel": "級距1",
+            "InitialMarginRate": "13.50%",
+            "MaintenanceMarginRate": "10.35%",
+            "UnderlyingOfSingleStockFutures": "台灣積體電路製造股份有限公司",
+            "UnderlyingSecurityCode": "2330"
+          },
+          {
+            "ClearingMarginRate": "10.00%",
+            "Contract": "QFF",
+            "ContractName": "小型台積電期貨",
+            "Date": "20260824",
+            "GroupLevel": "級距1",
+            "InitialMarginRate": "13.50%",
+            "MaintenanceMarginRate": "10.35%",
+            "UnderlyingOfSingleStockFutures": "台灣積體電路製造股份有限公司",
+            "UnderlyingSecurityCode": "2330"
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T18:24:17+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 1263,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 2,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

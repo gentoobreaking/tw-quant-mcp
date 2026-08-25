@@ -62,6 +62,7 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAInstiCallsPuts: "/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheDate",          // T134
 	model.TAOptionsDelta:   "/DailyOptionsDelta",   // 選擇權每日 Delta（T151）
 	model.TAOIChange:       "/va01",                // 台指選擇權未平倉量增減（T154）
+	model.TAStockMargin:    "/SingleStockFuturesMargining", // 股票期貨保證金（T167）
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -214,8 +215,8 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 	case model.TAInstiCallsPuts:
 		// 買賣權分計明細：直通保留官方欄位（含 CallPut，T134）。
 		out = json.RawMessage(raw.Body)
-	case model.TAOptionsDelta, model.TAOIChange:
-		// Delta / OI 增減：直通保留官方欄位（T151/T154）。
+	case model.TAOptionsDelta, model.TAOIChange, model.TAStockMargin:
+		// Delta / OI 增減 / 股票期貨保證金：直通保留官方欄位（T151/T154/T167）。
 		out = json.RawMessage(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)

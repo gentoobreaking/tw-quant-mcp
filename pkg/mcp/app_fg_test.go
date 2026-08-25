@@ -166,6 +166,10 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAOIChange, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Date": "20260729", "OpenInterest": "104587", "PreviousDay": "20260728", "PreviousDayOpenInterest": "70519", "Change": "34068"},
 	})
+	// 股票期貨保證金（T167）
+	f.single[tfKey(model.TAStockMargin, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Contract": "CAF", "UnderlyingSecurityCode": "1303", "ContractName": "南亞期貨", "GroupLevel": "級距3", "ClearingMarginRate": "15.00%", "MaintenanceMarginRate": "15.53%", "InitialMarginRate": "20.25%", "Date": "20260729"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},

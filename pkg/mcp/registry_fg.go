@@ -403,6 +403,20 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetOptionsInstiCallsPutsHistory,
 	}) // T153
 	r.Register(ToolDef{
+		Symbol:      "get_stock_futures_margin",
+		Name:        "get_stock_futures_margin",
+		Description: "查詢股票期貨保證金一覽表，顯示各股票期貨的保證金率及分組級距（" +
+			"TAIFEX-API SingleStockFuturesMargining，T167）。stock_code 可輸入股票代號（如 2330）或期貨契約代碼（如 CAF），留空顯示全部。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"stock_code": map[string]any{"type": "string", "description": "股票代號（如 2330）或期貨契約代碼（如 CAF）。留空則顯示全部"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetStockFuturesMargin,
+	}) // T167
+	r.Register(ToolDef{
 		Symbol:      "get_institutional_traders_by_options",
 		Name:        "get_institutional_traders_by_options",
 		Description: "查詢三大法人依各選擇權契約分類的交易資料，可觀察各選擇權商品的法人買賣情況（" +

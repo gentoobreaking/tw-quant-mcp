@@ -739,6 +739,45 @@ func handlerGetOptionsOIChange(a *App, args map[string]any) (HandlerResult, erro
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// handlerGetStockFuturesMargin：股票期貨保證金一覽表（TAIFEX-API
+// SingleStockFuturesMargining，T167）。stock_code 可為股票代號（2330）或
+// 期貨契約代碼（CAF），留空回全部。
+func handlerGetStockFuturesMargin(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	code := strings.TrimSpace(strVal(args["stock_code"]))
+	d, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAStockMargin, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAStockMargin, err)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", model.TAStockMargin, err)
+	}
+	if code == "" {
+		return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+	}
+	out := make([]map[string]any, 0, len(rows))
+	for _, r := range rows {
+		uc, _ := r["UnderlyingSecurityCode"].(string)
+		ct, _ := r["Contract"].(string)
+		if uc == code || strings.EqualFold(ct, code) {
+			out = append(out, r)
+		}
+	}
+	if len(out) == 0 {
+		return HandlerResult{}, fmt.Errorf("查無 %s 之股票期貨保證金資料", code)
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // handlerGetInstitutionalTradersByFuturesHistory：三大法人期貨部位歷史
 // （TAIFEX-DL futContractsDateDown，T132；contract 為 TXF 型代碼，預設 TXF，
 // 伺服器端以 commodityId 過濾；區間 ≤ 92 日）。
