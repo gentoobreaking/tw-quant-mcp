@@ -273,6 +273,21 @@ func registerBCTools(r *Registry) {
 		Handler:  apiListSpec{ds: provider.TWSEAPIForeignApply}.handler(),
 	}) // T123
 	r.Register(ToolDef{
+		Symbol:      "get_local_companies_applying_for_listing",
+		Name:        "get_local_companies_applying_for_listing",
+		Description: "查詢申請上市之本國公司（TWSE-API company/applylistingLocal，T138）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPILocalApply}.handler(),
+	}) // T138
+	r.Register(ToolDef{
 		Symbol:      "get_recently_listed_companies",
 		Name:        "get_recently_listed_companies",
 		Description: "查詢最近上市公司（TWSE-API company/newlisting，T162）。可選 name 過濾。",

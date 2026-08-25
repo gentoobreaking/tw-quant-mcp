@@ -101,6 +101,7 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPISecPenalty):      cache.DatasetCalendar,   // 證期局裁罰（T106）
 	string(provider.TWSEAPIForeignApply):    cache.DatasetCalendar,   // 外國公司申請第一上市（T123）
 	string(provider.TWSEAPINewListing):      cache.DatasetCalendar,   // 最近上市公司（T162）
+	string(provider.TWSEAPILocalApply):      cache.DatasetCalendar,   // 本國公司申請上市（T138）
 	string(provider.TWSEAPISuspListing):     cache.DatasetCalendar,   // 終止上市公司（T178）
 	string(provider.TWSEWDMarginInfo):       cache.DatasetMargin,     // 信用交易統計（T140）
 	string(provider.TWSEWDHoliday):          cache.DatasetCalendar,   // 開休市日期（T144）
