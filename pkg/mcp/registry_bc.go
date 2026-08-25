@@ -1129,6 +1129,22 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcBrokerVolumeRank,
 	}) // T196
 	r.Register(ToolDef{
+		Symbol: "get_otc_foreign_trading",
+		Name:   "get_otc_foreign_trading",
+		Description: "查詢上櫃股票外資及陸資每日買賣超彙總（TPEx-API tpex_3insti_qfii_trading，T197）。" +
+			"code 選填過濾特定證券；limit 預設 50、offset 分頁。注意：官方欄位 key 含不規則空白，原樣回傳。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填），過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcForeignTrading,
+	}) // T197
+	r.Register(ToolDef{
 		Symbol:      "get_otc_index",
 		Name:        "get_otc_index",
 		Description: "查詢櫃買市場（上櫃）指數歷史行情，包含開高低收、漲跌幅（TPEx-API tpex_index，T156）。",

@@ -1,0 +1,45 @@
+{
+  "arguments": {
+    "code": "00937B",
+    "limit": 3
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\" ForeignDealers-Difference\":\"0\",\" ForeignDealers-TotalBuy\":\"0\",\" ForeignDealers-TotalSell\":\"0\",\" ForeignInvestorsInclude MainlandAreaInvestors-Difference\":\"11625\",\" ForeignInvestorsIncludeMainlandAreaInvestors-Difference\":\"11625\",\" ForeignInvestorsIncludeMainlandAreaInvestors-Total Sell\":\"1397\",\" ForeignInvestorsIncludeMainlandAreaInvestors-TotalBuy\":\"13022\",\"CompanyName\":\"群益ESG投等債20+\",\"Date\":\"1150825\",\"ForeignInvestorsIncludeMainlandAreaInvestors-TotalSell\":\"1397\",\"Rank\":\"1\",\"SecuritiesCompanyCode\":\"00937B\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T06:15:30+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":310,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+      }
+    ],
+    "structuredContent": {
+      "data": [
+        {
+          " ForeignDealers-Difference": "0",
+          " ForeignDealers-TotalBuy": "0",
+          " ForeignDealers-TotalSell": "0",
+          " ForeignInvestorsInclude MainlandAreaInvestors-Difference": "11625",
+          " ForeignInvestorsIncludeMainlandAreaInvestors-Difference": "11625",
+          " ForeignInvestorsIncludeMainlandAreaInvestors-Total Sell": "1397",
+          " ForeignInvestorsIncludeMainlandAreaInvestors-TotalBuy": "13022",
+          "CompanyName": "群益ESG投等債20+",
+          "Date": "1150825",
+          "ForeignInvestorsIncludeMainlandAreaInvestors-TotalSell": "1397",
+          "Rank": "1",
+          "SecuritiesCompanyCode": "00937B"
+        }
+      ],
+      "_lineage": {
+        "source": "TPEX_API",
+        "source_role": "CANONICAL",
+        "fetched_at": "2026-08-26T06:15:30+08:00",
+        "data_date": "2026-08-26",
+        "freshness": "POST_MARKET",
+        "sampling_sec": 0,
+        "is_cached": false,
+        "latency_ms": 310,
+        "grade": "AVAILABLE"
+      },
+      "http_calls": 1,
+      "disclaimer": "僅供研究參考，不構成投資建議"
+    }
+  }
+}

@@ -151,6 +151,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["new_listing|"] = `[{"Code":"7855","Company":"和運租車","ApplicationDate":"1150414","Chairman":"劉源森","ApprovedListingDate":"1150811","Underwriter":"台新"}]`
 	f.bodies["local_apply|"] = `[{"Code":"7883","Company":"饗賓","ApplicationDate":"1150727","Chairman":"陳毅航","AmountofCapital ":"609760","CommitteeDate":"1150827","Underwriter":"元大","Note":""}]`
 	f.bodies["suspend_listing|"] = `[{"DelistingDate":"115/06/23","Company":"森崴能源","Code":"6806"}]`
+	f.bodies["otc_foreign_trading|"] = `[{"Date":"1150730","Rank":"1","SecuritiesCompanyCode":"8110","CompanyName":"華東"," ForeignInvestorsIncludeMainlandAreaInvestors-TotalBuy":"1000"}]`
 	f.bodies["otc_broker_volume|"] = `[{"Date":"20260730","StockRanking":"1","SecuritiesCompanyCodeAndCompanyName":"華東(8110)","SecuritiesFirmsRanking":"1","SecuritiesFirmsCode":"元大","TotalPurchaseShares":"1000","TotalSellShares":"900"}]`
 	f.bodies["otc_monthly_revenue|"] = `[{"出表日期":"1150817","資料年月":"11507","公司代號":"1240","公司名稱":"茂生農經","營業收入-當月營收":"242511","營業收入-上月比較增減(%)":"-10.24"}]`
 	f.bodies["otc_daily|"] = `[{"date":"2026-07-30","code":"8110","name":"華東","close":30.5,"change_dir":"+","change":0.35,"open":30.1,"high":30.7,"low":30.0,"volume":120000,"amount":3660000,"transaction":80}]`
@@ -300,6 +301,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_otc_daily", args: map[string]any{}},
 		{name: "get_otc_monthly_revenue", args: map[string]any{"code": "1240"}},
 		{name: "get_otc_active_broker_volume", args: map[string]any{"stock_no": "8110"}},
+		{name: "get_otc_foreign_trading", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_index", args: map[string]any{}},
 		{name: "get_otc_odd_lot", args: map[string]any{}},
 		{name: "get_daily_securities_lending_volume", args: map[string]any{}},

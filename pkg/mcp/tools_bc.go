@@ -1392,3 +1392,37 @@ func handlerGetOtcBrokerVolumeRank(a *App, args map[string]any) (HandlerResult, 
 	}
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
+
+// handlerGetOtcForeignTrading：上櫃外資及陸資買賣超彙總（T197）。
+// 官方欄位 key 含不規則空白，passthrough 原樣回傳；code 為本地端過濾。
+func handlerGetOtcForeignTrading(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExOtcForeignTrd), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcForeignTrd), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExOtcForeignTrd, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetInstitutional)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
