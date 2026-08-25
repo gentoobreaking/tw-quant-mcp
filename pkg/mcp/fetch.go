@@ -27,6 +27,20 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEWDBlockTrades):      cache.DatasetDailyKLine, // 鉅額交易日統計（T042）
 	string(provider.TWSEWDBlockMonthly):     cache.DatasetDailyKLine, // 鉅額交易月統計（T044）
 	string(provider.TWSEWDBlockYearly):      cache.DatasetDailyKLine, // 鉅額交易年統計（T045）
+	string(provider.TWSEWDCrossMarket):      cache.DatasetDailyKLine, // 跨市場成交（T115）
+	string(provider.TWSEWDDayTradeTargets):  cache.DatasetAlertStock, // 當沖標的（T116）
+	string(provider.TWSEWDSBLVolume):        cache.DatasetDailyKLine, // 借券賣出量（T119）
+	string(provider.TWSEWDFirstForeign):     cache.DatasetDailyKLine, // 第一上市外股（T122）
+	string(provider.TWSEWDMarginRestrict):   cache.DatasetCalendar,   // 停資停券預告（T139）
+	string(provider.TWSEWDGainLoss):         cache.DatasetDailyKLine, // 漲跌家數統計（T142）
+	string(provider.TWSEWDOddLot):           cache.DatasetDailyKLine, // 盤後零股（T149）
+	string(provider.TWSEWDTradingChanges):   cache.DatasetCalendar,   // 變更交易（T163）
+	string(provider.TWSEWDPriceChangeLim):   cache.DatasetValuation,  // 漲跌停參考價（T172）
+	string(provider.TWSEWDNewList5D):        cache.DatasetCalendar,   // 首五日無漲跌幅（T175）
+	string(provider.TWSEWDSuspDayTradeAnn):  cache.DatasetCalendar,   // 暫停當沖預告（T176）
+	string(provider.TWSEWDSuspDayTradeHis):  cache.DatasetTAIFEXHistory, // 暫停當沖歷史（T177）
+	string(provider.TWSEWDSuspended):        cache.DatasetCalendar,   // 暫停交易證券（T179）
+	string(provider.TWSEWDTopVolume):        cache.DatasetDailyKLine, // 成交量Top20（T184）
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,

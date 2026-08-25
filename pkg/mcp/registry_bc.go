@@ -213,6 +213,191 @@ func registerBCTools(r *Registry) {
 		Handler:  webListSpec{ds: provider.TWSEWDBlockYearly}.handler(),
 	})
 	r.Register(ToolDef{
+		Symbol:      "get_cross_market_trading_info",
+		Name:        "get_cross_market_trading_info",
+		Description: "查詢每日上市上櫃跨市場成交資訊（T115）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDCrossMarket}.handler(),
+	}) // T115
+	r.Register(ToolDef{
+		Symbol:      "get_daily_day_trading_targets",
+		Name:        "get_daily_day_trading_targets",
+		Description: "查詢上市股票每日當日沖銷交易標的及統計（T116）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "股票名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDDayTradeTargets}.handler(),
+	}) // T116
+	r.Register(ToolDef{
+		Symbol:      "get_daily_securities_lending_volume",
+		Name:        "get_daily_securities_lending_volume",
+		Description: "查詢集中市場借券賣出每日量（T119）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDSBLVolume}.handler(),
+	}) // T119
+	r.Register(ToolDef{
+		Symbol:      "get_first_listed_foreign_stocks_daily",
+		Name:        "get_first_listed_foreign_stocks_daily",
+		Description: "查詢每日第一上市外國股票成交量值（T122）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDFirstForeign}.handler(),
+	}) // T122
+	r.Register(ToolDef{
+		Symbol:      "get_margin_loan_restrictions_announcement",
+		Name:        "get_margin_loan_restrictions_announcement",
+		Description: "查詢集中市場停資停券預告表（T139）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDMarginRestrict}.handler(),
+	}) // T139
+	r.Register(ToolDef{
+		Symbol:      "get_odd_lot_trading_quotes",
+		Name:        "get_odd_lot_trading_quotes",
+		Description: "查詢集中市場盤後零股交易行情單（T149）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDOddLot}.handler(),
+	}) // T149
+	r.Register(ToolDef{
+		Symbol:      "get_securities_trading_changes",
+		Name:        "get_securities_trading_changes",
+		Description: "查詢集中市場證券變更交易（T163）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDTradingChanges}.handler(),
+	}) // T163
+	r.Register(ToolDef{
+		Symbol:      "get_stock_price_changes",
+		Name:        "get_stock_price_changes",
+		Description: "查詢上市個股股價升降幅（漲跌停參考價；T172）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDPriceChangeLim}.handler(),
+	}) // T172
+	r.Register(ToolDef{
+		Symbol:      "get_stocks_no_price_change_first_five_days",
+		Name:        "get_stocks_no_price_change_first_five_days",
+		Description: "查詢上市個股首五日無漲跌幅（T175）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDNewList5D}.handler(),
+	}) // T175
+	r.Register(ToolDef{
+		Symbol:      "get_suspended_day_trading_announcement",
+		Name:        "get_suspended_day_trading_announcement",
+		Description: "查詢暫停先賣後買當日沖銷標的預告表（T176）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDSuspDayTradeAnn}.handler(),
+	}) // T176
+	r.Register(ToolDef{
+		Symbol:      "get_suspended_day_trading_history",
+		Name:        "get_suspended_day_trading_history",
+		Description: "查詢暫停先賣後買當日沖銷交易歷史（T177）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDSuspDayTradeHis}.handler(),
+	}) // T177
+	r.Register(ToolDef{
+		Symbol:      "get_suspended_trading_stocks",
+		Name:        "get_suspended_trading_stocks",
+		Description: "查詢集中市場暫停交易證券（T179）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDSuspended}.handler(),
+	}) // T179
+	r.Register(ToolDef{
+		Symbol:      "get_top_20_volume_stocks",
+		Name:        "get_top_20_volume_stocks",
+		Description: "查詢當日成交量 Top20（TWSE-WEB MI_INDEX20，T184）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "股票名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDTopVolume}.handler(),
+	}) // T184
+
+	r.Register(ToolDef{
 		Symbol:      "get_after_hours_trading",
 		Name:        "get_after_hours_trading",
 		Description: "查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。" +

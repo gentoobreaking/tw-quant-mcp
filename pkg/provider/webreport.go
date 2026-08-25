@@ -3,6 +3,8 @@ package provider
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
+	"time"
 )
 
 // ParseWebReport 解析 TWSE-WEB 報表 JSON（stat/fields/data/date，T042 parity 系列）。
@@ -38,4 +40,41 @@ func ZipRow(fields []string, row []string) map[string]string {
 		}
 	}
 	return m
+}
+
+// normalizeWebTable 泛用 TWSE-WEB 表格直通正規化：以官方中文欄位名為 JSON 鍵
+// 輸出列陣列（parity 批次 T115/T116/T119/T122/T139/T149/T163/T172/T175-T177/T179/T184）。
+func normalizeWebTable(raw *RawResponse) ([]map[string]any, error) {
+	fields, rows, date, err := ParseWebReport(raw)
+	if err != nil {
+		return nil, err
+	}
+	var meta struct {
+		Date string `json:"date"`
+	}
+	_ = json.Unmarshal(raw.Body, &meta)
+	out := make([]map[string]any, 0, len(rows))
+	for _, row := range rows {
+		m := ZipRow(fields, row)
+		rec := make(map[string]any, len(m)+1)
+		for k, v := range m {
+			rec[k] = strings.TrimSpace(v)
+		}
+		if date != "" {
+			if ts, err := time.Parse("20060102", date); err == nil {
+				rec["_date"] = ts.Format("2006-01-02")
+			}
+		}
+		out = append(out, rec)
+	}
+	return out, nil
+}
+
+// normalizePassthroughArray 裸 JSON 陣列直通（opendata/* 端點，T142）。
+func normalizePassthroughArray(raw *RawResponse) (json.RawMessage, error) {
+	var arr json.RawMessage
+	if err := json.Unmarshal(raw.Body, &arr); err != nil {
+		return nil, fmt.Errorf("provider: passthrough 陣列解析失敗: %w", err)
+	}
+	return arr, nil
 }

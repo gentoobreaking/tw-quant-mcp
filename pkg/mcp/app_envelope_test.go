@@ -58,6 +58,19 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["block_yearly|"] = `[{"month":"2026","volume":30000000,"amount":1500000000}]`
 	f.bodies["block_trades|20260730"] = `[{"code":"2330","name":"台積電","trade_type":"配對交易","price":4825,"volume":50000,"amount":241250000}]`
 	f.bodies["block_trades|date=20260730"] = `[{"code":"2330","name":"台積電","trade_type":"配對交易","price":4825,"volume":50000,"amount":241250000}]`
+	f.bodies["cross_market|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["day_trade_targets|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["sbl_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["first_foreign|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["margin_restrict|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["odd_lot|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["trading_changes|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["price_change_lim|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["new_list_5d|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["suspend_daytrade_ann|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["suspend_daytrade_his|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["suspended|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["top_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
 	f.stub("daily_k", url.Values{"date": {"20260601"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "06", 20, 20)))
@@ -161,6 +174,20 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_block_trades_detail", args: map[string]any{"date": "2026-07-30"}},
 		{name: "get_block_trades_monthly", args: map[string]any{}},
 		{name: "get_block_trades_yearly", args: map[string]any{}},
+		// ── parity 批次 T115-T184 ──
+		{name: "get_cross_market_trading_info", args: map[string]any{}},
+		{name: "get_daily_day_trading_targets", args: map[string]any{}},
+		{name: "get_daily_securities_lending_volume", args: map[string]any{}},
+		{name: "get_first_listed_foreign_stocks_daily", args: map[string]any{}},
+		{name: "get_margin_loan_restrictions_announcement", args: map[string]any{}},
+		{name: "get_odd_lot_trading_quotes", args: map[string]any{}},
+		{name: "get_securities_trading_changes", args: map[string]any{}},
+		{name: "get_stock_price_changes", args: map[string]any{}},
+		{name: "get_stocks_no_price_change_first_five_days", args: map[string]any{}},
+		{name: "get_suspended_day_trading_announcement", args: map[string]any{}},
+		{name: "get_suspended_day_trading_history", args: map[string]any{}},
+		{name: "get_suspended_trading_stocks", args: map[string]any{}},
+		{name: "get_top_20_volume_stocks", args: map[string]any{"name": ""}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

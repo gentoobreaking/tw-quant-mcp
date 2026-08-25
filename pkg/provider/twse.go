@@ -47,6 +47,21 @@ const (
 	TWSEWDAfterHours    TWSEWebDataset = "after_hours"     // 盤後定價交易（T040）
 	TWSEWDBlockMonthly  TWSEWebDataset = "block_monthly"   // 鉅額交易月統計（T044）
 	TWSEWDBlockYearly   TWSEWebDataset = "block_yearly"    // 鉅額交易年統計（T045）
+	// ── parity 批次（T115/T116/T119/T122/T139/T142/T149/T163/T172/T175-T177/T179/T184）──
+	TWSEWDCrossMarket     TWSEWebDataset = "cross_market"      // 跨市場成交資訊
+	TWSEWDDayTradeTargets TWSEWebDataset = "day_trade_targets" // 當日沖銷標的
+	TWSEWDSBLVolume       TWSEWebDataset = "sbl_volume"        // 借券賣出每日量
+	TWSEWDFirstForeign    TWSEWebDataset = "first_foreign"     // 第一上市外國股票日成交量值
+	TWSEWDMarginRestrict  TWSEWebDataset = "margin_restrict"   // 停資停券預告表
+	TWSEWDGainLoss        TWSEWebDataset = "gain_loss"         // 市場漲跌家數統計（opendata）
+	TWSEWDOddLot          TWSEWebDataset = "odd_lot"           // 盤後零股行情
+	TWSEWDTradingChanges  TWSEWebDataset = "trading_changes"   // 證券變更交易
+	TWSEWDPriceChangeLim  TWSEWebDataset = "price_change_lim"  // 股價升降幅（漲跌停參考）
+	TWSEWDNewList5D       TWSEWebDataset = "new_list_5d"       // 首五日無漲跌幅
+	TWSEWDSuspDayTradeAnn TWSEWebDataset = "suspend_daytrade_ann" // 暫停當沖預告
+	TWSEWDSuspDayTradeHis TWSEWebDataset = "suspend_daytrade_his" // 暫停當沖歷史
+	TWSEWDSuspended       TWSEWebDataset = "suspended"         // 暫停交易證券
+	TWSEWDTopVolume       TWSEWebDataset = "top_volume"        // 成交量 Top20
 )
 
 // TWSEAPIDataset 為 TWSE-API（openapi.twse.com.tw）資料集 ID。
@@ -81,6 +96,20 @@ var (
 		TWSEWDBlockTrades:   "/rwd/block/BFIAUU_d",
 		TWSEWDBlockMonthly:  "/rwd/block/BFIAUU_m",
 		TWSEWDBlockYearly:   "/rwd/block/BFIAUU_y",
+		TWSEWDCrossMarket:     "/exchangeReport/MI_INDEX4",
+		TWSEWDDayTradeTargets: "/exchangeReport/TWTB4U",
+		TWSEWDSBLVolume:       "/SBL/TWT96U",
+		TWSEWDFirstForeign:    "/exchangeReport/STOCK_FIRST",
+		TWSEWDMarginRestrict:  "/exchangeReport/BFI84U",
+		TWSEWDGainLoss:        "/opendata/twtazu_od",
+		TWSEWDOddLot:          "/exchangeReport/TWT53U",
+		TWSEWDTradingChanges:  "/exchangeReport/TWT85U",
+		TWSEWDPriceChangeLim:  "/exchangeReport/TWT84U",
+		TWSEWDNewList5D:       "/exchangeReport/TWT88U",
+		TWSEWDSuspDayTradeAnn: "/exchangeReport/TWTBAU1",
+		TWSEWDSuspDayTradeHis: "/exchangeReport/TWTBAU2",
+		TWSEWDSuspended:       "/exchangeReport/TWTAWU",
+		TWSEWDTopVolume:       "/exchangeReport/MI_INDEX20",
 		TWSEWDAbnormal:      "/rwd/announcement/notice",
 		TWSEWDForeignQFIIS:  "/rwd/fund/MI_QFIIS",
 		TWSEWDAfterHours:    "/exchangeReport/BFT41U",
@@ -470,6 +499,34 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizeBlockTrades(raw)
 	case "block_yearly":
 		out, err = normalizeBlockTrades(raw)
+	case "cross_market":
+		out, err = normalizeWebTable(raw)
+	case "day_trade_targets":
+		out, err = normalizeWebTable(raw)
+	case "sbl_volume":
+		out, err = normalizeWebTable(raw)
+	case "first_foreign":
+		out, err = normalizeWebTable(raw)
+	case "margin_restrict":
+		out, err = normalizeWebTable(raw)
+	case "odd_lot":
+		out, err = normalizeWebTable(raw)
+	case "trading_changes":
+		out, err = normalizeWebTable(raw)
+	case "price_change_lim":
+		out, err = normalizeWebTable(raw)
+	case "new_list_5d":
+		out, err = normalizeWebTable(raw)
+	case "suspend_daytrade_ann":
+		out, err = normalizeWebTable(raw)
+	case "suspend_daytrade_his":
+		out, err = normalizeWebTable(raw)
+	case "suspended":
+		out, err = normalizeWebTable(raw)
+	case "top_volume":
+		out, err = normalizeWebTable(raw)
+	case "gain_loss":
+		out, err = normalizePassthroughArray(raw)
 	case "abnormal_volume":
 		out, err = normalizeAbnormalVolume(raw)
 	case "after_hours":
