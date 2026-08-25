@@ -23,6 +23,7 @@ data/
 .idea/
 .vscode/
 *.log
+.pi/
 
 # 渲染暫存
 snapshots/.html_tmp/

@@ -52,7 +52,7 @@ curl http://localhost:8787/health
 ## 設定（環境變數）
 
 | 變數 | 預設 | 說明 |
-|---|---|---|
+| --- | --- | --- |
 | `MCP_TRANSPORT` | `stdio` | `stdio` 或 `streamable-http` |
 | `MCP_HTTP_ADDR` | `127.0.0.1:8787` | streamable-http 監聽位址 |
 | `DATA_DIR` | `~/.tw-quant-mcp/data` | L2 SQLite 快取資料目錄（含 Materialized Index） |
@@ -355,15 +355,15 @@ v2.1 §14 之 **7 項優化需求**、**十大投資情境（§9，25 Tool）** 
 ## 資料來源（官方唯一，§2）
 
 | ID | 來源 | 內容 |
-|---|---|---|
+| --- | --- | --- |
 | TWSE-API | openapi.twse.com.tw | 公司治理、ESG 揭露（t187ap46_L_1~21，T037 雙來源之一）、日收盤、外資持股、權證、指數 |
-| TWSE-WEB | www.twse.com.tw/exchangeReport/* | 日 K、融資融券、三大法人、收盤行情、注意股 |
-| TWSE-ETF | www.twse.com.tw/zh/ETFortune/* | ETF 歷史 NAV/折溢價（e添富平台，POST ajaxEtfInfoChart） |
+| TWSE-WEB | <www.twse.com.tw/exchangeReport/>* | 日 K、融資融券、三大法人、收盤行情、注意股 |
+| TWSE-ETF | <www.twse.com.tw/zh/ETFortune/>* | ETF 歷史 NAV/折溢價（e添富平台，POST ajaxEtfInfoChart） |
 | TWSE-MIS | mis.twse.com.tw | 盤中即時 Snapshot（8 秒採樣） |
-| TPEx-API | www.tpex.org.tw/openapi | 上櫃日收盤、法人、融資融券、注意/處置股 |
+| TPEx-API | <www.tpex.org.tw/openapi> | 上櫃日收盤、法人、融資融券、注意/處置股 |
 | MOPS | mops.twse.com.tw | 月營收、財報三表、重大訊息、公司資料、ESG 揭露八主題（t187ap46_L_1~8，T037 雙來源之一） |
 | TAIFEX-API | openapi.taifex.com.tw | 期貨/選擇權行情、PCR、大額交易人、保證金（最新交易日） |
-| TAIFEX-DL | www.taifex.com.tw/cht/3/*DateDown* | 歷史回溯 CSV（T-1 起） |
+| TAIFEX-DL | <www.taifex.com.tw/cht/3/*DateDown>* | 歷史回溯 CSV（T-1 起） |
 
 **免責聲明（官方來源政策）**：本服務 100% 僅使用上述官方免費來源（§2 Source
 Registry），不連線任何第三方行情供應商；所有輸出僅供研究與程式化測試參考，
@@ -383,6 +383,7 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 ```
 
 ---
+
 ## License
 
 本專案採用 **Apache License 2.0** 授權。
@@ -596,4 +597,3 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 - `screen_high_yield`：高殖利率排行（§10.E；T017 composite 引擎批次過濾）。條件：min_yield（預設 3%）、min_dividend（每股現金股利下限）、max_pe、min_consecutive（最低連年配息年數，配息穩定性）。結果依殖利率遞減；整批快取 + 記憶體計算（§12.4）。
 - `screen_stocks`：價值/成長篩選全市場股票（§10.D；T017 composite 引擎批次過濾，整批快取 + 記憶體計算，§12.4）。條件：max_pe（低本益比）、max_pb（低股價淨值比）、min_yield（高殖利率）、min_growth（月營收 YoY）、min_profit_growth（淨利 YoY）、require_esg（具 ESG 揭露）。排序 sort（pe 預設|yield|pb|growth）；limit 即 top_n 回傳上限。
 - `set_active_watchlist`：設定盤中即時監控的股票觀察清單（最多 15 檔）。呼叫後 background worker 每 8 秒進行快照輪詢，為其餘盤中工具提供記憶體資料。
-
