@@ -954,7 +954,7 @@ func handlerGetOtcDaily(a *App, args map[string]any) (HandlerResult, error) {
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	ttl, _ := a.ttlOf(string(provider.TPExOtcDaily))
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine) // TPExOtcDaily 與 daily_kline 同政策（T155）
 	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
 	return HandlerResult{Data: otcPaginate(rows, offset, limit), Lineage: lineage}, nil
 }
@@ -972,7 +972,7 @@ func handlerGetOtcIndex(a *App, args map[string]any) (HandlerResult, error) {
 		return HandlerResult{}, err
 	}
 	sort.Slice(rows, func(i, j int) bool { return rows[i].Date > rows[j].Date })
-	ttl, _ := a.ttlOf(string(provider.TPExIndices))
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine) // 櫃買指數歷史同 daily_kline 政策（T156）
 	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
 	return HandlerResult{Data: otcPaginate(rows, offset, limit), Lineage: lineage}, nil
 }
@@ -995,7 +995,7 @@ func handlerGetOtcOddLot(a *App, args map[string]any) (HandlerResult, error) {
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	ttl, _ := a.ttlOf(string(provider.TPExOddLot))
+	ttl, _ := a.ttlOf(cache.DatasetAlertStock) // 上櫃零股同 alert_stock 政策（T157）
 	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
 	return HandlerResult{Data: otcPaginate(rows, offset, limit), Lineage: lineage}, nil
 }
