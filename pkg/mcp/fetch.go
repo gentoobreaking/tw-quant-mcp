@@ -150,6 +150,9 @@ var cacheDataset = map[string]string{
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）
 	string(provider.TPExOtcESG):             cache.DatasetESG,            // 上櫃 ESG 揭露（T216）
+	string(provider.TPExHDIndex):            cache.DatasetDailyKLine,     // 高殖利率指數歷史（T218）
+	string(provider.TPExHDLatest):           cache.DatasetDailyKLine,     // 高殖利率指數當日（T218）
+	string(provider.TPExHDConstituent):      cache.DatasetDailyKLine,     // 高殖利率指數成分股（T218）
 	string(model.TAOptionsDelta):            cache.DatasetCalendar,   // 選擇權 Delta（T151）
 	string(model.TAOIChange):                cache.DatasetCalendar,   // 台指選擇權 OI 增減（T154）
 	string(model.TAStockMargin):             cache.DatasetCalendar,   // 股票期貨保證金（T167）

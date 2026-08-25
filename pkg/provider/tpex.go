@@ -62,6 +62,9 @@ const (
 	TPExOtcDTTargets  TPExDataset = "otc_daytrade_targets"  // 上櫃當沖標的（T201）
 	TPExOtcDTStats    TPExDataset = "otc_daytrade_stats"    // 上櫃當沖統計（T201）
 	TPExOtcESG        TPExDataset = "otc_esg"               // 上櫃 ESG 揭露（T216，topic 1~21）
+	TPExHDIndex       TPExDataset = "hd_index"              // 高殖利率指數歷史（T218）
+	TPExHDLatest      TPExDataset = "hd_latest"             // 高殖利率指數當日（T218）
+	TPExHDConstituent TPExDataset = "hd_constituents"       // 高殖利率指數成分股（T218）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -86,6 +89,9 @@ var (
 		TPExOtcDTTargets:  "/tpex_securities",                   // 當沖標的（T201）
 		TPExOtcDTStats:    "/tpex_intraday_trading_statistics",  // 當沖統計（T201）
 		TPExOtcESG:        "/t187ap46_O_%s",                     // 上櫃 ESG 揭露 topic 模板（T216）
+		TPExHDIndex:       "/tphd_index",                        // 高殖利率指數歷史（T218）
+		TPExHDLatest:      "/tphd_change",                       // 高殖利率指數當日（T218）
+		TPExHDConstituent: "/tphd_constituents",                 // 高殖利率指數成分股（T218）
 	}
 )
 
@@ -259,6 +265,18 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExOtcESG):
 		// 上櫃 ESG 揭露：passthrough（T216；出表日期/報告年度/公司代號/
 		// 公司名稱 + 主題指標欄位）。
+		out = ms
+	case string(TPExHDIndex):
+		// 高殖利率指數歷史：passthrough（T218；Date/TPExHighDividendYieldIndex/
+		// TPExHighDividendYieldTotalReturnIndex）。
+		out = ms
+	case string(TPExHDLatest):
+		// 高殖利率指數當日收盤：passthrough（T218；上游端點名為 tphd_change
+		// 但實際回傳含治理指數等各指數名稱，如實保留）。
+		out = ms
+	case string(TPExHDConstituent):
+		// 高殖利率指數成分股：passthrough（T218；Date/SecuritiesCompanyCode/
+		// CompanyName）。
 		out = ms
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)

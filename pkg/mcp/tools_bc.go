@@ -1530,3 +1530,42 @@ func handlerGetOtcDaytradeStatistics(a *App, args map[string]any) (HandlerResult
 	}
 	return HandlerResult{Data: rows, Lineage: lineage}, nil
 }
+
+// handlerGetHighDividendIndex：櫃買高殖利率指數（T218；view 切換三端點）。
+// history=歷史收盤（含報酬指數）、latest=當日收盤、constituents=成分股。
+func handlerGetHighDividendIndex(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	view := strings.ToLower(strVal(args["view"]))
+	if view == "" {
+		view = "history"
+	}
+	var ds provider.TPExDataset
+	switch view {
+	case "latest":
+		ds = provider.TPExHDLatest
+	case "constituents":
+		ds = provider.TPExHDConstituent
+	default:
+		ds = provider.TPExHDIndex
+	}
+	limit, offset := listPaging(args)
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, view, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	if offset < len(rows) {
+		rows = rows[offset:]
+	} else {
+		rows = []map[string]any{}
+	}
+	if len(rows) > limit {
+		rows = rows[:limit]
+	}
+	return HandlerResult{Data: rows, Lineage: lineage}, nil
+}
