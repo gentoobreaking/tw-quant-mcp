@@ -1,0 +1,144 @@
+{
+  "arguments": {
+    "symbol": "2330"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 132,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"stock\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\"},\"technical\":{\"ma5\":2382,\"ma20\":2368.5,\"ma60\":2382.25,\"rsi_14\":52.05296025535314,\"trend_signal\":\"BULLISH\"},\"fundamental\":{\"pe\":27.53,\"pb\":9.57,\"dividend_yield_pct\":0.93,\"eps_growth_yoy_pct\":0},\"chip\":{\"foreign_net_shares_5d\":0,\"trust_net_shares_5d\":0},\"horizon\":\"mid\",\"_lineage\":[{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"0001-01-01T08:06:00+08:06\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":0,\"grade\":\"PREVIEW\"},{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"0001-01-01T08:06:00+08:06\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"PREVIEW\"},{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"0001-01-01T08:06:00+08:06\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":0,\"grade\":\"PREVIEW\"}],\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"indicator\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"value\"],\"title\":\"數值\"},\"note\":\"跨來源聚合（TWSE Web API + MOPS），Grade PREVIEW；value 為各指標數值（MA/RSI/PE/PB/殖利率/法人淨買賣，0 值省略）\"}},\"_lineage\":[{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T19:55:06+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":16241,\"grade\":\"PREVIEW\"},{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T19:55:06+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":16241,\"grade\":\"PREVIEW\"},{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T19:55:06+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":16241,\"grade\":\"PREVIEW\"}],\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"indicator\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"value\"],\"title\":\"數值\"},\"note\":\"跨來源聚合（TWSE Web API + MOPS），Grade PREVIEW；value 為各指標數值（MA/RSI/PE/PB/殖利率/法人淨買賣，0 值省略）\"},\"http_calls\":17,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "stock": {
+            "symbol": "2330",
+            "name": "台積電",
+            "market": "tse"
+          },
+          "technical": {
+            "ma5": 2382,
+            "ma20": 2368.5,
+            "ma60": 2382.25,
+            "rsi_14": 52.05296025535314,
+            "trend_signal": "BULLISH"
+          },
+          "fundamental": {
+            "pe": 27.53,
+            "pb": 9.57,
+            "dividend_yield_pct": 0.93,
+            "eps_growth_yoy_pct": 0
+          },
+          "chip": {
+            "foreign_net_shares_5d": 0,
+            "trust_net_shares_5d": 0
+          },
+          "horizon": "mid",
+          "_lineage": [
+            {
+              "source": "TWSE_WEB",
+              "source_role": "CANONICAL",
+              "fetched_at": "0001-01-01T08:06:00+08:06",
+              "data_date": "2026-08-25",
+              "freshness": "POST_MARKET",
+              "sampling_sec": 0,
+              "is_cached": false,
+              "latency_ms": 0,
+              "grade": "PREVIEW"
+            },
+            {
+              "source": "TWSE_API",
+              "source_role": "CANONICAL",
+              "fetched_at": "0001-01-01T08:06:00+08:06",
+              "data_date": "2026-08-25",
+              "freshness": "POST_MARKET",
+              "sampling_sec": 0,
+              "is_cached": true,
+              "latency_ms": 0,
+              "grade": "PREVIEW"
+            },
+            {
+              "source": "TWSE_WEB",
+              "source_role": "CANONICAL",
+              "fetched_at": "0001-01-01T08:06:00+08:06",
+              "data_date": "2026-08-25",
+              "freshness": "POST_MARKET",
+              "sampling_sec": 0,
+              "is_cached": false,
+              "latency_ms": 0,
+              "grade": "PREVIEW"
+            }
+          ],
+          "_chart_meta": {
+            "recommended_type": "line",
+            "x_axis": {
+              "key": "indicator",
+              "type": "category"
+            },
+            "y_axis": {
+              "keys": [
+                "value"
+              ],
+              "title": "數值"
+            },
+            "note": "跨來源聚合（TWSE Web API + MOPS），Grade PREVIEW；value 為各指標數值（MA/RSI/PE/PB/殖利率/法人淨買賣，0 值省略）"
+          }
+        },
+        "_lineage": [
+          {
+            "source": "TWSE_WEB",
+            "source_role": "CANONICAL",
+            "fetched_at": "2026-08-25T19:55:06+08:00",
+            "data_date": "2026-08-25",
+            "freshness": "POST_MARKET",
+            "sampling_sec": 0,
+            "is_cached": false,
+            "latency_ms": 16241,
+            "grade": "PREVIEW"
+          },
+          {
+            "source": "TWSE_API",
+            "source_role": "CANONICAL",
+            "fetched_at": "2026-08-25T19:55:06+08:00",
+            "data_date": "2026-08-25",
+            "freshness": "POST_MARKET",
+            "sampling_sec": 0,
+            "is_cached": true,
+            "latency_ms": 16241,
+            "grade": "PREVIEW"
+          },
+          {
+            "source": "TWSE_WEB",
+            "source_role": "CANONICAL",
+            "fetched_at": "2026-08-25T19:55:06+08:00",
+            "data_date": "2026-08-25",
+            "freshness": "POST_MARKET",
+            "sampling_sec": 0,
+            "is_cached": false,
+            "latency_ms": 16241,
+            "grade": "PREVIEW"
+          }
+        ],
+        "_chart_meta": {
+          "recommended_type": "line",
+          "x_axis": {
+            "key": "indicator",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "value"
+            ],
+            "title": "數值"
+          },
+          "note": "跨來源聚合（TWSE Web API + MOPS），Grade PREVIEW；value 為各指標數值（MA/RSI/PE/PB/殖利率/法人淨買賣，0 值省略）"
+        },
+        "http_calls": 17,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

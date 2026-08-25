@@ -472,6 +472,15 @@ func validateTWSE(raw *RawResponse, sourceID string) error {
 	if err := json.Unmarshal(body, &fld); err != nil {
 		return fmt.Errorf("provider: %s fields/data 解析失敗: %w", ds, err)
 	}
+	// 多表格端點（如 TWTB4U）頂層無 data，改驗 tables 結構（稽核補強 T116）。
+	if len(fld.DataRaw) == 0 {
+		var tb struct {
+			Tables []json.RawMessage `json:"tables"`
+		}
+		if json.Unmarshal(body, &tb) == nil && len(tb.Tables) > 0 {
+			return validateTables(ds, body)
+		}
+	}
 	if err := validateRequiredFields(ds, fld.Fields); err != nil {
 		return err
 	}
@@ -518,8 +527,12 @@ func rawRows(data json.RawMessage) ([][]string, error) {
 // isTablesDataset 判斷資料集是否為「tables」結構（margin/market_close/block_trades）。
 func isTablesDataset(ds string) bool {
 	switch ds {
-	case "margin", "market_close", "block_trades", "margin_info", "stock_mon_trade", "stock_year_his":
+	case "margin", "market_close", "block_trades", "margin_info":
 		return true
+	case "stock_mon_trade", "stock_year_his":
+		// FMSRFK/FMNPTK 實測為頂層 fields/data（非 tables[]），改走泛用表格
+		// 正規化（稽核補強 T171/T173）。
+		return false
 	}
 	return false
 }
@@ -682,14 +695,15 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizeIndexHistory(raw)
 	case "block_trades":
 		out, err = normalizeBlockTrades(raw)
-	case "block_monthly":
-		out, err = normalizeBlockTrades(raw)
-	case "block_yearly":
-		out, err = normalizeBlockTrades(raw)
+	case "block_monthly", "block_yearly":
+		// BFIAUU_m/y 為頂層 fields/data 結構（非 tables[]），改用泛用表格
+		// 正規化（稽核補強 T044/T045）。
+		out, err = normalizeWebTable(raw)
 	case "cross_market":
 		out, err = normalizeWebTable(raw)
 	case "day_trade_targets":
-		out, err = normalizeWebTable(raw)
+		// TWTB4U 為雙表格結構，取含「證券代號」之標的表（稽核補強 T116）。
+		out, err = normalizeWebTablesPick(raw, "證券代號")
 	case "fin_prog_abnormal":
 		out, err = normalizeWebTable(raw)
 	case "sbl_volume":
@@ -773,7 +787,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "monthly_avg_all", "stock_year_trade":
 		out, err = normalizeWebTable(raw)
 	case "stock_mon_trade", "stock_year_his":
-		out, err = normalizeWebTablesList(raw)
+		// FMSRFK/FMNPTK 為頂層 fields/data 結構（稽核補強 T171/T173）。
+		out, err = normalizeWebTable(raw)
 	case "eps_stats", "income_ci", "income_basi", "income_bd",
 		"income_fh", "income_ins", "income_mim", "disclosure_vio":
 		out, err = normalizePassthroughArray(raw)

@@ -23,13 +23,86 @@ func ParseWebReport(raw *RawResponse) ([]string, [][]string, string, error) {
 	if envelope.Stat != "" && !strings.EqualFold(envelope.Stat, "OK") {
 		return nil, nil, "", fmt.Errorf("provider: 官方回應異常 stat=%q", envelope.Stat)
 	}
-	var rows [][]string
+	var rawRows [][]any
 	if len(envelope.DataRaw) > 0 {
-		if err := json.Unmarshal(envelope.DataRaw, &rows); err != nil {
+		if err := json.Unmarshal(envelope.DataRaw, &rawRows); err != nil {
 			return nil, nil, "", fmt.Errorf("provider: data 列解析失敗: %w", err)
 		}
 	}
+	// 官方部分端點（如 MI_INDEX20）之儲存格可能為數字，一律轉字串（稽核 T167/T116 等）。
+	rows := make([][]string, 0, len(rawRows))
+	for _, rr := range rawRows {
+		row := make([]string, 0, len(rr))
+		for _, cell := range rr {
+			switch x := cell.(type) {
+			case string:
+				row = append(row, x)
+			case nil:
+				row = append(row, "")
+			default:
+				row = append(row, strings.TrimSpace(fmt.Sprint(x)))
+			}
+		}
+		rows = append(rows, row)
+	}
 	return envelope.Fields, rows, envelope.Date, nil
+}
+
+// normalizeWebTablesPick 自 tables[] 結構挑選含 mustField 欄位之首個表格，
+// 以官方中文欄名輸出列陣列（TWTB4U 等多表格端點；稽核補強 T116）。
+func normalizeWebTablesPick(raw *RawResponse, mustField string) ([]map[string]any, error) {
+	var envelope struct {
+		Stat   string `json:"stat"`
+		Date   string `json:"date"`
+		Tables []struct {
+			Title  string     `json:"title"`
+			Fields []string   `json:"fields"`
+			Data   [][]any    `json:"data"`
+		} `json:"tables"`
+	}
+	if err := json.Unmarshal(raw.Body, &envelope); err != nil {
+		return nil, fmt.Errorf("provider: tables JSON 解析失敗: %w", err)
+	}
+	if envelope.Stat != "" && !strings.EqualFold(envelope.Stat, "OK") {
+		return nil, fmt.Errorf("provider: 官方回應異常 stat=%q", envelope.Stat)
+	}
+	var date string
+	if ts, err := time.Parse("20060102", envelope.Date); err == nil {
+		date = ts.Format("2006-01-02")
+	}
+	for _, t := range envelope.Tables {
+		has := false
+		for _, f := range t.Fields {
+			if f == mustField {
+				has = true
+				break
+			}
+		}
+		if !has {
+			continue
+		}
+		out := make([]map[string]any, 0, len(t.Data))
+		for _, row := range t.Data {
+			rec := make(map[string]any, len(t.Fields)+1)
+			for i, f := range t.Fields {
+				v := ""
+				if i < len(row) && row[i] != nil {
+					if s, ok := row[i].(string); ok {
+						v = strings.TrimSpace(s)
+					} else {
+						v = strings.TrimSpace(fmt.Sprint(row[i]))
+					}
+				}
+				rec[f] = v
+			}
+			if date != "" {
+				rec["_date"] = date
+			}
+			out = append(out, rec)
+		}
+		return out, nil
+	}
+	return nil, fmt.Errorf("provider: 找不到含欄位 %q 之表格", mustField)
 }
 
 // ZipRow 將 fields 與 row 合成 map（缺欄位為空字串）。

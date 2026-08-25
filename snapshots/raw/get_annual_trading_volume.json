@@ -1,0 +1,344 @@
+{
+  "arguments": {},
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 101,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"year\":\"2025\",\"contract\":\"TX\",\"name\":\"臺股期貨\",\"volume\":30093412,\"trading_days\":243,\"avg_daily_volume\":123841},{\"year\":\"2025\",\"contract\":\"TE\",\"name\":\"電子期貨\",\"volume\":197795,\"trading_days\":243,\"avg_daily_volume\":814},{\"year\":\"2025\",\"contract\":\"TF\",\"name\":\"金融期貨\",\"volume\":108801,\"trading_days\":243,\"avg_daily_volume\":448},{\"year\":\"2025\",\"contract\":\"MTX\",\"name\":\"小型臺指\",\"volume\":60294020,\"trading_days\":243,\"avg_daily_volume\":248124},{\"year\":\"2025\",\"contract\":\"GDF\",\"name\":\"黃金期貨\",\"volume\":31618,\"trading_days\":243,\"avg_daily_volume\":130},{\"year\":\"2025\",\"contract\":\"GTF\",\"name\":\"櫃買期貨\",\"volume\":1089,\"trading_days\":243,\"avg_daily_volume\":4},{\"year\":\"2025\",\"contract\":\"XIF\",\"name\":\"非金電期貨\",\"volume\":24178,\"trading_days\":243,\"avg_daily_volume\":99},{\"year\":\"2025\",\"contract\":\"TGF\",\"name\":\"臺幣黃金期貨\",\"volume\":149170,\"trading_days\":243,\"avg_daily_volume\":614},{\"year\":\"2025\",\"contract\":\"STF\",\"name\":\"股票期貨\",\"volume\":72276818,\"trading_days\":243,\"avg_daily_volume\":297435},{\"year\":\"2025\",\"contract\":\"ETF\",\"name\":\"ETF期貨\",\"volume\":2778994,\"trading_days\":243,\"avg_daily_volume\":11436},{\"year\":\"2025\",\"contract\":\"RHF\",\"name\":\"美元兌人民幣期貨\",\"volume\":7207,\"trading_days\":243,\"avg_daily_volume\":30},{\"year\":\"2025\",\"contract\":\"RTF\",\"name\":\"小型美元兌人民幣期貨\",\"volume\":30415,\"trading_days\":243,\"avg_daily_volume\":125},{\"year\":\"2025\",\"contract\":\"TJF\",\"name\":\"東證期貨\",\"volume\":40155,\"trading_days\":243,\"avg_daily_volume\":165},{\"year\":\"2025\",\"contract\":\"XJF\",\"name\":\"美元兌日圓期貨\",\"volume\":72195,\"trading_days\":243,\"avg_daily_volume\":297},{\"year\":\"2025\",\"contract\":\"XEF\",\"name\":\"歐元兌美元期貨\",\"volume\":8835,\"trading_days\":243,\"avg_daily_volume\":36},{\"year\":\"2025\",\"contract\":\"UDF\",\"name\":\"美國道瓊期貨\",\"volume\":118789,\"trading_days\":243,\"avg_daily_volume\":489},{\"year\":\"2025\",\"contract\":\"SPF\",\"name\":\"美國標普500期貨\",\"volume\":15440,\"trading_days\":243,\"avg_daily_volume\":64},{\"year\":\"2025\",\"contract\":\"XAF\",\"name\":\"澳幣兌美元期貨\",\"volume\":4411,\"trading_days\":243,\"avg_daily_volume\":18},{\"year\":\"2025\",\"contract\":\"XBF\",\"name\":\"英鎊兌美元期貨\",\"volume\":6740,\"trading_days\":243,\"avg_daily_volume\":28},{\"year\":\"2025\",\"contract\":\"BRF\",\"name\":\"布蘭特原油期貨\",\"volume\":6167,\"trading_days\":243,\"avg_daily_volume\":25},{\"year\":\"2025\",\"contract\":\"G2F\",\"name\":\"富櫃200期貨\",\"volume\":23541,\"trading_days\":243,\"avg_daily_volume\":97},{\"year\":\"2025\",\"contract\":\"UNF\",\"name\":\"美國那斯達克100期貨\",\"volume\":402557,\"trading_days\":243,\"avg_daily_volume\":1657},{\"year\":\"2025\",\"contract\":\"BTF\",\"name\":\"臺灣生技期貨\",\"volume\":1538,\"trading_days\":243,\"avg_daily_volume\":6},{\"year\":\"2025\",\"contract\":\"E4F\",\"name\":\"臺灣永續期貨\",\"volume\":40866,\"trading_days\":243,\"avg_daily_volume\":168},{\"year\":\"2025\",\"contract\":\"F1F\",\"name\":\"英國富時100期貨\",\"volume\":45134,\"trading_days\":243,\"avg_daily_volume\":186},{\"year\":\"2025\",\"contract\":\"ZEF\",\"name\":\"小型電子期貨\",\"volume\":425412,\"trading_days\":243,\"avg_daily_volume\":1751},{\"year\":\"2025\",\"contract\":\"ZFF\",\"name\":\"小型金融期貨\",\"volume\":71777,\"trading_days\":243,\"avg_daily_volume\":295},{\"year\":\"2025\",\"contract\":\"SHF\",\"name\":\"航運期貨\",\"volume\":1203,\"trading_days\":243,\"avg_daily_volume\":5},{\"year\":\"2025\",\"contract\":\"SOF\",\"name\":\"半導體30期貨\",\"volume\":44326,\"trading_days\":243,\"avg_daily_volume\":182},{\"year\":\"2025\",\"contract\":\"SXF\",\"name\":\"美國費城半導體期貨\",\"volume\":90095,\"trading_days\":243,\"avg_daily_volume\":371},{\"year\":\"2025\",\"contract\":\"MXFFX\",\"name\":\"客製化小型臺指期貨\",\"volume\":28,\"trading_days\":243,\"avg_daily_volume\":0},{\"year\":\"2025\",\"contract\":\"TMF\",\"name\":\"微型臺指期貨\",\"volume\":42348376,\"trading_days\":243,\"avg_daily_volume\":174273},{\"year\":\"2025\",\"contract\":\"M1F\",\"name\":\"臺灣中型100期貨\",\"volume\":179528,\"trading_days\":243,\"avg_daily_volume\":739},{\"year\":\"2025\",\"contract\":\"TXO\",\"name\":\"臺指選擇權\",\"volume\":171542948,\"trading_days\":243,\"avg_daily_volume\":705938},{\"year\":\"2025\",\"contract\":\"STO\",\"name\":\"股票選擇權\",\"volume\":178666,\"trading_days\":243,\"avg_daily_volume\":735},{\"year\":\"2025\",\"contract\":\"TEO\",\"name\":\"電子選擇權\",\"volume\":23404,\"trading_days\":243,\"avg_daily_volume\":96},{\"year\":\"2025\",\"contract\":\"TFO\",\"name\":\"金融選擇權\",\"volume\":132070,\"trading_days\":243,\"avg_daily_volume\":543},{\"year\":\"2025\",\"contract\":\"TGO\",\"name\":\"黃金選擇權\",\"volume\":43720,\"trading_days\":243,\"avg_daily_volume\":180},{\"year\":\"2025\",\"contract\":\"ETC\",\"name\":\"ETF選擇權\",\"volume\":39762,\"trading_days\":243,\"avg_daily_volume\":164}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T19:54:28+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":3119,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "year": "2025",
+            "contract": "TX",
+            "name": "臺股期貨",
+            "volume": 30093412,
+            "trading_days": 243,
+            "avg_daily_volume": 123841
+          },
+          {
+            "year": "2025",
+            "contract": "TE",
+            "name": "電子期貨",
+            "volume": 197795,
+            "trading_days": 243,
+            "avg_daily_volume": 814
+          },
+          {
+            "year": "2025",
+            "contract": "TF",
+            "name": "金融期貨",
+            "volume": 108801,
+            "trading_days": 243,
+            "avg_daily_volume": 448
+          },
+          {
+            "year": "2025",
+            "contract": "MTX",
+            "name": "小型臺指",
+            "volume": 60294020,
+            "trading_days": 243,
+            "avg_daily_volume": 248124
+          },
+          {
+            "year": "2025",
+            "contract": "GDF",
+            "name": "黃金期貨",
+            "volume": 31618,
+            "trading_days": 243,
+            "avg_daily_volume": 130
+          },
+          {
+            "year": "2025",
+            "contract": "GTF",
+            "name": "櫃買期貨",
+            "volume": 1089,
+            "trading_days": 243,
+            "avg_daily_volume": 4
+          },
+          {
+            "year": "2025",
+            "contract": "XIF",
+            "name": "非金電期貨",
+            "volume": 24178,
+            "trading_days": 243,
+            "avg_daily_volume": 99
+          },
+          {
+            "year": "2025",
+            "contract": "TGF",
+            "name": "臺幣黃金期貨",
+            "volume": 149170,
+            "trading_days": 243,
+            "avg_daily_volume": 614
+          },
+          {
+            "year": "2025",
+            "contract": "STF",
+            "name": "股票期貨",
+            "volume": 72276818,
+            "trading_days": 243,
+            "avg_daily_volume": 297435
+          },
+          {
+            "year": "2025",
+            "contract": "ETF",
+            "name": "ETF期貨",
+            "volume": 2778994,
+            "trading_days": 243,
+            "avg_daily_volume": 11436
+          },
+          {
+            "year": "2025",
+            "contract": "RHF",
+            "name": "美元兌人民幣期貨",
+            "volume": 7207,
+            "trading_days": 243,
+            "avg_daily_volume": 30
+          },
+          {
+            "year": "2025",
+            "contract": "RTF",
+            "name": "小型美元兌人民幣期貨",
+            "volume": 30415,
+            "trading_days": 243,
+            "avg_daily_volume": 125
+          },
+          {
+            "year": "2025",
+            "contract": "TJF",
+            "name": "東證期貨",
+            "volume": 40155,
+            "trading_days": 243,
+            "avg_daily_volume": 165
+          },
+          {
+            "year": "2025",
+            "contract": "XJF",
+            "name": "美元兌日圓期貨",
+            "volume": 72195,
+            "trading_days": 243,
+            "avg_daily_volume": 297
+          },
+          {
+            "year": "2025",
+            "contract": "XEF",
+            "name": "歐元兌美元期貨",
+            "volume": 8835,
+            "trading_days": 243,
+            "avg_daily_volume": 36
+          },
+          {
+            "year": "2025",
+            "contract": "UDF",
+            "name": "美國道瓊期貨",
+            "volume": 118789,
+            "trading_days": 243,
+            "avg_daily_volume": 489
+          },
+          {
+            "year": "2025",
+            "contract": "SPF",
+            "name": "美國標普500期貨",
+            "volume": 15440,
+            "trading_days": 243,
+            "avg_daily_volume": 64
+          },
+          {
+            "year": "2025",
+            "contract": "XAF",
+            "name": "澳幣兌美元期貨",
+            "volume": 4411,
+            "trading_days": 243,
+            "avg_daily_volume": 18
+          },
+          {
+            "year": "2025",
+            "contract": "XBF",
+            "name": "英鎊兌美元期貨",
+            "volume": 6740,
+            "trading_days": 243,
+            "avg_daily_volume": 28
+          },
+          {
+            "year": "2025",
+            "contract": "BRF",
+            "name": "布蘭特原油期貨",
+            "volume": 6167,
+            "trading_days": 243,
+            "avg_daily_volume": 25
+          },
+          {
+            "year": "2025",
+            "contract": "G2F",
+            "name": "富櫃200期貨",
+            "volume": 23541,
+            "trading_days": 243,
+            "avg_daily_volume": 97
+          },
+          {
+            "year": "2025",
+            "contract": "UNF",
+            "name": "美國那斯達克100期貨",
+            "volume": 402557,
+            "trading_days": 243,
+            "avg_daily_volume": 1657
+          },
+          {
+            "year": "2025",
+            "contract": "BTF",
+            "name": "臺灣生技期貨",
+            "volume": 1538,
+            "trading_days": 243,
+            "avg_daily_volume": 6
+          },
+          {
+            "year": "2025",
+            "contract": "E4F",
+            "name": "臺灣永續期貨",
+            "volume": 40866,
+            "trading_days": 243,
+            "avg_daily_volume": 168
+          },
+          {
+            "year": "2025",
+            "contract": "F1F",
+            "name": "英國富時100期貨",
+            "volume": 45134,
+            "trading_days": 243,
+            "avg_daily_volume": 186
+          },
+          {
+            "year": "2025",
+            "contract": "ZEF",
+            "name": "小型電子期貨",
+            "volume": 425412,
+            "trading_days": 243,
+            "avg_daily_volume": 1751
+          },
+          {
+            "year": "2025",
+            "contract": "ZFF",
+            "name": "小型金融期貨",
+            "volume": 71777,
+            "trading_days": 243,
+            "avg_daily_volume": 295
+          },
+          {
+            "year": "2025",
+            "contract": "SHF",
+            "name": "航運期貨",
+            "volume": 1203,
+            "trading_days": 243,
+            "avg_daily_volume": 5
+          },
+          {
+            "year": "2025",
+            "contract": "SOF",
+            "name": "半導體30期貨",
+            "volume": 44326,
+            "trading_days": 243,
+            "avg_daily_volume": 182
+          },
+          {
+            "year": "2025",
+            "contract": "SXF",
+            "name": "美國費城半導體期貨",
+            "volume": 90095,
+            "trading_days": 243,
+            "avg_daily_volume": 371
+          },
+          {
+            "year": "2025",
+            "contract": "MXFFX",
+            "name": "客製化小型臺指期貨",
+            "volume": 28,
+            "trading_days": 243,
+            "avg_daily_volume": 0
+          },
+          {
+            "year": "2025",
+            "contract": "TMF",
+            "name": "微型臺指期貨",
+            "volume": 42348376,
+            "trading_days": 243,
+            "avg_daily_volume": 174273
+          },
+          {
+            "year": "2025",
+            "contract": "M1F",
+            "name": "臺灣中型100期貨",
+            "volume": 179528,
+            "trading_days": 243,
+            "avg_daily_volume": 739
+          },
+          {
+            "year": "2025",
+            "contract": "TXO",
+            "name": "臺指選擇權",
+            "volume": 171542948,
+            "trading_days": 243,
+            "avg_daily_volume": 705938
+          },
+          {
+            "year": "2025",
+            "contract": "STO",
+            "name": "股票選擇權",
+            "volume": 178666,
+            "trading_days": 243,
+            "avg_daily_volume": 735
+          },
+          {
+            "year": "2025",
+            "contract": "TEO",
+            "name": "電子選擇權",
+            "volume": 23404,
+            "trading_days": 243,
+            "avg_daily_volume": 96
+          },
+          {
+            "year": "2025",
+            "contract": "TFO",
+            "name": "金融選擇權",
+            "volume": 132070,
+            "trading_days": 243,
+            "avg_daily_volume": 543
+          },
+          {
+            "year": "2025",
+            "contract": "TGO",
+            "name": "黃金選擇權",
+            "volume": 43720,
+            "trading_days": 243,
+            "avg_daily_volume": 180
+          },
+          {
+            "year": "2025",
+            "contract": "ETC",
+            "name": "ETF選擇權",
+            "volume": 39762,
+            "trading_days": 243,
+            "avg_daily_volume": 164
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T19:54:28+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 3119,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 2,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "arguments": {},
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 211,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"_date\":\"2026-07-31\",\"代碼別(註)\":\"11\",\"執行到期日\":\"115/08/03\",\"執行起始日\":\"115/07/28\",\"成交價\":\"176.00\",\"成交數量\":\"30\",\"承銷價\":\"180.53\",\"承銷商名稱\":\"富邦\",\"累積成交數量\":\"30\",\"證券代號\":\"7689\",\"證券名稱\":\"大鵬科CLMX\",\"買賣別\":\"B\",\"過額配售數量\":\"680\"}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T20:01:09+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":2396,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "_date": "2026-07-31",
+            "代碼別(註)": "11",
+            "執行到期日": "115/08/03",
+            "執行起始日": "115/07/28",
+            "成交價": "176.00",
+            "成交數量": "30",
+            "承銷價": "180.53",
+            "承銷商名稱": "富邦",
+            "累積成交數量": "30",
+            "證券代號": "7689",
+            "證券名稱": "大鵬科CLMX",
+            "買賣別": "B",
+            "過額配售數量": "680"
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T20:01:09+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 2396,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 2,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}
