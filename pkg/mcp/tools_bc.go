@@ -1469,6 +1469,40 @@ func handlerGetOtcInstitutionalBreakdown(a *App, args map[string]any) (HandlerRe
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// handlerGetOtcAfterHours：上櫃盤後定價交易行情（T202，tpex_off_market）。
+// passthrough；code 為本地端過濾。
+func handlerGetOtcAfterHours(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExOtcAfterHours), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcAfterHours), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExOtcAfterHours, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // handlerGetOtcExdividendResult：上櫃除權息計算結果表（T200）。
 // 對稱上市預告表 get_exdividend_calendar；本工具為事後實際計算數據。
 func handlerGetOtcExdividendResult(a *App, args map[string]any) (HandlerResult, error) {

@@ -70,6 +70,7 @@ const (
 	TPExOtcQfiiInd    TPExDataset = "otc_qfii_industry"     // 上櫃外資類股持股（T198）
 	TPExOtcInstiTrd   TPExDataset = "otc_insti_trading"     // 上櫃投信買賣超彙總（T199）
 	TPExOtcDealerTrd  TPExDataset = "otc_dealer_trading"    // 上櫃自營商買賣超彙總（T199）
+	TPExOtcAfterHours TPExDataset = "otc_after_hours"       // 上櫃盤後定價行情（T202）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -102,6 +103,7 @@ var (
 		TPExOtcQfiiInd:    "/tpex_3insti_qfii_industry",         // 類股外資持股（T198）
 		TPExOtcInstiTrd:   "/tpex_3insti_trading",               // 投信買賣超彙總（T199）
 		TPExOtcDealerTrd:  "/tpex_3insti_dealer_trading",        // 自營商買賣超彙總（T199）
+		TPExOtcAfterHours: "/tpex_off_market",                   // 盤後定價行情（T202）
 	}
 )
 
@@ -276,6 +278,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExOtcInstiTrd), string(TPExOtcDealerTrd):
 		// passthrough（T199 實測；欄位 Date/Rank/SecuritiesCompanyCode/
 		// CompanyName/Buy/Sell/NetBuy，dealer 另有 NetBuySell，原樣保留）。
+		out = ms
+	case string(TPExOtcAfterHours):
+		// passthrough（T202 實測；欄位 Date/SecuritiesCompanyCode/CompanyName/
+		// Close/Transactions/TradeVolume/TradeAmount 等，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

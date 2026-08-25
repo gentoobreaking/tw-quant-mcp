@@ -1163,6 +1163,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcInstitutionalBreakdown,
 	}) // T199
 	r.Register(ToolDef{
+		Symbol: "get_otc_after_hours",
+		Name:   "get_otc_after_hours",
+		Description: "查詢上櫃股票盤後定價交易行情（TPEx-API tpex_off_market，T202）。" +
+			"含收盤價、成交筆數/股數/金額、委買委賣筆數與未成交股數。code 選填過濾；limit 預設 50、offset 分頁。" +
+			"對稱上市工具 get_after_hours_trading。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填），過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcAfterHours,
+	}) // T202
+	r.Register(ToolDef{
 		Symbol: "get_otc_exdividend_result",
 		Name:   "get_otc_exdividend_result",
 		Description: "查詢上櫃股票除權息「計算結果」表（TPEx-API tpex_exright_daily，T200）。" +
