@@ -478,6 +478,37 @@ func handlerGetInstitutionalOptionsPositions(a *App, args map[string]any) (Handl
 	return instiPositions(a, args, model.TAInstiOptions)
 }
 
+// handlerGetFuturesInstitutional：三大法人期貨與選擇權合計每日交易資訊
+// （TAIFEX-API DividedByFuturesAndOptions，T126；date 省略為最新交易日，
+// 直通保留官方欄位）。
+func handlerGetFuturesInstitutional(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAInstiDivided, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAInstiDivided, err)
+	}
+	if len(res.Data) == 0 {
+		note := res.Note
+		if note == "" {
+			note = "無資料"
+		}
+		return HandlerResult{}, fmt.Errorf("官方無 %s 於 %s 之資料（%s）", model.TAInstiDivided, d, note)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", model.TAInstiDivided, err)
+	}
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // instiPositions 三大法人部位（期貨/選擇權共用路徑）。
 func instiPositions(a *App, args map[string]any, ds model.TAIFEXDataset) (HandlerResult, error) {
 	ctx := context.Background()

@@ -147,6 +147,10 @@ func stubFG(f *fakeTAIFEX) {
 		{Date: "2026-07-29", Contract: "TXO", ContractMonth: "202608", Strike: 21000, CallPut: "買權", Volume: 12034},
 		{Date: "2026-07-29", Contract: "TFO", ContractMonth: "202608", Strike: 1700, CallPut: "買權", Volume: 900},
 	})
+	// 三大法人期貨+選擇權合計每日交易資訊（T126，直通官方欄位）
+	f.single[tfKey(model.TAInstiDivided, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260729", "Item": "自營商", "FuturesTradingVolume(Long)": "51590", "FuturesTradingVolume(Short)": "59037", "FuturesTradingVolume(Net)": "-7447"},
+	})
 	// 買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},
@@ -431,6 +435,32 @@ func TestFGFuturesDailyHistory(t *testing.T) {
 	if _, err := app.core.Call(context.Background(), "get_futures_daily_history",
 		map[string]any{"contract": "BAD", "start": "2026-07-27", "end": "2026-07-29"}); err == nil {
 		t.Fatal("白名單外契約應被拒絕")
+	}
+}
+
+// T126：get_futures_institutional 期貨+選擇權合計每日交易資訊
+func TestFGFuturesInstitutional(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_futures_institutional", map[string]any{})
+	rows, ok := env.Data.([]map[string]any)
+	if !ok {
+		t.Fatalf("Data 應為 []map[string]any，實際 %T", env.Data)
+	}
+	if len(rows) != 1 || rows[0]["Item"] != "自營商" {
+		t.Errorf("資料錯誤: %+v", rows)
+	}
+	if env.Lineage.Source != model.SourceTAIFEXAPI || env.Lineage.DataDate != "2026-07-29" {
+		t.Errorf("lineage 應為 API/2026-07-29: %+v", env.Lineage)
+	}
+
+	// 第二次呼叫 → 快取命中
+	env2 := callEnv(t, app, "get_futures_institutional", map[string]any{})
+	if !env2.Lineage.IsCached {
+		t.Errorf("第二次呼叫應命中快取: %+v", env2.Lineage)
 	}
 }
 

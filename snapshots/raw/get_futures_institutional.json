@@ -1,0 +1,116 @@
+{
+  "arguments": {},
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 10,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"Date\":\"20260824\",\"FuturesContractValueofOpenInterest(Long)(Thousands)\":\"86052925\",\"FuturesContractValueofOpenInterest(Net)(Thousands)\":\"-167627630\",\"FuturesContractValueofOpenInterest(Short)(Thousands)\":\"253680555\",\"FuturesOpenInterest(Long)\":\"98096\",\"FuturesOpenInterest(Net)\":\"-229493\",\"FuturesOpenInterest(Short)\":\"327589\",\"FuturesTradingValue(Long)(Thousands)\":\"58747920\",\"FuturesTradingValue(Net)(Thousands)\":\"3604877\",\"FuturesTradingValue(Short)(Thousands)\":\"55143043\",\"FuturesTradingVolume(Long)\":\"51590\",\"FuturesTradingVolume(Net)\":\"-7447\",\"FuturesTradingVolume(Short)\":\"59037\",\"Item\":\"自營商\",\"OptionsContractValueofOpenInterest(Long)(Thousands)\":\"1237487\",\"OptionsContractValueofOpenInterest(Net)(Thousands)\":\"166321\",\"OptionsContractValueofOpenInterest(Short)(Thousands)\":\"1071166\",\"OptionsOpenInterest(Long)\":\"37241\",\"OptionsOpenInterest(Net)\":\"2365\",\"OptionsOpenInterest(Short)\":\"34876\",\"OptionsTradingValue(Long)(Thousands)\":\"630871\",\"OptionsTradingValue(Net)(Thousands)\":\"-746\",\"OptionsTradingValue(Short)(Thousands)\":\"631617\",\"OptionsTradingVolume(Long)\":\"65052\",\"OptionsTradingVolume(Net)\":\"-332\",\"OptionsTradingVolume(Short)\":\"65384\"},{\"Date\":\"20260824\",\"FuturesContractValueofOpenInterest(Long)(Thousands)\":\"727614162\",\"FuturesContractValueofOpenInterest(Net)(Thousands)\":\"696471578\",\"FuturesContractValueofOpenInterest(Short)(Thousands)\":\"31142584\",\"FuturesOpenInterest(Long)\":\"93758\",\"FuturesOpenInterest(Net)\":\"89937\",\"FuturesOpenInterest(Short)\":\"3821\",\"FuturesTradingValue(Long)(Thousands)\":\"1111804\",\"FuturesTradingValue(Net)(Thousands)\":\"-4564414\",\"FuturesTradingValue(Short)(Thousands)\":\"5676218\",\"FuturesTradingVolume(Long)\":\"124\",\"FuturesTradingVolume(Net)\":\"-512\",\"FuturesTradingVolume(Short)\":\"636\",\"Item\":\"投信\",\"OptionsContractValueofOpenInterest(Long)(Thousands)\":\"330\",\"OptionsContractValueofOpenInterest(Net)(Thousands)\":\"-193412\",\"OptionsContractValueofOpenInterest(Short)(Thousands)\":\"193742\",\"OptionsOpenInterest(Long)\":\"6\",\"OptionsOpenInterest(Net)\":\"-3905\",\"OptionsOpenInterest(Short)\":\"3911\",\"OptionsTradingValue(Long)(Thousands)\":\"0\",\"OptionsTradingValue(Net)(Thousands)\":\"-30468\",\"OptionsTradingValue(Short)(Thousands)\":\"30468\",\"OptionsTradingVolume(Long)\":\"0\",\"OptionsTradingVolume(Net)\":\"-620\",\"OptionsTradingVolume(Short)\":\"620\"},{\"Date\":\"20260824\",\"FuturesContractValueofOpenInterest(Long)(Thousands)\":\"206932304\",\"FuturesContractValueofOpenInterest(Net)(Thousands)\":\"-935647596\",\"FuturesContractValueofOpenInterest(Short)(Thousands)\":\"1142579900\",\"FuturesOpenInterest(Long)\":\"181017\",\"FuturesOpenInterest(Net)\":\"-477388\",\"FuturesOpenInterest(Short)\":\"658405\",\"FuturesTradingValue(Long)(Thousands)\":\"772189944\",\"FuturesTradingValue(Net)(Thousands)\":\"-10203526\",\"FuturesTradingValue(Short)(Thousands)\":\"782393470\",\"FuturesTradingVolume(Long)\":\"499383\",\"FuturesTradingVolume(Net)\":\"-16088\",\"FuturesTradingVolume(Short)\":\"515471\",\"Item\":\"外資及陸資\",\"OptionsContractValueofOpenInterest(Long)(Thousands)\":\"388431\",\"OptionsContractValueofOpenInterest(Net)(Thousands)\":\"-221347\",\"OptionsContractValueofOpenInterest(Short)(Thousands)\":\"609778\",\"OptionsOpenInterest(Long)\":\"9336\",\"OptionsOpenInterest(Net)\":\"-3856\",\"OptionsOpenInterest(Short)\":\"13192\",\"OptionsTradingValue(Long)(Thousands)\":\"786794\",\"OptionsTradingValue(Net)(Thousands)\":\"-3313\",\"OptionsTradingValue(Short)(Thousands)\":\"790107\",\"OptionsTradingVolume(Long)\":\"67780\",\"OptionsTradingVolume(Net)\":\"-789\",\"OptionsTradingVolume(Short)\":\"68569\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T17:19:46+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1435,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "Date": "20260824",
+            "FuturesContractValueofOpenInterest(Long)(Thousands)": "86052925",
+            "FuturesContractValueofOpenInterest(Net)(Thousands)": "-167627630",
+            "FuturesContractValueofOpenInterest(Short)(Thousands)": "253680555",
+            "FuturesOpenInterest(Long)": "98096",
+            "FuturesOpenInterest(Net)": "-229493",
+            "FuturesOpenInterest(Short)": "327589",
+            "FuturesTradingValue(Long)(Thousands)": "58747920",
+            "FuturesTradingValue(Net)(Thousands)": "3604877",
+            "FuturesTradingValue(Short)(Thousands)": "55143043",
+            "FuturesTradingVolume(Long)": "51590",
+            "FuturesTradingVolume(Net)": "-7447",
+            "FuturesTradingVolume(Short)": "59037",
+            "Item": "自營商",
+            "OptionsContractValueofOpenInterest(Long)(Thousands)": "1237487",
+            "OptionsContractValueofOpenInterest(Net)(Thousands)": "166321",
+            "OptionsContractValueofOpenInterest(Short)(Thousands)": "1071166",
+            "OptionsOpenInterest(Long)": "37241",
+            "OptionsOpenInterest(Net)": "2365",
+            "OptionsOpenInterest(Short)": "34876",
+            "OptionsTradingValue(Long)(Thousands)": "630871",
+            "OptionsTradingValue(Net)(Thousands)": "-746",
+            "OptionsTradingValue(Short)(Thousands)": "631617",
+            "OptionsTradingVolume(Long)": "65052",
+            "OptionsTradingVolume(Net)": "-332",
+            "OptionsTradingVolume(Short)": "65384"
+          },
+          {
+            "Date": "20260824",
+            "FuturesContractValueofOpenInterest(Long)(Thousands)": "727614162",
+            "FuturesContractValueofOpenInterest(Net)(Thousands)": "696471578",
+            "FuturesContractValueofOpenInterest(Short)(Thousands)": "31142584",
+            "FuturesOpenInterest(Long)": "93758",
+            "FuturesOpenInterest(Net)": "89937",
+            "FuturesOpenInterest(Short)": "3821",
+            "FuturesTradingValue(Long)(Thousands)": "1111804",
+            "FuturesTradingValue(Net)(Thousands)": "-4564414",
+            "FuturesTradingValue(Short)(Thousands)": "5676218",
+            "FuturesTradingVolume(Long)": "124",
+            "FuturesTradingVolume(Net)": "-512",
+            "FuturesTradingVolume(Short)": "636",
+            "Item": "投信",
+            "OptionsContractValueofOpenInterest(Long)(Thousands)": "330",
+            "OptionsContractValueofOpenInterest(Net)(Thousands)": "-193412",
+            "OptionsContractValueofOpenInterest(Short)(Thousands)": "193742",
+            "OptionsOpenInterest(Long)": "6",
+            "OptionsOpenInterest(Net)": "-3905",
+            "OptionsOpenInterest(Short)": "3911",
+            "OptionsTradingValue(Long)(Thousands)": "0",
+            "OptionsTradingValue(Net)(Thousands)": "-30468",
+            "OptionsTradingValue(Short)(Thousands)": "30468",
+            "OptionsTradingVolume(Long)": "0",
+            "OptionsTradingVolume(Net)": "-620",
+            "OptionsTradingVolume(Short)": "620"
+          },
+          {
+            "Date": "20260824",
+            "FuturesContractValueofOpenInterest(Long)(Thousands)": "206932304",
+            "FuturesContractValueofOpenInterest(Net)(Thousands)": "-935647596",
+            "FuturesContractValueofOpenInterest(Short)(Thousands)": "1142579900",
+            "FuturesOpenInterest(Long)": "181017",
+            "FuturesOpenInterest(Net)": "-477388",
+            "FuturesOpenInterest(Short)": "658405",
+            "FuturesTradingValue(Long)(Thousands)": "772189944",
+            "FuturesTradingValue(Net)(Thousands)": "-10203526",
+            "FuturesTradingValue(Short)(Thousands)": "782393470",
+            "FuturesTradingVolume(Long)": "499383",
+            "FuturesTradingVolume(Net)": "-16088",
+            "FuturesTradingVolume(Short)": "515471",
+            "Item": "外資及陸資",
+            "OptionsContractValueofOpenInterest(Long)(Thousands)": "388431",
+            "OptionsContractValueofOpenInterest(Net)(Thousands)": "-221347",
+            "OptionsContractValueofOpenInterest(Short)(Thousands)": "609778",
+            "OptionsOpenInterest(Long)": "9336",
+            "OptionsOpenInterest(Net)": "-3856",
+            "OptionsOpenInterest(Short)": "13192",
+            "OptionsTradingValue(Long)(Thousands)": "786794",
+            "OptionsTradingValue(Net)(Thousands)": "-3313",
+            "OptionsTradingValue(Short)(Thousands)": "790107",
+            "OptionsTradingVolume(Long)": "67780",
+            "OptionsTradingVolume(Net)": "-789",
+            "OptionsTradingVolume(Short)": "68569"
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T17:19:46+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 1435,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 2,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

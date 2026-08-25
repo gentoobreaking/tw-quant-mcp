@@ -14,6 +14,7 @@ const (
 	TAOptionsDaily   TAIFEXDataset = "options_daily"    // 選擇權每日 OHLC
 	TAInstiFutures   TAIFEXDataset = "insti_futures"    // 三大法人期貨部位
 	TAInstiOptions   TAIFEXDataset = "insti_options"    // 三大法人選擇權部位
+	TAInstiDivided   TAIFEXDataset = "insti_divided"    // 三大法人期貨與選擇權合計每日交易資訊（T126）
 	TALargeTraderFut TAIFEXDataset = "large_trader_fut" // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt TAIFEXDataset = "large_trader_opt" // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio   TAIFEXDataset = "put_call_ratio"   // 買賣權比（PCR）

@@ -57,6 +57,7 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAMargin:         "/IndexFuturesAndOptionsMargining",
 	model.TAFAnnualVolume:  "/AnnualTradingVolume",
 	model.TAFMonthlyStats:  "/MonthlyTradingStatisticsFutures", // T148
+	model.TAInstiDivided:   "/MarketDataOfMajorInstitutionalTradersDividedByFuturesAndOptionsBytheDate", // T126
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -191,6 +192,10 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		out, err = normalizeTAIAnnualVolume(raw.Body, contract)
 	case model.TAFMonthlyStats:
 		out, err = normalizeTAIMonthlyTraderStats(raw.Body)
+	case model.TAInstiDivided:
+		// 期貨與選擇權合計每日交易資訊：欄位繁多（多空量/金額/OI/契約價值），
+		// 直通保留官方英文鍵名（T126）。
+		out = json.RawMessage(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
 	}

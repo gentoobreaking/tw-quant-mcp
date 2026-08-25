@@ -175,6 +175,20 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalOptionsPositions,
 	})
 	r.Register(ToolDef{
+		Symbol:      "get_futures_institutional",
+		Name:        "get_futures_institutional",
+		Description: "查詢三大法人期貨與選擇權每日交易資訊（期貨+選擇權合計；多空交易量/金額、未平倉與契約價值；" +
+			"TAIFEX-API DividedByFuturesAndOptionsBytheDate，T126）。date 省略為最新交易日。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"date": map[string]any{"type": "string", "description": "交易日期 YYYY-MM-DD（預設最新交易日）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetFuturesInstitutional,
+	}) // T126
+	r.Register(ToolDef{
 		Symbol: "get_institutional_futures_history",
 		Name:   "get_institutional_futures_history",
 		Description: "查詢三大法人期貨部位歷史（TAIFEX-DL 回溯，§9.3；L2 永久快取）。" +
