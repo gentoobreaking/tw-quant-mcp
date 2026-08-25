@@ -68,6 +68,8 @@ const (
 	TPExOtcMopsfin    TPExDataset = "otc_mopsfin"           // 上櫃治理/監理/股務（T237，kind 模板）
 	TPExOtcQfiiRank   TPExDataset = "otc_qfii_rank"         // 上櫃外資持股排行（T198）
 	TPExOtcQfiiInd    TPExDataset = "otc_qfii_industry"     // 上櫃外資類股持股（T198）
+	TPExOtcInstiTrd   TPExDataset = "otc_insti_trading"     // 上櫃投信買賣超彙總（T199）
+	TPExOtcDealerTrd  TPExDataset = "otc_dealer_trading"    // 上櫃自營商買賣超彙總（T199）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -98,6 +100,8 @@ var (
 		TPExOtcMopsfin:    "/mopsfin_%s",                        // 上櫃治理系列端點模板（T237）
 		TPExOtcQfiiRank:   "/tpex_3insti_qfii",                  // 外資持股排行（T198）
 		TPExOtcQfiiInd:    "/tpex_3insti_qfii_industry",         // 類股外資持股（T198）
+		TPExOtcInstiTrd:   "/tpex_3insti_trading",               // 投信買賣超彙總（T199）
+		TPExOtcDealerTrd:  "/tpex_3insti_dealer_trading",        // 自營商買賣超彙總（T199）
 	}
 )
 
@@ -268,6 +272,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		out = ms
 	case string(TPExOtcForeignTrd):
 		// passthrough（T197 實測；官方欄位 key 含不規則空白，原樣保留）。
+		out = ms
+	case string(TPExOtcInstiTrd), string(TPExOtcDealerTrd):
+		// passthrough（T199 實測；欄位 Date/Rank/SecuritiesCompanyCode/
+		// CompanyName/Buy/Sell/NetBuy，dealer 另有 NetBuySell，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

@@ -1427,6 +1427,48 @@ func handlerGetOtcForeignTrading(a *App, args map[string]any) (HandlerResult, er
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// handlerGetOtcInstitutionalBreakdown：上櫃投信/自營商買賣超彙總（T199）。
+// kind=trust 投信（tpex_3insti_trading）、kind=dealer 自營商
+// （tpex_3insti_dealer_trading，含 NetBuySell 自行買賣/避險淨額）；passthrough。
+func handlerGetOtcInstitutionalBreakdown(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	kind := strVal(args["kind"])
+	ds := provider.TPExOtcInstiTrd
+	if kind == "dealer" {
+		ds = provider.TPExOtcDealerTrd
+	} else if kind != "" && kind != "trust" {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 trust 或 dealer，得到 %q", kind)
+	}
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetInstitutional)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // handlerGetOtcExdividendResult：上櫃除權息計算結果表（T200）。
 // 對稱上市預告表 get_exdividend_calendar；本工具為事後實際計算數據。
 func handlerGetOtcExdividendResult(a *App, args map[string]any) (HandlerResult, error) {

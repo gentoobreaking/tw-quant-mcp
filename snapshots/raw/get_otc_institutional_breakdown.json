@@ -1,0 +1,18 @@
+{
+  "arguments": {
+    "kind": "trust",
+    "code": "5347",
+    "limit": 3
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"Buy\":\"2587\",\"CompanyName\":\"世界\",\"Date\":\"1150825\",\"NetBuy\":\"2577\",\"Rank\":\"1\",\"SecuritiesCompanyCode\":\"5347\",\"Sell\":\"10\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T07:29:09+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":80,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

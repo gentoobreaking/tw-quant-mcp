@@ -142,10 +142,12 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIGovernance):      cache.DatasetESG,
 	string(provider.TWSEAPIIndices):         cache.DatasetDailyKLine, // 指數收盤同 daily_kline 政策
 	string(provider.TPExDailyClose):         cache.DatasetDailyKLine,
-	string(provider.TPExOtcDaily):           cache.DatasetDailyKLine, // 上櫃收盤行情（T155）
+	string(provider.TPExOtcDaily):           cache.DatasetDailyKLine,     // 上櫃收盤行情（T155）
 	string(provider.TPExOtcMonthlyRev):      cache.DatasetMonthlyRevenue, // 上櫃月營收（T195）
 	string(provider.TPExBrokerVolume):       cache.DatasetInstitutional,  // 券商進出排行（T196）
 	string(provider.TPExOtcForeignTrd):      cache.DatasetInstitutional,  // 外資買賣超彙總（T197）
+	string(provider.TPExOtcInstiTrd):        cache.DatasetInstitutional,  // 投信買賣超彙總（T199）
+	string(provider.TPExOtcDealerTrd):       cache.DatasetInstitutional,  // 自營商買賣超彙總（T199）
 	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）
@@ -156,9 +158,9 @@ var cacheDataset = map[string]string{
 	string(provider.TPExOtcMopsfin):         cache.DatasetCalendar,       // 上櫃治理系列（T237）
 	string(provider.TPExOtcQfiiRank):        cache.DatasetForeignHold,    // 上櫃外資持股排行（T198）
 	string(provider.TPExOtcQfiiInd):         cache.DatasetForeignHold,    // 上櫃類股外資持股（T198）
-	string(model.TAOptionsDelta):            cache.DatasetCalendar,   // 選擇權 Delta（T151）
-	string(model.TAOIChange):                cache.DatasetCalendar,   // 台指選擇權 OI 增減（T154）
-	string(model.TAStockMargin):             cache.DatasetCalendar,   // 股票期貨保證金（T167）
+	string(model.TAOptionsDelta):            cache.DatasetCalendar,       // 選擇權 Delta（T151）
+	string(model.TAOIChange):                cache.DatasetCalendar,       // 台指選擇權 OI 增減（T154）
+	string(model.TAStockMargin):             cache.DatasetCalendar,       // 股票期貨保證金（T167）
 	string(provider.TPExAttention):          cache.DatasetAlertStock,
 	string(provider.TPExDisposition):        cache.DatasetAlertStock,
 	// MOPS Open Data（T012）

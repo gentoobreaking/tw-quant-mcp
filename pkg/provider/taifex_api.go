@@ -63,8 +63,8 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAOptionsDelta:   "/DailyOptionsDelta",                                                        // 選擇權每日 Delta（T151）
 	model.TAOIChange:       "/va01",                                                                     // 台指選擇權未平倉量增減（T154）
 	model.TAStockMargin:    "/SingleStockFuturesMargining",                                              // 股票期貨保證金（T167）
-	model.TATickFutures:    "/TimeAndSalesData",                                                          // 期貨逐筆成交（T207）
-	model.TATickOptions:    "/OptionsTimeAndSalesData",                                                   // 選擇權逐筆成交（T207）
+	model.TATickFutures:    "/TimeAndSalesData",                                                         // 期貨逐筆成交（T207）
+	model.TATickOptions:    "/OptionsTimeAndSalesData",                                                  // 選擇權逐筆成交（T207）
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。

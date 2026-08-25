@@ -1509,4 +1509,3 @@ func handlerGetTimeAndSales(a *App, args map[string]any) (HandlerResult, error) 
 	}
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
-

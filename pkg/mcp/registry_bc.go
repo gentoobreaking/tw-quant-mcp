@@ -1145,6 +1145,24 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcForeignTrading,
 	}) // T197
 	r.Register(ToolDef{
+		Symbol: "get_otc_institutional_breakdown",
+		Name:   "get_otc_institutional_breakdown",
+		Description: "查詢上櫃股票投信/自營商每日買賣超彙總（TPEx-API tpex_3insti_trading / tpex_3insti_dealer_trading，T199）。" +
+			"kind=trust 投信、kind=dealer 自營商（含自行買賣/避險淨額），預設 trust。" +
+			"code 選填過濾特定證券；limit 預設 50、offset 分頁。與 get_institutional_summary（合計）互補。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"trust", "dealer"}, "default": "trust", "description": "法人類別：trust 投信／dealer 自營商"},
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填），過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcInstitutionalBreakdown,
+	}) // T199
+	r.Register(ToolDef{
 		Symbol: "get_otc_exdividend_result",
 		Name:   "get_otc_exdividend_result",
 		Description: "查詢上櫃股票除權息「計算結果」表（TPEx-API tpex_exright_daily，T200）。" +
