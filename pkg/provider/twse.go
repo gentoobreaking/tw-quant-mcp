@@ -131,6 +131,8 @@ const (
 	TWSEAPIBrokerRegInv   TWSEAPIDataset = "broker_reg_inv"   // 定期定額名單（secRegData，T054）
 	TWSEAPISupervisorAck  TWSEAPIDataset = "supervisor_ack"   // 財報監察人承認（t187ap31_L，T084）
 	TWSEAPIProfitability  TWSEAPIDataset = "profitability"    // 營益分析（t187ap17_L，T101/T102）
+	TWSEAPIAuditVariance  TWSEAPIDataset = "audit_variance"   // 財測查核差異（t187ap16_L，T103）
+	TWSEAPIForecastAchv   TWSEAPIDataset = "forecast_achv"    // 財測達成率（t187ap15_L，T104）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -224,6 +226,8 @@ var (
 		TWSEAPIBrokerRegInv:    "/brokerService/secRegData",
 		TWSEAPISupervisorAck:   "/opendata/t187ap31_L",
 		TWSEAPIProfitability:   "/opendata/t187ap17_L",
+		TWSEAPIAuditVariance:   "/opendata/t187ap16_L",
+		TWSEAPIForecastAchv:    "/opendata/t187ap15_L",
 	}
 )
 
@@ -665,6 +669,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "supervisor_ack":
 		out, err = normalizePassthroughArray(raw)
 	case "profitability":
+		out, err = normalizePassthroughArray(raw)
+	case "audit_variance", "forecast_achv":
 		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)

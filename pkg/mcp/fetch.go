@@ -88,6 +88,8 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIBrokerRegInv):    cache.DatasetCalendar,   // 定期定額名單（T054）
 	string(provider.TWSEAPISupervisorAck):   cache.DatasetCalendar,   // 財報監察人承認（T084）
 	string(provider.TWSEAPIProfitability):   cache.DatasetFinancials, // 營益分析（季頻，T101/T102）
+	string(provider.TWSEAPIAuditVariance):   cache.DatasetFinancials, // 財測查核差異（T103）
+	string(provider.TWSEAPIForecastAchv):    cache.DatasetFinancials, // 財測達成率（T104）
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,

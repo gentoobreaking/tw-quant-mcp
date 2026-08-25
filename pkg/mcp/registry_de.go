@@ -321,6 +321,23 @@ func registerDETools(r *Registry) {
 	}) // T102
 
 	r.Register(ToolDef{
+		Symbol:      "get_company_quarterly_audit_variance",
+		Name:        "get_company_quarterly_audit_variance",
+		Description: "根據股票代號查詢上市公司當季綜合損益經會計師查核(核閱)數與當季預測數差異達百分之十以上者(簡式)（TWSE-API t187ap16_L，T103）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIAuditVariance}.handler(),
+	}) // T103
+	r.Register(ToolDef{
+		Symbol:      "get_company_quarterly_earnings_forecast_achievement",
+		Name:        "get_company_quarterly_earnings_forecast_achievement",
+		Description: "根據股票代號查詢上市公司截至各季綜合損益財測達成情形(簡式)（TWSE-API t187ap15_L，T104）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIForecastAchv}.handler(),
+	}) // T104
+
+	r.Register(ToolDef{
 		Symbol:      "get_company_dividend",
 		Name:        "get_company_dividend",
 		Description: "根據股票代號查詢上市公司股利分派情形（TWSE-API t187ap45_L 正規化模型，T081）。",
