@@ -7,6 +7,7 @@
 
 baseline 存於 snapshots/catalogs/<source>_endpoints.txt（每行一條路徑）。
 """
+
 import json
 import sys
 from pathlib import Path
@@ -46,7 +47,6 @@ def fetch_paths(name: str) -> list:
     except (subprocess.CalledProcessError, json.JSONDecodeError) as exc:
         raise RuntimeError(f"{name} 目錄抓取/解析失敗：{exc}") from exc
     return sorted(p.strip("/").lstrip("v1/") for p in doc.get("paths", {}))
-
 
 
 def load_baseline(name: str) -> set:
@@ -101,8 +101,10 @@ def main() -> None:
 
     if mode == "check":
         if changed:
-            print("\n結果：官方目錄有變更或異常——請評估新增工具/移除標註，"
-                  "確認後執行 make catalog-snapshot 更新 baseline。")
+            print(
+                "\n結果：官方目錄有變更或異常——請評估新增工具/移除標註，"
+                "確認後執行 make catalog-snapshot 更新 baseline。"
+            )
             sys.exit(1)
         print("\n結果：三個官方目錄皆無變更。")
 
