@@ -315,6 +315,25 @@ func handlerGetCompanyBalanceSheet(a *App, args map[string]any) (HandlerResult, 
 	return HandlerResult{Data: rows, Lineage: lineage}, nil
 }
 
+// handlerGetPublicCompanyBalanceSheet：公開發行公司資產負債表（T158）。
+// 公發公司代號未必存在於上市 Symbol Registry，故不做註冊校驗、直接嘗試全部格式。
+func handlerGetPublicCompanyBalanceSheet(a *App, args map[string]any) (HandlerResult, error) {
+	code := strVal(args["code"])
+	if code == "" {
+		return HandlerResult{}, fmt.Errorf("code 為必填參數")
+	}
+	ctx := context.Background()
+	dataDate := a.now().Format("2006-01-02")
+	rows, cached, stale, ds, _ := fetchFinancialRowsFallback(a, ctx, pubBalanceSheetDatasets,
+		financialSuffix(""), dataDate, code)
+	if len(rows) == 0 {
+		return HandlerResult{}, fmt.Errorf("查無 %s 之公開發行公司資產負債表資料", code)
+	}
+	ttl, _ := a.ttlOf(string(ds))
+	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+	return HandlerResult{Data: rows, Lineage: lineage}, nil
+}
+
 var balanceSheetDatasets = map[string]provider.TWSEAPIDataset{
 	"_ci":   provider.TWSEAPIBalCI,
 	"_basi": provider.TWSEAPIBalBASI,
@@ -525,6 +544,16 @@ var pubIncomeStatementDatasets = map[string]provider.TWSEAPIDataset{
 	"_fh":   provider.TWSEAPIPubIncFH,
 	"_ins":  provider.TWSEAPIPubIncINS,
 	"_mim":  provider.TWSEAPIPubIncMIM,
+}
+
+// pubBalanceSheetDatasets 對應公發資產負債表六種產業格式（T158）。
+var pubBalanceSheetDatasets = map[string]provider.TWSEAPIDataset{
+	"_ci":   provider.TWSEAPIPubBalCI,
+	"_basi": provider.TWSEAPIPubBalBASI,
+	"_bd":   provider.TWSEAPIPubBalBD,
+	"_fh":   provider.TWSEAPIPubBalFH,
+	"_ins":  provider.TWSEAPIPubBalINS,
+	"_mim":  provider.TWSEAPIPubBalMIM,
 }
 
 // handlerGetPublicCompanyIncomeStatement：公開發行公司綜合損益表（T160）。

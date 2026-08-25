@@ -88,6 +88,12 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIPubIncFH):        cache.DatasetFinancials,
 	string(provider.TWSEAPIPubIncINS):       cache.DatasetFinancials,
 	string(provider.TWSEAPIPubIncMIM):       cache.DatasetFinancials,
+	string(provider.TWSEAPIPubBalCI):        cache.DatasetFinancials, // 公發資產負債表-一般業（T158）
+	string(provider.TWSEAPIPubBalBASI):      cache.DatasetFinancials,
+	string(provider.TWSEAPIPubBalBD):        cache.DatasetFinancials,
+	string(provider.TWSEAPIPubBalFH):        cache.DatasetFinancials,
+	string(provider.TWSEAPIPubBalINS):       cache.DatasetFinancials,
+	string(provider.TWSEAPIPubBalMIM):       cache.DatasetFinancials,
 	string(provider.TWSEAPISupervisorComp):  cache.DatasetFinancials, // 監察人酬金（T111）
 	string(provider.TWSEWDMonthlyAvgAll):    cache.DatasetDailyKLine, // 月平均價（T168）
 	string(provider.TWSEWDStockMonTrade):    cache.DatasetDailyKLine, // 個股月成交（T171）

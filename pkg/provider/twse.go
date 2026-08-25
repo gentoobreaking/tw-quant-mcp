@@ -121,6 +121,12 @@ const (
 	TWSEAPIPubIncFH       TWSEAPIDataset = "pub_income_fh"    // 金控業
 	TWSEAPIPubIncINS      TWSEAPIDataset = "pub_income_ins"   // 保險業
 	TWSEAPIPubIncMIM      TWSEAPIDataset = "pub_income_mim"   // 異業
+	TWSEAPIPubBalCI       TWSEAPIDataset = "pub_bal_ci"       // 公發資產負債表-一般業（t187ap07_X_ci，T158）
+	TWSEAPIPubBalBASI     TWSEAPIDataset = "pub_bal_basi"     // 金融業
+	TWSEAPIPubBalBD       TWSEAPIDataset = "pub_bal_bd"       // 證券期貨業
+	TWSEAPIPubBalFH       TWSEAPIDataset = "pub_bal_fh"       // 金控業
+	TWSEAPIPubBalINS      TWSEAPIDataset = "pub_bal_ins"      // 保險業
+	TWSEAPIPubBalMIM      TWSEAPIDataset = "pub_bal_mim"      // 異業
 	// 行情歷史與指數補齊（T140，T143-T145，T161，T180-T183）
 	TWSEWDMarginInfo    TWSEWebDataset = "margin_info"    // 信用交易統計（MI_MARGN，T140）
 	TWSEWDHoliday       TWSEWebDataset = "holiday"        // 市場開休市日期（holidaySchedule，T144）
@@ -275,6 +281,12 @@ var (
 		TWSEAPIPubIncFH:        "/opendata/t187ap06_X_fh",
 		TWSEAPIPubIncINS:       "/opendata/t187ap06_X_ins",
 		TWSEAPIPubIncMIM:       "/opendata/t187ap06_X_mim",
+		TWSEAPIPubBalCI:        "/opendata/t187ap07_X_ci",
+		TWSEAPIPubBalBASI:      "/opendata/t187ap07_X_basi",
+		TWSEAPIPubBalBD:        "/opendata/t187ap07_X_bd",
+		TWSEAPIPubBalFH:        "/opendata/t187ap07_X_fh",
+		TWSEAPIPubBalINS:       "/opendata/t187ap07_X_ins",
+		TWSEAPIPubBalMIM:       "/opendata/t187ap07_X_mim",
 		TWSEAPIInsiderPreann:   "/opendata/t187ap12_L",
 		TWSEAPIInsiderUntrans:  "/opendata/t187ap13_L",
 		TWSEAPIDirComp:         "/opendata/t187ap29_A_L",
@@ -750,6 +762,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizePassthroughArray(raw)
 	case "fund_basic", "pub_board_hold", "pub_income_ci", "pub_income_basi",
 		"pub_income_bd", "pub_income_fh", "pub_income_ins", "pub_income_mim":
+		out, err = normalizePassthroughArray(raw)
+	case "pub_bal_ci", "pub_bal_basi", "pub_bal_bd", "pub_bal_fh", "pub_bal_ins", "pub_bal_mim":
 		out, err = normalizePassthroughArray(raw)
 	case "margin_info":
 		out, err = normalizeWebTablesList(raw)

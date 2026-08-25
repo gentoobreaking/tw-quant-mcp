@@ -121,6 +121,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["fund_basic|"] = `[{"出表日期":"1150824","基金代號":"00400A","基金簡稱":"主動國泰動能高息","基金類型":"主動式ETF"}]`
 	f.bodies["pub_board_hold|"] = `[{"出表日期":"1150820","資料年月":"11507","公司代號":"2330","公司名稱":"台積電"}]`
 	f.bodies["pub_income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"247728.00"}]`
+	f.bodies["pub_bal_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","資產總額":"1000000.00"}]`
 	f.bodies["margin_info|"] = `[{"項目":"融資(交易單位)","買進":"100","賣出":"90","今日餘額":"5000000","_table":"115年08月24日 信用交易統計","_date":"2026-07-30"}]`
 	f.bodies["holiday|"] = `[{"日期":"2026-01-01","名稱":"中華民國開國紀念日","說明":"休市"}]`
 	f.bodies["realtime_stats|"] = `[{"時間":"13:25:00","累計委託筆數":"3000000"}]`
@@ -364,6 +365,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_fund_basic_info", args: map[string]any{}},
 		{name: "get_public_company_board_shareholdings", args: map[string]any{"code": "2330"}},
 		{name: "get_public_company_income_statement", args: map[string]any{"code": "2330"}},
+		{name: "get_public_company_balance_sheet", args: map[string]any{"code": "2330"}},
 		{name: "get_margin_trading_info", args: map[string]any{}},
 		{name: "get_market_disposal_stocks", args: map[string]any{}},
 		{name: "get_market_historical_index", args: map[string]any{}},

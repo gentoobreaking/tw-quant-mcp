@@ -410,6 +410,15 @@ func registerDETools(r *Registry) {
 		ReadOnly:    true,
 		Handler:     handlerGetPublicCompanyIncomeStatement,
 	}) // T160
+	r.Register(ToolDef{
+		Symbol:      "get_public_company_balance_sheet",
+		Name:        "get_public_company_balance_sheet",
+		Description: "根據股票代號查詢公開發行公司資產負債表（TWSE-API t187ap07_X 系列，T158）。" +
+			"自動偵測公司所屬產業並使用對應的財務報表格式。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     handlerGetPublicCompanyBalanceSheet,
+	}) // T158
 
 	r.Register(ToolDef{
 		Symbol:      "get_company_supervisor_compensation",
