@@ -44,6 +44,7 @@ const (
 	TWSEWDBlockTrades   TWSEWebDataset = "block_trades"    // 鉅額交易
 	TWSEWDAbnormal      TWSEWebDataset = "abnormal_volume" // 異常成交量（當日公布注意股票）
 	TWSEWDForeignQFIIS  TWSEWebDataset = "qfiis"           // 外資及陸資投資持股統計（個股每日，T011）
+	TWSEWDAfterHours    TWSEWebDataset = "after_hours"     // 盤後定價交易（T040）
 )
 
 // TWSEAPIDataset 為 TWSE-API（openapi.twse.com.tw）資料集 ID。
@@ -78,6 +79,7 @@ var (
 		TWSEWDBlockTrades:   "/rwd/block/BFIAUU_d",
 		TWSEWDAbnormal:      "/rwd/announcement/notice",
 		TWSEWDForeignQFIIS:  "/rwd/fund/MI_QFIIS",
+		TWSEWDAfterHours:    "/exchangeReport/BFT41U",
 	}
 	twseAPIPaths = map[TWSEAPIDataset]string{
 		TWSEAPIDailyClose:      "/exchangeReport/STOCK_DAY_ALL",
@@ -462,6 +464,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizeBlockTrades(raw)
 	case "abnormal_volume":
 		out, err = normalizeAbnormalVolume(raw)
+	case "after_hours":
+		out, err = normalizeAfterHours(raw)
 	case "qfiis":
 		out, err = normalizeQFIIS(raw)
 	case "punish":
@@ -1125,6 +1129,62 @@ type AbnormalVolumeRow struct {
 	Date        string  `json:"date"`         // YYYY-MM-DD
 	Close       float64 `json:"close"`        // 收盤價（元）
 	PE          float64 `json:"pe"`           // 本益比
+}
+
+// ---------------------------------------------------------------------------
+// 盤後定價交易（TWSE-WEB）：/exchangeReport/BFT41U（T040）。
+// 官方欄位：證券代號/證券名稱/成交數量/成交筆數/成交金額/成交價/最後揭示買量/最後揭示賣量。
+
+// AfterHoursRow 為一檔盤後定價交易資訊。
+type AfterHoursRow struct {
+	Code        string  `json:"code"`
+	Name        string  `json:"name"`
+	Volume      int64   `json:"volume"`      // 成交數量（股）
+	Transaction int64   `json:"transaction"` // 成交筆數
+	Amount      int64   `json:"amount"`      // 成交金額（元）
+	Price       float64 `json:"price"`       // 成交價（元）
+	BidVolume   int64   `json:"bid_volume"`  // 最後揭示買量（股）
+	AskVolume   int64   `json:"ask_volume"`  // 最後揭示賣量（股）
+	Date        string  `json:"date"`         // YYYY-MM-DD（資料歸屬日）
+}
+
+// normalizeAfterHours：盤後定價交易（BFT41U，T040）。頂層 date 為資料歸屬日。
+func normalizeAfterHours(raw *RawResponse) ([]AfterHoursRow, error) {
+	var meta struct {
+		Date string `json:"date"`
+	}
+	_ = json.Unmarshal(raw.Body, &meta)
+	date := ""
+	if ts, err := time.Parse("20060102", strings.TrimSpace(meta.Date)); err == nil {
+		date = model.FormatDate(ts)
+	}
+	fields, rows, err := rowsOf(raw)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]AfterHoursRow, 0, len(rows))
+	for _, row := range rows {
+		m := parseRow(fields, row)
+		r := AfterHoursRow{
+			Code:        strings.TrimSpace(m["證券代號"]),
+			Name:        strings.TrimSpace(m["證券名稱"]),
+			Volume:      commaIntOrZero(m["成交數量"]),
+			Transaction: commaIntOrZero(m["成交筆數"]),
+			Amount:      commaDecimalToInt(m["成交金額"]),
+			Price:       commaFloatOrZero(m["成交價"]),
+			BidVolume:   commaIntOrZero(m["最後揭示買量"]),
+			AskVolume:   commaIntOrZero(m["最後揭示賣量"]),
+			Date:        date,
+		}
+		if r.Code == "" {
+			continue
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: after_hours 無有效資料列")
+	}
+	return out, nil
 }
 
 func normalizeAbnormalVolume(raw *RawResponse) ([]AbnormalVolumeRow, error) {

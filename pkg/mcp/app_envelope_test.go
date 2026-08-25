@@ -49,6 +49,9 @@ func stubBCEnvelope(f *fakeFetch) {
 	// get_etf_nav（§30.1：fundPric netPrice+atmps / close 市價）
 	f.bodies["etf|0050|fundPric"] = `{"netPrice":[{"date":"2026/07/30","count":101.0},{"date":"2026/07/29","count":100.0}],"atmps":[{"date":"2026/07/30","count":0.15},{"date":"2026/07/29","count":-0.1}]}`
 	f.bodies["etf|0050|close"] = `[{"date":"2026/07/30","count":101.15},{"date":"2026/07/29","count":99.9}]`
+	// get_after_hours_trading（T040）
+	f.stub("after_hours", nil,
+		`[{"code":"2330","name":"台積電","volume":100,"transaction":5,"amount":482500,"price":4825,"bid_volume":10,"ask_volume":20,"date":"2026-07-30"}]`)
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
 	f.stub("daily_k", url.Values{"date": {"20260601"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "06", 20, 20)))
@@ -145,6 +148,8 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_institutional_futures_positions", args: map[string]any{"date": "2026-07-29"}},
 		{name: "get_institutional_options_positions", args: map[string]any{"date": "2026-07-29"}},
 		{name: "get_institutional_futures_history", args: map[string]any{"start": "2026-07-27", "end": "2026-07-29"}},
+		// ── T040 parity ──
+		{name: "get_after_hours_trading", args: map[string]any{}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},
@@ -165,8 +170,8 @@ func TestAllToolsEnvelopeConsistent(t *testing.T) {
 	intraday := newTestApp(t)
 
 	names := intraday.Registry().Names()
-	if len(names) != 40 {
-		t.Fatalf("前置：應登錄 40 工具，實際 %d", len(names))
+	if len(names) < 40 {
+		t.Fatalf("前置：應至少登錄 40 工具，實際 %d", len(names))
 	}
 	covered := map[string]bool{}
 	for _, p := range allToolProbes() {
@@ -177,8 +182,8 @@ func TestAllToolsEnvelopeConsistent(t *testing.T) {
 			t.Errorf("探針清單缺漏工具 %q（驗收要求覆蓋所有已註冊 Tool）", n)
 		}
 	}
-	if len(covered) != 40 {
-		t.Fatalf("探針應覆蓋 40 工具，實際 %d", len(covered))
+	if len(covered) != len(names) {
+		t.Fatalf("探針應覆蓋全部 %d 個工具，實際 %d", len(names), len(covered))
 	}
 
 	for _, p := range allToolProbes() {

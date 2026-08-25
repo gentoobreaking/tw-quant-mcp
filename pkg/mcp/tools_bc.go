@@ -873,3 +873,50 @@ func handlerGetTWSEIndex(a *App, args map[string]any) (HandlerResult, error) {
 
 	return HandlerResult{Data: view, Lineage: lg}, nil
 }
+
+// handlerGetAfterHoursTrading：盤後定價交易（BFT41U，T040）。
+func handlerGetAfterHoursTrading(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	code, _ := args["code"].(string)
+	limit, offset := 50, 0
+	if v, ok := args["limit"]; ok {
+		if n, err := asInt(v); err == nil && n > 0 {
+			limit = n
+		}
+	}
+	if v, ok := args["offset"]; ok {
+		if n, err := asInt(v); err == nil && n >= 0 {
+			offset = n
+		}
+	}
+	date, err := a.resolveDate("")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	rows, cached, stale, err := fetchNormalize[[]provider.AfterHoursRow](a, ctx,
+		string(provider.TWSEWDAfterHours), date,
+		cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDAfterHours), date, code, nil),
+		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDAfterHours, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	if code != "" {
+		filtered := rows[:0:0]
+		for _, r := range rows {
+			if r.Code == code {
+				filtered = append(filtered, r)
+			}
+		}
+		rows = filtered
+	}
+	if offset < len(rows) {
+		rows = rows[offset:]
+	} else {
+		rows = rows[:0]
+	}
+	if len(rows) > limit {
+		rows = rows[:limit]
+	}
+	ttl, _ := a.ttlOf(string(provider.TWSEWDAfterHours))
+	return HandlerResult{Data: rows, Lineage: postLineage(model.SourceTWSEWeb, date, cached || stale, stale, ttl)}, nil
+}

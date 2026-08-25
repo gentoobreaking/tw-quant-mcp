@@ -150,6 +150,22 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetWarrantActivity,
 	})
 	r.Register(ToolDef{
+		Symbol:      "get_after_hours_trading",
+		Name:        "get_after_hours_trading",
+		Description: "查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。" +
+			"code 選填（單檔查詢）；limit 預設 50；offset 分頁。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "股票代號（選填，預設全部）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetAfterHoursTrading,
+	})
+	r.Register(ToolDef{
 		Symbol:      "get_major_announcements",
 		Name:        "get_major_announcements",
 		Description: "查詢上市/上櫃重大訊息（MOPS 公開資訊觀測站 Open Data，T012）。支援依日期、股票代號、關鍵字過濾。資料來源：mopsfin.twse.com.tw",
