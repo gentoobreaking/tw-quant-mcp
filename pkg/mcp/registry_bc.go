@@ -273,6 +273,36 @@ func registerBCTools(r *Registry) {
 		Handler:  apiListSpec{ds: provider.TWSEAPIForeignApply}.handler(),
 	}) // T123
 	r.Register(ToolDef{
+		Symbol:      "get_recently_listed_companies",
+		Name:        "get_recently_listed_companies",
+		Description: "查詢最近上市公司（TWSE-API company/newlisting，T162）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPINewListing}.handler(),
+	}) // T162
+	r.Register(ToolDef{
+		Symbol:      "get_suspended_listed_companies",
+		Name:        "get_suspended_listed_companies",
+		Description: "查詢終止上市公司（TWSE-API company/suspendListingCsvAndHtml，T178）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPISuspListing}.handler(),
+	}) // T178
+	r.Register(ToolDef{
 		Symbol:      "get_daily_securities_lending_volume",
 		Name:        "get_daily_securities_lending_volume",
 		Description: "查詢集中市場借券賣出每日量（T119）。",
