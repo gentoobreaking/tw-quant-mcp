@@ -1095,6 +1095,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcDaily,
 	}) // T155
 	r.Register(ToolDef{
+		Symbol: "get_otc_monthly_revenue",
+		Name:   "get_otc_monthly_revenue",
+		Description: "查詢上櫃公司每月營業收入彙總（TPEx-API mopsfin_t187ap05_O，T195）。" +
+			"對稱上市 get_monthly_revenue。code 選填，指定則只回傳該公司；" +
+			"欄位含資料年月、當月/上月/去年營收與 YoY/MoM 增減。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "公司代號（選填），指定則只回傳該公司"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcMonthlyRevenue,
+	}) // T195
+	r.Register(ToolDef{
 		Symbol:      "get_otc_index",
 		Name:        "get_otc_index",
 		Description: "查詢櫃買市場（上櫃）指數歷史行情，包含開高低收、漲跌幅（TPEx-API tpex_index，T156）。",

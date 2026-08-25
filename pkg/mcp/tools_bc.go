@@ -1324,3 +1324,37 @@ func handlerGetAbnormalAccumulatedNoticeStocks(a *App, args map[string]any) (Han
 	}
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
+
+// handlerGetOtcMonthlyRevenue：上櫃公司每月營業收入彙總（T195）。
+// 對稱上市 get_monthly_revenue；code 為本地端過濾（公司代號）。
+func handlerGetOtcMonthlyRevenue(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExOtcMonthlyRev), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcMonthlyRev), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExOtcMonthlyRev, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetMonthlyRevenue) // 上櫃月營收同 monthly_revenue 政策
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "公司代號", "code") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}

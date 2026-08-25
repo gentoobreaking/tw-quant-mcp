@@ -151,6 +151,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["new_listing|"] = `[{"Code":"7855","Company":"和運租車","ApplicationDate":"1150414","Chairman":"劉源森","ApprovedListingDate":"1150811","Underwriter":"台新"}]`
 	f.bodies["local_apply|"] = `[{"Code":"7883","Company":"饗賓","ApplicationDate":"1150727","Chairman":"陳毅航","AmountofCapital ":"609760","CommitteeDate":"1150827","Underwriter":"元大","Note":""}]`
 	f.bodies["suspend_listing|"] = `[{"DelistingDate":"115/06/23","Company":"森崴能源","Code":"6806"}]`
+	f.bodies["otc_monthly_revenue|"] = `[{"出表日期":"1150817","資料年月":"11507","公司代號":"1240","公司名稱":"茂生農經","營業收入-當月營收":"242511","營業收入-上月比較增減(%)":"-10.24"}]`
 	f.bodies["otc_daily|"] = `[{"date":"2026-07-30","code":"8110","name":"華東","close":30.5,"change_dir":"+","change":0.35,"open":30.1,"high":30.7,"low":30.0,"volume":120000,"amount":3660000,"transaction":80}]`
 	f.bodies["eps_stats|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","季度":"4","EPS":"15.85"}]`
 	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
@@ -296,6 +297,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_recently_listed_companies", args: map[string]any{}},
 		{name: "get_suspended_listed_companies", args: map[string]any{}},
 		{name: "get_otc_daily", args: map[string]any{}},
+		{name: "get_otc_monthly_revenue", args: map[string]any{"code": "1240"}},
 		{name: "get_otc_index", args: map[string]any{}},
 		{name: "get_otc_odd_lot", args: map[string]any{}},
 		{name: "get_daily_securities_lending_volume", args: map[string]any{}},

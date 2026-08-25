@@ -143,6 +143,7 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIIndices):         cache.DatasetDailyKLine, // 指數收盤同 daily_kline 政策
 	string(provider.TPExDailyClose):         cache.DatasetDailyKLine,
 	string(provider.TPExOtcDaily):           cache.DatasetDailyKLine, // 上櫃收盤行情（T155）
+	string(provider.TPExOtcMonthlyRev):      cache.DatasetMonthlyRevenue, // 上櫃月營收（T195）
 	string(model.TAOptionsDelta):            cache.DatasetCalendar,   // 選擇權 Delta（T151）
 	string(model.TAOIChange):                cache.DatasetCalendar,   // 台指選擇權 OI 增減（T154）
 	string(model.TAStockMargin):             cache.DatasetCalendar,   // 股票期貨保證金（T167）

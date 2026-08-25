@@ -55,6 +55,7 @@ const (
 	TPExExRights      TPExDataset = "ex_rights"             // 除權息預告表
 	TPExOddLot        TPExDataset = "odd_lot"               // 零股交易
 	TPExOtcDaily      TPExDataset = "otc_daily"             // 上櫃每日收盤行情（T155）
+	TPExOtcMonthlyRev TPExDataset = "otc_monthly_revenue"   // 上櫃月營收彙總（T195）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -72,6 +73,7 @@ var (
 		TPExExRights:      "/tpex_exright_prepost",
 		TPExOddLot:        "/tpex_odd_stock",
 		TPExOtcDaily:      "/tpex_mainboard_daily_close_quotes", // T155
+		TPExOtcMonthlyRev: "/mopsfin_t187ap05_O",                // 上櫃月營收彙總（T195）
 	}
 )
 
@@ -206,6 +208,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExOtcDaily):
 		// 欄位序同 tpex_mainboard_quotes（T155 實測），共用收盤行情正規化。
 		out = normalizeTPExDailyClose(ms)
+	case string(TPExOtcMonthlyRev):
+		// 官方中文欄位 passthrough（T195 實測：出表日期/資料年月/公司代號/
+		// 營業收入-當月營收/上月比較增減(%) 等）。
+		out = ms
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
 	}
