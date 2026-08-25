@@ -1162,6 +1162,38 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcExdividendResult,
 	}) // T200
 	r.Register(ToolDef{
+		Symbol: "get_otc_daytrade_targets",
+		Name:   "get_otc_daytrade_targets",
+		Description: "查詢上櫃現股當沖交易標的清單（TPEx-API tpex_securities，T201）。" +
+			"code 選填過濾；結果同步注入 scan_daytrade_eligibility 名單（kind=daytrade）。" +
+			"暫停當沖之標的於「暫停現股賣出後現款買進當沖註記」欄位標示。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填），過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcDaytradeTargets,
+	}) // T201
+	r.Register(ToolDef{
+		Symbol: "get_otc_daytrade_statistics",
+		Name:   "get_otc_daytrade_statistics",
+		Description: "查詢上櫃股票現股當沖交易統計時序（TPEx-API tpex_intraday_trading_statistics，T201）。" +
+			"含當沖成交量/值及其佔全市場比重，依日期新→舊；limit 預設 50、offset 分頁。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcDaytradeStatistics,
+	}) // T201
+	r.Register(ToolDef{
 		Symbol:      "get_otc_index",
 		Name:        "get_otc_index",
 		Description: "查詢櫃買市場（上櫃）指數歷史行情，包含開高低收、漲跌幅（TPEx-API tpex_index，T156）。",

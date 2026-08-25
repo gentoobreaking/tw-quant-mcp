@@ -59,6 +59,8 @@ const (
 	TPExBrokerVolume  TPExDataset = "otc_broker_volume"     // 上櫃熱門股券商進出排行（T196）
 	TPExOtcForeignTrd TPExDataset = "otc_foreign_trading"   // 上櫃外資及陸資買賣超彙總（T197）
 	TPExOtcExRightDay TPExDataset = "otc_exright_daily"     // 上櫃除權息計算結果（T200）
+	TPExOtcDTTargets  TPExDataset = "otc_daytrade_targets"  // 上櫃當沖標的（T201）
+	TPExOtcDTStats    TPExDataset = "otc_daytrade_stats"    // 上櫃當沖統計（T201）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -80,6 +82,8 @@ var (
 		TPExBrokerVolume:  "/tpex_active_broker_volume",         // 熱門股券商進出排行（T196）
 		TPExOtcForeignTrd: "/tpex_3insti_qfii_trading",          // 外資及陸資買賣超彙總（T197）
 		TPExOtcExRightDay: "/tpex_exright_daily",                // 除權息計算結果（T200）
+		TPExOtcDTTargets:  "/tpex_securities",                   // 當沖標的（T201）
+		TPExOtcDTStats:    "/tpex_intraday_trading_statistics",  // 當沖統計（T201）
 	}
 )
 
@@ -229,6 +233,13 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/
 		// ExRightsDiviend/CashDividend/LimitUp/LimitDown/OpeningReferencePrice 等）。
+		out = ms
+	case string(TPExOtcDTTargets):
+		// passthrough（T201 實測：資料日期/證券代號/證券名稱/暫停現股賣出後
+		// 現款買進當沖註記）。
+		out = ms
+	case string(TPExOtcDTStats):
+		// passthrough（T201 實測：Date/DayTradingVolume/佔市場比/買賣值系列）。
 		out = ms
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)

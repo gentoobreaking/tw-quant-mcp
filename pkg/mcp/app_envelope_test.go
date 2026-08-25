@@ -151,6 +151,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["new_listing|"] = `[{"Code":"7855","Company":"和運租車","ApplicationDate":"1150414","Chairman":"劉源森","ApprovedListingDate":"1150811","Underwriter":"台新"}]`
 	f.bodies["local_apply|"] = `[{"Code":"7883","Company":"饗賓","ApplicationDate":"1150727","Chairman":"陳毅航","AmountofCapital ":"609760","CommitteeDate":"1150827","Underwriter":"元大","Note":""}]`
 	f.bodies["suspend_listing|"] = `[{"DelistingDate":"115/06/23","Company":"森崴能源","Code":"6806"}]`
+	f.bodies["otc_daytrade_targets|"] = `[{"資料日期":"1150730","證券代號":"8110","證券名稱":"華東","暫停現股賣出後現款買進當沖註記":""}]`
+	f.bodies["otc_daytrade_stats|"] = `[{"Date":"1150730","DayTradingVolume":"354631000","DayTradingVolumeOfTheMarket":"22.56%","DayTradingValueOfBuys":"62782492410"}]`
 	f.bodies["otc_exright_daily|"] = `[{"Date":"1150730","SecuritiesCompanyCode":"8110","CompanyName":"華東","ExRightsDiviend":"除息","CashDividend":"0.5","OpeningReferencePrice":"49.5"}]`
 	f.bodies["otc_foreign_trading|"] = `[{"Date":"1150730","Rank":"1","SecuritiesCompanyCode":"8110","CompanyName":"華東"," ForeignInvestorsIncludeMainlandAreaInvestors-TotalBuy":"1000"}]`
 	f.bodies["otc_broker_volume|"] = `[{"Date":"20260730","StockRanking":"1","SecuritiesCompanyCodeAndCompanyName":"華東(8110)","SecuritiesFirmsRanking":"1","SecuritiesFirmsCode":"元大","TotalPurchaseShares":"1000","TotalSellShares":"900"}]`
@@ -304,6 +306,8 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_otc_active_broker_volume", args: map[string]any{"stock_no": "8110"}},
 		{name: "get_otc_foreign_trading", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_exdividend_result", args: map[string]any{"code": "8110"}},
+		{name: "get_otc_daytrade_targets", args: map[string]any{"code": "8110"}},
+		{name: "get_otc_daytrade_statistics", args: map[string]any{}},
 		{name: "get_otc_index", args: map[string]any{}},
 		{name: "get_otc_odd_lot", args: map[string]any{}},
 		{name: "get_daily_securities_lending_volume", args: map[string]any{}},

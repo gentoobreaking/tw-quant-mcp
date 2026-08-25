@@ -1460,3 +1460,73 @@ func handlerGetOtcExdividendResult(a *App, args map[string]any) (HandlerResult, 
 	}
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
+
+// handlerGetOtcDaytradeTargets：上櫃現股當沖交易標的（T201；tpex_securities）。
+// 查詢結果同步注入 scan_daytrade_eligibility 名單（kind=daytrade）。
+func handlerGetOtcDaytradeTargets(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExOtcDTTargets), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcDTTargets), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExOtcDTTargets, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetAlertStock)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	alerts := make([]AlertList, 0, len(rows))
+	for _, r := range rows {
+		c := rowField(r, "證券代號", "code")
+		if c == "" {
+			continue
+		}
+		note := rowField(r, "暫停現股賣出後現款買進當沖註記")
+		if code != "" && c != code {
+			continue
+		}
+		out = append(out, r)
+		alerts = append(alerts, AlertList{Scope: "otc", Kind: "daytrade", Code: c,
+			Info: mapStringOrEmpty(note)})
+	}
+	a.risk.AddLists(date, "otc", alerts)
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
+func mapStringOrEmpty(s string) string { return s }
+
+// handlerGetOtcDaytradeStatistics：上櫃現股當沖交易統計時序（T201）。
+func handlerGetOtcDaytradeStatistics(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExOtcDTStats), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcDTStats), date, "", nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExOtcDTStats, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	if offset < len(rows) {
+		rows = rows[offset:]
+	} else {
+		rows = []map[string]any{}
+	}
+	if len(rows) > limit {
+		rows = rows[:limit]
+	}
+	return HandlerResult{Data: rows, Lineage: lineage}, nil
+}
