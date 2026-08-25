@@ -37,6 +37,24 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetDailyFuturesMarketReport,
 	}) // T117
 	r.Register(ToolDef{
+		Symbol: "get_time_and_sales",
+		Name:   "get_time_and_sales",
+		Description: "查詢期貨/選擇權每筆成交資料（tick 級；TAIFEX-API TimeAndSalesData / " +
+			"OptionsTimeAndSalesData，T207）。market 參數 futures（預設）/options；date 省略為最新交易日。" +
+			"資料量大：limit 預設 50、上限 1000，建議指定 date。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"market": map[string]any{"type": "string", "enum": []string{"futures", "options"}, "default": "futures", "description": "市場別"},
+				"date":   map[string]any{"type": "string", "description": "交易日 YYYY-MM-DD（省略為最新交易日）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "maximum": 1000, "description": "回傳筆數上限（預設 50，最大 1000）"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetTimeAndSales,
+	}) // T207
+	r.Register(ToolDef{
 		Symbol: "get_daily_options_market_report",
 		Name:   "get_daily_options_market_report",
 		Description: "查詢選擇權每日交易行情，篩選有成交量的履約價資料，按成交量由大到小排序（TAIFEX-API DailyMarketReportOpt，T118）。" +

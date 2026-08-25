@@ -24,6 +24,8 @@ const (
 	TAOptInstiByCont   TAIFEXDataset = "opt_insti_by_contract" // 三大法人各選擇權契約交易歷史（僅 DL，T152）
 	TAInstiCPHist      TAIFEXDataset = "insti_cp_hist"         // 三大法人選擇權買賣權分計歷史（僅 DL，T153）
 	TAStockMargin      TAIFEXDataset = "stock_margin"          // 股票期貨保證金一覽表（僅 API，T167）
+	TATickFutures      TAIFEXDataset = "tick_futures"          // 期貨逐筆成交（僅 API，T207）
+	TATickOptions      TAIFEXDataset = "tick_options"          // 選擇權逐筆成交（僅 API，T207）
 	TALargeTraderFut   TAIFEXDataset = "large_trader_fut"      // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt   TAIFEXDataset = "large_trader_opt"      // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio     TAIFEXDataset = "put_call_ratio"        // 買賣權比（PCR）

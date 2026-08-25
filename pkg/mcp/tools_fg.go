@@ -1455,3 +1455,58 @@ func handlerGetMonthlyTradingStatistics(a *App, args map[string]any) (HandlerRes
 	}
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, latest, fromCache, a.taifexTTL())}, nil
 }
+
+// handlerGetTimeAndSales：期貨/選擇權逐筆成交（TAIFEX-API TimeAndSalesData /
+// OptionsTimeAndSalesData，T207）。market 參數 futures（預設）/options；
+// date 省略為最新交易日。tick 級資料量大，limit 上限 1000。
+func handlerGetTimeAndSales(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	market := strings.ToLower(strVal(args["market"]))
+	if market == "" {
+		market = "futures"
+	}
+	ds := model.TATickFutures
+	if market == "options" {
+		ds = model.TATickOptions
+	}
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	limit, offset := 50, 0
+	if v, ok := args["limit"]; ok {
+		if n, e := asInt(v); e == nil && n > 0 {
+			limit = n
+			if limit > 1000 {
+				limit = 1000
+			}
+		}
+	}
+	if v, ok := args["offset"]; ok {
+		if n, e := asInt(v); e == nil && n >= 0 {
+			offset = n
+		}
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	if offset < len(rows) {
+		rows = rows[offset:]
+	} else {
+		rows = []map[string]any{}
+	}
+	if len(rows) > limit {
+		rows = rows[:limit]
+	}
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+

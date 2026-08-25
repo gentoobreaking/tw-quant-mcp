@@ -1,0 +1,64 @@
+{
+  "arguments": {
+    "market": "futures",
+    "limit": 3
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"ContractMonth(Week)\":\"202610\",\"Date\":\"20260821\",\"OpeningCallAuction\":\" \",\"PriceforFurtherDeliveryMonthContract\":\"\",\"PriceforNearerDeliveryMonthContract\":\"\",\"ProductCode\":\"BRF\",\"TimeOfTrades\":\"163303\",\"TradePrice\":\"2970\",\"Volume(Buy+Sell)\":\"2\"},{\"ContractMonth(Week)\":\"202610\",\"Date\":\"20260821\",\"OpeningCallAuction\":\" \",\"PriceforFurtherDeliveryMonthContract\":\"\",\"PriceforNearerDeliveryMonthContract\":\"\",\"ProductCode\":\"BRF\",\"TimeOfTrades\":\"165910\",\"TradePrice\":\"2948\",\"Volume(Buy+Sell)\":\"4\"},{\"ContractMonth(Week)\":\"202610\",\"Date\":\"20260821\",\"OpeningCallAuction\":\" \",\"PriceforFurtherDeliveryMonthContract\":\"\",\"PriceforNearerDeliveryMonthContract\":\"\",\"ProductCode\":\"BRF\",\"TimeOfTrades\":\"180507\",\"TradePrice\":\"2988.5\",\"Volume(Buy+Sell)\":\"4\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T06:34:33+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":24472,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+      }
+    ],
+    "structuredContent": {
+      "data": [
+        {
+          "ContractMonth(Week)": "202610",
+          "Date": "20260821",
+          "OpeningCallAuction": " ",
+          "PriceforFurtherDeliveryMonthContract": "",
+          "PriceforNearerDeliveryMonthContract": "",
+          "ProductCode": "BRF",
+          "TimeOfTrades": "163303",
+          "TradePrice": "2970",
+          "Volume(Buy+Sell)": "2"
+        },
+        {
+          "ContractMonth(Week)": "202610",
+          "Date": "20260821",
+          "OpeningCallAuction": " ",
+          "PriceforFurtherDeliveryMonthContract": "",
+          "PriceforNearerDeliveryMonthContract": "",
+          "ProductCode": "BRF",
+          "TimeOfTrades": "165910",
+          "TradePrice": "2948",
+          "Volume(Buy+Sell)": "4"
+        },
+        {
+          "ContractMonth(Week)": "202610",
+          "Date": "20260821",
+          "OpeningCallAuction": " ",
+          "PriceforFurtherDeliveryMonthContract": "",
+          "PriceforNearerDeliveryMonthContract": "",
+          "ProductCode": "BRF",
+          "TimeOfTrades": "180507",
+          "TradePrice": "2988.5",
+          "Volume(Buy+Sell)": "4"
+        }
+      ],
+      "_lineage": {
+        "source": "TAIFEX_API",
+        "source_role": "CANONICAL",
+        "fetched_at": "2026-08-26T06:34:33+08:00",
+        "data_date": "2026-08-24",
+        "freshness": "POST_MARKET",
+        "sampling_sec": 0,
+        "is_cached": false,
+        "latency_ms": 24472,
+        "grade": "AVAILABLE"
+      },
+      "http_calls": 2,
+      "disclaimer": "僅供研究參考，不構成投資建議"
+    }
+  }
+}

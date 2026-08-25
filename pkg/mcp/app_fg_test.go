@@ -104,6 +104,11 @@ func (f *fakeTAIFEX) LatestTradingDay(_ context.Context) (string, error) {
 
 // stubFG 建立 F/G 工具測試之常用 stub。
 func stubFG(f *fakeTAIFEX) {
+	// 期貨逐筆成交（T207，最新日）
+	f.single[tfKey(model.TATickFutures, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260729", "ProductCode": "BRF", "ContractMonth(Week)": "202610",
+			"TimeOfTrades": "163303", "TradePrice": "2970", "Volume(Buy+Sell)": "2"},
+	})
 	// 期貨每日行情（TX，最新日 2026-07-29）
 	f.single[tfKey(model.TAFuturesDaily, "2026-07-29", "TX")] = tfStub([]model.FuturesDailyRow{
 		{Date: "2026-07-29", Contract: "TX", ContractMonth: "202608", Session: "一般", Open: 41915, High: 42070, Low: 39442, Close: 40392, Change: -1181, ChangePct: -2.84, Volume: 124405, Settlement: 40328, OpenInterest: 108507},
