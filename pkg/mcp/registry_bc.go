@@ -582,6 +582,22 @@ func registerBCTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetMajorAnnouncements,
 	})
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_major_news",
+		Name:        "get_company_major_news",
+		Description: "查詢上市公司每日重大訊息（MOPS t187ap04_L，T096）。code 選填，指定則僅回傳該公司。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code": map[string]any{"type": "string", "description": "股票代號（選填），例如 \"2330\""},
+			},
+		},
+		ReadOnly: true,
+		Handler: func(a *App, args map[string]any) (HandlerResult, error) {
+			return handlerGetMajorAnnouncements(a, map[string]any{"symbol": strVal(args["code"])})
+		},
+	}) // T096
 	r.Register(ToolDef{
 		Symbol: "get_twse_index",
 		Name:   "get_twse_index",
