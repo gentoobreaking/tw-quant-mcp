@@ -19,6 +19,7 @@ const (
 	TAPutCallRatio   TAIFEXDataset = "put_call_ratio"   // 買賣權比（PCR）
 	TAMargin         TAIFEXDataset = "margin"           // 保證金（僅 API）
 	TAFAnnualVolume  TAIFEXDataset = "annual_volume"    // 年成交量統計（僅 API，T041）
+	TAFMonthlyStats  TAIFEXDataset = "monthly_stats_futures" // 期貨各類交易人月統計（僅 API，T148）
 )
 
 // FuturesDailyRow 為單一期貨契約之日交易行情。

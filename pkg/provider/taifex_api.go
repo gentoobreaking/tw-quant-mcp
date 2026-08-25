@@ -56,6 +56,7 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAPutCallRatio:   "/PutCallRatio",
 	model.TAMargin:         "/IndexFuturesAndOptionsMargining",
 	model.TAFAnnualVolume:  "/AnnualTradingVolume",
+	model.TAFMonthlyStats:  "/MonthlyTradingStatisticsFutures", // T148
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -188,6 +189,8 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		out, err = normalizeTAIMargin(raw.Body, date, contract)
 	case model.TAFAnnualVolume:
 		out, err = normalizeTAIAnnualVolume(raw.Body, contract)
+	case model.TAFMonthlyStats:
+		out, err = normalizeTAIMonthlyTraderStats(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
 	}
@@ -574,6 +577,73 @@ func normalizeTAIAnnualVolume(body []byte, contract string) ([]AnnualVolumeRow, 
 	}
 	if len(out) == 0 {
 		return nil, fmt.Errorf("provider: annual_volume 無有效資料列")
+	}
+	return out, nil
+}
+
+// MonthlyTraderStatsRow 為期貨市場月統計之單一商品類別列（T148）。
+// 官方欄位（2026-08-25 實測）：YYYYMM、ContactName、TotalVolume、
+// Brokers-Individual(Buy/Sell)、Brokers-InstutionalInvestors-{SecuritiesDealers/
+// SecuritiesInvestmentTrust/Foreign&MainlandAreaInstitutionalInvestors/
+// ManagedFuturesEnterprisesAndFuturesTrustFunds/OtherInstitutionalInvesters}(Buy/Sell)、
+// ProprietaryTraders(Buy/Sell)、MonthEndOpenInterest；數量單位：口。
+type MonthlyTraderStatsRow struct {
+	Month          string `json:"month"`                    // YYYYMM
+	Category       string `json:"category"`                 // 商品類別（股價指數期貨、股票期貨…）
+	TotalVolume    int64  `json:"total_volume"`             // 總成交量
+	IndivBuy       int64  `json:"individual_buy"`           // 自然人買方
+	IndivSell      int64  `json:"individual_sell"`          // 自然人賣方
+	DealerBuy      int64  `json:"dealer_buy"`               // 自營商經紀業務買方
+	DealerSell     int64  `json:"dealer_sell"`              // 自營商經紀業務賣方
+	TrustBuy       int64  `json:"trust_buy"`                // 投信買方
+	TrustSell      int64  `json:"trust_sell"`               // 投信賣方
+	ForeignBuy     int64  `json:"foreign_buy"`              // 外資及陸資買方
+	ForeignSell    int64  `json:"foreign_sell"`             // 外資及陸資賣方
+	ManagedBuy     int64  `json:"managed_futures_buy"`      // 期貨信託/期經買方
+	ManagedSell    int64  `json:"managed_futures_sell"`     // 期貨信託/期經賣方
+	OtherInstiBuy  int64  `json:"other_institutional_buy"`  // 其他機構買方
+	OtherInstiSell int64  `json:"other_institutional_sell"` // 其他機構賣方
+	PropBuy        int64  `json:"proprietary_buy"`          // 自營商買方
+	PropSell       int64  `json:"proprietary_sell"`         // 自營商賣方
+	MonthEndOI     int64  `json:"month_end_open_interest"`  // 月底未平倉
+}
+
+// normalizeTAIMonthlyTraderStats：期貨各類交易人各商品交易量統計表
+//（MonthlyTradingStatisticsFutures，T148）。
+func normalizeTAIMonthlyTraderStats(body []byte) ([]MonthlyTraderStatsRow, error) {
+	var rows []map[string]any
+	if err := json.Unmarshal(body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: monthly_stats_futures JSON 解析失敗: %w", err)
+	}
+	out := make([]MonthlyTraderStatsRow, 0, len(rows))
+	for _, m := range rows {
+		r := MonthlyTraderStatsRow{
+			Month:          strAny(m["YYYYMM"]),
+			Category:       strAny(m["ContactName"]),
+			TotalVolume:    intAny(m["TotalVolume"]),
+			IndivBuy:       intAny(m["Brokers-Individual(Buy)"]),
+			IndivSell:      intAny(m["Brokers-Individual(Sell)"]),
+			DealerBuy:      intAny(m["Brokers-InstutionalInvestors-SecuritiesDealers(Buy)"]),
+			DealerSell:     intAny(m["Brokers-InstutionalInvestors-SecuritiesDealers(Sell)"]),
+			TrustBuy:       intAny(m["Brokers-InstutionalInvestors-SecuritiesInvestmentTrust(Buy)"]),
+			TrustSell:      intAny(m["Brokers-InstutionalInvestors-SecuritiesInvestmentTrust(Sell)"]),
+			ForeignBuy:     intAny(m["Brokers-InstutionalInvestors-Foreign&MainlandAreaInstitutionalInvestors(Buy)"]),
+			ForeignSell:    intAny(m["Brokers-InstutionalInvestors-Foreign&MainlandAreaInstitutionalInvestors(Sell)"]),
+			ManagedBuy:     intAny(m["Brokers-InstutionalInvestors-ManagedFuturesEnterprisesAndFuturesTrustFunds(Buy)"]),
+			ManagedSell:    intAny(m["Brokers-InstutionalInvestors-ManagedFuturesEnterprisesAndFuturesTrustFunds(Sell)"]),
+			OtherInstiBuy:  intAny(m["Brokers-InstutionalInvestors-OtherInstitutionalInvesters(Buy)"]),
+			OtherInstiSell: intAny(m["Brokers-InstutionalInvestors-OtherInstitutionalInvesters(Sell)"]),
+			PropBuy:        intAny(m["ProprietaryTraders(Buy)"]),
+			PropSell:       intAny(m["ProprietaryTraders(Sell)"]),
+			MonthEndOI:     intAny(m["MonthEndOpenInterest"]),
+		}
+		if r.Month == "" || r.Category == "" {
+			continue
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: monthly_stats_futures 無有效資料列")
 	}
 	return out, nil
 }

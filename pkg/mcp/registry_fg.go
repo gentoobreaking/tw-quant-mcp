@@ -71,6 +71,19 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetAnnualTradingVolume,
 	})
 	r.Register(ToolDef{
+		Symbol:      "get_monthly_trading_statistics",
+		Name:        "get_monthly_trading_statistics",
+		Description: "查詢期貨市場月統計資料，依商品類別（股價指數、利率、商品、股票）分類，" +
+			"顯示各類型交易人（自營商、投信、外資、散戶等）的買賣量與月底未平倉量" +
+			"（TAIFEX-API MonthlyTradingStatisticsFutures，T148）。", 
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetMonthlyTradingStatistics,
+	})
+	r.Register(ToolDef{
 		Symbol: "get_large_trader_positions",
 		Name:   "get_large_trader_positions",
 		Description: "查詢大額交易人未沖銷部位（期貨 + 選擇權合併；§10.F）。" +

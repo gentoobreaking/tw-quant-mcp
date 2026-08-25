@@ -174,6 +174,7 @@ func allToolProbes() []envelopeProbe {
 		// ── T040 parity ──
 		{name: "get_after_hours_trading", args: map[string]any{}},
 		{name: "get_annual_trading_volume", args: map[string]any{}},
+		{name: "get_monthly_trading_statistics", args: map[string]any{}},
 		{name: "get_block_trades_daily", args: map[string]any{}},
 		{name: "get_block_trades_detail", args: map[string]any{"date": "2026-07-30"}},
 		{name: "get_block_trades_monthly", args: map[string]any{}},

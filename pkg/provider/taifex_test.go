@@ -270,6 +270,37 @@ func taifexQueryHarness(t *testing.T, apiHandler, dlHandler http.HandlerFunc) (*
 	return q, apiSrv, dlSrv
 }
 
+// TestTAIFEXAPIMonthlyTraderStats 月統計（T148）：fixture 對照遠端回傳樣本。
+func TestTAIFEXAPIMonthlyTraderStats(t *testing.T) {
+	s := newTAIFEXAPISource("https://api.test/v1")
+	raw := fixtureRaw(t, s.URL(model.TAFMonthlyStats, nil),
+		taifexFixture(t, "tfx_MonthlyTradingStatisticsFutures.json"))
+	if err := s.Validate(raw); err != nil {
+		t.Fatalf("Validate 失敗: %v", err)
+	}
+	out, err := s.Normalize(raw)
+	if err != nil {
+		t.Fatalf("Normalize 失敗: %v", err)
+	}
+	var stats []MonthlyTraderStatsRow
+	if err := json.Unmarshal(out, &stats); err != nil {
+		t.Fatal(err)
+	}
+	if len(stats) != 4 {
+		t.Fatalf("應有 4 列（指數/股票/匯率/商品期貨），實際 %d", len(stats))
+	}
+	first := stats[0]
+	if first.Month != "202607" || first.Category != "股價指數期貨" {
+		t.Errorf("首列欄位異常: %+v", first)
+	}
+	if first.TotalVolume != 23656674 || first.ForeignBuy != 10679002 || first.MonthEndOI != 231222 {
+		t.Errorf("首列數值異常: %+v", first)
+	}
+	if first.IndivBuy == 0 || first.PropSell == 0 {
+		t.Errorf("自然人/自營商欄位未解析: %+v", first)
+	}
+}
+
 // TestTAIFEXQueryAPIPath date==最新交易日 → API 路徑。
 func TestTAIFEXQueryAPIPath(t *testing.T) {
 	q, _, _ := taifexQueryHarness(t,

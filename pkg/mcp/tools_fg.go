@@ -512,3 +512,25 @@ func handlerGetAnnualTradingVolume(a *App, args map[string]any) (HandlerResult, 
 	}
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, latest, fromCache, a.taifexTTL())}, nil
 }
+
+// handlerGetMonthlyTradingStatistics：期貨各類交易人各商品交易量月統計（T148）。
+func handlerGetMonthlyTradingStatistics(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	latest, err := q.LatestTradingDay(ctx)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAFMonthlyStats, latest, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAFMonthlyStats, err)
+	}
+	rows, err := taifexRows[provider.MonthlyTraderStatsRow](model.TAFMonthlyStats, latest, res)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, latest, fromCache, a.taifexTTL())}, nil
+}

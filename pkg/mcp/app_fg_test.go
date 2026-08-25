@@ -124,6 +124,11 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAFAnnualVolume, "2026-07-29", "")] = tfStub([]provider.AnnualVolumeRow{
 		{Year: "2026", Contract: "TX", Name: "臺股期貨", Volume: 10000000, TradingDays: 140, AvgDailyVolume: 71428},
 	})
+	// 期貨各類交易人月統計（T148）
+	f.single[tfKey(model.TAFMonthlyStats, "2026-07-29", "")] = tfStub([]provider.MonthlyTraderStatsRow{
+		{Month: "202607", Category: "股價指數期貨", TotalVolume: 23656674, IndivBuy: 11620813, IndivSell: 11650825, PropBuy: 1134894, PropSell: 1138726, ForeignBuy: 10679002, ForeignSell: 10660793, MonthEndOI: 231222},
+		{Month: "202607", Category: "股票期貨", TotalVolume: 15667872, IndivBuy: 5224890, IndivSell: 5367331, MonthEndOI: 98000},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},
