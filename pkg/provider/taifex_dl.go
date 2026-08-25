@@ -93,6 +93,16 @@ var taifexDLSpecs = map[model.TAIFEXDataset]taifexDLSpec{
 		view: "totalTableDate", down: "totalTableDateDown",
 		fields: []string{"queryStartDate", "queryEndDate"},
 	},
+	model.TAOptInstiByCont: {
+		view: "optContractsDate", down: "optContractsDateDown",
+		fields:      []string{"queryStartDate", "queryEndDate"},
+		contractKey: "commodityId",
+	},
+	model.TAInstiCPHist: {
+		view: "callsAndPutsDate", down: "callsAndPutsDateDown",
+		fields:      []string{"queryStartDate", "queryEndDate"},
+		contractKey: "commodityId",
+	},
 }
 
 // dlSupported 判定資料集是否由 DL 提供（§9.2；保證金僅 API）。
@@ -323,6 +333,19 @@ var dlHeaders = map[model.TAIFEXDataset][]string{
 		"空方未平倉口數", "空方未平倉契約金額(百萬元)", "多空未平倉口數淨額",
 		"多空未平倉契約金額淨額(百萬元)",
 	},
+	model.TAOptInstiByCont: {
+		"日期", "商品名稱", "身份別", "多方交易口數", "多方交易契約金額(千元)",
+		"空方交易口數", "空方交易契約金額(千元)", "多空交易口數淨額",
+		"多空交易契約金額淨額(千元)", "多方未平倉口數", "多方未平倉契約金額(千元)",
+		"空方未平倉口數", "空方未平倉契約金額(千元)", "多空未平倉口數淨額",
+		"多空未平倉契約金額淨額(千元)",
+	},
+	model.TAInstiCPHist: {
+		"日期", "商品名稱", "買賣權別", "身份別", "買方交易口數", "買方交易契約金額(千元)",
+		"賣方交易口數", "賣方交易契約金額(千元)", "交易口數買賣淨額", "交易契約金額買賣淨額(千元)",
+		"買方未平倉口數", "買方未平倉契約金額(千元)", "賣方未平倉口數", "賣方未平倉契約金額(千元)",
+		"未平倉口數買賣淨額", "未平倉契約金額買賣淨額(千元)",
+	},
 }
 
 func validateTAIFEXDL(raw *RawResponse) error {
@@ -426,6 +449,10 @@ func normalizeTAIFEXDL(raw *RawResponse) ([]byte, error) {
 		out = normalizeDLInstiSplit(records[1:], col)
 	case model.TAInstiTotal:
 		out = normalizeDLInstiGeneral(records[1:], col)
+	case model.TAOptInstiByCont:
+		out = normalizeDLInstitutional(records[1:], col)
+	case model.TAInstiCPHist:
+		out = normalizeDLInstiCP(records[1:], col)
 	case model.TALargeTraderFut, model.TALargeTraderOpt:
 		out = normalizeDLLargeTrader(records[1:], col)
 	case model.TAPutCallRatio:
@@ -625,6 +652,36 @@ func normalizeDLInstiGeneral(recs [][]string, col func([]string, string) string)
 			OIShortValue: dlFloat(col(rec, "空方未平倉契約金額(百萬元)")),
 			OINet:        dlInt(col(rec, "多空未平倉口數淨額")),
 			OINetValue:   dlFloat(col(rec, "多空未平倉契約金額淨額(百萬元)")),
+		})
+	}
+	return out
+}
+
+// normalizeDLInstiCP：三大法人選擇權買賣權分計歷史 CSV（T153）。
+func normalizeDLInstiCP(recs [][]string, col func([]string, string) string) []model.InstiCPRow {
+	out := make([]model.InstiCPRow, 0, len(recs))
+	for _, rec := range recs {
+		d, ok := dlDate(col(rec, "日期"))
+		if !ok {
+			continue
+		}
+		out = append(out, model.InstiCPRow{
+			Date:        d,
+			Contract:    col(rec, "商品名稱"),
+			CallPut:     col(rec, "買賣權別"),
+			Investor:    col(rec, "身份別"),
+			BuyVolume:   dlInt(col(rec, "買方交易口數")),
+			BuyValue:    dlFloat(col(rec, "買方交易契約金額(千元)")),
+			SellVolume:  dlInt(col(rec, "賣方交易口數")),
+			SellValue:   dlFloat(col(rec, "賣方交易契約金額(千元)")),
+			NetVolume:   dlInt(col(rec, "交易口數買賣淨額")),
+			NetValue:    dlFloat(col(rec, "交易契約金額買賣淨額(千元)")),
+			OIBuy:       dlInt(col(rec, "買方未平倉口數")),
+			OIBuyValue:  dlFloat(col(rec, "買方未平倉契約金額(千元)")),
+			OISell:      dlInt(col(rec, "賣方未平倉口數")),
+			OISellValue: dlFloat(col(rec, "賣方未平倉契約金額(千元)")),
+			OINetBuy:    dlInt(col(rec, "未平倉口數買賣淨額")),
+			OINetValue:  dlFloat(col(rec, "未平倉契約金額買賣淨額(千元)")),
 		})
 	}
 	return out

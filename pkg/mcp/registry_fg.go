@@ -371,6 +371,38 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetOptionsOIChange,
 	}) // T154
 	r.Register(ToolDef{
+		Symbol:      "get_options_institutional_by_contract_history",
+		Name:        "get_options_institutional_by_contract_history",
+		Description: "查詢三大法人各選擇權契約交易歷史（CALL+PUT合計，可回溯查詢；TAIFEX-DL optContractsDateDown，T152）。" +
+			"contract 為選擇權契約代碼（TXO/TEO/TFO 等，預設 TXO）。區間不可超過 92 日。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "default": "TXO", "description": "選擇權契約代碼，預設 TXO"},
+				"start":    map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
+				"end":      map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOptionsInstiByContractHistory,
+	}) // T152
+	r.Register(ToolDef{
+		Symbol:      "get_options_institutional_calls_puts_history",
+		Name:        "get_options_institutional_calls_puts_history",
+		Description: "查詢三大法人選擇權買賣權（CALL/PUT）分計交易歷史（可回溯查詢；TAIFEX-DL callsAndPutsDateDown，T153）。" +
+			"適合觀察外資對選擇權 CALL/PUT 布局隨時間的變化趨勢。contract 預設 TXO。區間不可超過 92 日。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "default": "TXO", "description": "選擇權契約代碼，預設 TXO"},
+				"start":    map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
+				"end":      map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOptionsInstiCallsPutsHistory,
+	}) // T153
+	r.Register(ToolDef{
 		Symbol:      "get_institutional_traders_by_options",
 		Name:        "get_institutional_traders_by_options",
 		Description: "查詢三大法人依各選擇權契約分類的交易資料，可觀察各選擇權商品的法人買賣情況（" +

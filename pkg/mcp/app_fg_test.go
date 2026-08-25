@@ -203,6 +203,17 @@ func stubFG(f *fakeTAIFEX) {
 			{Date: "2026-07-29", Contract: "TXO", ContractMonth: "202608", Strike: 20500, CallPut: "賣權", Close: 990, Volume: 15000},
 		}, ""),
 	}
+	// 三大法人選擇權契約歷史（T152/T153，DL）
+	f.ranges[tfRangeKey(model.TAOptInstiByCont, "2026-07-27", "2026-07-29", "TXO")] = map[string]provider.TAIFEXQueryResult{
+		"2026-07-27": tfStubDL([]model.InstitutionalRow{{Date: "2026-07-27", Contract: "臺指選擇權", Investor: "外資及陸資", NetVolume: 500}}, ""),
+		"2026-07-28": tfStubDL([]model.InstitutionalRow{{Date: "2026-07-28", Contract: "臺指選擇權", Investor: "外資及陸資", NetVolume: 600}}, ""),
+		"2026-07-29": tfStubDL([]model.InstitutionalRow{{Date: "2026-07-29", Contract: "臺指選擇權", Investor: "外資及陸資", NetVolume: 700}}, ""),
+	}
+	f.ranges[tfRangeKey(model.TAInstiCPHist, "2026-07-27", "2026-07-29", "TXO")] = map[string]provider.TAIFEXQueryResult{
+		"2026-07-27": tfStubDL([]model.InstiCPRow{{Date: "2026-07-27", Contract: "臺指選擇權", CallPut: "CALL", Investor: "外資及陸資", BuyVolume: 40000}}, ""),
+		"2026-07-28": tfStubDL([]model.InstiCPRow{{Date: "2026-07-28", Contract: "臺指選擇權", CallPut: "CALL", Investor: "外資及陸資", BuyVolume: 41000}}, ""),
+		"2026-07-29": tfStubDL([]model.InstiCPRow{{Date: "2026-07-29", Contract: "臺指選擇權", CallPut: "PUT", Investor: "外資及陸資", BuyVolume: 42000}}, ""),
+	}
 	// 保證金一覽（T127）
 	f.single[tfKey(model.TAMargin, "2026-07-29", "")] = tfStub([]model.MarginRow{
 		{Date: "2026-07-29", Contract: "臺股期貨", ClearingMargin: 214000, MaintenanceMargin: 165000, InitialMargin: 278000},

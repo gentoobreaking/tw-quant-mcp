@@ -789,6 +789,65 @@ func handlerGetInstitutionalTradersByFuturesHistory(a *App, args map[string]any)
 	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
 }
 
+// instiHistRangeHandler：T152/T153 共用之 DL 歷史查詢路徑（區間 ≤ 92 日，
+// contract 為中文契約名子字串或留空全部；伺服器端以 commodityId 過濾）。
+func instiHistByContract[T any](a *App, args map[string]any, ds model.TAIFEXDataset,
+	defaultContract string, fetchContract func(string) string) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	contract := strings.TrimSpace(strVal(args["contract"]))
+	if contract == "" {
+		contract = defaultContract
+	}
+	start := flexDateArg(strVal(args["start"]))
+	if start == "" {
+		start = flexDateArg(strVal(args["start_date"]))
+	}
+	end := flexDateArg(strVal(args["end"]))
+	if end == "" {
+		end = flexDateArg(strVal(args["end_date"]))
+	}
+	if start == "" || end == "" {
+		return HandlerResult{}, fmt.Errorf("參數 start（start_date）與 end（end_date）為必填")
+	}
+	sd, ed, err := validateRange(start, end)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	sT, errT := model.ParseDate(sd)
+	eT, _ := model.ParseDate(ed)
+	if errT == nil && int(eT.Sub(sT).Hours()/24) > instiSplitRangeCap {
+		return HandlerResult{}, fmt.Errorf("查詢區間不可超過 %d 天，請縮小範圍", instiSplitRangeCap)
+	}
+	fc := fetchContract(contract)
+	byDay, err := q.FetchRange(ctx, ds, sd, ed, fc)
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 範圍查詢失敗: %w", ds, err)
+	}
+	rows, err := collectRangeRows[T](ds, byDay)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
+}
+
+// handlerGetOptionsInstiByContractHistory：三大法人各選擇權契約交易歷史
+// （CALL+PUT 合計，TAIFEX-DL optContractsDateDown，T152）。
+func handlerGetOptionsInstiByContractHistory(a *App, args map[string]any) (HandlerResult, error) {
+	return instiHistByContract[model.InstitutionalRow](a, args, model.TAOptInstiByCont, "TXO",
+		func(c string) string { return strings.ToUpper(c) })
+}
+
+// handlerGetOptionsInstiCallsPutsHistory：三大法人選擇權買賣權分計歷史
+// （TAIFEX-DL callsAndPutsDateDown，T153）。
+func handlerGetOptionsInstiCallsPutsHistory(a *App, args map[string]any) (HandlerResult, error) {
+	return instiHistByContract[model.InstiCPRow](a, args, model.TAInstiCPHist, "TXO",
+		func(c string) string { return strings.ToUpper(c) })
+}
+
 // handlerGetPutCallRatio：買賣權比（date 或 range，支援歷史，§10.F）。
 func handlerGetPutCallRatio(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()

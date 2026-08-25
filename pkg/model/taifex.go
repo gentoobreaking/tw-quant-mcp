@@ -21,6 +21,8 @@ const (
 	TAInstiTotal       TAIFEXDataset = "insti_total"        // 三大法人期貨+選擇權合計總表歷史（僅 DL，T130）
 	TAOptionsDelta     TAIFEXDataset = "options_delta"     // 選擇權每日 Delta（僅 API，T151）
 	TAOIChange         TAIFEXDataset = "oi_change"         // 台指選擇權未平倉量增減（僅 API，T154）
+	TAOptInstiByCont   TAIFEXDataset = "opt_insti_by_contract" // 三大法人各選擇權契約交易歷史（僅 DL，T152）
+	TAInstiCPHist      TAIFEXDataset = "insti_cp_hist"      // 三大法人選擇權買賣權分計歷史（僅 DL，T153）
 	TALargeTraderFut TAIFEXDataset = "large_trader_fut" // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt TAIFEXDataset = "large_trader_opt" // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio   TAIFEXDataset = "put_call_ratio"   // 買賣權比（PCR）
@@ -139,6 +141,27 @@ type InstiGeneralRow struct {
 	OIShortValue float64 `json:"oi_short_value"` // 空方未平倉契約金額（百萬元）
 	OINet        int64   `json:"oi_net"`        // 多空未平倉口數淨額
 	OINetValue   float64 `json:"oi_net_value"`  // 多空未平倉契約金額淨額（百萬元）
+}
+
+// InstiCPRow 為三大法人選擇權買賣權（CALL/PUT）分計歷史之單列（T153）。
+// 金額單位千元。
+type InstiCPRow struct {
+	Date         string  `json:"date"`           // YYYY-MM-DD
+	Contract     string  `json:"contract"`       // 商品名稱
+	CallPut      string  `json:"call_put"`       // CALL / PUT
+	Investor     string  `json:"investor"`       // 身份別
+	BuyVolume    int64   `json:"buy_volume"`     // 買方交易口數
+	BuyValue     float64 `json:"buy_value"`      // 買方交易契約金額（千元）
+	SellVolume   int64   `json:"sell_volume"`    // 賣方交易口數
+	SellValue    float64 `json:"sell_value"`     // 賣方交易契約金額（千元）
+	NetVolume    int64   `json:"net_volume"`     // 交易口數買賣淨額
+	NetValue     float64 `json:"net_value"`      // 交易契約金額買賣淨額（千元）
+	OIBuy        int64   `json:"oi_buy"`         // 買方未平倉口數
+	OIBuyValue   float64 `json:"oi_buy_value"`   // 買方未平倉契約金額（千元）
+	OISell       int64   `json:"oi_sell"`        // 賣方未平倉口數
+	OISellValue  float64 `json:"oi_sell_value"`  // 賣方未平倉契約金額（千元）
+	OINetBuy     int64   `json:"oi_net_buy"`     // 未平倉口數買賣淨額
+	OINetValue   float64 `json:"oi_net_value"`   // 未平倉契約金額買賣淨額（千元）
 }
 
 // LargeTraderRow 為單一商品/月份/交易人類別之大額交易人未沖銷部位。
