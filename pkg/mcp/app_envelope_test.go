@@ -235,6 +235,9 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_financial_health_check", args: map[string]any{"symbol": "2330"}},
 		{name: "get_valuation_ratios", args: map[string]any{"symbol": "2330"}},
 		{name: "get_esg_report", args: map[string]any{"symbol": "2330"}},
+		{name: "get_companies_with_anticompetitive_losses", args: map[string]any{}},
+		{name: "get_companies_with_csr_reports_103", args: map[string]any{}},
+		{name: "get_companies_with_inclusive_finance_data", args: map[string]any{}},
 		{name: "get_company_profile", args: map[string]any{"symbol": "2330"}},
 		// ── E 組（篩選/股利，4）──
 		{name: "screen_stocks", args: map[string]any{"min_eps": float64(1)}},

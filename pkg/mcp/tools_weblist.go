@@ -556,6 +556,90 @@ var pubBalanceSheetDatasets = map[string]provider.TWSEAPIDataset{
 	"_mim":  provider.TWSEAPIPubBalMIM,
 }
 
+// esgMeaningful 判斷 ESG 欄位值是否有意義（排除空值、N/A、零）。
+func esgMeaningful(v string) bool {
+	v = strings.TrimSpace(v)
+	if v == "" || v == "N/A" || v == "NA" || v == "-" || v == "0" || v == "0.00" {
+		return false
+	}
+	f, err := strconv.ParseFloat(strings.ReplaceAll(v, ",", ""), 64)
+	if err == nil && f == 0 {
+		return false
+	}
+	return true
+}
+
+// esgScanAll 取得指定 ESG 主題全量資料（依公司代號去重取最新年度）。
+func esgScanAll(a *App, ctx context.Context, topic int) ([]provider.ESGRow, bool, bool, error) {
+	dataDate := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]provider.ESGRow](a, ctx,
+		string(provider.TWSEAPIESG), dataDate,
+		cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIESG), dataDate, "",
+			map[string]string{"topic": strconv.Itoa(topic)}),
+		func() ([]byte, error) {
+			return a.fetchAPIRaw(ctx, provider.TWSEAPIESG, url.Values{"topic": {strconv.Itoa(topic)}})
+		})
+	return rows, cached, stale, err
+}
+
+// handlerGetCompaniesWithAnticompetitiveLosses：全體已申報反競爭行為法律
+// 訴訟損失之上市公司（t187ap46_L_20，T059；排除零值及 N/A）。
+func handlerGetCompaniesWithAnticompetitiveLosses(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	rows, cached, stale, err := esgScanAll(a, ctx, 20)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	const field = "因與反競爭行為條例相關的法律訴訟而造成的金錢損失總額(仟元)"
+	ttl, _ := a.ttlOf(string(provider.TWSEAPIESG))
+	lineage := postLineage(model.SourceTWSEAPI, a.now().Format("2006-01-02"), cached || stale, stale, ttl)
+	out := make([]map[string]any, 0)
+	for _, r := range rows {
+		if v, ok := r.Fields[field]; ok && esgMeaningful(v) {
+			out = append(out, map[string]any{
+				"code": r.Code, "name": r.Name, "year": r.Year,
+				field: v,
+			})
+		}
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
+// inclusiveFinanceFields 為普惠金融申報欄位（T062）。
+var inclusiveFinanceFields = []string{
+	"對促進小型企業及社區發展的貸放件數(件)",
+	"對促進小型企業及社區發展的貸放餘額(仟元)",
+	"對缺少銀行服務之弱勢族群提供金融教育之參與人數(人)",
+}
+
+// handlerGetCompaniesWithInclusiveFinance：全體已申報普惠金融活動之上市公司
+// （t187ap46_L_17，T062；排除零值及 N/A）。
+func handlerGetCompaniesWithInclusiveFinance(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	rows, cached, stale, err := esgScanAll(a, ctx, 17)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(string(provider.TWSEAPIESG))
+	lineage := postLineage(model.SourceTWSEAPI, a.now().Format("2006-01-02"), cached || stale, stale, ttl)
+	out := make([]map[string]any, 0)
+	for _, r := range rows {
+		rec := map[string]any{"code": r.Code, "name": r.Name, "year": r.Year}
+		meaningful := false
+		for _, f := range inclusiveFinanceFields {
+			v := r.Fields[f]
+			rec[f] = v
+			if esgMeaningful(v) {
+				meaningful = true
+			}
+		}
+		if meaningful {
+			out = append(out, rec)
+		}
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // handlerGetPublicCompanyIncomeStatement：公開發行公司綜合損益表（T160）。
 // 公發公司代號未必存在於上市 Symbol Registry，故不做註冊校驗、直接嘗試全部格式。
 func handlerGetPublicCompanyIncomeStatement(a *App, args map[string]any) (HandlerResult, error) {
@@ -573,4 +657,15 @@ func handlerGetPublicCompanyIncomeStatement(a *App, args map[string]any) (Handle
 	ttl, _ := a.ttlOf(string(ds))
 	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
 	return HandlerResult{Data: rows, Lineage: lineage}, nil
+}
+
+// handlerGetCompaniesWithCSRReports103：民國103年應編製 CSR 報告書公司（T061）。
+// 官方來源 /static/20151104/CSR103 已於 openapi.twse.com.tw 下架（404），
+// 無可替代之官方端點，回明確錯誤訊息（§實作要求：官方端點缺漏回明確錯誤）。
+func handlerGetCompaniesWithCSRReports103(a *App, args map[string]any) (HandlerResult, error) {
+	ttl, _ := a.ttlOf(cache.DatasetCalendar)
+	lg := postLineage(model.SourceTWSEAPI, a.now().Format("2006-01-02"), true, false, ttl)
+	return HandlerResult{Data: []map[string]any{{"status": "unavailable",
+		"note": "官方資料源已下架（openapi.twse.com.tw/static/20151104/CSR103 回 404），目前無可替代之官方端點提供 103 年度 CSR 報告書名單"}},
+		Lineage: lg}, nil
 }

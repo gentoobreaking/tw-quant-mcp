@@ -514,6 +514,40 @@ func registerDETools(r *Registry) {
 		})
 	}
 	r.Register(ToolDef{
+		Symbol:      "get_companies_with_anticompetitive_losses",
+		Name:        "get_companies_with_anticompetitive_losses",
+		Description: "查詢所有已申報反競爭行為法律訴訟損失的上市公司，排除零值及 N/A（TWSE-API t187ap46_L_20，T059）。",
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetCompaniesWithAnticompetitiveLosses,
+	}) // T059
+	r.Register(ToolDef{
+		Symbol:      "get_companies_with_csr_reports_103",
+		Name:        "get_companies_with_csr_reports_103",
+		Description: "查詢民國103年應編製及申報企業社會責任報告書之公司（T061）。" +
+			"注意：官方資料源已下架，目前回明確錯誤訊息。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetCompaniesWithCSRReports103,
+	}) // T061
+	r.Register(ToolDef{
+		Symbol:      "get_companies_with_inclusive_finance_data",
+		Name:        "get_companies_with_inclusive_finance_data",
+		Description: "查詢所有已申報普惠金融活動的上市公司，排除零值及 N/A（TWSE-API t187ap46_L_17，T062）。",
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetCompaniesWithInclusiveFinance,
+	}) // T062
+	r.Register(ToolDef{
 		Symbol: "get_company_profile",
 		Name:   "get_company_profile",
 		Description: "查詢公司基本資料（MOPS t187ap03_L：董事長、資本額、上市日期、" +
