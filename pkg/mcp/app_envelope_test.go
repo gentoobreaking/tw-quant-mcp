@@ -49,6 +49,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	// get_etf_nav（§30.1：fundPric netPrice+atmps / close 市價）
 	f.bodies["etf|0050|fundPric"] = `{"netPrice":[{"date":"2026/07/30","count":101.0},{"date":"2026/07/29","count":100.0}],"atmps":[{"date":"2026/07/30","count":0.15},{"date":"2026/07/29","count":-0.1}]}`
 	f.bodies["etf|0050|close"] = `[{"date":"2026/07/30","count":101.15},{"date":"2026/07/29","count":99.9}]`
+	// get_block_trades_daily（T042，tables 型）
+	f.bodies["block_trades|"] = `[{"date":"2026-08-03","trade_type":"逐筆交易","class":"特定證券","volume":1000000,"volume_share":0.01,"amount":50000000,"amount_share":0.05}]`
 	// get_after_hours_trading（T040）
 	f.stub("after_hours", nil,
 		`[{"code":"2330","name":"台積電","volume":100,"transaction":5,"amount":482500,"price":4825,"bid_volume":10,"ask_volume":20,"date":"2026-07-30"}]`)
@@ -151,6 +153,7 @@ func allToolProbes() []envelopeProbe {
 		// ── T040 parity ──
 		{name: "get_after_hours_trading", args: map[string]any{}},
 		{name: "get_annual_trading_volume", args: map[string]any{}},
+		{name: "get_block_trades_daily", args: map[string]any{}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

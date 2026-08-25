@@ -1,7 +1,9 @@
 package mcp
 
 // registry_bc.go 登錄 §10.B（盤後行情・籌碼）與 §10.C（重大訊息與風險）
-// 之 11 個工具。全部為 POST_MARKET 資料，lineage 由 handler 回報。
+// 之工具（parity 任務持續新增）。全部為 POST_MARKET 資料，lineage 由 handler 回報。
+
+import "tw-quant-mcp/pkg/provider"
 
 // registerBCTools 將 B/C 組工具登錄至 r。
 func registerBCTools(r *Registry) {
@@ -148,6 +150,20 @@ func registerBCTools(r *Registry) {
 		},
 		ReadOnly: true,
 		Handler:  handlerGetWarrantActivity,
+	})
+	r.Register(ToolDef{
+		Symbol:      "get_block_trades_daily",
+		Name:        "get_block_trades_daily",
+		Description: "查詢集中市場鉅額交易日成交量值統計（TWSE-WEB BFIAUU_d，T042）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler: webListSpec{ds: provider.TWSEWDBlockTrades}.handler(),
 	})
 	r.Register(ToolDef{
 		Symbol:      "get_after_hours_trading",
