@@ -24,6 +24,7 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEWDMargin):           cache.DatasetMargin,        // 與 TPEx margin 同名
 	string(provider.TWSEWDAbnormal):         cache.DatasetAlertStock,
 	string(provider.TWSEWDAfterHours):       cache.DatasetDailyKLine, // 盤後定價交易：日頻快照（T040）
+	string(provider.TWSEWDBlockTrades):      cache.DatasetDailyKLine, // 鉅額交易日統計（T042）
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,
