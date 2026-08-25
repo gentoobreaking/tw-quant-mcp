@@ -379,8 +379,23 @@ make loadtest     # 壓力測試（20 併發，快取命中率 + 延遲分位數
 make fixtures     # 錄製官方 raw response fixtures（-host all -date YYYYMMDD）
 make e2e          # 端到端驗證（MCP client 依序呼叫 A→G 代表工具）
 make soak         # 4.5h 連續運行測試（需實際交易日開盤時段）
-scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工具
+scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 工具數
 ```
+
+### GitHub Release 流程
+
+推送 `v*` tag 即自動觸發（`.github/workflows/release.yml`）：
+
+1. 測試守門（`go vet` + `go test`）
+2. 五平台交叉編譯：linux/amd64+arm64、darwin/amd64+arm64、windows/amd64
+   （`CGO_ENABLED=0 -trimpath`，版本號以 ldflags 注入 tag）
+3. 產出 tar.gz / zip ＋ SHA256 checksums.txt，自動建立 GitHub Release
+
+```bash
+git tag v2.1.0 && git push origin v2.1.0
+```
+
+CI（`.github/workflows/ci.yml`）於每次 push / PR 執行 vet＋test＋建置確認。
 
 ---
 
