@@ -97,6 +97,12 @@ const (
 	TWSEAPIBalFH   TWSEAPIDataset = "balance_sheet_fh"   // 金控業 _fh
 	TWSEAPIBalINS  TWSEAPIDataset = "balance_sheet_ins"  // 保險業 _ins
 	TWSEAPIBalMIM  TWSEAPIDataset = "balance_sheet_mim"  // 異業 _mim
+	// 公司治理與內部人報表（T069-T073）
+	TWSEAPIBoardInsuff    TWSEAPIDataset = "board_insuff"     // 董監持股不足法定成數（t187ap08_L，T069）
+	TWSEAPIBoardInsuffCon TWSEAPIDataset = "board_insuff_con" // 董監持股不足連續月份（t187ap10_L，T070）
+	TWSEAPIBoardPledged   TWSEAPIDataset = "board_pledged"    // 董監質權設定彙總（t187ap09_L，T071）
+	TWSEAPIBoardHoldings  TWSEAPIDataset = "board_holdings"   // 董監持股餘額明細（t187ap11_L，T072）
+	TWSEAPICEODualRole    TWSEAPIDataset = "ceo_dual_role"    // 董事長兼任總經理（t187ap33_L，T073）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -160,6 +166,11 @@ var (
 		TWSEAPIBalFH:           "/opendata/t187ap07_L_fh",
 		TWSEAPIBalINS:          "/opendata/t187ap07_L_ins",
 		TWSEAPIBalMIM:          "/opendata/t187ap07_L_mim",
+		TWSEAPIBoardInsuff:     "/opendata/t187ap08_L",
+		TWSEAPIBoardInsuffCon:  "/opendata/t187ap10_L",
+		TWSEAPIBoardPledged:    "/opendata/t187ap09_L",
+		TWSEAPIBoardHoldings:   "/opendata/t187ap11_L",
+		TWSEAPICEODualRole:     "/opendata/t187ap33_L",
 	}
 )
 
@@ -584,6 +595,9 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizePassthroughArray(raw)
 	case "balance_sheet_ci", "balance_sheet_basi", "balance_sheet_bd",
 		"balance_sheet_fh", "balance_sheet_ins", "balance_sheet_mim":
+		out, err = normalizePassthroughArray(raw)
+	case "board_insuff", "board_insuff_con", "board_pledged",
+		"board_holdings", "ceo_dual_role":
 		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)

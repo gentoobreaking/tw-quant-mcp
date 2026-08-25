@@ -280,3 +280,90 @@ var balanceSheetDatasets = map[string]provider.TWSEAPIDataset{
 	"_ins":  provider.TWSEAPIBalINS,
 	"_mim":  provider.TWSEAPIBalMIM,
 }
+
+// apiCompanySpec 為「依公司代號查詢」之 TWSE-API 報表工具（fetch t187apXX_L
+// 全量 → 本地過濾 公司代號/code == code；T072 起）。
+type apiCompanySpec struct {
+	ds provider.TWSEAPIDataset
+}
+
+func (s apiCompanySpec) handler() func(*App, map[string]any) (HandlerResult, error) {
+	return func(a *App, args map[string]any) (HandlerResult, error) {
+		code := strVal(args["code"])
+		if code == "" {
+			return HandlerResult{}, fmt.Errorf("code 為必填參數")
+		}
+		if _, err := a.symbolOf(code); err != nil {
+			return HandlerResult{}, err
+		}
+		ctx := context.Background()
+		dataDate := a.now().Format("2006-01-02")
+		rows, cached, stale, err := fetchFinancialRowsForCode(a, ctx, s.ds, dataDate, code)
+		if err != nil {
+			return HandlerResult{}, err
+		}
+		ttl, _ := a.ttlOf(string(s.ds))
+		lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+		out := make([]map[string]any, 0)
+		for _, r := range rows {
+			if rowField(r, "公司代號", "code") == code {
+				out = append(out, r)
+			}
+		}
+		if len(out) == 0 {
+			return HandlerResult{}, fmt.Errorf("查無 %s 之資料", code)
+		}
+		return HandlerResult{Data: out, Lineage: lineage}, nil
+	}
+}
+
+// esgCompanySpec 為「依公司代號查詢 ESG 主題揭露」之工具（t187ap46_L_<topic>，
+// 取報告年度最新一列之 Fields；T068 起公司治理/ESG 細項任務共用）。
+type esgCompanySpec struct {
+	topic int
+}
+
+func (s esgCompanySpec) handler() func(*App, map[string]any) (HandlerResult, error) {
+	return func(a *App, args map[string]any) (HandlerResult, error) {
+		code := strVal(args["code"])
+		if code == "" {
+			return HandlerResult{}, fmt.Errorf("code 為必填參數")
+		}
+		sym, err := a.symbolOf(code)
+		if err != nil {
+			return HandlerResult{}, err
+		}
+		ctx := context.Background()
+		dataDate := a.now().Format("2006-01-02")
+		rows, cached, stale, err := fetchNormalize[[]provider.ESGRow](a, ctx,
+			string(provider.TWSEAPIESG), dataDate,
+			cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIESG), dataDate, "",
+				map[string]string{"topic": strconv.Itoa(s.topic)}),
+			func() ([]byte, error) {
+				return a.fetchAPIRaw(ctx, provider.TWSEAPIESG, url.Values{"topic": {strconv.Itoa(s.topic)}})
+			})
+		if err != nil {
+			return HandlerResult{}, err
+		}
+		ttl, _ := a.ttlOf(string(provider.TWSEAPIESG))
+		lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+
+		var latest *provider.ESGRow
+		for i := range rows {
+			r := &rows[i]
+			if r.Code != code {
+				continue
+			}
+			if latest == nil || r.Year > latest.Year {
+				latest = r
+			}
+		}
+		if latest == nil {
+			return HandlerResult{}, fmt.Errorf("查無 %s（%s）之該主題揭露資料", code, sym.Name)
+		}
+		return HandlerResult{Data: map[string]any{
+			"code": latest.Code, "name": latest.Name, "year": latest.Year,
+			"report_date": latest.ReportDate, "fields": latest.Fields,
+		}, Lineage: lineage}, nil
+	}
+}

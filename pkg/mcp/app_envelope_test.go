@@ -89,6 +89,11 @@ func stubBCEnvelope(f *fakeFetch) {
 	// get_companies_with_ownership_changes（T064）
 	f.bodies["ownership_change|"] = `[{"出表日期":"1150824","公司代號":"1516","公司名稱":"川飛","經營權異動日期":"1150629","經營權異動說明":"董事席次累積變動過半"}]`
 	f.bodies["balance_sheet_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","流動資產":"1953224680.00","資產總計":"5960165310.00","負債總計":"2966944650.00","股本":"772318170.00","保留盈餘":"629290890.00"}]`
+	f.bodies["board_insuff|"] = `[{"出表日期":"1150819","公司代號":"1225","公司名稱":"福懋油","全體董事本人實際持有股數":"6130138"}]`
+	f.bodies["board_insuff_con|"] = `[{"出表日期":"1150819","連續不足達3個月":"2515","連續不足達4個月":"1225"}]`
+	f.bodies["board_pledged|"] = `[{"出表日期":"1150819","公司代號":"1101","公司名稱":"台泥","質權設定股數":"100000"}]`
+	f.bodies["board_holdings|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","職稱":"董事","姓名":"示例","持有股數":"1000000"}]`
+	f.bodies["ceo_dual_role|"] = `[{"出表日期":"1150825","公司代號":"1101","公司名稱":"台泥","董事長是否兼任總經理":"否"}]`
 	f.bodies["top_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
@@ -221,6 +226,12 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_companies_with_ownership_changes", args: map[string]any{}},
 		{name: "get_companies_with_refineries_in_populated_areas", args: map[string]any{}},
 		{name: "get_company_balance_sheet", args: map[string]any{"code": "2330"}},
+		{name: "get_company_board_info", args: map[string]any{"code": "2330"}},
+		{name: "get_company_board_insufficient_shares", args: map[string]any{}},
+		{name: "get_company_board_insufficient_shares_consecutive", args: map[string]any{}},
+		{name: "get_company_board_pledged_shares", args: map[string]any{}},
+		{name: "get_company_board_shareholdings", args: map[string]any{"code": "2330"}},
+		{name: "get_company_ceo_dual_role", args: map[string]any{}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

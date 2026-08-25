@@ -4,6 +4,8 @@ package mcp
 // （T014）。資料源：MOPS（T012）、TWSE-API/TPEx（T008/T009）；五面向
 // 評分（get_financial_health_check）由 T017 composite engine 提供。
 
+import "tw-quant-mcp/pkg/provider"
+
 func registerDETools(r *Registry) {
 	r.Register(ToolDef{
 		Symbol: "get_financial_statements",
@@ -121,6 +123,92 @@ func registerDETools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetCompanyBalanceSheet,
 	}) // T067
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_board_info",
+		Name:        "get_company_board_info",
+		Description: "根據股票代號查詢上市公司董事會資訊（ESG 揭露 t187ap46_L_6，T068）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code": map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+			},
+			"required": []string{"code"},
+		},
+		ReadOnly: true,
+		Handler:  esgCompanySpec{topic: 6}.handler(),
+	}) // T068
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_board_insufficient_shares",
+		Name:        "get_company_board_insufficient_shares",
+		Description: "查詢上市公司董事、監察人持股不足法定成數彙總表（TWSE-API t187ap08_L，T069）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIBoardInsuff}.handler(),
+	}) // T069
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_board_insufficient_shares_consecutive",
+		Name:        "get_company_board_insufficient_shares_consecutive",
+		Description: "查詢上市公司董事、監察人持股連續不足月數彙總表（TWSE-API t187ap10_L，T070）。",
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIBoardInsuffCon}.handler(),
+	}) // T070
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_board_pledged_shares",
+		Name:        "get_company_board_pledged_shares",
+		Description: "查詢上市公司董事、監察人質權設定占董事及監察人實際持有股數彙總表（TWSE-API t187ap09_L，T071）。",
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIBoardPledged}.handler(),
+	}) // T071
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_board_shareholdings",
+		Name:        "get_company_board_shareholdings",
+		Description: "根據股票代號查詢上市公司董監事持股餘額明細資料（TWSE-API t187ap11_L，T072）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code": map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+			},
+			"required": []string{"code"},
+		},
+		ReadOnly: true,
+		Handler:  apiCompanySpec{ds: provider.TWSEAPIBoardHoldings}.handler(),
+	}) // T072
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_ceo_dual_role",
+		Name:        "get_company_ceo_dual_role",
+		Description: "查詢上市公司董事長是否兼任總經理資訊彙總表（TWSE-API t187ap33_L，T073）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPICEODualRole}.handler(),
+	}) // T073
 	r.Register(ToolDef{
 		Symbol: "get_company_profile",
 		Name:   "get_company_profile",
