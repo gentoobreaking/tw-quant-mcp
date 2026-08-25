@@ -140,6 +140,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.stub("monthly_avg", url.Values{"date": {"20260730"}, "stockNo": {"2330"}}, `[{"date":"2026-07-30","close":"1150.00","monthly_avg":"1130.00"}]`)
 	f.stub("daily_k", url.Values{"date": {"20260730"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "07", 0, 10)))
 	f.bodies["daily_close|"] = `[{"code":"2330","name":"台積電","close":"1150.00"},{"code":"2317","name":"鴻海","close":"180.00"}]`
+	f.bodies["sec_penalty|"] = `[{"出表日期":"1150824","股票代號":"2330","公司名稱":"台積電","違規事由":"示例"}]`
 	f.bodies["eps_stats|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","季度":"4","EPS":"15.85"}]`
 	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
 	f.bodies["disclosure_vio|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","違法情形":"未依法令期限公告申報"}]`
@@ -352,6 +353,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_stock_monthly_history", args: map[string]any{"stock_no": "2330"}},
 		{name: "get_stock_yearly_history", args: map[string]any{"stock_no": "2330"}},
 		{name: "get_warrant_basic_info", args: map[string]any{"code": "030012"}},
+		{name: "get_company_sec_regulatory_penalties", args: map[string]any{"code": "2330"}},
 		{name: "get_warrant_daily_trading", args: map[string]any{"code": "2330"}},
 		{name: "get_company_shareholder_meeting_announcements", args: map[string]any{}},
 		{name: "get_company_shareholder_meeting_announcements_by_code", args: map[string]any{"code": "2330"}},

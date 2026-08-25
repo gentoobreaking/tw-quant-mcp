@@ -96,6 +96,7 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIWarrantBasic):    cache.DatasetCalendar,   // 權證基本資料（T187）
 	string(provider.TWSEAPIWarrantTrader):   cache.DatasetCalendar,   // 權證流動量提供者（T189）
 	string(provider.TWSEAPIWarrantIssue):    cache.DatasetCalendar,   // 權證發行統計（T190）
+	string(provider.TWSEAPISecPenalty):      cache.DatasetCalendar,   // 證期局裁罰（T106）
 	string(provider.TWSEWDMarginInfo):       cache.DatasetMargin,     // 信用交易統計（T140）
 	string(provider.TWSEWDHoliday):          cache.DatasetCalendar,   // 開休市日期（T144）
 	string(provider.TWSEWDRealTimeStats):    cache.DatasetMISSnapshot, // 5秒成交統計（盤中即時，T161）

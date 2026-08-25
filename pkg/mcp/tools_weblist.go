@@ -353,7 +353,7 @@ func (s apiCompanySpec) handler() func(*App, map[string]any) (HandlerResult, err
 		lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
 		out := make([]map[string]any, 0)
 		for _, r := range rows {
-			if code == "" || rowField(r, "公司代號", "code", "權證代號") == code {
+			if code == "" || rowField(r, "公司代號", "股票代號", "code", "權證代號") == code {
 				out = append(out, r)
 			}
 		}

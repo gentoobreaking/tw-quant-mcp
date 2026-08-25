@@ -836,6 +836,21 @@ func registerBCTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  apiListSpec{ds: provider.TWSEAPIWarrantIssue}.handler(),
 	}) // T190
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_sec_regulatory_penalties",
+		Name:        "get_company_sec_regulatory_penalties",
+		Description: "根據股票代號查詢上市公司金管會證券期貨局裁罰案件專區（TWSE-API t187ap22_L passthrough，T106）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code": map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+			},
+			"required": []string{"code"},
+		},
+		ReadOnly: true,
+		Handler:  apiCompanySpec{ds: provider.TWSEAPISecPenalty, skipRegistryCheck: true}.handler(),
+	}) // T106
 	r.Register(ToolDef{
 		Symbol:      "get_real_time_trading_stats",
 		Name:        "get_real_time_trading_stats",
