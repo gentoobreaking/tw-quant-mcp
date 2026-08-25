@@ -286,6 +286,15 @@ func registerDETools(r *Registry) {
 	}) // T084
 
 	r.Register(ToolDef{
+		Symbol:      "get_company_governance_regulations",
+		Name:        "get_company_governance_regulations",
+		Description: "根據股票代號查詢上市公司公司治理之相關規程規則（TWSE-API t187ap32_L 正規化模型，T088）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIGovernance}.handler(),
+	}) // T088
+
+	r.Register(ToolDef{
 		Symbol:      "get_company_dividend",
 		Name:        "get_company_dividend",
 		Description: "根據股票代號查詢上市公司股利分派情形（TWSE-API t187ap45_L 正規化模型，T081）。",

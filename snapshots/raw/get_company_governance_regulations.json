@@ -1,0 +1,16 @@
+{
+  "arguments": {
+    "code": "2330"
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"code\":\"2330\",\"name\":\"台積電\",\"report_date\":\"2026-08-24\",\"rules\":\"公司治理實務守則\"},{\"code\":\"2330\",\"name\":\"台積電\",\"report_date\":\"2026-08-24\",\"rules\":\"公司股東會議事規則\"},{\"code\":\"2330\",\"name\":\"台積電\",\"report_date\":\"2026-08-24\",\"rules\":\"公司董事會議事規範\"},{\"code\":\"2330\",\"name\":\"台積電\",\"report_date\":\"2026-08-24\",\"rules\":\"公司董事及監察人選任程序\"},{\"code\":\"2330\",\"name\":\"台積電\",\"report_date\":\"2026-08-24\",\"rules\":\"公司訂定道德行為準則\"},{\"code\":\"2330\",\"name\":\"台積電\",\"report_date\":\"2026-08-24\",\"rules\":\"公司審計委員會組織規程\"},{\"code\":\"2330\",\"name\":\"台積電\",\"report_date\":\"2026-08-24\",\"rules\":\"公司提名委員會組織規程\"},{\"code\":\"2330\",\"name\":\"台積電\",\"report_date\":\"2026-08-24\",\"rules\":\"公司薪資報酬委員會組織規程\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T14:48:54+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":260,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

@@ -290,6 +290,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_broker_service_personnel", args: map[string]any{}},
 		{name: "get_brokers_offering_regular_investment", args: map[string]any{}},
 		{name: "get_company_financial_reports_supervisor_acknowledgment", args: map[string]any{"code": "2330"}},
+		{name: "get_company_governance_regulations", args: map[string]any{"code": "2330"}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},
