@@ -7,6 +7,8 @@
 ## 功能特色
 
 - **盤中即時引擎**：MIS 8 秒採樣、15 檔 Watchlist、純記憶體 1 分/5 分 K 線組裝（**零 HTTP**）、VWAP、爆量偵測、當沖資格掃描
+- **即時報價雙模式**：watchlist 引擎（零 HTTP，高頻監控）＋ `get_realtime_quote` MIS 單發直查（任意多檔 1~20 檔、免 watchlist、上市/上櫃自動判別）
+- **全市場快照與風險累計**：`get_all_stocks_daily_close` 單日全市場逐檔收盤行情（OHLC/PE）、`get_abnormal_accumulated_notice_stocks` 注意累計次數異常、`get_twse_events` 證交所活動訊息
 - **盤後行情與籌碼**：日 K（含 MA/RSI/MACD 技術指標）、三大法人、融資融券、注意/處置股、權證、外資持股
 - **ETF 與指數**：ETF 歷史 NAV + 折溢價（e添富平台，§30.1 L1）、加權指數/寶島/臺灣50 盤後行情與歷史日 K
 - **基本面與股利**：財報三表、月營收、五面向健康評分、ESG 揭露八主題（雙來源速度選源＋fallback，T037）、公司資料、除權息行事曆、高殖利率篩選
@@ -24,7 +26,7 @@
 
 ```bash
 make build          # 產出 bin/tw-quant-mcp（CGO-free 單一執行檔）
-make build-release  # 產出 bin/tw-quant-mcp-v1.3.0（帶版本號）
+make build-release  # 產出 bin/tw-quant-mcp-v$(VERSION)（帶版本號；VERSION 預設 0.1.0，可 make build-release VERSION=x.y.z 覆寫）
 ```
 
 ### 執行
@@ -167,7 +169,7 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 └──────────────────────────────────┬────────────────────────────────┘
                                    │ JSON-RPC（Stdio / Streamable HTTP）
 ┌──────────────────────────────────▼────────────────────────────────┐
-│                     MCP Engine Layer（39 Tool Router）             │
+│                     MCP Engine Layer（194 Tool Router）             │
 │              Handler Routers + Schema Validation（§9/§10）         │
 └──────────────────────────────────┬────────────────────────────────┘
                                    │ Normalized Query
@@ -392,7 +394,7 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 > 本專案為研究/模擬用途，授權條款不構成任何投資建議或保證；
 > 使用/修改/再散佈前請詳閱 LICENSE 全文。
 
-本專案僅供個人量化研究與教育用途。資料來源（FinMind、TWSE、TPEX）之使用請遵守各平台之服務條款。
+本專案僅供個人量化研究與教育用途。資料來源（TWSE、TPEx、MOPS、TAIFEX 官方平台）之使用請遵守各平台之服務條款。
 
 ## 附錄：完整工具目錄（194 個，由 tools/list 自動產生 2026-08-26；T191–T194 遠端獨有全數對齊）
 
