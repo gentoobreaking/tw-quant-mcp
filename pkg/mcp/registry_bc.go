@@ -503,6 +503,23 @@ func registerBCTools(r *Registry) {
 	}) // T058
 
 	r.Register(ToolDef{
+		Symbol:      "get_companies_with_business_scope_changes",
+		Name:        "get_companies_with_business_scope_changes",
+		Description: "查詢上市公司經營權及營業範圍異(變)動專區-營業範圍重大變更公司" +
+			"（TWSE-API t187ap25_L，T060）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIScopeChanges}.handler(),
+	}) // T060
+
+	r.Register(ToolDef{
 		Symbol:      "get_after_hours_trading",
 		Name:        "get_after_hours_trading",
 		Description: "查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。" +
