@@ -30,6 +30,7 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEWDBlockYearly):      cache.DatasetDailyKLine, // 鉅額交易年統計（T045）
 	string(provider.TWSEWDCrossMarket):      cache.DatasetDailyKLine, // 跨市場成交（T115）
 	string(provider.TWSEWDDayTradeTargets):  cache.DatasetAlertStock, // 當沖標的（T116）
+	string(provider.TWSEWDFinProgAbn):       cache.DatasetAlertStock, // 異常推介個股（T121）
 	string(provider.TWSEWDSBLVolume):        cache.DatasetDailyKLine, // 借券賣出量（T119）
 	string(provider.TWSEWDFirstForeign):     cache.DatasetDailyKLine, // 第一上市外股（T122）
 	string(provider.TWSEWDMarginRestrict):   cache.DatasetCalendar,   // 停資停券預告（T139）

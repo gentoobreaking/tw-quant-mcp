@@ -242,6 +242,22 @@ func registerBCTools(r *Registry) {
 		Handler:  webListSpec{ds: provider.TWSEWDDayTradeTargets}.handler(),
 	}) // T116
 	r.Register(ToolDef{
+		Symbol:      "get_financial_program_abnormal_recommendations",
+		Name:        "get_financial_program_abnormal_recommendations",
+		Description: "查詢投資理財節目異常推介個股（TWSE-WEB Announcement/BFZFZU_T，T121）。可選 name 過濾；" +
+			"無異常推介時官方回「本日無」佔位列。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "股票名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDFinProgAbn}.handler(),
+	}) // T121
+	r.Register(ToolDef{
 		Symbol:      "get_daily_securities_lending_volume",
 		Name:        "get_daily_securities_lending_volume",
 		Description: "查詢集中市場借券賣出每日量（T119）。",

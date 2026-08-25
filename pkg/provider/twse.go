@@ -50,6 +50,7 @@ const (
 	// ── parity 批次（T115/T116/T119/T122/T139/T142/T149/T163/T172/T175-T177/T179/T184）──
 	TWSEWDCrossMarket     TWSEWebDataset = "cross_market"      // 跨市場成交資訊
 	TWSEWDDayTradeTargets TWSEWebDataset = "day_trade_targets" // 當日沖銷標的
+	TWSEWDFinProgAbn     TWSEWebDataset = "fin_prog_abnormal"   // 投資理財節目異常推介個股（BFZFZU_T，T121）
 	TWSEWDSBLVolume       TWSEWebDataset = "sbl_volume"        // 借券賣出每日量
 	TWSEWDFirstForeign    TWSEWebDataset = "first_foreign"     // 第一上市外國股票日成交量值
 	TWSEWDMarginRestrict  TWSEWebDataset = "margin_restrict"   // 停資停券預告表
@@ -184,6 +185,7 @@ var (
 		TWSEWDBlockYearly:   "/rwd/block/BFIAUU_y",
 		TWSEWDCrossMarket:     "/exchangeReport/MI_INDEX4",
 		TWSEWDDayTradeTargets: "/exchangeReport/TWTB4U",
+		TWSEWDFinProgAbn:      "/Announcement/BFZFZU_T",
 		TWSEWDSBLVolume:       "/SBL/TWT96U",
 		TWSEWDFirstForeign:    "/exchangeReport/STOCK_FIRST",
 		TWSEWDMarginRestrict:  "/exchangeReport/BFI84U",
@@ -667,6 +669,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "cross_market":
 		out, err = normalizeWebTable(raw)
 	case "day_trade_targets":
+		out, err = normalizeWebTable(raw)
+	case "fin_prog_abnormal":
 		out, err = normalizeWebTable(raw)
 	case "sbl_volume":
 		out, err = normalizeWebTable(raw)

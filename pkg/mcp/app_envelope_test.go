@@ -146,6 +146,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["disclosure_vio|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","違法情形":"未依法令期限公告申報"}]`
 	f.bodies["top_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	f.bodies["etf_reg_inv|"] = `[{"rank":"1","code":"2330","name":"台積電","stock_accounts":"236,742","etf_code":"0050","etf_name":"元大台灣50","etf_accounts":"1,241,976","_date":"2026-07-30"}]`
+	f.bodies["fin_prog_abnormal|"] = `[{"編號":"1","證券代號":"2330","證券名稱":"台積電","日期":"115年08月25日"}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
 	f.stub("daily_k", url.Values{"date": {"20260601"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "06", 20, 20)))
@@ -255,6 +256,7 @@ func allToolProbes() []envelopeProbe {
 		// ── parity 批次 T115-T184 ──
 		{name: "get_cross_market_trading_info", args: map[string]any{}},
 		{name: "get_daily_day_trading_targets", args: map[string]any{}},
+		{name: "get_financial_program_abnormal_recommendations", args: map[string]any{}},
 		{name: "get_daily_securities_lending_volume", args: map[string]any{}},
 		{name: "get_first_listed_foreign_stocks_daily", args: map[string]any{}},
 		{name: "get_margin_loan_restrictions_announcement", args: map[string]any{}},
