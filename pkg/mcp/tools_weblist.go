@@ -321,7 +321,8 @@ var balanceSheetDatasets = map[string]provider.TWSEAPIDataset{
 // apiCompanySpec 為「依公司代號查詢」之 TWSE-API 報表工具（fetch t187apXX_L
 // 全量 → 本地過濾 公司代號/code == code；T072 起）。
 type apiCompanySpec struct {
-	ds provider.TWSEAPIDataset
+	ds            provider.TWSEAPIDataset
+	skipRegistryCheck bool // 公發公司等非上市代號免 Symbol Registry 校驗（T159）
 }
 
 func (s apiCompanySpec) handler() func(*App, map[string]any) (HandlerResult, error) {
@@ -330,8 +331,10 @@ func (s apiCompanySpec) handler() func(*App, map[string]any) (HandlerResult, err
 		if code == "" {
 			return HandlerResult{}, fmt.Errorf("code 為必填參數")
 		}
-		if _, err := a.symbolOf(code); err != nil {
-			return HandlerResult{}, err
+		if !s.skipRegistryCheck {
+			if _, err := a.symbolOf(code); err != nil {
+				return HandlerResult{}, err
+			}
 		}
 		ctx := context.Background()
 		dataDate := a.now().Format("2006-01-02")
@@ -504,4 +507,34 @@ func handlerGetProfitabilitySummary(a *App, args map[string]any) (HandlerResult,
 	ttl, _ := a.ttlOf(string(provider.TWSEAPIProfitability))
 	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
 	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
+
+// pubIncomeStatementDatasets 為公開發行公司綜合損益表六種產業格式（T160）。
+var pubIncomeStatementDatasets = map[string]provider.TWSEAPIDataset{
+	"_ci":   provider.TWSEAPIPubIncCI,
+	"_basi": provider.TWSEAPIPubIncBASI,
+	"_bd":   provider.TWSEAPIPubIncBD,
+	"_fh":   provider.TWSEAPIPubIncFH,
+	"_ins":  provider.TWSEAPIPubIncINS,
+	"_mim":  provider.TWSEAPIPubIncMIM,
+}
+
+// handlerGetPublicCompanyIncomeStatement：公開發行公司綜合損益表（T160）。
+// 公發公司代號未必存在於上市 Symbol Registry，故不做註冊校驗、直接嘗試全部格式。
+func handlerGetPublicCompanyIncomeStatement(a *App, args map[string]any) (HandlerResult, error) {
+	code := strVal(args["code"])
+	if code == "" {
+		return HandlerResult{}, fmt.Errorf("code 為必填參數")
+	}
+	ctx := context.Background()
+	dataDate := a.now().Format("2006-01-02")
+	rows, cached, stale, ds, _ := fetchFinancialRowsFallback(a, ctx, pubIncomeStatementDatasets,
+		financialSuffix(""), dataDate, code)
+	if len(rows) == 0 {
+		return HandlerResult{}, fmt.Errorf("查無 %s 之公開發行公司綜合損益表資料", code)
+	}
+	ttl, _ := a.ttlOf(string(ds))
+	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+	return HandlerResult{Data: rows, Lineage: lineage}, nil
 }

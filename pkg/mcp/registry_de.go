@@ -383,6 +383,35 @@ func registerDETools(r *Registry) {
 	}) // T110
 
 	r.Register(ToolDef{
+		Symbol:      "get_fund_basic_info",
+		Name:        "get_fund_basic_info",
+		Description: "查詢基金基本資料彙總表（TWSE-API t187ap47_L，T124）。",
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIFundBasic}.handler(),
+	}) // T124
+	r.Register(ToolDef{
+		Symbol:      "get_public_company_board_shareholdings",
+		Name:        "get_public_company_board_shareholdings",
+		Description: "根據股票代號查詢公開發行公司董監事持股餘額明細（TWSE-API t187ap11_P，T159）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIPubBoardHold, skipRegistryCheck: true}.handler(),
+	}) // T159
+	r.Register(ToolDef{
+		Symbol:      "get_public_company_income_statement",
+		Name:        "get_public_company_income_statement",
+		Description: "根據股票代號查詢公開發行公司綜合損益表（TWSE-API t187ap06_X，T160）。" +
+			"自動偵測公司所屬產業並使用對應的財務報表格式。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     handlerGetPublicCompanyIncomeStatement,
+	}) // T160
+
+	r.Register(ToolDef{
 		Symbol:      "get_company_supervisor_compensation",
 		Name:        "get_company_supervisor_compensation",
 		Description: "根據股票代號查詢上市公司監察人酬金相關資訊（TWSE-API t187ap29_B_L，T111）。",

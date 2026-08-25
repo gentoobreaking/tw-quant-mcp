@@ -77,6 +77,14 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIIncINS):          cache.DatasetFinancials,
 	string(provider.TWSEAPIIncMIM):          cache.DatasetFinancials,
 	string(provider.TWSEAPIDisclosureVio):   cache.DatasetCalendar,   // 資訊揭露違法（T094）
+	string(provider.TWSEAPIFundBasic):       cache.DatasetCalendar,   // 基金基本資料（T124）
+	string(provider.TWSEAPIPubBoardHold):    cache.DatasetCalendar,   // 公發董監持股（T159）
+	string(provider.TWSEAPIPubIncCI):        cache.DatasetFinancials, // 公發損益表-一般業（T160）
+	string(provider.TWSEAPIPubIncBASI):      cache.DatasetFinancials,
+	string(provider.TWSEAPIPubIncBD):        cache.DatasetFinancials,
+	string(provider.TWSEAPIPubIncFH):        cache.DatasetFinancials,
+	string(provider.TWSEAPIPubIncINS):       cache.DatasetFinancials,
+	string(provider.TWSEAPIPubIncMIM):       cache.DatasetFinancials,
 	string(provider.TWSEAPISupervisorComp):  cache.DatasetFinancials, // 監察人酬金（T111）
 	string(provider.TWSEAPIMeetingAnn):      cache.DatasetCalendar,   // 股東會公告（T107/T108）
 	string(provider.TWSEAPIMeetingDates):    cache.DatasetCalendar,   // 股東會日期地點（T109）

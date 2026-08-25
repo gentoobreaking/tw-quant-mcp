@@ -110,6 +110,15 @@ const (
 	TWSEAPIMeetingAnn     TWSEAPIDataset = "meeting_ann"       // 股東會公告彙總（t187ap38_L，T107/T108 共用）
 	TWSEAPIMeetingDates   TWSEAPIDataset = "meeting_dates"     // 股東會日期地點（t187ap41_L，T109）
 	TWSEAPIProposalExer   TWSEAPIDataset = "proposal_exercise" // 提案權行使彙總（t187ap35_L，T110）
+	// 公發公司／基金（T124，T159，T160）
+	TWSEAPIFundBasic      TWSEAPIDataset = "fund_basic"       // 基金基本資料（t187ap47_L，T124）
+	TWSEAPIPubBoardHold   TWSEAPIDataset = "pub_board_hold"   // 公發董監持股餘額（t187ap11_P，T159）
+	TWSEAPIPubIncCI       TWSEAPIDataset = "pub_income_ci"    // 公發損益表-一般業（t187ap06_X_ci，T160）
+	TWSEAPIPubIncBASI     TWSEAPIDataset = "pub_income_basi"  // 金融業
+	TWSEAPIPubIncBD       TWSEAPIDataset = "pub_income_bd"    // 證券期貨業
+	TWSEAPIPubIncFH       TWSEAPIDataset = "pub_income_fh"    // 金控業
+	TWSEAPIPubIncINS      TWSEAPIDataset = "pub_income_ins"   // 保險業
+	TWSEAPIPubIncMIM      TWSEAPIDataset = "pub_income_mim"   // 異業
 	TWSEAPIInsiderPreann  TWSEAPIDataset = "insider_preann"   // 內部人持股轉讓事前申報（t187ap12_L，T078）
 	TWSEAPIInsiderUntrans TWSEAPIDataset = "insider_untrans"  // 內部人持股未轉讓（t187ap13_L，T079）
 	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"         // 董事酬金（t187ap29_A_L，T080）
@@ -211,6 +220,14 @@ var (
 		TWSEAPIMeetingAnn:      "/opendata/t187ap38_L",
 		TWSEAPIMeetingDates:    "/opendata/t187ap41_L",
 		TWSEAPIProposalExer:    "/opendata/t187ap35_L",
+		TWSEAPIFundBasic:       "/opendata/t187ap47_L",
+		TWSEAPIPubBoardHold:    "/opendata/t187ap11_P",
+		TWSEAPIPubIncCI:        "/opendata/t187ap06_X_ci",
+		TWSEAPIPubIncBASI:      "/opendata/t187ap06_X_basi",
+		TWSEAPIPubIncBD:        "/opendata/t187ap06_X_bd",
+		TWSEAPIPubIncFH:        "/opendata/t187ap06_X_fh",
+		TWSEAPIPubIncINS:       "/opendata/t187ap06_X_ins",
+		TWSEAPIPubIncMIM:       "/opendata/t187ap06_X_mim",
 		TWSEAPIInsiderPreann:   "/opendata/t187ap12_L",
 		TWSEAPIInsiderUntrans:  "/opendata/t187ap13_L",
 		TWSEAPIDirComp:         "/opendata/t187ap29_A_L",
@@ -668,6 +685,9 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		"insider_untrans", "dir_comp", "major_shareholders":
 		out, err = normalizePassthroughArray(raw)
 	case "supervisor_comp", "meeting_ann", "meeting_dates", "proposal_exercise":
+		out, err = normalizePassthroughArray(raw)
+	case "fund_basic", "pub_board_hold", "pub_income_ci", "pub_income_basi",
+		"pub_income_bd", "pub_income_fh", "pub_income_ins", "pub_income_mim":
 		out, err = normalizePassthroughArray(raw)
 	case "eps_stats", "income_ci", "income_basi", "income_bd",
 		"income_fh", "income_ins", "income_mim", "disclosure_vio":
