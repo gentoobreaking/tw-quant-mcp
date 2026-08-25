@@ -160,6 +160,11 @@ func stubFG(f *fakeTAIFEX) {
 		"2026-07-28": tfStubDL([]model.PCRow{{Date: "2026-07-28", CallVolume: 95000, PutVolume: 114000, VolumeRatio: 120.0}}, ""),
 		"2026-07-29": tfStubDL([]model.PCRow{{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5}}, ""),
 	}
+	// 保證金一覽（T127）
+	f.single[tfKey(model.TAMargin, "2026-07-29", "")] = tfStub([]model.MarginRow{
+		{Date: "2026-07-29", Contract: "臺股期貨", ClearingMargin: 214000, MaintenanceMargin: 165000, InitialMargin: 278000},
+		{Date: "2026-07-29", Contract: "小型臺指期貨", ClearingMargin: 53500, MaintenanceMargin: 41000, InitialMargin: 70000},
+	})
 	// 三大法人期貨/選擇權（最新日）
 	f.single[tfKey(model.TAInstiFutures, "2026-07-29", "")] = tfStub([]model.InstitutionalRow{
 		{Date: "2026-07-29", Contract: "臺股期貨", Investor: "自營商", LongVolume: 12186, NetVolume: 5000, OINet: 10000},

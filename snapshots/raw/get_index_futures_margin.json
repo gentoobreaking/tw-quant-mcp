@@ -1,0 +1,41 @@
+{
+  "arguments": {
+    "contract": "臺股期貨"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 10,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-08-24\",\"contract\":\"臺股期貨\",\"clearing_margin\":519000,\"maintenance_margin\":538000,\"initial_margin\":701000}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T17:22:46+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1255,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-08-24",
+            "contract": "臺股期貨",
+            "clearing_margin": 519000,
+            "maintenance_margin": 538000,
+            "initial_margin": 701000
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T17:22:46+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 1255,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 2,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

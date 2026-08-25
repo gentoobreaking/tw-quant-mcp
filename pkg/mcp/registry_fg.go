@@ -189,6 +189,20 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetFuturesInstitutional,
 	}) // T126
 	r.Register(ToolDef{
+		Symbol:      "get_index_futures_margin",
+		Name:        "get_index_futures_margin",
+		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +
+			"TAIFEX-API IndexFuturesAndOptionsMargining，T127）。contract 為中文商品名子字串（如「臺股期貨」），留空顯示全部。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "description": "商品名稱（中文），例如「臺股期貨」。留空則顯示全部"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetIndexFuturesMargin,
+	}) // T127
+	r.Register(ToolDef{
 		Symbol: "get_institutional_futures_history",
 		Name:   "get_institutional_futures_history",
 		Description: "查詢三大法人期貨部位歷史（TAIFEX-DL 回溯，§9.3；L2 永久快取）。" +

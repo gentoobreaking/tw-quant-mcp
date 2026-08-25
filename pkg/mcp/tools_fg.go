@@ -509,6 +509,47 @@ func handlerGetFuturesInstitutional(a *App, args map[string]any) (HandlerResult,
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// handlerGetIndexFuturesMargin：股價指數類期貨與選擇權保證金一覽表
+// （TAIFEX-API IndexFuturesAndOptionsMargining，T127）。contract 為中文商品名
+// 子字串過濾（如「臺股期貨」），留空回全部；查無時列出可用商品。
+func handlerGetIndexFuturesMargin(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	contract := strings.TrimSpace(strVal(args["contract"]))
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAMargin, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAMargin, err)
+	}
+	rows, err := taifexRows[model.MarginRow](model.TAMargin, d, res)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	if contract == "" {
+		return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+	}
+	filtered := make([]model.MarginRow, 0, len(rows))
+	for _, r := range rows {
+		if strings.Contains(r.Contract, contract) {
+			filtered = append(filtered, r)
+		}
+	}
+	if len(filtered) == 0 {
+		names := make([]string, 0, len(rows))
+		for _, r := range rows {
+			names = append(names, r.Contract)
+		}
+		return HandlerResult{}, fmt.Errorf("查無「%s」。可用商品：%s", contract, strings.Join(names, "、"))
+	}
+	return HandlerResult{Data: filtered, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // instiPositions 三大法人部位（期貨/選擇權共用路徑）。
 func instiPositions(a *App, args map[string]any, ds model.TAIFEXDataset) (HandlerResult, error) {
 	ctx := context.Background()
