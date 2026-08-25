@@ -209,7 +209,21 @@ jobs:
             echo "::notice::homebrew-tap 已更新至 ${VERSION}"
           fi
           } 2>&1 | tee /tmp/tap.log
-          exit ${PIPESTATUS[0]}
+          RC=${PIPESTATUS[0]}
+          # 失敗時將完整 log 推到 tap repo 的 ci-debug 分支（log 端點不可靠時的診斷通道）
+          if [ "$RC" -ne 0 ] && [ -d tap ]; then
+            (
+              cd tap
+              git checkout -b ci-debug 2>/dev/null || git checkout ci-debug
+              cp /tmp/tap.log DEBUG-ci.md
+              git config user.name "tw-quant-mcp release bot"
+              git config user.email "actions@users.noreply.github.com"
+              git add DEBUG-ci.md
+              git commit -m "ci debug log $(date -u +%FT%TZ)"
+              git push -f origin ci-debug
+            ) || true
+          fi
+          exit $RC
 
       - name: Upload tap failure diagnostics
         if: failure() || cancelled()
