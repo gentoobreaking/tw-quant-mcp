@@ -47,6 +47,7 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEWDSLSBalanceHis):    cache.DatasetMargin,     // 融券借券餘額歷史（T164）
 	string(provider.TWSEWDSBLTradesHis):     cache.DatasetDailyKLine, // 借券賣出成交歷史（T165）
 	string(provider.TWSEWDBondRedemption):   cache.DatasetDailyKLine, // 中央登錄公債補息（T055）
+	string(provider.TWSEWDEtfRegInv):        cache.DatasetCalendar,   // 定期定額戶數統計排行（T120）
 	string(provider.TWSEAPICumVoting):       cache.DatasetCalendar,   // 累積投票制董監事彙總（T056）
 	string(provider.TWSEAPIOwnScopeHalt):    cache.DatasetCalendar,   // 經營權異動停止買賣（T057）
 	string(provider.TWSEAPIOwnScopeTrade):   cache.DatasetCalendar,   // 經營權異動列變更交易（T058）

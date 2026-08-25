@@ -35,3 +35,29 @@ func TestNormalizeAfterHours(t *testing.T) {
 		t.Errorf("Date = %q，期望 2026-08-24", r.Date)
 	}
 }
+
+// T120：定期定額交易戶數統計排行（ETFRank）正規化
+func TestNormalizeEtfRegInv(t *testing.T) {
+	body := `{"stat":"OK","title":"115年07月 定期定額交易戶數統計排行月報表",
+"fields":[" ","代號","名稱","交易戶數","代號","名稱","交易戶數"],
+"date":"20260701",
+"data":[["1","2330","台積電","236,742","0050","元大台灣50","1,241,976"]]}`
+	raw := &RawResponse{Body: []byte(body)}
+	rows, err := normalizeEtfRegInv(raw)
+	if err != nil {
+		t.Fatalf("normalizeEtfRegInv: %v", err)
+	}
+	if len(rows) != 1 {
+		t.Fatalf("期望 1 列，得到 %d", len(rows))
+	}
+	r := rows[0]
+	if r["rank"] != "1" || r["code"] != "2330" || r["name"] != "台積電" || r["stock_accounts"] != "236,742" {
+		t.Errorf("股票欄錯誤: %+v", r)
+	}
+	if r["etf_code"] != "0050" || r["etf_name"] != "元大台灣50" || r["etf_accounts"] != "1,241,976" {
+		t.Errorf("ETF 欄錯誤: %+v", r)
+	}
+	if r["_date"] != "2026-07-01" {
+		t.Errorf("_date = %q，期望 2026-07-01", r["_date"])
+	}
+}

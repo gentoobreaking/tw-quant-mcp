@@ -397,6 +397,23 @@ func registerBCTools(r *Registry) {
 		Handler:  webListSpec{ds: provider.TWSEWDTopVolume}.handler(),
 	}) // T184
 	r.Register(ToolDef{
+		Symbol:      "get_etf_regular_investment_ranking",
+		Name:        "get_etf_regular_investment_ranking",
+		Description: "查詢定期定額交易戶數統計排行月報表（TWSE-WEB ETFReport/ETFRank，T120）。" +
+			"每列含排名、股票與 ETF 之代碼/名稱/交易戶數。可選 code/name 過濾（比對股票欄）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "股票代號過濾（選填）"},
+				"name":   map[string]any{"type": "string", "description": "股票名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDEtfRegInv}.handler(),
+	}) // T120
+	r.Register(ToolDef{
 		Symbol:      "get_market_institutional_amounts_history",
 		Name:        "get_market_institutional_amounts_history",
 		Description: "查詢外資及陸資/投信/自營商買賣超金額彙總歷史（TWSE-WEB BFI82U，T146）。",

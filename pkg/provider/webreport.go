@@ -71,6 +71,41 @@ func normalizeWebTable(raw *RawResponse) ([]map[string]any, error) {
 	return out, nil
 }
 
+// normalizeEtfRegInv 正規化定期定額交易戶數統計排行月報表（ETFRank，T120）：
+// 官方 fields 含重複欄名（股票/ETF 兩組「代號/名稱/交易戶數」），改用語意化鍵名。
+func normalizeEtfRegInv(raw *RawResponse) ([]map[string]any, error) {
+	fields, rows, date, err := ParseWebReport(raw)
+	if err != nil {
+		return nil, err
+	}
+	if len(fields) < 7 {
+		return nil, fmt.Errorf("provider: ETFRank 欄位數不足: %v", fields)
+	}
+	out := make([]map[string]any, 0, len(rows))
+	for _, row := range rows {
+		get := func(i int) string {
+			if i < len(row) {
+				return strings.TrimSpace(row[i])
+			}
+			return ""
+		}
+		rec := map[string]any{
+			"rank":           get(0),
+			"code":           get(1),
+			"name":           get(2),
+			"stock_accounts": get(3),
+			"etf_code":       get(4),
+			"etf_name":       get(5),
+			"etf_accounts":   get(6),
+		}
+		if ts, perr := time.Parse("20060102", date); perr == nil {
+			rec["_date"] = ts.Format("2006-01-02")
+		}
+		out = append(out, rec)
+	}
+	return out, nil
+}
+
 // normalizePassthroughArray 裸 JSON 陣列直通（opendata/* 端點，T142）。
 func normalizePassthroughArray(raw *RawResponse) (json.RawMessage, error) {
 	var arr json.RawMessage

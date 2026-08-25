@@ -145,6 +145,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
 	f.bodies["disclosure_vio|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","違法情形":"未依法令期限公告申報"}]`
 	f.bodies["top_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["etf_reg_inv|"] = `[{"rank":"1","code":"2330","name":"台積電","stock_accounts":"236,742","etf_code":"0050","etf_name":"元大台灣50","etf_accounts":"1,241,976","_date":"2026-07-30"}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
 	f.stub("daily_k", url.Values{"date": {"20260601"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "06", 20, 20)))
@@ -265,6 +266,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_suspended_day_trading_history", args: map[string]any{}},
 		{name: "get_suspended_trading_stocks", args: map[string]any{}},
 		{name: "get_top_20_volume_stocks", args: map[string]any{"name": ""}},
+		{name: "get_etf_regular_investment_ranking", args: map[string]any{}},
 		{name: "get_market_institutional_amounts_history", args: map[string]any{"date": "2026-07-30"}},
 		{name: "get_market_turnover_history", args: map[string]any{"date": "2026-07-30"}},
 		{name: "get_short_sale_lending_balance_history", args: map[string]any{"date": "2026-07-30"}},

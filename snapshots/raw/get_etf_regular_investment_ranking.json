@@ -1,0 +1,232 @@
+{
+  "arguments": {},
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 10,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"_date\":\"2026-07-01\",\"code\":\"2330\",\"etf_accounts\":\"1,241,976\",\"etf_code\":\"0050\",\"etf_name\":\"元大台灣50\",\"name\":\"台積電\",\"rank\":\"1\",\"stock_accounts\":\"236,742\"},{\"_date\":\"2026-07-01\",\"code\":\"2884\",\"etf_accounts\":\"319,337\",\"etf_code\":\"0056\",\"etf_name\":\"元大高股息\",\"name\":\"玉山金\",\"rank\":\"2\",\"stock_accounts\":\"26,532\"},{\"_date\":\"2026-07-01\",\"code\":\"2317\",\"etf_accounts\":\"306,352\",\"etf_code\":\"00878\",\"etf_name\":\"國泰永續高股息\",\"name\":\"鴻海\",\"rank\":\"3\",\"stock_accounts\":\"22,826\"},{\"_date\":\"2026-07-01\",\"code\":\"2886\",\"etf_accounts\":\"245,434\",\"etf_code\":\"006208\",\"etf_name\":\"富邦台50\",\"name\":\"兆豐金\",\"rank\":\"4\",\"stock_accounts\":\"20,946\"},{\"_date\":\"2026-07-01\",\"code\":\"2891\",\"etf_accounts\":\"168,694\",\"etf_code\":\"00919\",\"etf_name\":\"群益台灣精選高息\",\"name\":\"中信金\",\"rank\":\"5\",\"stock_accounts\":\"19,817\"},{\"_date\":\"2026-07-01\",\"code\":\"2308\",\"etf_accounts\":\"159,424\",\"etf_code\":\"00981A\",\"etf_name\":\"主動統一台股增長\",\"name\":\"台達電\",\"rank\":\"6\",\"stock_accounts\":\"16,827\"},{\"_date\":\"2026-07-01\",\"code\":\"2412\",\"etf_accounts\":\"93,221\",\"etf_code\":\"009816\",\"etf_name\":\"凱基台灣TOP50\",\"name\":\"中華電\",\"rank\":\"7\",\"stock_accounts\":\"15,524\"},{\"_date\":\"2026-07-01\",\"code\":\"2881\",\"etf_accounts\":\"76,590\",\"etf_code\":\"0052\",\"etf_name\":\"富邦科技\",\"name\":\"富邦金\",\"rank\":\"8\",\"stock_accounts\":\"14,851\"},{\"_date\":\"2026-07-01\",\"code\":\"2885\",\"etf_accounts\":\"59,889\",\"etf_code\":\"00713\",\"etf_name\":\"元大台灣高息低波\",\"name\":\"元大金\",\"rank\":\"9\",\"stock_accounts\":\"13,804\"},{\"_date\":\"2026-07-01\",\"code\":\"2892\",\"etf_accounts\":\"53,739\",\"etf_code\":\"00881\",\"etf_name\":\"國泰台灣科技龍頭\",\"name\":\"第一金\",\"rank\":\"10\",\"stock_accounts\":\"11,948\"},{\"_date\":\"2026-07-01\",\"code\":\"2454\",\"etf_accounts\":\"44,667\",\"etf_code\":\"00646\",\"etf_name\":\"元大S\\u0026P500\",\"name\":\"聯發科\",\"rank\":\"11\",\"stock_accounts\":\"11,657\"},{\"_date\":\"2026-07-01\",\"code\":\"2890\",\"etf_accounts\":\"37,546\",\"etf_code\":\"00830\",\"etf_name\":\"國泰費城半導體\",\"name\":\"永豐金\",\"rank\":\"12\",\"stock_accounts\":\"11,027\"},{\"_date\":\"2026-07-01\",\"code\":\"2887\",\"etf_accounts\":\"35,887\",\"etf_code\":\"00662\",\"etf_name\":\"富邦NASDAQ\",\"name\":\"台新新光金\",\"rank\":\"13\",\"stock_accounts\":\"9,917\"},{\"_date\":\"2026-07-01\",\"code\":\"2882\",\"etf_accounts\":\"30,290\",\"etf_code\":\"00922\",\"etf_name\":\"國泰台灣領袖50\",\"name\":\"國泰金\",\"rank\":\"14\",\"stock_accounts\":\"9,245\"},{\"_date\":\"2026-07-01\",\"code\":\"5880\",\"etf_accounts\":\"29,664\",\"etf_code\":\"00929\",\"etf_name\":\"復華台灣科技優息\",\"name\":\"合庫金\",\"rank\":\"15\",\"stock_accounts\":\"8,616\"},{\"_date\":\"2026-07-01\",\"code\":\"2603\",\"etf_accounts\":\"27,259\",\"etf_code\":\"00692\",\"etf_name\":\"富邦公司治理\",\"name\":\"長榮\",\"rank\":\"16\",\"stock_accounts\":\"5,920\"},{\"_date\":\"2026-07-01\",\"code\":\"2834\",\"etf_accounts\":\"27,063\",\"etf_code\":\"00991A\",\"etf_name\":\"主動復華未來50\",\"name\":\"臺企銀\",\"rank\":\"17\",\"stock_accounts\":\"5,530\"},{\"_date\":\"2026-07-01\",\"code\":\"3711\",\"etf_accounts\":\"24,303\",\"etf_code\":\"00988A\",\"etf_name\":\"主動統一全球創新\",\"name\":\"日月光投控\",\"rank\":\"18\",\"stock_accounts\":\"5,000\"},{\"_date\":\"2026-07-01\",\"code\":\"2880\",\"etf_accounts\":\"22,970\",\"etf_code\":\"00935\",\"etf_name\":\"野村臺灣新科技50\",\"name\":\"華南金\",\"rank\":\"19\",\"stock_accounts\":\"4,935\"},{\"_date\":\"2026-07-01\",\"code\":\"2382\",\"etf_accounts\":\"21,704\",\"etf_code\":\"00850\",\"etf_name\":\"元大臺灣ESG永續\",\"name\":\"廣達\",\"rank\":\"20\",\"stock_accounts\":\"4,591\"}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T17:02:56+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":3475,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "_date": "2026-07-01",
+            "code": "2330",
+            "etf_accounts": "1,241,976",
+            "etf_code": "0050",
+            "etf_name": "元大台灣50",
+            "name": "台積電",
+            "rank": "1",
+            "stock_accounts": "236,742"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2884",
+            "etf_accounts": "319,337",
+            "etf_code": "0056",
+            "etf_name": "元大高股息",
+            "name": "玉山金",
+            "rank": "2",
+            "stock_accounts": "26,532"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2317",
+            "etf_accounts": "306,352",
+            "etf_code": "00878",
+            "etf_name": "國泰永續高股息",
+            "name": "鴻海",
+            "rank": "3",
+            "stock_accounts": "22,826"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2886",
+            "etf_accounts": "245,434",
+            "etf_code": "006208",
+            "etf_name": "富邦台50",
+            "name": "兆豐金",
+            "rank": "4",
+            "stock_accounts": "20,946"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2891",
+            "etf_accounts": "168,694",
+            "etf_code": "00919",
+            "etf_name": "群益台灣精選高息",
+            "name": "中信金",
+            "rank": "5",
+            "stock_accounts": "19,817"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2308",
+            "etf_accounts": "159,424",
+            "etf_code": "00981A",
+            "etf_name": "主動統一台股增長",
+            "name": "台達電",
+            "rank": "6",
+            "stock_accounts": "16,827"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2412",
+            "etf_accounts": "93,221",
+            "etf_code": "009816",
+            "etf_name": "凱基台灣TOP50",
+            "name": "中華電",
+            "rank": "7",
+            "stock_accounts": "15,524"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2881",
+            "etf_accounts": "76,590",
+            "etf_code": "0052",
+            "etf_name": "富邦科技",
+            "name": "富邦金",
+            "rank": "8",
+            "stock_accounts": "14,851"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2885",
+            "etf_accounts": "59,889",
+            "etf_code": "00713",
+            "etf_name": "元大台灣高息低波",
+            "name": "元大金",
+            "rank": "9",
+            "stock_accounts": "13,804"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2892",
+            "etf_accounts": "53,739",
+            "etf_code": "00881",
+            "etf_name": "國泰台灣科技龍頭",
+            "name": "第一金",
+            "rank": "10",
+            "stock_accounts": "11,948"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2454",
+            "etf_accounts": "44,667",
+            "etf_code": "00646",
+            "etf_name": "元大S&P500",
+            "name": "聯發科",
+            "rank": "11",
+            "stock_accounts": "11,657"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2890",
+            "etf_accounts": "37,546",
+            "etf_code": "00830",
+            "etf_name": "國泰費城半導體",
+            "name": "永豐金",
+            "rank": "12",
+            "stock_accounts": "11,027"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2887",
+            "etf_accounts": "35,887",
+            "etf_code": "00662",
+            "etf_name": "富邦NASDAQ",
+            "name": "台新新光金",
+            "rank": "13",
+            "stock_accounts": "9,917"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2882",
+            "etf_accounts": "30,290",
+            "etf_code": "00922",
+            "etf_name": "國泰台灣領袖50",
+            "name": "國泰金",
+            "rank": "14",
+            "stock_accounts": "9,245"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "5880",
+            "etf_accounts": "29,664",
+            "etf_code": "00929",
+            "etf_name": "復華台灣科技優息",
+            "name": "合庫金",
+            "rank": "15",
+            "stock_accounts": "8,616"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2603",
+            "etf_accounts": "27,259",
+            "etf_code": "00692",
+            "etf_name": "富邦公司治理",
+            "name": "長榮",
+            "rank": "16",
+            "stock_accounts": "5,920"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2834",
+            "etf_accounts": "27,063",
+            "etf_code": "00991A",
+            "etf_name": "主動復華未來50",
+            "name": "臺企銀",
+            "rank": "17",
+            "stock_accounts": "5,530"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "3711",
+            "etf_accounts": "24,303",
+            "etf_code": "00988A",
+            "etf_name": "主動統一全球創新",
+            "name": "日月光投控",
+            "rank": "18",
+            "stock_accounts": "5,000"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2880",
+            "etf_accounts": "22,970",
+            "etf_code": "00935",
+            "etf_name": "野村臺灣新科技50",
+            "name": "華南金",
+            "rank": "19",
+            "stock_accounts": "4,935"
+          },
+          {
+            "_date": "2026-07-01",
+            "code": "2382",
+            "etf_accounts": "21,704",
+            "etf_code": "00850",
+            "etf_name": "元大臺灣ESG永續",
+            "name": "廣達",
+            "rank": "20",
+            "stock_accounts": "4,591"
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T17:02:56+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 3475,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}
