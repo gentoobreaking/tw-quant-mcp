@@ -1,0 +1,1 @@
+get_company_daily_insider_trades_untransferred {"code": "2330"} -> 查無 2330 之資料
