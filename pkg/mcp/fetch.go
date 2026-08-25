@@ -86,6 +86,7 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIBrokerMonthly):   cache.DatasetCalendar,   // 券商月報表（T052）
 	string(provider.TWSEAPIBrokerPersonnel): cache.DatasetCalendar,   // 從業人員統計（T053）
 	string(provider.TWSEAPIBrokerRegInv):    cache.DatasetCalendar,   // 定期定額名單（T054）
+	string(provider.TWSEAPISupervisorAck):   cache.DatasetCalendar,   // 財報監察人承認（T084）
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,

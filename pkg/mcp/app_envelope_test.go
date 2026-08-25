@@ -109,6 +109,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["broker_monthly|"] = `[{"出表日期":"1150825","券商代號":"0200","券商名稱":"遠智證券","會計科目名稱":"流動資產","本月借方總額":"73498551","本月貸方總額":"88602523"}]`
 	f.bodies["broker_personnel|"] = `[{"出表日期":"1150801","職位":"高級業務員","受託買賣":"2130"}]`
 	f.bodies["broker_reg_inv|"] = `[{"SecuritiesFirmCode":"1020","Name":"合庫","BrokerageBusinessStartingDate":"1100701","WealthManagementBusinessStartingDate":""}]`
+	f.bodies["supervisor_ack|"] = `[{"出表日期":"1150824","公司代號":"2330","公司名稱":"台積電","是否設置審計委員會":"是"}]`
 	f.bodies["eps_stats|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","季度":"4","EPS":"15.85"}]`
 	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
 	f.bodies["disclosure_vio|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","違法情形":"未依法令期限公告申報"}]`
@@ -288,6 +289,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_broker_monthly_statements", args: map[string]any{}},
 		{name: "get_broker_service_personnel", args: map[string]any{}},
 		{name: "get_brokers_offering_regular_investment", args: map[string]any{}},
+		{name: "get_company_financial_reports_supervisor_acknowledgment", args: map[string]any{"code": "2330"}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

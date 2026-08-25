@@ -277,6 +277,15 @@ func registerDETools(r *Registry) {
 	}) // T097
 
 	r.Register(ToolDef{
+		Symbol:      "get_company_financial_reports_supervisor_acknowledgment",
+		Name:        "get_company_financial_reports_supervisor_acknowledgment",
+		Description: "根據股票代號查詢上市公司財務報告經監察人承認情形（TWSE-API t187ap31_L，T084）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPISupervisorAck}.handler(),
+	}) // T084
+
+	r.Register(ToolDef{
 		Symbol:      "get_company_dividend",
 		Name:        "get_company_dividend",
 		Description: "根據股票代號查詢上市公司股利分派情形（TWSE-API t187ap45_L 正規化模型，T081）。",
