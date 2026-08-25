@@ -18,7 +18,7 @@ SHA_LINUX_AMD64=$(sha_of linux_amd64)
 BASE_URL="https://github.com/${OWNER}/tw-quant-mcp/releases/download/v${VER}"
 
 mkdir -p "$(dirname "$OUT")"
-cat > "$OUT" <<FORMULA
+cat >"$OUT" <<FORMULA
 # 自動產生：由 tw-quant-mcp release workflow 於 ${VER} 發佈時更新，請勿手改。
 class TwQuantMcp < Formula
   desc "Taiwan quant market data MCP Server (official sources)"
