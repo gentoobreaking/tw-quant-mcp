@@ -119,6 +119,16 @@ const (
 	TWSEAPIIncINS         TWSEAPIDataset = "income_ins"       // 保險業
 	TWSEAPIIncMIM         TWSEAPIDataset = "income_mim"       // 異業
 	TWSEAPIDisclosureVio  TWSEAPIDataset = "disclosure_vio"   // 資訊揭露違法（t187ap23_L，T094）
+	// 券商資料（T046-T054）
+	TWSEAPIBrokerBasic    TWSEAPIDataset = "broker_basic"     // 證券商基本資料（t187ap18，T046）
+	TWSEAPIBrokerBranch   TWSEAPIDataset = "broker_branch"    // 分公司基本資料（OpenData_BRK02，T047）
+	TWSEAPIBrokerElec     TWSEAPIDataset = "broker_elec"      // 電子式交易統計（t187ap19，T048）
+	TWSEAPIBrokerGender   TWSEAPIDataset = "broker_gender"    // 營業員男女人數（OpenData_BRK01，T049）
+	TWSEAPIBrokerHQ       TWSEAPIDataset = "broker_hq"        // 本公司基本資料（brokerList，T050）
+	TWSEAPIBrokerIncome   TWSEAPIDataset = "broker_income"    // 券商損益彙總（t187ap21，T051）
+	TWSEAPIBrokerMonthly  TWSEAPIDataset = "broker_monthly"   // 券商月報表（t187ap20，T052）
+	TWSEAPIBrokerPersonnel TWSEAPIDataset = "broker_personnel" // 從業人員統計（t187ap01，T053）
+	TWSEAPIBrokerRegInv   TWSEAPIDataset = "broker_reg_inv"   // 定期定額名單（secRegData，T054）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -201,6 +211,15 @@ var (
 		TWSEAPIIncINS:          "/opendata/t187ap06_L_ins",
 		TWSEAPIIncMIM:          "/opendata/t187ap06_L_mim",
 		TWSEAPIDisclosureVio:   "/opendata/t187ap23_L",
+		TWSEAPIBrokerBasic:     "/opendata/t187ap18",
+		TWSEAPIBrokerBranch:    "/opendata/OpenData_BRK02",
+		TWSEAPIBrokerElec:      "/opendata/t187ap19",
+		TWSEAPIBrokerGender:    "/opendata/OpenData_BRK01",
+		TWSEAPIBrokerHQ:        "/brokerService/brokerList",
+		TWSEAPIBrokerIncome:    "/opendata/t187ap21",
+		TWSEAPIBrokerMonthly:   "/opendata/t187ap20",
+		TWSEAPIBrokerPersonnel: "/opendata/t187ap01",
+		TWSEAPIBrokerRegInv:    "/brokerService/secRegData",
 	}
 )
 
@@ -634,6 +653,10 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizePassthroughArray(raw)
 	case "eps_stats", "income_ci", "income_basi", "income_bd",
 		"income_fh", "income_ins", "income_mim", "disclosure_vio":
+		out, err = normalizePassthroughArray(raw)
+	case "broker_basic", "broker_branch", "broker_elec", "broker_gender",
+		"broker_hq", "broker_income", "broker_monthly", "broker_personnel",
+		"broker_reg_inv":
 		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)

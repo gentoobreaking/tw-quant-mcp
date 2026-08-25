@@ -129,11 +129,13 @@ func rowField(r map[string]any, keys ...string) string {
 
 // rowCode / rowName：過濾用之代碼/名稱欄位（相容官方中文欄名）。
 func rowCode(r map[string]any) string {
-	return rowField(r, "code", "公司代號", "證券代號", "債券代號")
+	return rowField(r, "code", "公司代號", "證券代號", "債券代號",
+		"券商代號", "證券商代號", "Code", "SecuritiesFirmCode")
 }
 
 func rowName(r map[string]any) string {
-	return rowField(r, "name", "公司名稱", "證券名稱", "債券簡稱")
+	return rowField(r, "name", "公司名稱", "證券名稱", "債券簡稱",
+		"券商名稱", "券商(證券IB)簡稱", "證券商名稱", "Name")
 }
 
 func paginateRows(rows []map[string]any, code, name string, offset, limit int) []any {

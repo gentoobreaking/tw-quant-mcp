@@ -100,6 +100,15 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["insider_untrans|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","未轉讓股數":"10000"}]`
 	f.bodies["dir_comp|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","酬金總額":"8000000"}]`
 	f.bodies["major_shareholders|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"行政院國家發展基金","持有股數":"1000000000"}]`
+	f.bodies["broker_basic|"] = `[{"出表日期":"1150825","證券代號":"1020","券商(證券IB)簡稱":"合庫","設立日期":"1001202"}]`
+	f.bodies["broker_branch|"] = `[{"出表日期":"1150825","證券商代號":"1021","證券商名稱":"合庫- 台中","地址":"台中市西區民台中市西區民權路91號6樓"}]`
+	f.bodies["broker_elec|"] = `[{"出表日期":"1150815","成交月份":"11507","累計開戶數":"20958039","成交筆數":"50000000"}]`
+	f.bodies["broker_gender|"] = `[{"出表日期":"1150825","證券商代號":"1020","男性員工人數":"68","女性員工人數":"109","總人數":"177"}]`
+	f.bodies["broker_hq|"] = `[{"Code":"1020","Name":"合庫","EstablishmentDate":"1001202","Address":"台北市大安區忠孝東路四段285號1樓(部分)"}]`
+	f.bodies["broker_income|"] = `[{"出表日期":"1150825","券商代號":"0200","券商名稱":"遠智證券","會計科目名稱":"經紀手續費收入","本月金額":"9856892","累進金額":"102032114"}]`
+	f.bodies["broker_monthly|"] = `[{"出表日期":"1150825","券商代號":"0200","券商名稱":"遠智證券","會計科目名稱":"流動資產","本月借方總額":"73498551","本月貸方總額":"88602523"}]`
+	f.bodies["broker_personnel|"] = `[{"出表日期":"1150801","職位":"高級業務員","受託買賣":"2130"}]`
+	f.bodies["broker_reg_inv|"] = `[{"SecuritiesFirmCode":"1020","Name":"合庫","BrokerageBusinessStartingDate":"1100701","WealthManagementBusinessStartingDate":""}]`
 	f.bodies["eps_stats|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","季度":"4","EPS":"15.85"}]`
 	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
 	f.bodies["disclosure_vio|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","違法情形":"未依法令期限公告申報"}]`
@@ -270,6 +279,15 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_company_eps_statistics", args: map[string]any{"code": "2330"}},
 		{name: "get_company_income_statement", args: map[string]any{"code": "2330"}},
 		{name: "get_company_information_disclosure_violations", args: map[string]any{"code": "2330"}},
+		{name: "get_broker_basic_info", args: map[string]any{}},
+		{name: "get_broker_branch_info", args: map[string]any{}},
+		{name: "get_broker_electronic_trading_statistics", args: map[string]any{}},
+		{name: "get_broker_gender_statistics", args: map[string]any{}},
+		{name: "get_broker_headquarters_info", args: map[string]any{}},
+		{name: "get_broker_income_expenditure", args: map[string]any{}},
+		{name: "get_broker_monthly_statements", args: map[string]any{}},
+		{name: "get_broker_service_personnel", args: map[string]any{}},
+		{name: "get_brokers_offering_regular_investment", args: map[string]any{}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

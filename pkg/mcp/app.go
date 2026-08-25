@@ -474,5 +474,6 @@ func buildRegistry() *Registry {
 	registerDETools(r)
 	registerFGTools(r)
 	registerETFTools(r)
+	registerBrokerTools(r)
 	return r
 }
