@@ -17,12 +17,36 @@
 
 ## 安裝
 
-### 需求
+### 方式一：Homebrew（推薦，macOS / Linux）
+
+```bash
+brew tap gentoobreaking/tap https://github.com/gentoobreaking/homebrew-tap.git
+brew install tw-quant-mcp
+```
+
+安裝後執行檔位於 `$(brew --prefix)/bin/tw-quant-mcp`。
+
+```bash
+brew upgrade tw-quant-mcp          # 升級（新版 tag 發佈後）
+brew uninstall tw-quant-mcp        # 移除（不會動到其他套件）
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"t","version":"0"}}}' \
+  | tw-quant-mcp                   # 驗證：應回傳含 serverInfo 的 JSON
+```
+
+> ⚠️ **疑難排解**：若出現 `Tap remote mismatch`，代表本地 tap 的 remote URL 與上游不一致：
+> ```bash
+> brew untap gentoobreaking/tap && brew tap gentoobreaking/tap https://github.com/gentoobreaking/homebrew-tap.git
+> ```
+> 注意：**untap 會一併移除該 tap 安裝的套件**，執行後請重新 `brew install`。
+
+### 方式二：從原始碼建置
+
+#### 需求
 
 - Go 1.26+
 - macOS / Linux / Windows（`CGO_ENABLED=0` 純靜態編譯，無 cgo 依賴）
 
-### 建置
+#### 建置
 
 ```bash
 make build          # 產出 bin/tw-quant-mcp（CGO-free 單一執行檔）
@@ -73,13 +97,11 @@ curl http://localhost:8787/health
 
 ## MCP 客戶端設定
 
-### Homebrew 安裝（推薦，macOS / Linux）
-
-透過自建 tap 安裝（首次需先建立 tap repo，見下方「Homebrew tap 自動發佈」）：
+### Homebrew 安裝（macOS / Linux）
 
 ```bash
-brew install gentoobreaking/tap/tw-quant-mcp
-# 升級：brew upgrade tw-quant-mcp
+brew tap gentoobreaking/tap https://github.com/gentoobreaking/homebrew-tap.git
+brew install tw-quant-mcp
 ```
 
 安裝後將 `$(brew --prefix)/bin/tw-quant-mcp` 填入下方任一 MCP client 的 command 欄位。
