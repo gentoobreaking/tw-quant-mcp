@@ -45,6 +45,7 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEWDTurnoverHistory):  cache.DatasetDailyKLine, // 市場成交資訊歷史（T147）
 	string(provider.TWSEWDSLSBalanceHis):    cache.DatasetMargin,     // 融券借券餘額歷史（T164）
 	string(provider.TWSEWDSBLTradesHis):     cache.DatasetDailyKLine, // 借券賣出成交歷史（T165）
+	string(provider.TWSEWDBondRedemption):   cache.DatasetDailyKLine, // 中央登錄公債補息（T055）
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,

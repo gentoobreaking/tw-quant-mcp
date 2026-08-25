@@ -442,6 +442,18 @@ func registerBCTools(r *Registry) {
 	}) // T165
 
 	r.Register(ToolDef{
+		Symbol:      "get_central_depository_bond_redemption",
+		Name:        "get_central_depository_bond_redemption",
+		Description: "查詢中央登錄公債補息資料表（TWSE-WEB BFI61U，T055）。", 
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDBondRedemption}.handler(),
+	}) // T055
+
+	r.Register(ToolDef{
 		Symbol:      "get_after_hours_trading",
 		Name:        "get_after_hours_trading",
 		Description: "查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。" +

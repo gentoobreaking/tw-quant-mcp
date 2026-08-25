@@ -66,6 +66,7 @@ const (
 	TWSEWDTurnoverHistory TWSEWebDataset = "turnover_history"  // 市場成交資訊/週轉率歷史（T147）
 	TWSEWDSLSBalanceHis   TWSEWebDataset = "sbl_balance_his"   // 融券借券餘額歷史（T164）
 	TWSEWDSBLTradesHis    TWSEWebDataset = "sbl_trades_his"    // 借券賣出成交歷史（T165）
+	TWSEWDBondRedemption  TWSEWebDataset = "bond_redemption"   // 中央登錄公債補息資料表（T055）
 )
 
 // TWSEAPIDataset 為 TWSE-API（openapi.twse.com.tw）資料集 ID。
@@ -118,6 +119,7 @@ var (
 		TWSEWDTurnoverHistory: "/rwd/zh/afterTrading/FMTQIK",
 		TWSEWDSLSBalanceHis:   "/rwd/zh/marginTrading/TWT93U",
 		TWSEWDSBLTradesHis:    "/rwd/zh/afterTrading/TWTASU",
+		TWSEWDBondRedemption:  "/exchangeReport/BFI61U",
 		TWSEWDAbnormal:      "/rwd/announcement/notice",
 		TWSEWDForeignQFIIS:  "/rwd/fund/MI_QFIIS",
 		TWSEWDAfterHours:    "/exchangeReport/BFT41U",
@@ -540,6 +542,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "turnover_history":
 		out, err = normalizeWebTable(raw)
 	case "sbl_balance_his":
+		out, err = normalizeWebTable(raw)
+	case "bond_redemption":
 		out, err = normalizeWebTable(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)
