@@ -324,6 +324,25 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetLargeTradersOptionsOI,
 	}) // T137
 	r.Register(ToolDef{
+		Symbol:      "get_options_daily_history",
+		Name:        "get_options_daily_history",
+		Description: "查詢選擇權每日OHLC歷史行情（可回溯查詢；TAIFEX-DL dlOptDataDown，T150）。" +
+			"contract 預設 TXO。資料量龐大，建議指定 contract_month（如 202606、202606W1）；" +
+			"未指定且資料量過大時改為列出可用到期月份。區間跨度上限 366 日。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract":       map[string]any{"type": "string", "default": "TXO", "description": "選擇權契約代碼，預設 TXO。其他常用：TEO、TFO"},
+				"start":          map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
+				"end":            map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）"},
+				"contract_month": map[string]any{"type": "string", "description": "到期月份/週次，如 202606 或 202606W1。留空且資料量過大時回傳可用月份清單"},
+				"call_put":       map[string]any{"type": "string", "enum": []string{"買權", "賣權"}, "description": "篩選買賣權，留空顯示全部"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOptionsDailyHistory,
+	}) // T150
+	r.Register(ToolDef{
 		Symbol:      "get_institutional_traders_by_options",
 		Name:        "get_institutional_traders_by_options",
 		Description: "查詢三大法人依各選擇權契約分類的交易資料，可觀察各選擇權商品的法人買賣情況（" +

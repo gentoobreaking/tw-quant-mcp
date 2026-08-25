@@ -186,6 +186,16 @@ func stubFG(f *fakeTAIFEX) {
 		"2026-07-28": tfStubDL([]model.InstiGeneralRow{{Date: "2026-07-28", Investor: "外資及陸資", LongVolume: 705000, NetVolume: -19000}}, ""),
 		"2026-07-29": tfStubDL([]model.InstiGeneralRow{{Date: "2026-07-29", Investor: "外資及陸資", LongVolume: 710000, NetVolume: -18000}}, ""),
 	}
+	// 選擇權每日歷史（T150，DL）
+	f.ranges[tfRangeKey(model.TAOptionsDaily, "2026-07-28", "2026-07-29", "TXO")] = map[string]provider.TAIFEXQueryResult{
+		"2026-07-28": tfStubDL([]model.OptionsDailyRow{
+			{Date: "2026-07-28", Contract: "TXO", ContractMonth: "202608", Strike: 20000, CallPut: "買權", Close: 3300, Volume: 500},
+		}, ""),
+		"2026-07-29": tfStubDL([]model.OptionsDailyRow{
+			{Date: "2026-07-29", Contract: "TXO", ContractMonth: "202608", Strike: 21000, CallPut: "買權", Close: 1850, Volume: 12034},
+			{Date: "2026-07-29", Contract: "TXO", ContractMonth: "202608", Strike: 20500, CallPut: "賣權", Close: 990, Volume: 15000},
+		}, ""),
+	}
 	// 保證金一覽（T127）
 	f.single[tfKey(model.TAMargin, "2026-07-29", "")] = tfStub([]model.MarginRow{
 		{Date: "2026-07-29", Contract: "臺股期貨", ClearingMargin: 214000, MaintenanceMargin: 165000, InitialMargin: 278000},
@@ -684,6 +694,35 @@ func TestFGLargeTradersFuturesHistory(t *testing.T) {
 	if _, err := app.core.Call(context.Background(), "get_large_traders_futures_history",
 		map[string]any{"start": "2026-07-28", "end": "2026-07-29"}); err == nil {
 		t.Fatal("contract 必填")
+	}
+}
+
+// T150：get_options_daily_history（contract_month 過濾、買賣權過濾）
+func TestFGOptionsDailyHistory(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_options_daily_history",
+		map[string]any{"start": "20260728", "end": "20260729", "contract_month": "202608"})
+	rows, ok := env.Data.([]model.OptionsDailyRow)
+	if !ok {
+		t.Fatalf("Data 應為 []OptionsDailyRow，實際 %T", env.Data)
+	}
+	if len(rows) != 3 || rows[0].Date != "2026-07-28" {
+		t.Errorf("歷史行情錯誤: %+v", rows)
+	}
+	if env.Lineage.Source != model.SourceTAIFEXDL {
+		t.Errorf("lineage 應為 DL: %+v", env.Lineage)
+	}
+
+	// call_put 過濾
+	env2 := callEnv(t, app, "get_options_daily_history",
+		map[string]any{"start": "20260728", "end": "20260729", "call_put": "賣權"})
+	rows2 := env2.Data.([]model.OptionsDailyRow)
+	if len(rows2) != 1 || rows2[0].CallPut != "賣權" {
+		t.Errorf("call_put=賣權 應只回 1 列: %+v", rows2)
 	}
 }
 

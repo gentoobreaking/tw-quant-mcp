@@ -546,6 +546,95 @@ func handlerGetLargeTradersFuturesHistory(a *App, args map[string]any) (HandlerR
 	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
 }
 
+// optionsHistoryRowCap 為 T150 未指定 contract_month 時之資料量門檻，超過改列到期月份。
+const optionsHistoryRowCap = 500
+
+// handlerGetOptionsDailyHistory：選擇權每日 OHLC 歷史（TAIFEX-DL dlOptDataDown，
+// T150）。contract 預設 TXO；contract_month/call_put 過濾；未指定 contract_month
+// 且資料量過大時改列可用到期月份。
+func handlerGetOptionsDailyHistory(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	contract := strings.ToUpper(strings.TrimSpace(strVal(args["contract"])))
+	if contract == "" {
+		contract = "TXO"
+	}
+	start := flexDateArg(strVal(args["start"]))
+	if start == "" {
+		start = flexDateArg(strVal(args["start_date"]))
+	}
+	end := flexDateArg(strVal(args["end"]))
+	if end == "" {
+		end = flexDateArg(strVal(args["end_date"]))
+	}
+	if start == "" || end == "" {
+		return HandlerResult{}, fmt.Errorf("參數 start（start_date）與 end（end_date）為必填")
+	}
+	callPut := strings.TrimSpace(strVal(args["call_put"]))
+	if callPut != "" && callPut != "買權" && callPut != "賣權" {
+		return HandlerResult{}, fmt.Errorf("參數 call_put 僅接受「買權」或「賣權」，實際 %q", callPut)
+	}
+	contractMonth := strings.TrimSpace(strVal(args["contract_month"]))
+	sd, ed, err := validateRange(start, end)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	byDay, err := q.FetchRange(ctx, model.TAOptionsDaily, sd, ed, contract)
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 範圍查詢失敗: %w", model.TAOptionsDaily, err)
+	}
+	all, err := collectRangeRows[model.OptionsDailyRow](model.TAOptionsDaily, byDay)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	months := map[string]bool{}
+	for _, r := range all {
+		if r.Contract == contract {
+			months[r.ContractMonth] = true
+		}
+	}
+	if contractMonth == "" && len(all) > optionsHistoryRowCap {
+		list := make([]string, 0, len(months))
+		for m := range months {
+			list = append(list, m)
+		}
+		sort.Strings(list)
+		out := make([]map[string]any, 0, len(list))
+		for _, m := range list {
+			out = append(out, map[string]any{"contract_month": m})
+		}
+		lg := taifexLineage(byDay[ed], ed, false, a.taifexTTL())
+		lg.DerivedFrom = []string{"contract_months_list"}
+		return HandlerResult{Data: out, Lineage: lg}, nil
+	}
+	rows := make([]model.OptionsDailyRow, 0, len(all))
+	for _, r := range all {
+		if r.Contract != contract {
+			continue
+		}
+		if contractMonth != "" && r.ContractMonth != contractMonth {
+			continue
+		}
+		if callPut != "" && r.CallPut != callPut {
+			continue
+		}
+		rows = append(rows, r)
+	}
+	sort.Slice(rows, func(i, j int) bool {
+		if rows[i].Date != rows[j].Date {
+			return rows[i].Date < rows[j].Date
+		}
+		if rows[i].Strike != rows[j].Strike {
+			return rows[i].Strike < rows[j].Strike
+		}
+		return rows[i].CallPut < rows[j].CallPut
+	})
+	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
+}
+
 // handlerGetInstitutionalTradersByFuturesHistory：三大法人期貨部位歷史
 // （TAIFEX-DL futContractsDateDown，T132；contract 為 TXF 型代碼，預設 TXF，
 // 伺服器端以 commodityId 過濾；區間 ≤ 92 日）。
