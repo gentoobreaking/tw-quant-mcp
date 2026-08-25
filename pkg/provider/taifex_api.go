@@ -56,13 +56,13 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAPutCallRatio:   "/PutCallRatio",
 	model.TAMargin:         "/IndexFuturesAndOptionsMargining",
 	model.TAFAnnualVolume:  "/AnnualTradingVolume",
-	model.TAFMonthlyStats:  "/MonthlyTradingStatisticsFutures", // T148
+	model.TAFMonthlyStats:  "/MonthlyTradingStatisticsFutures",                                          // T148
 	model.TAInstiDivided:   "/MarketDataOfMajorInstitutionalTradersDividedByFuturesAndOptionsBytheDate", // T126
-	model.TAInstiGeneral:   "/MarketDataOfMajorInstitutionalTradersGeneralBytheDate",                     // T129
-	model.TAInstiCallsPuts: "/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheDate",          // T134
-	model.TAOptionsDelta:   "/DailyOptionsDelta",   // 選擇權每日 Delta（T151）
-	model.TAOIChange:       "/va01",                // 台指選擇權未平倉量增減（T154）
-	model.TAStockMargin:    "/SingleStockFuturesMargining", // 股票期貨保證金（T167）
+	model.TAInstiGeneral:   "/MarketDataOfMajorInstitutionalTradersGeneralBytheDate",                    // T129
+	model.TAInstiCallsPuts: "/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheDate",      // T134
+	model.TAOptionsDelta:   "/DailyOptionsDelta",                                                        // 選擇權每日 Delta（T151）
+	model.TAOIChange:       "/va01",                                                                     // 台指選擇權未平倉量增減（T154）
+	model.TAStockMargin:    "/SingleStockFuturesMargining",                                              // 股票期貨保證金（T167）
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -660,12 +660,12 @@ func decodeUTF8OrBig5(body []byte) ([]byte, error) {
 
 // AnnualVolumeRow 為單一期貨商品之年成交量統計（T041）。
 type AnnualVolumeRow struct {
-	Year    string `json:"year"`
-	Contract string `json:"contract"`
-	Name    string `json:"name"`
-	Volume  int64  `json:"volume"`
-	TradingDays int64 `json:"trading_days"`
-	AvgDailyVolume int64 `json:"avg_daily_volume"`
+	Year           string `json:"year"`
+	Contract       string `json:"contract"`
+	Name           string `json:"name"`
+	Volume         int64  `json:"volume"`
+	TradingDays    int64  `json:"trading_days"`
+	AvgDailyVolume int64  `json:"avg_daily_volume"`
 }
 
 // normalizeTAIAnnualVolume：年成交量統計（AnnualTradingVolume，T041）。
@@ -677,11 +677,11 @@ func normalizeTAIAnnualVolume(body []byte, contract string) ([]AnnualVolumeRow, 
 	out := make([]AnnualVolumeRow, 0, len(rows))
 	for _, m := range rows {
 		r := AnnualVolumeRow{
-			Year:    strAny(m["YYYY"]),
-			Contract: strings.ToUpper(strAny(m["Contract"])),
-			Name:    strAny(m["ContractName"]),
-			Volume:  intAny(m["Volume"]),
-			TradingDays: intAny(m["NumberOfTradingDays"]),
+			Year:           strAny(m["YYYY"]),
+			Contract:       strings.ToUpper(strAny(m["Contract"])),
+			Name:           strAny(m["ContractName"]),
+			Volume:         intAny(m["Volume"]),
+			TradingDays:    intAny(m["NumberOfTradingDays"]),
 			AvgDailyVolume: intAny(m["AvgDailyTradingVolume"]),
 		}
 		if r.Contract == "" {
@@ -726,7 +726,7 @@ type MonthlyTraderStatsRow struct {
 }
 
 // normalizeTAIMonthlyTraderStats：期貨各類交易人各商品交易量統計表
-//（MonthlyTradingStatisticsFutures，T148）。
+// （MonthlyTradingStatisticsFutures，T148）。
 func normalizeTAIMonthlyTraderStats(body []byte) ([]MonthlyTraderStatsRow, error) {
 	var rows []map[string]any
 	if err := json.Unmarshal(body, &rows); err != nil {

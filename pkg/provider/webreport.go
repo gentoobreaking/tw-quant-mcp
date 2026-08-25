@@ -55,9 +55,9 @@ func normalizeWebTablesPick(raw *RawResponse, mustField string) ([]map[string]an
 		Stat   string `json:"stat"`
 		Date   string `json:"date"`
 		Tables []struct {
-			Title  string     `json:"title"`
-			Fields []string   `json:"fields"`
-			Data   [][]any    `json:"data"`
+			Title  string   `json:"title"`
+			Fields []string `json:"fields"`
+			Data   [][]any  `json:"data"`
 		} `json:"tables"`
 	}
 	if err := json.Unmarshal(raw.Body, &envelope); err != nil {
@@ -195,9 +195,9 @@ func normalizeWebTablesList(raw *RawResponse) ([]map[string]any, error) {
 		Date   string `json:"date"`
 		Stat   string `json:"stat"`
 		Tables []struct {
-			Title  string    `json:"title"`
-			Fields []string  `json:"fields"`
-			Data   [][]any   `json:"data"` // 官方可能回數字或字串
+			Title  string   `json:"title"`
+			Fields []string `json:"fields"`
+			Data   [][]any  `json:"data"` // 官方可能回數字或字串
 		} `json:"tables"`
 	}
 	if err := json.Unmarshal(raw.Body, &env); err != nil {

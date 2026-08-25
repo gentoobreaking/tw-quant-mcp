@@ -48,27 +48,27 @@ const (
 	TWSEWDBlockMonthly  TWSEWebDataset = "block_monthly"   // 鉅額交易月統計（T044）
 	TWSEWDBlockYearly   TWSEWebDataset = "block_yearly"    // 鉅額交易年統計（T045）
 	// ── parity 批次（T115/T116/T119/T122/T139/T142/T149/T163/T172/T175-T177/T179/T184）──
-	TWSEWDCrossMarket     TWSEWebDataset = "cross_market"      // 跨市場成交資訊
-	TWSEWDDayTradeTargets TWSEWebDataset = "day_trade_targets" // 當日沖銷標的
-	TWSEWDFinProgAbn     TWSEWebDataset = "fin_prog_abnormal"   // 投資理財節目異常推介個股（BFZFZU_T，T121）
-	TWSEWDSBLVolume       TWSEWebDataset = "sbl_volume"        // 借券賣出每日量
-	TWSEWDFirstForeign    TWSEWebDataset = "first_foreign"     // 第一上市外國股票日成交量值
-	TWSEWDMarginRestrict  TWSEWebDataset = "margin_restrict"   // 停資停券預告表
-	TWSEWDGainLoss        TWSEWebDataset = "gain_loss"         // 市場漲跌家數統計（opendata）
-	TWSEWDOddLot          TWSEWebDataset = "odd_lot"           // 盤後零股行情
-	TWSEWDTradingChanges  TWSEWebDataset = "trading_changes"   // 證券變更交易
-	TWSEWDPriceChangeLim  TWSEWebDataset = "price_change_lim"  // 股價升降幅（漲跌停參考）
-	TWSEWDNewList5D       TWSEWebDataset = "new_list_5d"       // 首五日無漲跌幅
+	TWSEWDCrossMarket     TWSEWebDataset = "cross_market"         // 跨市場成交資訊
+	TWSEWDDayTradeTargets TWSEWebDataset = "day_trade_targets"    // 當日沖銷標的
+	TWSEWDFinProgAbn      TWSEWebDataset = "fin_prog_abnormal"    // 投資理財節目異常推介個股（BFZFZU_T，T121）
+	TWSEWDSBLVolume       TWSEWebDataset = "sbl_volume"           // 借券賣出每日量
+	TWSEWDFirstForeign    TWSEWebDataset = "first_foreign"        // 第一上市外國股票日成交量值
+	TWSEWDMarginRestrict  TWSEWebDataset = "margin_restrict"      // 停資停券預告表
+	TWSEWDGainLoss        TWSEWebDataset = "gain_loss"            // 市場漲跌家數統計（opendata）
+	TWSEWDOddLot          TWSEWebDataset = "odd_lot"              // 盤後零股行情
+	TWSEWDTradingChanges  TWSEWebDataset = "trading_changes"      // 證券變更交易
+	TWSEWDPriceChangeLim  TWSEWebDataset = "price_change_lim"     // 股價升降幅（漲跌停參考）
+	TWSEWDNewList5D       TWSEWebDataset = "new_list_5d"          // 首五日無漲跌幅
 	TWSEWDSuspDayTradeAnn TWSEWebDataset = "suspend_daytrade_ann" // 暫停當沖預告
 	TWSEWDSuspDayTradeHis TWSEWebDataset = "suspend_daytrade_his" // 暫停當沖歷史
-	TWSEWDSuspended       TWSEWebDataset = "suspended"         // 暫停交易證券
-	TWSEWDTopVolume       TWSEWebDataset = "top_volume"        // 成交量 Top20
-	TWSEWDInstiAmounts    TWSEWebDataset = "insti_amounts"     // 三大法人買賣超金額歷史（T146）
-	TWSEWDTurnoverHistory TWSEWebDataset = "turnover_history"  // 市場成交資訊/週轉率歷史（T147）
-	TWSEWDSLSBalanceHis   TWSEWebDataset = "sbl_balance_his"   // 融券借券餘額歷史（T164）
-	TWSEWDSBLTradesHis    TWSEWebDataset = "sbl_trades_his"    // 借券賣出成交歷史（T165）
-	TWSEWDBondRedemption  TWSEWebDataset = "bond_redemption"   // 中央登錄公債補息資料表（T055）
-	TWSEWDEtfRegInv      TWSEWebDataset = "etf_reg_inv"       // 定期定額交易戶數統計排行月報表（ETFRank，T120）
+	TWSEWDSuspended       TWSEWebDataset = "suspended"            // 暫停交易證券
+	TWSEWDTopVolume       TWSEWebDataset = "top_volume"           // 成交量 Top20
+	TWSEWDInstiAmounts    TWSEWebDataset = "insti_amounts"        // 三大法人買賣超金額歷史（T146）
+	TWSEWDTurnoverHistory TWSEWebDataset = "turnover_history"     // 市場成交資訊/週轉率歷史（T147）
+	TWSEWDSLSBalanceHis   TWSEWebDataset = "sbl_balance_his"      // 融券借券餘額歷史（T164）
+	TWSEWDSBLTradesHis    TWSEWebDataset = "sbl_trades_his"       // 借券賣出成交歷史（T165）
+	TWSEWDBondRedemption  TWSEWebDataset = "bond_redemption"      // 中央登錄公債補息資料表（T055）
+	TWSEWDEtfRegInv       TWSEWebDataset = "etf_reg_inv"          // 定期定額交易戶數統計排行月報表（ETFRank，T120）
 )
 
 // TWSEAPIDataset 為 TWSE-API（openapi.twse.com.tw）資料集 ID。
@@ -107,27 +107,27 @@ const (
 	TWSEAPIBoardHoldings  TWSEAPIDataset = "board_holdings"   // 董監持股餘額明細（t187ap11_L，T072）
 	TWSEAPICEODualRole    TWSEAPIDataset = "ceo_dual_role"    // 董事長兼任總經理（t187ap33_L，T073）
 	// 內部人／酬金／大股東報表（T076-T080，T094，T097）
-	TWSEAPIDirCompCon     TWSEAPIDataset = "dir_comp_con"     // 合併報表董事酬金（t187ap29_C_L，T076）
+	TWSEAPIDirCompCon     TWSEAPIDataset = "dir_comp_con"      // 合併報表董事酬金（t187ap29_C_L，T076）
 	TWSEAPISupCompCon     TWSEAPIDataset = "sup_comp_con"      // 合併報表監察人酬金（t187ap29_D_L，T077）
 	TWSEAPISupervisorComp TWSEAPIDataset = "supervisor_comp"   // 監察人酬金（t187ap29_B_L，T111）
 	TWSEAPIMeetingAnn     TWSEAPIDataset = "meeting_ann"       // 股東會公告彙總（t187ap38_L，T107/T108 共用）
 	TWSEAPIMeetingDates   TWSEAPIDataset = "meeting_dates"     // 股東會日期地點（t187ap41_L，T109）
 	TWSEAPIProposalExer   TWSEAPIDataset = "proposal_exercise" // 提案權行使彙總（t187ap35_L，T110）
 	// 公發公司／基金（T124，T159，T160）
-	TWSEAPIFundBasic      TWSEAPIDataset = "fund_basic"       // 基金基本資料（t187ap47_L，T124）
-	TWSEAPIPubBoardHold   TWSEAPIDataset = "pub_board_hold"   // 公發董監持股餘額（t187ap11_P，T159）
-	TWSEAPIPubIncCI       TWSEAPIDataset = "pub_income_ci"    // 公發損益表-一般業（t187ap06_X_ci，T160）
-	TWSEAPIPubIncBASI     TWSEAPIDataset = "pub_income_basi"  // 金融業
-	TWSEAPIPubIncBD       TWSEAPIDataset = "pub_income_bd"    // 證券期貨業
-	TWSEAPIPubIncFH       TWSEAPIDataset = "pub_income_fh"    // 金控業
-	TWSEAPIPubIncINS      TWSEAPIDataset = "pub_income_ins"   // 保險業
-	TWSEAPIPubIncMIM      TWSEAPIDataset = "pub_income_mim"   // 異業
-	TWSEAPIPubBalCI       TWSEAPIDataset = "pub_bal_ci"       // 公發資產負債表-一般業（t187ap07_X_ci，T158）
-	TWSEAPIPubBalBASI     TWSEAPIDataset = "pub_bal_basi"     // 金融業
-	TWSEAPIPubBalBD       TWSEAPIDataset = "pub_bal_bd"       // 證券期貨業
-	TWSEAPIPubBalFH       TWSEAPIDataset = "pub_bal_fh"       // 金控業
-	TWSEAPIPubBalINS      TWSEAPIDataset = "pub_bal_ins"      // 保險業
-	TWSEAPIPubBalMIM      TWSEAPIDataset = "pub_bal_mim"      // 異業
+	TWSEAPIFundBasic    TWSEAPIDataset = "fund_basic"      // 基金基本資料（t187ap47_L，T124）
+	TWSEAPIPubBoardHold TWSEAPIDataset = "pub_board_hold"  // 公發董監持股餘額（t187ap11_P，T159）
+	TWSEAPIPubIncCI     TWSEAPIDataset = "pub_income_ci"   // 公發損益表-一般業（t187ap06_X_ci，T160）
+	TWSEAPIPubIncBASI   TWSEAPIDataset = "pub_income_basi" // 金融業
+	TWSEAPIPubIncBD     TWSEAPIDataset = "pub_income_bd"   // 證券期貨業
+	TWSEAPIPubIncFH     TWSEAPIDataset = "pub_income_fh"   // 金控業
+	TWSEAPIPubIncINS    TWSEAPIDataset = "pub_income_ins"  // 保險業
+	TWSEAPIPubIncMIM    TWSEAPIDataset = "pub_income_mim"  // 異業
+	TWSEAPIPubBalCI     TWSEAPIDataset = "pub_bal_ci"      // 公發資產負債表-一般業（t187ap07_X_ci，T158）
+	TWSEAPIPubBalBASI   TWSEAPIDataset = "pub_bal_basi"    // 金融業
+	TWSEAPIPubBalBD     TWSEAPIDataset = "pub_bal_bd"      // 證券期貨業
+	TWSEAPIPubBalFH     TWSEAPIDataset = "pub_bal_fh"      // 金控業
+	TWSEAPIPubBalINS    TWSEAPIDataset = "pub_bal_ins"     // 保險業
+	TWSEAPIPubBalMIM    TWSEAPIDataset = "pub_bal_mim"     // 異業
 	// 行情歷史與指數補齊（T140，T143-T145，T161，T180-T183）
 	TWSEWDMarginInfo    TWSEWebDataset = "margin_info"    // 信用交易統計（MI_MARGN，T140）
 	TWSEWDHoliday       TWSEWebDataset = "holiday"        // 市場開休市日期（holidaySchedule，T144）
@@ -136,48 +136,48 @@ const (
 	TWSEWDIslandIndex   TWSEWebDataset = "island_index"   // 寶島指數歷史（FRMSA，T182）
 	TWSEWDTotalReturn   TWSEWebDataset = "total_return"   // 加權報酬指數歷史（MFI94U，T183）
 	// 個股交易統計與權證（T166-T190）
-	TWSEWDMonthlyAvgAll  TWSEWebDataset = "monthly_avg_all"  // 月平均價全市場（STOCK_DAY_AVG_ALL，T168）
-	TWSEWDStockMonTrade  TWSEWebDataset = "stock_mon_trade"  // 個股月成交資訊（FMSRFK，T171）
-	TWSEWDStockYearHis   TWSEWebDataset = "stock_year_his"   // 個股歷年成交（FMNPTK，T173）
-	TWSEWDStockYearTrade TWSEWebDataset = "stock_year_trade" // 年度成交資訊全市場（FMNPTK_ALL，T174）
-	TWSEAPITopForeign    TWSEAPIDataset = "top_foreign"      // 外資持股前20（MI_QFIIS_sort_20，T185）
-	TWSEAPITwseNews      TWSEAPIDataset = "twse_news"        // 證交所新聞（news/newsList，T186）
-	TWSEAPITwseEvents    TWSEAPIDataset = "twse_events"      // 證交所活動訊息（news/eventList，T191）
-	TWSEAPIWarrantBasic  TWSEAPIDataset = "warrant_basic"    // 權證基本資料（t187ap37_L，T187）
-	TWSEAPIWarrantTrader TWSEAPIDataset = "warrant_trader"   // 權證流動量提供者（t187ap43_L，T189）
-	TWSEAPIWarrantIssue  TWSEAPIDataset = "warrant_issue"    // 權證年度發行統計（t187ap36_L，T190）
-	TWSEAPISecPenalty    TWSEAPIDataset = "sec_penalty"      // 證期局違規裁罰（t187ap22_L，T106）
-	TWSEAPIForeignApply  TWSEAPIDataset = "foreign_apply"    // 外國公司申請第一上市（company/applylistingForeign，T123）
-	TWSEAPILocalApply    TWSEAPIDataset = "local_apply"      // 本國公司申請上市（company/applylistingLocal，T138）
-	TWSEAPINewListing    TWSEAPIDataset = "new_listing"       // 最近上市公司（company/newlisting，T162）
-	TWSEAPISuspListing   TWSEAPIDataset = "suspend_listing"   // 終止上市公司（company/suspendListingCsvAndHtml，T178）
-	TWSEAPIInsiderPreann  TWSEAPIDataset = "insider_preann"   // 內部人持股轉讓事前申報（t187ap12_L，T078）
-	TWSEAPIInsiderUntrans TWSEAPIDataset = "insider_untrans"  // 內部人持股未轉讓（t187ap13_L，T079）
-	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"         // 董事酬金（t187ap29_A_L，T080）
+	TWSEWDMonthlyAvgAll   TWSEWebDataset = "monthly_avg_all"    // 月平均價全市場（STOCK_DAY_AVG_ALL，T168）
+	TWSEWDStockMonTrade   TWSEWebDataset = "stock_mon_trade"    // 個股月成交資訊（FMSRFK，T171）
+	TWSEWDStockYearHis    TWSEWebDataset = "stock_year_his"     // 個股歷年成交（FMNPTK，T173）
+	TWSEWDStockYearTrade  TWSEWebDataset = "stock_year_trade"   // 年度成交資訊全市場（FMNPTK_ALL，T174）
+	TWSEAPITopForeign     TWSEAPIDataset = "top_foreign"        // 外資持股前20（MI_QFIIS_sort_20，T185）
+	TWSEAPITwseNews       TWSEAPIDataset = "twse_news"          // 證交所新聞（news/newsList，T186）
+	TWSEAPITwseEvents     TWSEAPIDataset = "twse_events"        // 證交所活動訊息（news/eventList，T191）
+	TWSEAPIWarrantBasic   TWSEAPIDataset = "warrant_basic"      // 權證基本資料（t187ap37_L，T187）
+	TWSEAPIWarrantTrader  TWSEAPIDataset = "warrant_trader"     // 權證流動量提供者（t187ap43_L，T189）
+	TWSEAPIWarrantIssue   TWSEAPIDataset = "warrant_issue"      // 權證年度發行統計（t187ap36_L，T190）
+	TWSEAPISecPenalty     TWSEAPIDataset = "sec_penalty"        // 證期局違規裁罰（t187ap22_L，T106）
+	TWSEAPIForeignApply   TWSEAPIDataset = "foreign_apply"      // 外國公司申請第一上市（company/applylistingForeign，T123）
+	TWSEAPILocalApply     TWSEAPIDataset = "local_apply"        // 本國公司申請上市（company/applylistingLocal，T138）
+	TWSEAPINewListing     TWSEAPIDataset = "new_listing"        // 最近上市公司（company/newlisting，T162）
+	TWSEAPISuspListing    TWSEAPIDataset = "suspend_listing"    // 終止上市公司（company/suspendListingCsvAndHtml，T178）
+	TWSEAPIInsiderPreann  TWSEAPIDataset = "insider_preann"     // 內部人持股轉讓事前申報（t187ap12_L，T078）
+	TWSEAPIInsiderUntrans TWSEAPIDataset = "insider_untrans"    // 內部人持股未轉讓（t187ap13_L，T079）
+	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"           // 董事酬金（t187ap29_A_L，T080）
 	TWSEAPIMajorSharehold TWSEAPIDataset = "major_shareholders" // 持股逾10%大股東（t187ap02_L，T097）
 	// 財務與監理報表（T081，T083，T092，T094）
-	TWSEAPIEPSStats       TWSEAPIDataset = "eps_stats"        // EPS 統計（t187ap14_L，T083）
-	TWSEAPIIncCI          TWSEAPIDataset = "income_ci"        // 綜合損益表-一般業（t187ap06_L_ci，T092）
-	TWSEAPIIncBASI        TWSEAPIDataset = "income_basi"      // 金融業
-	TWSEAPIIncBD          TWSEAPIDataset = "income_bd"        // 證券期貨業
-	TWSEAPIIncFH          TWSEAPIDataset = "income_fh"        // 金控業
-	TWSEAPIIncINS         TWSEAPIDataset = "income_ins"       // 保險業
-	TWSEAPIIncMIM         TWSEAPIDataset = "income_mim"       // 異業
-	TWSEAPIDisclosureVio  TWSEAPIDataset = "disclosure_vio"   // 資訊揭露違法（t187ap23_L，T094）
+	TWSEAPIEPSStats      TWSEAPIDataset = "eps_stats"      // EPS 統計（t187ap14_L，T083）
+	TWSEAPIIncCI         TWSEAPIDataset = "income_ci"      // 綜合損益表-一般業（t187ap06_L_ci，T092）
+	TWSEAPIIncBASI       TWSEAPIDataset = "income_basi"    // 金融業
+	TWSEAPIIncBD         TWSEAPIDataset = "income_bd"      // 證券期貨業
+	TWSEAPIIncFH         TWSEAPIDataset = "income_fh"      // 金控業
+	TWSEAPIIncINS        TWSEAPIDataset = "income_ins"     // 保險業
+	TWSEAPIIncMIM        TWSEAPIDataset = "income_mim"     // 異業
+	TWSEAPIDisclosureVio TWSEAPIDataset = "disclosure_vio" // 資訊揭露違法（t187ap23_L，T094）
 	// 券商資料（T046-T054）
-	TWSEAPIBrokerBasic    TWSEAPIDataset = "broker_basic"     // 證券商基本資料（t187ap18，T046）
-	TWSEAPIBrokerBranch   TWSEAPIDataset = "broker_branch"    // 分公司基本資料（OpenData_BRK02，T047）
-	TWSEAPIBrokerElec     TWSEAPIDataset = "broker_elec"      // 電子式交易統計（t187ap19，T048）
-	TWSEAPIBrokerGender   TWSEAPIDataset = "broker_gender"    // 營業員男女人數（OpenData_BRK01，T049）
-	TWSEAPIBrokerHQ       TWSEAPIDataset = "broker_hq"        // 本公司基本資料（brokerList，T050）
-	TWSEAPIBrokerIncome   TWSEAPIDataset = "broker_income"    // 券商損益彙總（t187ap21，T051）
-	TWSEAPIBrokerMonthly  TWSEAPIDataset = "broker_monthly"   // 券商月報表（t187ap20，T052）
+	TWSEAPIBrokerBasic     TWSEAPIDataset = "broker_basic"     // 證券商基本資料（t187ap18，T046）
+	TWSEAPIBrokerBranch    TWSEAPIDataset = "broker_branch"    // 分公司基本資料（OpenData_BRK02，T047）
+	TWSEAPIBrokerElec      TWSEAPIDataset = "broker_elec"      // 電子式交易統計（t187ap19，T048）
+	TWSEAPIBrokerGender    TWSEAPIDataset = "broker_gender"    // 營業員男女人數（OpenData_BRK01，T049）
+	TWSEAPIBrokerHQ        TWSEAPIDataset = "broker_hq"        // 本公司基本資料（brokerList，T050）
+	TWSEAPIBrokerIncome    TWSEAPIDataset = "broker_income"    // 券商損益彙總（t187ap21，T051）
+	TWSEAPIBrokerMonthly   TWSEAPIDataset = "broker_monthly"   // 券商月報表（t187ap20，T052）
 	TWSEAPIBrokerPersonnel TWSEAPIDataset = "broker_personnel" // 從業人員統計（t187ap01，T053）
-	TWSEAPIBrokerRegInv   TWSEAPIDataset = "broker_reg_inv"   // 定期定額名單（secRegData，T054）
-	TWSEAPISupervisorAck  TWSEAPIDataset = "supervisor_ack"   // 財報監察人承認（t187ap31_L，T084）
-	TWSEAPIProfitability  TWSEAPIDataset = "profitability"    // 營益分析（t187ap17_L，T101/T102）
-	TWSEAPIAuditVariance  TWSEAPIDataset = "audit_variance"   // 財測查核差異（t187ap16_L，T103）
-	TWSEAPIForecastAchv   TWSEAPIDataset = "forecast_achv"    // 財測達成率（t187ap15_L，T104）
+	TWSEAPIBrokerRegInv    TWSEAPIDataset = "broker_reg_inv"   // 定期定額名單（secRegData，T054）
+	TWSEAPISupervisorAck   TWSEAPIDataset = "supervisor_ack"   // 財報監察人承認（t187ap31_L，T084）
+	TWSEAPIProfitability   TWSEAPIDataset = "profitability"    // 營益分析（t187ap17_L，T101/T102）
+	TWSEAPIAuditVariance   TWSEAPIDataset = "audit_variance"   // 財測查核差異（t187ap16_L，T103）
+	TWSEAPIForecastAchv    TWSEAPIDataset = "forecast_achv"    // 財測達成率（t187ap15_L，T104）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -186,15 +186,15 @@ var (
 	twseWebBase  = "https://www.twse.com.tw"
 	twseAPIBase  = "https://openapi.twse.com.tw/v1"
 	twseWebPaths = map[TWSEWebDataset]string{
-		TWSEWDDailyK:        "/rwd/afterTrading/STOCK_DAY",
-		TWSEWDMonthlyAvg:    "/rwd/afterTrading/STOCK_DAY_AVG",
-		TWSEWDMargin:        "/rwd/marginTrading/MI_MARGN",
-		TWSEWDInstitutional: "/rwd/fund/T86",
-		TWSEWDMarketClose:   "/rwd/afterTrading/MI_INDEX",
-		TWSEWDIndexHistory:  "/indicesReport/MI_5MINS_HIST",
-		TWSEWDBlockTrades:   "/rwd/block/BFIAUU_d",
-		TWSEWDBlockMonthly:  "/rwd/block/BFIAUU_m",
-		TWSEWDBlockYearly:   "/rwd/block/BFIAUU_y",
+		TWSEWDDailyK:          "/rwd/afterTrading/STOCK_DAY",
+		TWSEWDMonthlyAvg:      "/rwd/afterTrading/STOCK_DAY_AVG",
+		TWSEWDMargin:          "/rwd/marginTrading/MI_MARGN",
+		TWSEWDInstitutional:   "/rwd/fund/T86",
+		TWSEWDMarketClose:     "/rwd/afterTrading/MI_INDEX",
+		TWSEWDIndexHistory:    "/indicesReport/MI_5MINS_HIST",
+		TWSEWDBlockTrades:     "/rwd/block/BFIAUU_d",
+		TWSEWDBlockMonthly:    "/rwd/block/BFIAUU_m",
+		TWSEWDBlockYearly:     "/rwd/block/BFIAUU_y",
 		TWSEWDCrossMarket:     "/exchangeReport/MI_INDEX4",
 		TWSEWDDayTradeTargets: "/exchangeReport/TWTB4U",
 		TWSEWDFinProgAbn:      "/Announcement/BFZFZU_T",
@@ -216,20 +216,20 @@ var (
 		TWSEWDSBLTradesHis:    "/rwd/zh/afterTrading/TWTASU",
 		TWSEWDBondRedemption:  "/exchangeReport/BFI61U",
 		TWSEWDEtfRegInv:       "/ETFReport/ETFRank",
-		TWSEWDAbnormal:      "/rwd/announcement/notice",
-		TWSEWDForeignQFIIS:  "/rwd/fund/MI_QFIIS",
-		TWSEWDAfterHours:    "/exchangeReport/BFT41U",
+		TWSEWDAbnormal:        "/rwd/announcement/notice",
+		TWSEWDForeignQFIIS:    "/rwd/fund/MI_QFIIS",
+		TWSEWDAfterHours:      "/exchangeReport/BFT41U",
 		// ── 行情歷史與指數補齊（T140-T183）──
-		TWSEWDMarginInfo:    "/exchangeReport/MI_MARGN",
-		TWSEWDHoliday:       "/holidaySchedule/holidaySchedule",
-		TWSEWDRealTimeStats: "/exchangeReport/MI_5MINS",
-		TWSEWDTaiwan50:      "/indicesReport/TAI50I",
-		TWSEWDIslandIndex:   "/indicesReport/FRMSA",
-		TWSEWDTotalReturn:   "/indicesReport/MFI94U",
-		TWSEWDMonthlyAvgAll: "/exchangeReport/STOCK_DAY_AVG_ALL",
-		TWSEWDStockMonTrade: "/rwd/zh/afterTrading/FMSRFK",
-		TWSEWDStockYearHis:  "/rwd/zh/afterTrading/FMNPTK",
-		TWSEWDStockYearTrade:"/exchangeReport/FMNPTK_ALL",
+		TWSEWDMarginInfo:     "/exchangeReport/MI_MARGN",
+		TWSEWDHoliday:        "/holidaySchedule/holidaySchedule",
+		TWSEWDRealTimeStats:  "/exchangeReport/MI_5MINS",
+		TWSEWDTaiwan50:       "/indicesReport/TAI50I",
+		TWSEWDIslandIndex:    "/indicesReport/FRMSA",
+		TWSEWDTotalReturn:    "/indicesReport/MFI94U",
+		TWSEWDMonthlyAvgAll:  "/exchangeReport/STOCK_DAY_AVG_ALL",
+		TWSEWDStockMonTrade:  "/rwd/zh/afterTrading/FMSRFK",
+		TWSEWDStockYearHis:   "/rwd/zh/afterTrading/FMNPTK",
+		TWSEWDStockYearTrade: "/exchangeReport/FMNPTK_ALL",
 	}
 	twseAPIPaths = map[TWSEAPIDataset]string{
 		TWSEAPIDailyClose:      "/exchangeReport/STOCK_DAY_ALL",
@@ -239,27 +239,27 @@ var (
 		TWSEAPIESG:             "/opendata/t187ap46_L_%s", // topic 1..21
 		TWSEAPIGovernance:      "/opendata/t187ap32_L",
 		TWSEAPIPunish:          "/announcement/punish",
-		TWSEAPINoteTrans:       "/announcement/notetrans", // 注意累計次數異常（T193）
-		TWSEAPIValuation:       "/exchangeReport/BWIBBU_ALL", // 上市個股日本益比、殖利率及股價淨值比
-		TWSEAPIExDiv:           "/exchangeReport/TWT48U_ALL", // 除權除息預告表
-		TWSEAPIDividend:        "/opendata/t187ap45_L",       // 上市公司股利分派情形
-		TWSEAPITopForeign:      "/fund/MI_QFIIS_sort_20",  // 外資持股Top20（T185）
-		TWSEAPITwseNews:        "/news/newsList",          // 證交所新聞（T186）
-		TWSEAPITwseEvents:      "/news/eventList",         // 證交所活動訊息（T191）
-		TWSEAPIWarrantBasic:    "/opendata/t187ap37_L",    // 權證基本資料（T187）
-		TWSEAPIWarrantTrader:   "/opendata/t187ap43_L",    // 權證流動量提供者（T189）
-		TWSEAPIWarrantIssue:    "/opendata/t187ap36_L",    // 權證年度發行統計（T190）
-		TWSEAPISecPenalty:      "/opendata/t187ap22_L",    // 證期局裁罰（T106）
-		TWSEAPIForeignApply:    "/company/applylistingForeign", // 外國公司申請第一上市（T123）
-		TWSEAPINewListing:      "/company/newlisting",          // 最近上市公司（T162）
-		TWSEAPILocalApply:      "/company/applylistingLocal",   // 本國公司申請上市（T138）
+		TWSEAPINoteTrans:       "/announcement/notetrans",           // 注意累計次數異常（T193）
+		TWSEAPIValuation:       "/exchangeReport/BWIBBU_ALL",        // 上市個股日本益比、殖利率及股價淨值比
+		TWSEAPIExDiv:           "/exchangeReport/TWT48U_ALL",        // 除權除息預告表
+		TWSEAPIDividend:        "/opendata/t187ap45_L",              // 上市公司股利分派情形
+		TWSEAPITopForeign:      "/fund/MI_QFIIS_sort_20",            // 外資持股Top20（T185）
+		TWSEAPITwseNews:        "/news/newsList",                    // 證交所新聞（T186）
+		TWSEAPITwseEvents:      "/news/eventList",                   // 證交所活動訊息（T191）
+		TWSEAPIWarrantBasic:    "/opendata/t187ap37_L",              // 權證基本資料（T187）
+		TWSEAPIWarrantTrader:   "/opendata/t187ap43_L",              // 權證流動量提供者（T189）
+		TWSEAPIWarrantIssue:    "/opendata/t187ap36_L",              // 權證年度發行統計（T190）
+		TWSEAPISecPenalty:      "/opendata/t187ap22_L",              // 證期局裁罰（T106）
+		TWSEAPIForeignApply:    "/company/applylistingForeign",      // 外國公司申請第一上市（T123）
+		TWSEAPINewListing:      "/company/newlisting",               // 最近上市公司（T162）
+		TWSEAPILocalApply:      "/company/applylistingLocal",        // 本國公司申請上市（T138）
 		TWSEAPISuspListing:     "/company/suspendListingCsvAndHtml", // 終止上市公司（T178）
-		TWSEAPICumVoting:       "/opendata/t187ap34_L", // 累積投票制選任董監事彙總（T056）
-		TWSEAPIOwnScopeHalt:    "/opendata/t187ap26_L", // 經營權異動且營業範圍重大變更停止買賣（T057）
-		TWSEAPIOwnScopeTrade:   "/opendata/t187ap27_L", // 經營權異動且營業範圍重大變更列變更交易（T058）
-		TWSEAPIScopeChanges:    "/opendata/t187ap25_L", // 營業範圍重大變更公司（T060）
-		TWSEAPIIndepDirectors:  "/opendata/t187ap30_L", // 獨立董監事兼任情形彙總（T063）
-		TWSEAPIOwnershipChange: "/opendata/t187ap24_L", // 經營權異動公司（T064）
+		TWSEAPICumVoting:       "/opendata/t187ap34_L",              // 累積投票制選任董監事彙總（T056）
+		TWSEAPIOwnScopeHalt:    "/opendata/t187ap26_L",              // 經營權異動且營業範圍重大變更停止買賣（T057）
+		TWSEAPIOwnScopeTrade:   "/opendata/t187ap27_L",              // 經營權異動且營業範圍重大變更列變更交易（T058）
+		TWSEAPIScopeChanges:    "/opendata/t187ap25_L",              // 營業範圍重大變更公司（T060）
+		TWSEAPIIndepDirectors:  "/opendata/t187ap30_L",              // 獨立董監事兼任情形彙總（T063）
+		TWSEAPIOwnershipChange: "/opendata/t187ap24_L",              // 經營權異動公司（T064）
 		TWSEAPIBalCI:           "/opendata/t187ap07_L_ci",
 		TWSEAPIBalBASI:         "/opendata/t187ap07_L_basi",
 		TWSEAPIBalBD:           "/opendata/t187ap07_L_bd",
@@ -1491,7 +1491,7 @@ type AfterHoursRow struct {
 	Price       float64 `json:"price"`       // 成交價（元）
 	BidVolume   int64   `json:"bid_volume"`  // 最後揭示買量（股）
 	AskVolume   int64   `json:"ask_volume"`  // 最後揭示賣量（股）
-	Date        string  `json:"date"`         // YYYY-MM-DD（資料歸屬日）
+	Date        string  `json:"date"`        // YYYY-MM-DD（資料歸屬日）
 }
 
 // normalizeAfterHours：盤後定價交易（BFT41U，T040）。頂層 date 為資料歸屬日。

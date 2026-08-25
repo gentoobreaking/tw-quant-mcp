@@ -111,10 +111,10 @@ func (s *ETFDividendSource) ID() string { return "TWSE_ETF_DIVIDEND" }
 
 // etfDivResp 為 etfDiv 端點回應結構。
 type etfDivResp struct {
-	Status string        `json:"status"`
-	Title  string        `json:"title"`
-	Data   [][]string    `json:"data"`
-	Fields []string      `json:"fields"`
+	Status string     `json:"status"`
+	Title  string     `json:"title"`
+	Data   [][]string `json:"data"`
+	Fields []string   `json:"fields"`
 }
 
 // FetchDividend 取得 ETF 分配收益歷史。
@@ -142,11 +142,11 @@ func (s *ETFDividendSource) FetchDividend(ctx context.Context, code, startDate, 
 	}
 
 	var raw struct {
-	Status string          `json:"status"`
-	Title  string          `json:"title"`
-	Data   [][]interface{} `json:"data"`
-	Fields []string        `json:"fields"`
-}
+		Status string          `json:"status"`
+		Title  string          `json:"title"`
+		Data   [][]interface{} `json:"data"`
+		Fields []string        `json:"fields"`
+	}
 	if err := json.Unmarshal(resp.Body, &raw); err != nil {
 		return nil, fmt.Errorf("provider: ETFDividend JSON 解析失敗: %w", err)
 	}

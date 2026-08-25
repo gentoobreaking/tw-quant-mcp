@@ -945,8 +945,8 @@ func registerBCTools(r *Registry) {
 		Handler:  apiListSpec{ds: provider.TWSEAPIWarrantIssue}.handler(),
 	}) // T190
 	r.Register(ToolDef{
-		Symbol:      "get_twse_events",
-		Name:        "get_twse_events",
+		Symbol: "get_twse_events",
+		Name:   "get_twse_events",
 		Description: "查詢證交所活動訊息（業績發表會、產業講座等活動公告；TWSE-API news/eventList，T191）。" +
 			"top 為回傳筆數上限（預設 10，填 0 回傳全部）。每筆含 No（序號）、Title（標題）、Details（詳情連結）。",
 		Schema: map[string]any{
@@ -959,8 +959,8 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetTwseEvents,
 	}) // T191
 	r.Register(ToolDef{
-		Symbol:      "get_all_stocks_daily_close",
-		Name:        "get_all_stocks_daily_close",
+		Symbol: "get_all_stocks_daily_close",
+		Name:   "get_all_stocks_daily_close",
 		Description: "查詢指定日期全部上市股票的每日收盤行情（開高低收、成交量、本益比；TWSE-WEB MI_INDEX，T192）。" +
 			"與 get_stock_daily_quote（單一股票跨日）互補：此工具是「單一日期查全市場」快照。" +
 			"date 需為交易日；stock_no/name 為本地端過濾；limit/offset 分頁（預設 50）。",
@@ -979,8 +979,8 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetAllStocksDailyClose,
 	}) // T192
 	r.Register(ToolDef{
-		Symbol:      "get_abnormal_accumulated_notice_stocks",
-		Name:        "get_abnormal_accumulated_notice_stocks",
+		Symbol: "get_abnormal_accumulated_notice_stocks",
+		Name:   "get_abnormal_accumulated_notice_stocks",
 		Description: "查詢集中市場公布注意累計次數異常資訊（TWSE-API announcement/notetrans，T193）。" +
 			"與 get_attention_disposition_stocks（當日注意/處置清單）互補：本工具揭露近期符合注意處理標準之累計紀錄，適合風險掃描與短線避雷。" +
 			"清單含權證（kind 可過濾 stock/warrant）；name 關鍵字過濾；limit 預設 50、offset 分頁。",

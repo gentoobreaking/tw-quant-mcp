@@ -31,7 +31,7 @@ func stubMISQuoteFetch(_ context.Context, codes []string) ([]provider.RealtimeQu
 		out = append(out, provider.RealtimeQuote{
 			IntradayQuote: model.IntradayQuote{
 				Symbol: c,
-				Date: "2026-07-31", Time: "09:30:00", TradeTime: "09:30:00",
+				Date:   "2026-07-31", Time: "09:30:00", TradeTime: "09:30:00",
 				Last: last, Change: 1.0, ChangePct: 1.0,
 				Open: last - 2, High: last + 1, Low: last - 3, PrevClose: last - 1,
 				Volume: 500000, MinuteVol: 10000,

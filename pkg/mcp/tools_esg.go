@@ -326,7 +326,7 @@ func handlerGetESGReport(a *App, args map[string]any) (HandlerResult, error) {
 const esgRefineryField = "在人口密集地區的煉油廠數量(座)"
 
 // handlerGetRefineriesPopulatedAreas：人口密集區設有煉油廠之上市公司
-//（ESG topic 15，排除零值與 N/A；T065）。
+// （ESG topic 15，排除零值與 N/A；T065）。
 func handlerGetRefineriesPopulatedAreas(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	dataDate := a.now().Format("2006-01-02")

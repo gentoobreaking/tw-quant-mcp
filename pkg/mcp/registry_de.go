@@ -96,10 +96,10 @@ func registerDETools(r *Registry) {
 		Handler:  handlerGetESGReport,
 	})
 	r.Register(ToolDef{
-		Symbol:      "get_companies_with_refineries_in_populated_areas",
-		Name:        "get_companies_with_refineries_in_populated_areas",
+		Symbol: "get_companies_with_refineries_in_populated_areas",
+		Name:   "get_companies_with_refineries_in_populated_areas",
 		Description: "查詢所有已申報在人口密集區設有煉油廠的上市公司（排除零值及 N/A；" +
-			"TWSE-API ESG t187ap46_L_15，T065）。", 
+			"TWSE-API ESG t187ap46_L_15，T065）。",
 		Schema: map[string]any{
 			"type":       "object",
 			"properties": map[string]any{},
@@ -109,8 +109,8 @@ func registerDETools(r *Registry) {
 	}) // T065
 
 	r.Register(ToolDef{
-		Symbol:      "get_company_balance_sheet",
-		Name:        "get_company_balance_sheet",
+		Symbol: "get_company_balance_sheet",
+		Name:   "get_company_balance_sheet",
 		Description: "根據股票代號查詢上市公司資產負債表（TWSE-API t187ap07_L，T067）。" +
 			"自動偵測公司所屬產業並使用對應的財務報表格式（一般業、金融業、證券期貨業、金控業、保險業、異業）。",
 		Schema: map[string]any{
@@ -303,8 +303,8 @@ func registerDETools(r *Registry) {
 		Handler:     apiCompanySpec{ds: provider.TWSEAPIProfitability}.handler(),
 	}) // T101
 	r.Register(ToolDef{
-		Symbol:      "get_company_profitability_analysis_summary",
-		Name:        "get_company_profitability_analysis_summary",
+		Symbol: "get_company_profitability_analysis_summary",
+		Name:   "get_company_profitability_analysis_summary",
 		Description: "查詢上市公司營益分析彙總表（全體公司，支援排序與分頁；TWSE-API t187ap17_L，T102）。" +
 			"order_by 可用欄位：公司代號、公司名稱、年度、季別、營業收入(百萬元)、毛利率(%)(營業毛利)/(營業收入)等比率欄。",
 		Schema: map[string]any{
@@ -402,22 +402,22 @@ func registerDETools(r *Registry) {
 		Handler:     apiCompanySpec{ds: provider.TWSEAPIPubBoardHold, skipRegistryCheck: true}.handler(),
 	}) // T159
 	r.Register(ToolDef{
-		Symbol:      "get_public_company_income_statement",
-		Name:        "get_public_company_income_statement",
+		Symbol: "get_public_company_income_statement",
+		Name:   "get_public_company_income_statement",
 		Description: "根據股票代號查詢公開發行公司綜合損益表（TWSE-API t187ap06_X，T160）。" +
 			"自動偵測公司所屬產業並使用對應的財務報表格式。",
-		Schema:      compSchema(),
-		ReadOnly:    true,
-		Handler:     handlerGetPublicCompanyIncomeStatement,
+		Schema:   compSchema(),
+		ReadOnly: true,
+		Handler:  handlerGetPublicCompanyIncomeStatement,
 	}) // T160
 	r.Register(ToolDef{
-		Symbol:      "get_public_company_balance_sheet",
-		Name:        "get_public_company_balance_sheet",
+		Symbol: "get_public_company_balance_sheet",
+		Name:   "get_public_company_balance_sheet",
 		Description: "根據股票代號查詢公開發行公司資產負債表（TWSE-API t187ap07_X 系列，T158）。" +
 			"自動偵測公司所屬產業並使用對應的財務報表格式。",
-		Schema:      compSchema(),
-		ReadOnly:    true,
-		Handler:     handlerGetPublicCompanyBalanceSheet,
+		Schema:   compSchema(),
+		ReadOnly: true,
+		Handler:  handlerGetPublicCompanyBalanceSheet,
 	}) // T158
 
 	r.Register(ToolDef{
@@ -454,13 +454,13 @@ func registerDETools(r *Registry) {
 		Handler:     apiCompanySpec{ds: provider.TWSEAPIEPSStats}.handler(),
 	}) // T083
 	r.Register(ToolDef{
-		Symbol:      "get_company_income_statement",
-		Name:        "get_company_income_statement",
+		Symbol: "get_company_income_statement",
+		Name:   "get_company_income_statement",
 		Description: "根據股票代號查詢上市公司綜合損益表（TWSE-API t187ap06_L，T092）。" +
 			"自動偵測公司所屬產業並使用對應的財務報表格式（一般業、金融業、證券期貨業、金控業、保險業、異業）。",
-		Schema:      compSchema(),
-		ReadOnly:    true,
-		Handler:     handlerGetCompanyIncomeStatement,
+		Schema:   compSchema(),
+		ReadOnly: true,
+		Handler:  handlerGetCompanyIncomeStatement,
 	}) // T092
 	r.Register(ToolDef{
 		Symbol:      "get_company_information_disclosure_violations",
@@ -485,24 +485,24 @@ func registerDETools(r *Registry) {
 		symbol, name string
 		topic        int
 	}{
-		{"get_company_anticompetitive_litigation", "根據股票代號查詢上市公司訴訟、非訟與行政爭訟事項資訊（反競爭爭議）", 20},        // T066
-		{"get_company_climate_management", "根據股票代號查詢上市公司氣候相關財務揭露（TCFD）管理資訊", 8},                          // T074
-		{"get_company_community_relations", "根據股票代號查詢上市公司社區關懷與社會服務資訊", 15},                                      // T075
-		{"get_company_energy_management", "根據股票代號查詢上市公司能源管理資訊", 2},                                                        // T082
-		{"get_company_food_safety", "根據股票代號查詢上市公司食品安全資訊", 12},                                                              // T085
-		{"get_company_fuel_management", "根據股票代號查詢上市公司燃料管理資訊", 10},                                                          // T086
-		{"get_company_greenhouse_gas_emissions", "根據股票代號查詢上市公司溫室氣體排放資訊", 1},                                              // T089
-		{"get_company_human_development", "根據股票代號查詢上市公司人力發展資訊", 5},                                                          // T090
-		{"get_company_inclusive_finance", "根據股票代號查詢上市公司普惠金融資訊", 17},                                                          // T091
-		{"get_company_info_security", "根據股票代號查詢上市公司資通安全管理制度資訊", 16},                                                    // T093
-		{"get_company_investor_communications", "根據股票代號查詢上市公司投資人溝通資訊", 7},                                                  // T095
-		{"get_company_ownership_and_control", "根據股票代號查詢上市公司所有權及控制權資訊", 18},                                              // T098
-		{"get_company_product_lifecycle", "根據股票代號查詢上市公司產品生命週期資訊", 11},                                                      // T099
-		{"get_company_product_quality_safety", "根據股票代號查詢上市公司產品品質與安全資訊", 14},                                            // T100
-		{"get_company_risk_management", "根據股票代號查詢上市公司風險管理資訊", 19},                                                            // T105
-		{"get_company_supply_chain_management", "根據股票代號查詢上市公司供應鏈管理資訊", 13},                                              // T112
-		{"get_company_waste_management", "根據股票代號查詢上市公司廢棄物管理資訊", 4},                                                          // T113
-		{"get_company_water_management", "根據股票代號查詢上市公司水資源管理資訊", 3},                                                          // T114
+		{"get_company_anticompetitive_litigation", "根據股票代號查詢上市公司訴訟、非訟與行政爭訟事項資訊（反競爭爭議）", 20}, // T066
+		{"get_company_climate_management", "根據股票代號查詢上市公司氣候相關財務揭露（TCFD）管理資訊", 8},             // T074
+		{"get_company_community_relations", "根據股票代號查詢上市公司社區關懷與社會服務資訊", 15},                  // T075
+		{"get_company_energy_management", "根據股票代號查詢上市公司能源管理資訊", 2},                          // T082
+		{"get_company_food_safety", "根據股票代號查詢上市公司食品安全資訊", 12},                               // T085
+		{"get_company_fuel_management", "根據股票代號查詢上市公司燃料管理資訊", 10},                           // T086
+		{"get_company_greenhouse_gas_emissions", "根據股票代號查詢上市公司溫室氣體排放資訊", 1},                 // T089
+		{"get_company_human_development", "根據股票代號查詢上市公司人力發展資訊", 5},                          // T090
+		{"get_company_inclusive_finance", "根據股票代號查詢上市公司普惠金融資訊", 17},                         // T091
+		{"get_company_info_security", "根據股票代號查詢上市公司資通安全管理制度資訊", 16},                         // T093
+		{"get_company_investor_communications", "根據股票代號查詢上市公司投資人溝通資訊", 7},                   // T095
+		{"get_company_ownership_and_control", "根據股票代號查詢上市公司所有權及控制權資訊", 18},                  // T098
+		{"get_company_product_lifecycle", "根據股票代號查詢上市公司產品生命週期資訊", 11},                       // T099
+		{"get_company_product_quality_safety", "根據股票代號查詢上市公司產品品質與安全資訊", 14},                 // T100
+		{"get_company_risk_management", "根據股票代號查詢上市公司風險管理資訊", 19},                           // T105
+		{"get_company_supply_chain_management", "根據股票代號查詢上市公司供應鏈管理資訊", 13},                  // T112
+		{"get_company_waste_management", "根據股票代號查詢上市公司廢棄物管理資訊", 4},                          // T113
+		{"get_company_water_management", "根據股票代號查詢上市公司水資源管理資訊", 3},                          // T114
 	} {
 		r.Register(ToolDef{
 			Symbol:      e.symbol,
@@ -525,12 +525,12 @@ func registerDETools(r *Registry) {
 		Handler:  handlerGetCompaniesWithAnticompetitiveLosses,
 	}) // T059
 	r.Register(ToolDef{
-		Symbol:      "get_companies_with_csr_reports_103",
-		Name:        "get_companies_with_csr_reports_103",
+		Symbol: "get_companies_with_csr_reports_103",
+		Name:   "get_companies_with_csr_reports_103",
 		Description: "查詢民國103年應編製及申報企業社會責任報告書之公司（T061）。" +
 			"注意：官方資料源已下架，目前回明確錯誤訊息。",
 		Schema: map[string]any{
-			"type": "object",
+			"type":       "object",
 			"properties": map[string]any{},
 		},
 		ReadOnly: true,

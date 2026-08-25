@@ -24,14 +24,14 @@ loadtest:
 
 # T019：fixtures 錄製工具（-host all -date YYYYMMDD 錄製全部）
 fixtures:
-	go run ./cmd/fixtures -host all -date $$(date +%Y%m%d)
+	go run ./cmd/fixtures -host all -date "$$(date +%Y%m%d)"
 
 vet:
 	go vet ./...
 
 lint:
 	go vet ./...
-	@out="$$(gofmt -l .)"; if [ -n "$$out" ]; then echo "gofmt 需要格式化:"; echo "$$out"; exit 1; fi
+	./scripts/check_fmt.sh
 
 fmt:
 	gofmt -s -w .
@@ -78,3 +78,7 @@ snapshots-render:
 # 匯出 36 工具呼叫結果為 Markdown 報告（snapshots/REPORT.md）
 snapshots-report:
 	python3 ./scripts/export_snapshots_md.py
+
+# 重新彙出 docs/TOOL_CATALOG.md（真實 tools/list；工具數變動後執行）
+catalog:
+	./scripts/update_catalog.sh

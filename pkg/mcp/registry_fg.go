@@ -23,8 +23,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetFuturesDailyOHLC,
 	})
 	r.Register(ToolDef{
-		Symbol:      "get_daily_futures_market_report",
-		Name:        "get_daily_futures_market_report",
+		Symbol: "get_daily_futures_market_report",
+		Name:   "get_daily_futures_market_report",
 		Description: "查詢期貨每日交易行情，包含開高低收、成交量、未平倉量等資訊（TAIFEX-API DailyMarketReportFut，T117）。" +
 			"常用契約代碼：TX（臺指期貨）、MTX（小型臺指）等白名單契約；contract 留空可列出所有可用契約代碼。",
 		Schema: map[string]any{
@@ -37,8 +37,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetDailyFuturesMarketReport,
 	}) // T117
 	r.Register(ToolDef{
-		Symbol:      "get_daily_options_market_report",
-		Name:        "get_daily_options_market_report",
+		Symbol: "get_daily_options_market_report",
+		Name:   "get_daily_options_market_report",
 		Description: "查詢選擇權每日交易行情，篩選有成交量的履約價資料，按成交量由大到小排序（TAIFEX-API DailyMarketReportOpt，T118）。" +
 			"常用契約代碼：TXO（臺指選擇權）、TEO（電子選擇權）、TFO（金融選擇權）；contract 留空可列出所有可用契約代碼。",
 		Schema: map[string]any{
@@ -70,16 +70,16 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetFuturesHistory,
 	})
 	r.Register(ToolDef{
-		Symbol:      "get_futures_daily_history",
-		Name:        "get_futures_daily_history",
+		Symbol: "get_futures_daily_history",
+		Name:   "get_futures_daily_history",
 		Description: "查詢期貨每日OHLC歷史行情（可回溯查詢，非僅最新一日；TAIFEX-DL 下載頁回溯，T125）。" +
 			"contract 省略時預設 TX（臺股期貨）；回傳區間內每個交易日、每個到期月份、一般與盤後時段行情。",
 		Schema: map[string]any{
 			"type": "object",
 			"properties": map[string]any{
-				"contract":   map[string]any{"type": "string", "default": "TX", "description": "期貨契約代碼，預設 TX。常用：MTX、E4F（電子）、GXF（金融）"},
-				"start":      map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
-				"end":        map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）；區間跨度上限 366 日"},
+				"contract": map[string]any{"type": "string", "default": "TX", "description": "期貨契約代碼，預設 TX。常用：MTX、E4F（電子）、GXF（金融）"},
+				"start":    map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
+				"end":      map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）；區間跨度上限 366 日"},
 			},
 		},
 		ReadOnly: true,
@@ -103,8 +103,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetPutCallRatio,
 	})
 	r.Register(ToolDef{
-		Symbol:      "get_annual_trading_volume",
-		Name:        "get_annual_trading_volume",
+		Symbol: "get_annual_trading_volume",
+		Name:   "get_annual_trading_volume",
 		Description: "查詢各期貨商品年成交量統計（年度總成交量、交易日數、平均日成交量；TAIFEX-API，T041）。" +
 			"contract 省略則回傳全部商品。",
 		Schema: map[string]any{
@@ -117,11 +117,11 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetAnnualTradingVolume,
 	})
 	r.Register(ToolDef{
-		Symbol:      "get_monthly_trading_statistics",
-		Name:        "get_monthly_trading_statistics",
+		Symbol: "get_monthly_trading_statistics",
+		Name:   "get_monthly_trading_statistics",
 		Description: "查詢期貨市場月統計資料，依商品類別（股價指數、利率、商品、股票）分類，" +
 			"顯示各類型交易人（自營商、投信、外資、散戶等）的買賣量與月底未平倉量" +
-			"（TAIFEX-API MonthlyTradingStatisticsFutures，T148）。", 
+			"（TAIFEX-API MonthlyTradingStatisticsFutures，T148）。",
 		Schema: map[string]any{
 			"type":       "object",
 			"properties": map[string]any{},
@@ -175,8 +175,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalOptionsPositions,
 	})
 	r.Register(ToolDef{
-		Symbol:      "get_futures_institutional",
-		Name:        "get_futures_institutional",
+		Symbol: "get_futures_institutional",
+		Name:   "get_futures_institutional",
 		Description: "查詢三大法人期貨與選擇權每日交易資訊（期貨+選擇權合計；多空交易量/金額、未平倉與契約價值；" +
 			"TAIFEX-API DividedByFuturesAndOptionsBytheDate，T126）。date 省略為最新交易日。",
 		Schema: map[string]any{
@@ -189,8 +189,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetFuturesInstitutional,
 	}) // T126
 	r.Register(ToolDef{
-		Symbol:      "get_index_futures_margin",
-		Name:        "get_index_futures_margin",
+		Symbol: "get_index_futures_margin",
+		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +
 			"TAIFEX-API IndexFuturesAndOptionsMargining，T127）。contract 為中文商品名子字串（如「臺股期貨」），留空顯示全部。",
 		Schema: map[string]any{
@@ -203,8 +203,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetIndexFuturesMargin,
 	}) // T127
 	r.Register(ToolDef{
-		Symbol:      "get_institutional_fut_opt_split_history",
-		Name:        "get_institutional_fut_opt_split_history",
+		Symbol: "get_institutional_fut_opt_split_history",
+		Name:   "get_institutional_fut_opt_split_history",
 		Description: "查詢三大法人期貨與選擇權分計交易歷史（期貨、選擇權並列顯示，可回溯查詢；" +
 			"TAIFEX-DL futAndOptDateDown，T128）。與 get_institutional_total_history（合計）不同，" +
 			"本工具將期貨與選擇權之多空交易口數、契約金額（千元）、未平倉分開列出。區間不可超過 92 日。",
@@ -219,8 +219,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalFutOptSplitHistory,
 	}) // T128
 	r.Register(ToolDef{
-		Symbol:      "get_institutional_general",
-		Name:        "get_institutional_general",
+		Symbol: "get_institutional_general",
+		Name:   "get_institutional_general",
 		Description: "查詢三大法人（自營商、投信、外資）當日期貨與選擇權市場整體交易總表，" +
 			"包含交易量、交易金額（百萬元）、未平倉口數及契約價值（TAIFEX-API GeneralBytheDate，T129）。" +
 			"date 省略為最新交易日。",
@@ -234,8 +234,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalGeneral,
 	}) // T129
 	r.Register(ToolDef{
-		Symbol:      "get_institutional_total_history",
-		Name:        "get_institutional_total_history",
+		Symbol: "get_institutional_total_history",
+		Name:   "get_institutional_total_history",
 		Description: "查詢三大法人期貨與選擇權合計總表歷史（可回溯查詢；TAIFEX-DL totalTableDateDown，T130）。" +
 			"與 get_institutional_traders_by_futures_history（僅期貨）不同，本工具為期貨+選擇權合計數字。區間不可超過 92 日。",
 		Schema: map[string]any{
@@ -249,8 +249,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalTotalHistory,
 	}) // T130
 	r.Register(ToolDef{
-		Symbol:      "get_institutional_traders_by_futures",
-		Name:        "get_institutional_traders_by_futures",
+		Symbol: "get_institutional_traders_by_futures",
+		Name:   "get_institutional_traders_by_futures",
 		Description: "查詢三大法人依各期貨契約分類的交易資料，可觀察各期貨商品的法人買賣情況（" +
 			"TAIFEX-API DetailsOfFuturesContracts，T131）。contract_code 為中文契約名子字串（如「臺股期貨」），留空顯示全部。",
 		Schema: map[string]any{
@@ -263,8 +263,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalTradersByFutures,
 	}) // T131
 	r.Register(ToolDef{
-		Symbol:      "get_institutional_traders_by_futures_history",
-		Name:        "get_institutional_traders_by_futures_history",
+		Symbol: "get_institutional_traders_by_futures_history",
+		Name:   "get_institutional_traders_by_futures_history",
 		Description: "查詢三大法人期貨部位歷史資料（可回溯查詢；TAIFEX-DL futContractsDateDown，T132）。" +
 			"contract 為期貨契約代碼（TXF/MXF/EXF/FXF/TMF 等，預設 TXF），與日行情之 TX/MTX 為不同代碼系統。區間不可超過 92 日。",
 		Schema: map[string]any{
@@ -279,8 +279,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalTradersByFuturesHistory,
 	}) // T132
 	r.Register(ToolDef{
-		Symbol:      "get_large_traders_futures_history",
-		Name:        "get_large_traders_futures_history",
+		Symbol: "get_large_traders_futures_history",
+		Name:   "get_large_traders_futures_history",
 		Description: "查詢期貨大額交易人未沖銷部位歷史資料（可回溯查詢；TAIFEX-DL largeTraderFutDown，T135）。" +
 			"contract 為必填契約代碼（如 TX、MTX、TE、TF），由本工具取得資料後本地端篩選。區間不可超過 31 日。",
 		Schema: map[string]any{
@@ -295,8 +295,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetLargeTradersFuturesHistory,
 	}) // T135
 	r.Register(ToolDef{
-		Symbol:      "get_large_traders_futures_oi",
-		Name:        "get_large_traders_futures_oi",
+		Symbol: "get_large_traders_futures_oi",
+		Name:   "get_large_traders_futures_oi",
 		Description: "查詢期貨大額交易人（前五大、前十大）未沖銷部位資料，可觀察大戶持倉方向（" +
 			"TAIFEX-API OpenInterestOfLargeTradersFutures，T136）。contract 精確比對契約代碼，預設 TX；留空列出所有可用契約代碼。",
 		Schema: map[string]any{
@@ -309,8 +309,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetLargeTradersFuturesOI,
 	}) // T136
 	r.Register(ToolDef{
-		Symbol:      "get_large_traders_options_oi",
-		Name:        "get_large_traders_options_oi",
+		Symbol: "get_large_traders_options_oi",
+		Name:   "get_large_traders_options_oi",
 		Description: "查詢選擇權大額交易人（前五大、前十大）未沖銷部位資料，可觀察大戶選擇權布局（" +
 			"TAIFEX-API OpenInterestOfLargeTradersOptions，T137）。contract 精確比對契約代碼，預設 TXO；留空列出所有可用契約代碼。",
 		Schema: map[string]any{
@@ -324,8 +324,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetLargeTradersOptionsOI,
 	}) // T137
 	r.Register(ToolDef{
-		Symbol:      "get_options_daily_history",
-		Name:        "get_options_daily_history",
+		Symbol: "get_options_daily_history",
+		Name:   "get_options_daily_history",
 		Description: "查詢選擇權每日OHLC歷史行情（可回溯查詢；TAIFEX-DL dlOptDataDown，T150）。" +
 			"contract 預設 TXO。資料量龐大，建議指定 contract_month（如 202606、202606W1）；" +
 			"未指定且資料量過大時改為列出可用到期月份。區間跨度上限 366 日。",
@@ -343,8 +343,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetOptionsDailyHistory,
 	}) // T150
 	r.Register(ToolDef{
-		Symbol:      "get_options_delta",
-		Name:        "get_options_delta",
+		Symbol: "get_options_delta",
+		Name:   "get_options_delta",
 		Description: "查詢選擇權每日 Delta 值，了解各履約價的風險敏感度與隱含方向性（TAIFEX-API DailyOptionsDelta，T151）。" +
 			"contract 預設 TXO；contract_month 留空則列出可用月份；call_put 可篩選買賣權。",
 		Schema: map[string]any{
@@ -359,8 +359,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetOptionsDelta,
 	}) // T151
 	r.Register(ToolDef{
-		Symbol:      "get_options_oi_change",
-		Name:        "get_options_oi_change",
+		Symbol: "get_options_oi_change",
+		Name:   "get_options_oi_change",
 		Description: "查詢台指選擇權每日未平倉量增減，顯示今日與前一交易日的未平倉量及變化量（" +
 			"TAIFEX-API va01，T154）。未平倉大幅增加代表新部位建立，大幅減少代表部位了結或到期。",
 		Schema: map[string]any{
@@ -371,8 +371,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetOptionsOIChange,
 	}) // T154
 	r.Register(ToolDef{
-		Symbol:      "get_options_institutional_by_contract_history",
-		Name:        "get_options_institutional_by_contract_history",
+		Symbol: "get_options_institutional_by_contract_history",
+		Name:   "get_options_institutional_by_contract_history",
 		Description: "查詢三大法人各選擇權契約交易歷史（CALL+PUT合計，可回溯查詢；TAIFEX-DL optContractsDateDown，T152）。" +
 			"contract 為選擇權契約代碼（TXO/TEO/TFO 等，預設 TXO）。區間不可超過 92 日。",
 		Schema: map[string]any{
@@ -387,8 +387,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetOptionsInstiByContractHistory,
 	}) // T152
 	r.Register(ToolDef{
-		Symbol:      "get_options_institutional_calls_puts_history",
-		Name:        "get_options_institutional_calls_puts_history",
+		Symbol: "get_options_institutional_calls_puts_history",
+		Name:   "get_options_institutional_calls_puts_history",
 		Description: "查詢三大法人選擇權買賣權（CALL/PUT）分計交易歷史（可回溯查詢；TAIFEX-DL callsAndPutsDateDown，T153）。" +
 			"適合觀察外資對選擇權 CALL/PUT 布局隨時間的變化趨勢。contract 預設 TXO。區間不可超過 92 日。",
 		Schema: map[string]any{
@@ -403,8 +403,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetOptionsInstiCallsPutsHistory,
 	}) // T153
 	r.Register(ToolDef{
-		Symbol:      "get_stock_futures_margin",
-		Name:        "get_stock_futures_margin",
+		Symbol: "get_stock_futures_margin",
+		Name:   "get_stock_futures_margin",
 		Description: "查詢股票期貨保證金一覽表，顯示各股票期貨的保證金率及分組級距（" +
 			"TAIFEX-API SingleStockFuturesMargining，T167）。stock_code 可輸入股票代號（如 2330）或期貨契約代碼（如 CAF），留空顯示全部。",
 		Schema: map[string]any{
@@ -417,8 +417,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetStockFuturesMargin,
 	}) // T167
 	r.Register(ToolDef{
-		Symbol:      "get_institutional_traders_by_options",
-		Name:        "get_institutional_traders_by_options",
+		Symbol: "get_institutional_traders_by_options",
+		Name:   "get_institutional_traders_by_options",
 		Description: "查詢三大法人依各選擇權契約分類的交易資料，可觀察各選擇權商品的法人買賣情況（" +
 			"TAIFEX-API DetailsOfOptionsContracts，T133）。contract_code 為中文契約名子字串（如「臺指選擇權」），留空顯示全部。",
 		Schema: map[string]any{
@@ -431,8 +431,8 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalTradersByOptions,
 	}) // T133
 	r.Register(ToolDef{
-		Symbol:      "get_institutional_traders_calls_puts",
-		Name:        "get_institutional_traders_calls_puts",
+		Symbol: "get_institutional_traders_calls_puts",
+		Name:   "get_institutional_traders_calls_puts",
 		Description: "查詢三大法人選擇權買賣權分計交易資料，分別顯示 CALL 與 PUT 的法人持倉情況（" +
 			"TAIFEX-API DetailsOfCallsAndPuts，T134）。外資偏多時 CALL 淨多單會大幅增加。contract_code 留空顯示全部。",
 		Schema: map[string]any{

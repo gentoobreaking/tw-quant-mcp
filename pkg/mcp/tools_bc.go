@@ -1275,7 +1275,7 @@ func handlerGetAllStocksDailyClose(a *App, args map[string]any) (HandlerResult, 
 // 資訊（announcement/notetrans，T193）。與 get_attention_disposition_stocks
 // （當日注意/處置清單）互補：本工具揭露「近期符合注意處理標準」之累計紀錄。
 // 清單含權證（Code 為 6 碼），原樣回傳不靜默丟棄；kind 選填可供過濾
-//（"stock"=4 碼普通股、"warrant"=6 碼權證）。
+// （"stock"=4 碼普通股、"warrant"=6 碼權證）。
 func handlerGetAbnormalAccumulatedNoticeStocks(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	limit, offset := listPaging(args)

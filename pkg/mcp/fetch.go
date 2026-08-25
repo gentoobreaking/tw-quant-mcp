@@ -24,56 +24,56 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEWDInstitutional):    cache.DatasetInstitutional, // 與 TPEx institutional 同名
 	string(provider.TWSEWDMargin):           cache.DatasetMargin,        // 與 TPEx margin 同名
 	string(provider.TWSEWDAbnormal):         cache.DatasetAlertStock,
-	string(provider.TWSEWDAfterHours):       cache.DatasetDailyKLine, // 盤後定價交易：日頻快照（T040）
-	string(provider.TWSEWDBlockTrades):      cache.DatasetDailyKLine, // 鉅額交易日統計（T042）
-	string(provider.TWSEWDBlockMonthly):     cache.DatasetDailyKLine, // 鉅額交易月統計（T044）
-	string(provider.TWSEWDBlockYearly):      cache.DatasetDailyKLine, // 鉅額交易年統計（T045）
-	string(provider.TWSEWDCrossMarket):      cache.DatasetDailyKLine, // 跨市場成交（T115）
-	string(provider.TWSEWDDayTradeTargets):  cache.DatasetAlertStock, // 當沖標的（T116）
-	string(provider.TWSEWDFinProgAbn):       cache.DatasetAlertStock, // 異常推介個股（T121）
-	string(provider.TWSEWDSBLVolume):        cache.DatasetDailyKLine, // 借券賣出量（T119）
-	string(provider.TWSEWDFirstForeign):     cache.DatasetDailyKLine, // 第一上市外股（T122）
-	string(provider.TWSEWDMarginRestrict):   cache.DatasetCalendar,   // 停資停券預告（T139）
-	string(provider.TWSEWDGainLoss):         cache.DatasetDailyKLine, // 漲跌家數統計（T142）
-	string(provider.TWSEWDOddLot):           cache.DatasetDailyKLine, // 盤後零股（T149）
-	string(provider.TWSEWDTradingChanges):   cache.DatasetCalendar,   // 變更交易（T163）
-	string(provider.TWSEWDPriceChangeLim):   cache.DatasetValuation,  // 漲跌停參考價（T172）
-	string(provider.TWSEWDNewList5D):        cache.DatasetCalendar,   // 首五日無漲跌幅（T175）
-	string(provider.TWSEWDSuspDayTradeAnn):  cache.DatasetCalendar,   // 暫停當沖預告（T176）
+	string(provider.TWSEWDAfterHours):       cache.DatasetDailyKLine,    // 盤後定價交易：日頻快照（T040）
+	string(provider.TWSEWDBlockTrades):      cache.DatasetDailyKLine,    // 鉅額交易日統計（T042）
+	string(provider.TWSEWDBlockMonthly):     cache.DatasetDailyKLine,    // 鉅額交易月統計（T044）
+	string(provider.TWSEWDBlockYearly):      cache.DatasetDailyKLine,    // 鉅額交易年統計（T045）
+	string(provider.TWSEWDCrossMarket):      cache.DatasetDailyKLine,    // 跨市場成交（T115）
+	string(provider.TWSEWDDayTradeTargets):  cache.DatasetAlertStock,    // 當沖標的（T116）
+	string(provider.TWSEWDFinProgAbn):       cache.DatasetAlertStock,    // 異常推介個股（T121）
+	string(provider.TWSEWDSBLVolume):        cache.DatasetDailyKLine,    // 借券賣出量（T119）
+	string(provider.TWSEWDFirstForeign):     cache.DatasetDailyKLine,    // 第一上市外股（T122）
+	string(provider.TWSEWDMarginRestrict):   cache.DatasetCalendar,      // 停資停券預告（T139）
+	string(provider.TWSEWDGainLoss):         cache.DatasetDailyKLine,    // 漲跌家數統計（T142）
+	string(provider.TWSEWDOddLot):           cache.DatasetDailyKLine,    // 盤後零股（T149）
+	string(provider.TWSEWDTradingChanges):   cache.DatasetCalendar,      // 變更交易（T163）
+	string(provider.TWSEWDPriceChangeLim):   cache.DatasetValuation,     // 漲跌停參考價（T172）
+	string(provider.TWSEWDNewList5D):        cache.DatasetCalendar,      // 首五日無漲跌幅（T175）
+	string(provider.TWSEWDSuspDayTradeAnn):  cache.DatasetCalendar,      // 暫停當沖預告（T176）
 	string(provider.TWSEWDSuspDayTradeHis):  cache.DatasetTAIFEXHistory, // 暫停當沖歷史（T177）
-	string(provider.TWSEWDSuspended):        cache.DatasetCalendar,   // 暫停交易證券（T179）
-	string(provider.TWSEWDTopVolume):        cache.DatasetDailyKLine, // 成交量Top20（T184）
+	string(provider.TWSEWDSuspended):        cache.DatasetCalendar,      // 暫停交易證券（T179）
+	string(provider.TWSEWDTopVolume):        cache.DatasetDailyKLine,    // 成交量Top20（T184）
 	string(provider.TWSEWDInstiAmounts):     cache.DatasetInstitutional, // 法人買賣超金額歷史（T146）
-	string(provider.TWSEWDTurnoverHistory):  cache.DatasetDailyKLine, // 市場成交資訊歷史（T147）
-	string(provider.TWSEWDSLSBalanceHis):    cache.DatasetMargin,     // 融券借券餘額歷史（T164）
-	string(provider.TWSEWDSBLTradesHis):     cache.DatasetDailyKLine, // 借券賣出成交歷史（T165）
-	string(provider.TWSEWDBondRedemption):   cache.DatasetDailyKLine, // 中央登錄公債補息（T055）
-	string(provider.TWSEWDEtfRegInv):        cache.DatasetCalendar,   // 定期定額戶數統計排行（T120）
-	string(provider.TWSEAPICumVoting):       cache.DatasetCalendar,   // 累積投票制董監事彙總（T056）
-	string(provider.TWSEAPIOwnScopeHalt):    cache.DatasetCalendar,   // 經營權異動停止買賣（T057）
-	string(provider.TWSEAPIOwnScopeTrade):   cache.DatasetCalendar,   // 經營權異動列變更交易（T058）
-	string(provider.TWSEAPIScopeChanges):    cache.DatasetCalendar,   // 營業範圍重大變更公司（T060）
-	string(provider.TWSEAPIIndepDirectors):  cache.DatasetCalendar,   // 獨立董監事兼任彙總（T063）
-	string(provider.TWSEAPIOwnershipChange): cache.DatasetCalendar,   // 經營權異動公司（T064）
-	string(provider.TWSEAPIBalCI):           cache.DatasetFinancials, // 資產負債表（季頻，§5.2 財報 90d，T067）
-	string(provider.TWSEAPIBalBASI):         cache.DatasetFinancials, // 金融業
-	string(provider.TWSEAPIBalBD):           cache.DatasetFinancials, // 證券期貨業
-	string(provider.TWSEAPIBalFH):           cache.DatasetFinancials, // 金控業
-	string(provider.TWSEAPIBalINS):          cache.DatasetFinancials, // 保險業
-	string(provider.TWSEAPIBalMIM):          cache.DatasetFinancials, // 異業
-	string(provider.TWSEAPIBoardInsuff):     cache.DatasetCalendar,   // 董監持股不足（T069）
-	string(provider.TWSEAPIBoardInsuffCon):  cache.DatasetCalendar,   // 持股不足連續月份（T070）
-	string(provider.TWSEAPIBoardPledged):    cache.DatasetCalendar,   // 董監質權設定（T071）
-	string(provider.TWSEAPIBoardHoldings):   cache.DatasetCalendar,   // 董監持股餘額明細（T072）
-	string(provider.TWSEAPICEODualRole):     cache.DatasetCalendar,   // 董事長兼任總經理（T073）
-	string(provider.TWSEAPIDirCompCon):      cache.DatasetFinancials, // 合併董事酬金（T076）
-	string(provider.TWSEAPISupCompCon):      cache.DatasetFinancials, // 合併監察人酬金（T077）
-	string(provider.TWSEAPIInsiderPreann):   cache.DatasetCalendar,   // 內部人轉讓申報（T078）
-	string(provider.TWSEAPIInsiderUntrans):  cache.DatasetCalendar,   // 內部人未轉讓（T079）
-	string(provider.TWSEAPIDirComp):         cache.DatasetFinancials, // 董事酬金（T080）
-	string(provider.TWSEAPIMajorSharehold):  cache.DatasetCalendar,   // 大股東名單（T097）
-	string(provider.TWSEAPIEPSStats):        cache.DatasetFinancials, // EPS 統計（T083）
-	string(provider.TWSEAPIIncCI):           cache.DatasetFinancials, // 損益表-一般業（T092）
+	string(provider.TWSEWDTurnoverHistory):  cache.DatasetDailyKLine,    // 市場成交資訊歷史（T147）
+	string(provider.TWSEWDSLSBalanceHis):    cache.DatasetMargin,        // 融券借券餘額歷史（T164）
+	string(provider.TWSEWDSBLTradesHis):     cache.DatasetDailyKLine,    // 借券賣出成交歷史（T165）
+	string(provider.TWSEWDBondRedemption):   cache.DatasetDailyKLine,    // 中央登錄公債補息（T055）
+	string(provider.TWSEWDEtfRegInv):        cache.DatasetCalendar,      // 定期定額戶數統計排行（T120）
+	string(provider.TWSEAPICumVoting):       cache.DatasetCalendar,      // 累積投票制董監事彙總（T056）
+	string(provider.TWSEAPIOwnScopeHalt):    cache.DatasetCalendar,      // 經營權異動停止買賣（T057）
+	string(provider.TWSEAPIOwnScopeTrade):   cache.DatasetCalendar,      // 經營權異動列變更交易（T058）
+	string(provider.TWSEAPIScopeChanges):    cache.DatasetCalendar,      // 營業範圍重大變更公司（T060）
+	string(provider.TWSEAPIIndepDirectors):  cache.DatasetCalendar,      // 獨立董監事兼任彙總（T063）
+	string(provider.TWSEAPIOwnershipChange): cache.DatasetCalendar,      // 經營權異動公司（T064）
+	string(provider.TWSEAPIBalCI):           cache.DatasetFinancials,    // 資產負債表（季頻，§5.2 財報 90d，T067）
+	string(provider.TWSEAPIBalBASI):         cache.DatasetFinancials,    // 金融業
+	string(provider.TWSEAPIBalBD):           cache.DatasetFinancials,    // 證券期貨業
+	string(provider.TWSEAPIBalFH):           cache.DatasetFinancials,    // 金控業
+	string(provider.TWSEAPIBalINS):          cache.DatasetFinancials,    // 保險業
+	string(provider.TWSEAPIBalMIM):          cache.DatasetFinancials,    // 異業
+	string(provider.TWSEAPIBoardInsuff):     cache.DatasetCalendar,      // 董監持股不足（T069）
+	string(provider.TWSEAPIBoardInsuffCon):  cache.DatasetCalendar,      // 持股不足連續月份（T070）
+	string(provider.TWSEAPIBoardPledged):    cache.DatasetCalendar,      // 董監質權設定（T071）
+	string(provider.TWSEAPIBoardHoldings):   cache.DatasetCalendar,      // 董監持股餘額明細（T072）
+	string(provider.TWSEAPICEODualRole):     cache.DatasetCalendar,      // 董事長兼任總經理（T073）
+	string(provider.TWSEAPIDirCompCon):      cache.DatasetFinancials,    // 合併董事酬金（T076）
+	string(provider.TWSEAPISupCompCon):      cache.DatasetFinancials,    // 合併監察人酬金（T077）
+	string(provider.TWSEAPIInsiderPreann):   cache.DatasetCalendar,      // 內部人轉讓申報（T078）
+	string(provider.TWSEAPIInsiderUntrans):  cache.DatasetCalendar,      // 內部人未轉讓（T079）
+	string(provider.TWSEAPIDirComp):         cache.DatasetFinancials,    // 董事酬金（T080）
+	string(provider.TWSEAPIMajorSharehold):  cache.DatasetCalendar,      // 大股東名單（T097）
+	string(provider.TWSEAPIEPSStats):        cache.DatasetFinancials,    // EPS 統計（T083）
+	string(provider.TWSEAPIIncCI):           cache.DatasetFinancials,    // 損益表-一般業（T092）
 	string(provider.TWSEAPIIncBASI):         cache.DatasetFinancials,
 	string(provider.TWSEAPIIncBD):           cache.DatasetFinancials,
 	string(provider.TWSEAPIIncFH):           cache.DatasetFinancials,
@@ -94,45 +94,45 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIPubBalFH):        cache.DatasetFinancials,
 	string(provider.TWSEAPIPubBalINS):       cache.DatasetFinancials,
 	string(provider.TWSEAPIPubBalMIM):       cache.DatasetFinancials,
-	string(provider.TWSEAPISupervisorComp):  cache.DatasetFinancials, // 監察人酬金（T111）
-	string(provider.TWSEWDMonthlyAvgAll):    cache.DatasetDailyKLine, // 月平均價（T168）
-	string(provider.TWSEWDStockMonTrade):    cache.DatasetDailyKLine, // 個股月成交（T171）
-	string(provider.TWSEWDStockYearHis):     cache.DatasetDailyKLine, // 個股歷年成交（T173）
-	string(provider.TWSEWDStockYearTrade):   cache.DatasetDailyKLine, // 年度成交全市場（T174）
-	string(provider.TWSEAPITopForeign):      cache.DatasetForeignHold, // 外資持股Top20（T185）
+	string(provider.TWSEAPISupervisorComp):  cache.DatasetFinancials,   // 監察人酬金（T111）
+	string(provider.TWSEWDMonthlyAvgAll):    cache.DatasetDailyKLine,   // 月平均價（T168）
+	string(provider.TWSEWDStockMonTrade):    cache.DatasetDailyKLine,   // 個股月成交（T171）
+	string(provider.TWSEWDStockYearHis):     cache.DatasetDailyKLine,   // 個股歷年成交（T173）
+	string(provider.TWSEWDStockYearTrade):   cache.DatasetDailyKLine,   // 年度成交全市場（T174）
+	string(provider.TWSEAPITopForeign):      cache.DatasetForeignHold,  // 外資持股Top20（T185）
 	string(provider.TWSEAPITwseNews):        cache.DatasetMaterialNews, // 證交所新聞（T186）
 	string(provider.TWSEAPITwseEvents):      cache.DatasetMaterialNews, // 證交所活動訊息（T191）
 	string(provider.TWSEAPINoteTrans):       cache.DatasetAlertStock,   // 注意累計次數異常（T193）
-	string(provider.TWSEAPIWarrantBasic):    cache.DatasetCalendar,   // 權證基本資料（T187）
-	string(provider.TWSEAPIWarrantTrader):   cache.DatasetCalendar,   // 權證流動量提供者（T189）
-	string(provider.TWSEAPIWarrantIssue):    cache.DatasetCalendar,   // 權證發行統計（T190）
-	string(provider.TWSEAPISecPenalty):      cache.DatasetCalendar,   // 證期局裁罰（T106）
-	string(provider.TWSEAPIForeignApply):    cache.DatasetCalendar,   // 外國公司申請第一上市（T123）
-	string(provider.TWSEAPINewListing):      cache.DatasetCalendar,   // 最近上市公司（T162）
-	string(provider.TWSEAPILocalApply):      cache.DatasetCalendar,   // 本國公司申請上市（T138）
-	string(provider.TWSEAPISuspListing):     cache.DatasetCalendar,   // 終止上市公司（T178）
-	string(provider.TWSEWDMarginInfo):       cache.DatasetMargin,     // 信用交易統計（T140）
-	string(provider.TWSEWDHoliday):          cache.DatasetCalendar,   // 開休市日期（T144）
-	string(provider.TWSEWDRealTimeStats):    cache.DatasetMISSnapshot, // 5秒成交統計（盤中即時，T161）
-	string(provider.TWSEWDTaiwan50):         cache.DatasetDailyKLine, // 臺灣50指數歷史（T181）
-	string(provider.TWSEWDIslandIndex):      cache.DatasetDailyKLine, // 寶島指數歷史（T182）
-	string(provider.TWSEWDTotalReturn):      cache.DatasetDailyKLine, // 報酬指數歷史（T183）
-	string(provider.TWSEAPIMeetingAnn):      cache.DatasetCalendar,   // 股東會公告（T107/T108）
-	string(provider.TWSEAPIMeetingDates):    cache.DatasetCalendar,   // 股東會日期地點（T109）
-	string(provider.TWSEAPIProposalExer):    cache.DatasetCalendar,   // 提案權行使（T110）
-	string(provider.TWSEAPIBrokerBasic):     cache.DatasetCalendar,   // 券商基本資料（T046）
-	string(provider.TWSEAPIBrokerBranch):    cache.DatasetCalendar,   // 券商分公司（T047）
-	string(provider.TWSEAPIBrokerElec):      cache.DatasetCalendar,   // 電子交易統計（T048）
-	string(provider.TWSEAPIBrokerGender):    cache.DatasetCalendar,   // 營業員性別統計（T049）
-	string(provider.TWSEAPIBrokerHQ):        cache.DatasetCalendar,   // 券商本公司（T050）
-	string(provider.TWSEAPIBrokerIncome):    cache.DatasetCalendar,   // 券商損益（T051）
-	string(provider.TWSEAPIBrokerMonthly):   cache.DatasetCalendar,   // 券商月報表（T052）
-	string(provider.TWSEAPIBrokerPersonnel): cache.DatasetCalendar,   // 從業人員統計（T053）
-	string(provider.TWSEAPIBrokerRegInv):    cache.DatasetCalendar,   // 定期定額名單（T054）
-	string(provider.TWSEAPISupervisorAck):   cache.DatasetCalendar,   // 財報監察人承認（T084）
-	string(provider.TWSEAPIProfitability):   cache.DatasetFinancials, // 營益分析（季頻，T101/T102）
-	string(provider.TWSEAPIAuditVariance):   cache.DatasetFinancials, // 財測查核差異（T103）
-	string(provider.TWSEAPIForecastAchv):    cache.DatasetFinancials, // 財測達成率（T104）
+	string(provider.TWSEAPIWarrantBasic):    cache.DatasetCalendar,     // 權證基本資料（T187）
+	string(provider.TWSEAPIWarrantTrader):   cache.DatasetCalendar,     // 權證流動量提供者（T189）
+	string(provider.TWSEAPIWarrantIssue):    cache.DatasetCalendar,     // 權證發行統計（T190）
+	string(provider.TWSEAPISecPenalty):      cache.DatasetCalendar,     // 證期局裁罰（T106）
+	string(provider.TWSEAPIForeignApply):    cache.DatasetCalendar,     // 外國公司申請第一上市（T123）
+	string(provider.TWSEAPINewListing):      cache.DatasetCalendar,     // 最近上市公司（T162）
+	string(provider.TWSEAPILocalApply):      cache.DatasetCalendar,     // 本國公司申請上市（T138）
+	string(provider.TWSEAPISuspListing):     cache.DatasetCalendar,     // 終止上市公司（T178）
+	string(provider.TWSEWDMarginInfo):       cache.DatasetMargin,       // 信用交易統計（T140）
+	string(provider.TWSEWDHoliday):          cache.DatasetCalendar,     // 開休市日期（T144）
+	string(provider.TWSEWDRealTimeStats):    cache.DatasetMISSnapshot,  // 5秒成交統計（盤中即時，T161）
+	string(provider.TWSEWDTaiwan50):         cache.DatasetDailyKLine,   // 臺灣50指數歷史（T181）
+	string(provider.TWSEWDIslandIndex):      cache.DatasetDailyKLine,   // 寶島指數歷史（T182）
+	string(provider.TWSEWDTotalReturn):      cache.DatasetDailyKLine,   // 報酬指數歷史（T183）
+	string(provider.TWSEAPIMeetingAnn):      cache.DatasetCalendar,     // 股東會公告（T107/T108）
+	string(provider.TWSEAPIMeetingDates):    cache.DatasetCalendar,     // 股東會日期地點（T109）
+	string(provider.TWSEAPIProposalExer):    cache.DatasetCalendar,     // 提案權行使（T110）
+	string(provider.TWSEAPIBrokerBasic):     cache.DatasetCalendar,     // 券商基本資料（T046）
+	string(provider.TWSEAPIBrokerBranch):    cache.DatasetCalendar,     // 券商分公司（T047）
+	string(provider.TWSEAPIBrokerElec):      cache.DatasetCalendar,     // 電子交易統計（T048）
+	string(provider.TWSEAPIBrokerGender):    cache.DatasetCalendar,     // 營業員性別統計（T049）
+	string(provider.TWSEAPIBrokerHQ):        cache.DatasetCalendar,     // 券商本公司（T050）
+	string(provider.TWSEAPIBrokerIncome):    cache.DatasetCalendar,     // 券商損益（T051）
+	string(provider.TWSEAPIBrokerMonthly):   cache.DatasetCalendar,     // 券商月報表（T052）
+	string(provider.TWSEAPIBrokerPersonnel): cache.DatasetCalendar,     // 從業人員統計（T053）
+	string(provider.TWSEAPIBrokerRegInv):    cache.DatasetCalendar,     // 定期定額名單（T054）
+	string(provider.TWSEAPISupervisorAck):   cache.DatasetCalendar,     // 財報監察人承認（T084）
+	string(provider.TWSEAPIProfitability):   cache.DatasetFinancials,   // 營益分析（季頻，T101/T102）
+	string(provider.TWSEAPIAuditVariance):   cache.DatasetFinancials,   // 財測查核差異（T103）
+	string(provider.TWSEAPIForecastAchv):    cache.DatasetFinancials,   // 財測達成率（T104）
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,
@@ -143,9 +143,9 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIIndices):         cache.DatasetDailyKLine, // 指數收盤同 daily_kline 政策
 	string(provider.TPExDailyClose):         cache.DatasetDailyKLine,
 	string(provider.TPExOtcDaily):           cache.DatasetDailyKLine, // 上櫃收盤行情（T155）
-	string(model.TAOptionsDelta):         cache.DatasetCalendar,   // 選擇權 Delta（T151）
-	string(model.TAOIChange):             cache.DatasetCalendar,   // 台指選擇權 OI 增減（T154）
-	string(model.TAStockMargin):          cache.DatasetCalendar,   // 股票期貨保證金（T167）
+	string(model.TAOptionsDelta):            cache.DatasetCalendar,   // 選擇權 Delta（T151）
+	string(model.TAOIChange):                cache.DatasetCalendar,   // 台指選擇權 OI 增減（T154）
+	string(model.TAStockMargin):             cache.DatasetCalendar,   // 股票期貨保證金（T167）
 	string(provider.TPExAttention):          cache.DatasetAlertStock,
 	string(provider.TPExDisposition):        cache.DatasetAlertStock,
 	// MOPS Open Data（T012）

@@ -10,26 +10,26 @@ type TAIFEXDataset string
 
 // TAIFEX 資料集（§2 TAIFEX-API / §9.2 TAIFEX-DL）。
 const (
-	TAFuturesDaily   TAIFEXDataset = "futures_daily"    // 期貨每日 OHLC
-	TAOptionsDaily   TAIFEXDataset = "options_daily"    // 選擇權每日 OHLC
-	TAInstiFutures   TAIFEXDataset = "insti_futures"    // 三大法人期貨部位
-	TAInstiOptions   TAIFEXDataset = "insti_options"    // 三大法人選擇權部位
-	TAInstiDivided   TAIFEXDataset = "insti_divided"    // 三大法人期貨與選擇權合計每日交易資訊（T126）
-	TAInstiGeneral   TAIFEXDataset = "insti_general"    // 三大法人整體交易總表（CSV，T129）
-	TAInstiCallsPuts TAIFEXDataset = "insti_calls_puts" // 三大法人選擇權買賣權分計明細（T134）
-	TAInstiFutOptSplit TAIFEXDataset = "insti_fut_opt_split" // 三大法人期貨/選擇權分計歷史（僅 DL，T128）
-	TAInstiTotal       TAIFEXDataset = "insti_total"        // 三大法人期貨+選擇權合計總表歷史（僅 DL，T130）
-	TAOptionsDelta     TAIFEXDataset = "options_delta"     // 選擇權每日 Delta（僅 API，T151）
-	TAOIChange         TAIFEXDataset = "oi_change"         // 台指選擇權未平倉量增減（僅 API，T154）
+	TAFuturesDaily     TAIFEXDataset = "futures_daily"         // 期貨每日 OHLC
+	TAOptionsDaily     TAIFEXDataset = "options_daily"         // 選擇權每日 OHLC
+	TAInstiFutures     TAIFEXDataset = "insti_futures"         // 三大法人期貨部位
+	TAInstiOptions     TAIFEXDataset = "insti_options"         // 三大法人選擇權部位
+	TAInstiDivided     TAIFEXDataset = "insti_divided"         // 三大法人期貨與選擇權合計每日交易資訊（T126）
+	TAInstiGeneral     TAIFEXDataset = "insti_general"         // 三大法人整體交易總表（CSV，T129）
+	TAInstiCallsPuts   TAIFEXDataset = "insti_calls_puts"      // 三大法人選擇權買賣權分計明細（T134）
+	TAInstiFutOptSplit TAIFEXDataset = "insti_fut_opt_split"   // 三大法人期貨/選擇權分計歷史（僅 DL，T128）
+	TAInstiTotal       TAIFEXDataset = "insti_total"           // 三大法人期貨+選擇權合計總表歷史（僅 DL，T130）
+	TAOptionsDelta     TAIFEXDataset = "options_delta"         // 選擇權每日 Delta（僅 API，T151）
+	TAOIChange         TAIFEXDataset = "oi_change"             // 台指選擇權未平倉量增減（僅 API，T154）
 	TAOptInstiByCont   TAIFEXDataset = "opt_insti_by_contract" // 三大法人各選擇權契約交易歷史（僅 DL，T152）
-	TAInstiCPHist      TAIFEXDataset = "insti_cp_hist"      // 三大法人選擇權買賣權分計歷史（僅 DL，T153）
-	TAStockMargin      TAIFEXDataset = "stock_margin"       // 股票期貨保證金一覽表（僅 API，T167）
-	TALargeTraderFut TAIFEXDataset = "large_trader_fut" // 大額交易人期貨未沖銷部位
-	TALargeTraderOpt TAIFEXDataset = "large_trader_opt" // 大額交易人選擇權未沖銷部位
-	TAPutCallRatio   TAIFEXDataset = "put_call_ratio"   // 買賣權比（PCR）
-	TAMargin         TAIFEXDataset = "margin"           // 保證金（僅 API）
-	TAFAnnualVolume  TAIFEXDataset = "annual_volume"    // 年成交量統計（僅 API，T041）
-	TAFMonthlyStats  TAIFEXDataset = "monthly_stats_futures" // 期貨各類交易人月統計（僅 API，T148）
+	TAInstiCPHist      TAIFEXDataset = "insti_cp_hist"         // 三大法人選擇權買賣權分計歷史（僅 DL，T153）
+	TAStockMargin      TAIFEXDataset = "stock_margin"          // 股票期貨保證金一覽表（僅 API，T167）
+	TALargeTraderFut   TAIFEXDataset = "large_trader_fut"      // 大額交易人期貨未沖銷部位
+	TALargeTraderOpt   TAIFEXDataset = "large_trader_opt"      // 大額交易人選擇權未沖銷部位
+	TAPutCallRatio     TAIFEXDataset = "put_call_ratio"        // 買賣權比（PCR）
+	TAMargin           TAIFEXDataset = "margin"                // 保證金（僅 API）
+	TAFAnnualVolume    TAIFEXDataset = "annual_volume"         // 年成交量統計（僅 API，T041）
+	TAFMonthlyStats    TAIFEXDataset = "monthly_stats_futures" // 期貨各類交易人月統計（僅 API，T148）
 )
 
 // FuturesDailyRow 為單一期貨契約之日交易行情。
@@ -97,72 +97,72 @@ type InstitutionalRow struct {
 // InstiSplitRow 為三大法人期貨/選擇權分計之單日單身份別列（僅 DL，T128）。
 // 期貨與選擇權並列，金額單位千元。
 type InstiSplitRow struct {
-	Date          string  `json:"date"`            // YYYY-MM-DD
-	Investor      string  `json:"investor"`        // 身份別（自營商 / 投信 / 外資及陸資）
-	FutLongVol    int64   `json:"fut_long_vol"`    // 期貨多方交易口數
-	OptLongVol    int64   `json:"opt_long_vol"`    // 選擇權多方交易口數
-	FutLongValue  float64 `json:"fut_long_value"`  // 期貨多方交易契約金額（千元）
-	OptLongValue  float64 `json:"opt_long_value"`  // 選擇權多方交易契約金額（千元）
-	FutShortVol   int64   `json:"fut_short_vol"`   // 期貨空方交易口數
-	OptShortVol   int64   `json:"opt_short_vol"`   // 選擇權空方交易口數
-	FutShortValue float64 `json:"fut_short_value"` // 期貨空方交易契約金額（千元）
-	OptShortValue float64 `json:"opt_short_value"` // 選擇權空方交易契約金額（千元）
-	FutNetVol     int64   `json:"fut_net_vol"`     // 期貨多空交易口數淨額
-	OptNetVol     int64   `json:"opt_net_vol"`     // 選擇權多空交易口數淨額
-	FutNetValue   float64 `json:"fut_net_value"`   // 期貨多空交易契約金額淨額（千元）
-	OptNetValue   float64 `json:"opt_net_value"`   // 選擇權多空交易契約金額淨額（千元）
-	FutOILong     int64   `json:"fut_oi_long"`     // 期貨多方未平倉口數
-	OptOILong     int64   `json:"opt_oi_long"`     // 選擇權多方未平倉口數
-	FutOILongVal  float64 `json:"fut_oi_long_val"` // 期貨多方未平倉契約金額（千元）
-	OptOILongVal  float64 `json:"opt_oi_long_val"` // 選擇權多方未平倉契約金額（千元）
-	FutOIShort    int64   `json:"fut_oi_short"`    // 期貨空方未平倉口數
-	OptOIShort    int64   `json:"opt_oi_short"`    // 選擇權空方未平倉口數
+	Date          string  `json:"date"`             // YYYY-MM-DD
+	Investor      string  `json:"investor"`         // 身份別（自營商 / 投信 / 外資及陸資）
+	FutLongVol    int64   `json:"fut_long_vol"`     // 期貨多方交易口數
+	OptLongVol    int64   `json:"opt_long_vol"`     // 選擇權多方交易口數
+	FutLongValue  float64 `json:"fut_long_value"`   // 期貨多方交易契約金額（千元）
+	OptLongValue  float64 `json:"opt_long_value"`   // 選擇權多方交易契約金額（千元）
+	FutShortVol   int64   `json:"fut_short_vol"`    // 期貨空方交易口數
+	OptShortVol   int64   `json:"opt_short_vol"`    // 選擇權空方交易口數
+	FutShortValue float64 `json:"fut_short_value"`  // 期貨空方交易契約金額（千元）
+	OptShortValue float64 `json:"opt_short_value"`  // 選擇權空方交易契約金額（千元）
+	FutNetVol     int64   `json:"fut_net_vol"`      // 期貨多空交易口數淨額
+	OptNetVol     int64   `json:"opt_net_vol"`      // 選擇權多空交易口數淨額
+	FutNetValue   float64 `json:"fut_net_value"`    // 期貨多空交易契約金額淨額（千元）
+	OptNetValue   float64 `json:"opt_net_value"`    // 選擇權多空交易契約金額淨額（千元）
+	FutOILong     int64   `json:"fut_oi_long"`      // 期貨多方未平倉口數
+	OptOILong     int64   `json:"opt_oi_long"`      // 選擇權多方未平倉口數
+	FutOILongVal  float64 `json:"fut_oi_long_val"`  // 期貨多方未平倉契約金額（千元）
+	OptOILongVal  float64 `json:"opt_oi_long_val"`  // 選擇權多方未平倉契約金額（千元）
+	FutOIShort    int64   `json:"fut_oi_short"`     // 期貨空方未平倉口數
+	OptOIShort    int64   `json:"opt_oi_short"`     // 選擇權空方未平倉口數
 	FutOIShortVal float64 `json:"fut_oi_short_val"` // 期貨空方未平倉契約金額（千元）
 	OptOIShortVal float64 `json:"opt_oi_short_val"` // 選擇權空方未平倉契約金額（千元）
-	FutOINet      int64   `json:"fut_oi_net"`      // 期貨多空未平倉口數淨額
-	OptOINet      int64   `json:"opt_oi_net"`      // 選擇權多空未平倉口數淨額
-	FutOINetVal   float64 `json:"fut_oi_net_val"`  // 期貨多空未平倉契約金額淨額（千元）
-	OptOINetVal   float64 `json:"opt_oi_net_val"`  // 選擇權多空未平倉契約金額淨額（千元）
+	FutOINet      int64   `json:"fut_oi_net"`       // 期貨多空未平倉口數淨額
+	OptOINet      int64   `json:"opt_oi_net"`       // 選擇權多空未平倉口數淨額
+	FutOINetVal   float64 `json:"fut_oi_net_val"`   // 期貨多空未平倉契約金額淨額（千元）
+	OptOINetVal   float64 `json:"opt_oi_net_val"`   // 選擇權多空未平倉契約金額淨額（千元）
 }
 
 // InstiGeneralRow 為三大法人整體交易總表（期貨+選擇權合計，T129）。
 // 金額單位百萬元。
 type InstiGeneralRow struct {
-	Date         string  `json:"date"`          // YYYY-MM-DD
-	Investor     string  `json:"investor"`      // 身份別
-	LongVolume   int64   `json:"long_volume"`   // 多方交易口數
-	LongValue    float64 `json:"long_value"`    // 多方交易契約金額（百萬元）
-	ShortVolume  int64   `json:"short_volume"`  // 空方交易口數
-	ShortValue   float64 `json:"short_value"`   // 空方交易契約金額（百萬元）
-	NetVolume    int64   `json:"net_volume"`    // 多空交易口數淨額
-	NetValue     float64 `json:"net_value"`     // 多空交易契約金額淨額（百萬元）
-	OILong       int64   `json:"oi_long"`       // 多方未平倉口數
-	OILongValue  float64 `json:"oi_long_value"` // 多方未平倉契約金額（百萬元）
-	OIShort      int64   `json:"oi_short"`      // 空方未平倉口數
+	Date         string  `json:"date"`           // YYYY-MM-DD
+	Investor     string  `json:"investor"`       // 身份別
+	LongVolume   int64   `json:"long_volume"`    // 多方交易口數
+	LongValue    float64 `json:"long_value"`     // 多方交易契約金額（百萬元）
+	ShortVolume  int64   `json:"short_volume"`   // 空方交易口數
+	ShortValue   float64 `json:"short_value"`    // 空方交易契約金額（百萬元）
+	NetVolume    int64   `json:"net_volume"`     // 多空交易口數淨額
+	NetValue     float64 `json:"net_value"`      // 多空交易契約金額淨額（百萬元）
+	OILong       int64   `json:"oi_long"`        // 多方未平倉口數
+	OILongValue  float64 `json:"oi_long_value"`  // 多方未平倉契約金額（百萬元）
+	OIShort      int64   `json:"oi_short"`       // 空方未平倉口數
 	OIShortValue float64 `json:"oi_short_value"` // 空方未平倉契約金額（百萬元）
-	OINet        int64   `json:"oi_net"`        // 多空未平倉口數淨額
-	OINetValue   float64 `json:"oi_net_value"`  // 多空未平倉契約金額淨額（百萬元）
+	OINet        int64   `json:"oi_net"`         // 多空未平倉口數淨額
+	OINetValue   float64 `json:"oi_net_value"`   // 多空未平倉契約金額淨額（百萬元）
 }
 
 // InstiCPRow 為三大法人選擇權買賣權（CALL/PUT）分計歷史之單列（T153）。
 // 金額單位千元。
 type InstiCPRow struct {
-	Date         string  `json:"date"`           // YYYY-MM-DD
-	Contract     string  `json:"contract"`       // 商品名稱
-	CallPut      string  `json:"call_put"`       // CALL / PUT
-	Investor     string  `json:"investor"`       // 身份別
-	BuyVolume    int64   `json:"buy_volume"`     // 買方交易口數
-	BuyValue     float64 `json:"buy_value"`      // 買方交易契約金額（千元）
-	SellVolume   int64   `json:"sell_volume"`    // 賣方交易口數
-	SellValue    float64 `json:"sell_value"`     // 賣方交易契約金額（千元）
-	NetVolume    int64   `json:"net_volume"`     // 交易口數買賣淨額
-	NetValue     float64 `json:"net_value"`      // 交易契約金額買賣淨額（千元）
-	OIBuy        int64   `json:"oi_buy"`         // 買方未平倉口數
-	OIBuyValue   float64 `json:"oi_buy_value"`   // 買方未平倉契約金額（千元）
-	OISell       int64   `json:"oi_sell"`        // 賣方未平倉口數
-	OISellValue  float64 `json:"oi_sell_value"`  // 賣方未平倉契約金額（千元）
-	OINetBuy     int64   `json:"oi_net_buy"`     // 未平倉口數買賣淨額
-	OINetValue   float64 `json:"oi_net_value"`   // 未平倉契約金額買賣淨額（千元）
+	Date        string  `json:"date"`          // YYYY-MM-DD
+	Contract    string  `json:"contract"`      // 商品名稱
+	CallPut     string  `json:"call_put"`      // CALL / PUT
+	Investor    string  `json:"investor"`      // 身份別
+	BuyVolume   int64   `json:"buy_volume"`    // 買方交易口數
+	BuyValue    float64 `json:"buy_value"`     // 買方交易契約金額（千元）
+	SellVolume  int64   `json:"sell_volume"`   // 賣方交易口數
+	SellValue   float64 `json:"sell_value"`    // 賣方交易契約金額（千元）
+	NetVolume   int64   `json:"net_volume"`    // 交易口數買賣淨額
+	NetValue    float64 `json:"net_value"`     // 交易契約金額買賣淨額（千元）
+	OIBuy       int64   `json:"oi_buy"`        // 買方未平倉口數
+	OIBuyValue  float64 `json:"oi_buy_value"`  // 買方未平倉契約金額（千元）
+	OISell      int64   `json:"oi_sell"`       // 賣方未平倉口數
+	OISellValue float64 `json:"oi_sell_value"` // 賣方未平倉契約金額（千元）
+	OINetBuy    int64   `json:"oi_net_buy"`    // 未平倉口數買賣淨額
+	OINetValue  float64 `json:"oi_net_value"`  // 未平倉契約金額買賣淨額（千元）
 }
 
 // LargeTraderRow 為單一商品/月份/交易人類別之大額交易人未沖銷部位。
