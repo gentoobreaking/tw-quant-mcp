@@ -5,6 +5,7 @@
 （version 僅供頁首標註；tools_json 為 tools/list result.tools 的 JSON 字串）
 輸出寫到 stdout。
 """
+
 import json
 import sys
 
@@ -92,8 +93,7 @@ def classify(tool) -> str:
 
     if name in INTRADAY_TOOLS:
         return "盤中即時（TWSE-MIS）"
-    if name in {"screen_stocks", "screen_high_yield",
-                "get_financial_health_check"}:
+    if name in {"screen_stocks", "screen_high_yield", "get_financial_health_check"}:
         return "篩選與衍生評分"
     if name == "get_stock_trend_composite":
         return "跨來源聚合"
@@ -150,8 +150,9 @@ def main() -> None:
         "| 資料來源 | 工具數 |",
         "| --- | --- |",
     ]
-    ordered = [g for g in GROUP_ORDER if g in groups] + \
-              [g for g in groups if g not in GROUP_ORDER]
+    ordered = [g for g in GROUP_ORDER if g in groups] + [
+        g for g in groups if g not in GROUP_ORDER
+    ]
     for g in ordered:
         lines.append(f"| {g} | {len(groups[g])} |")
     lines.append(f"| **合計** | **{len(tools)}** |")
