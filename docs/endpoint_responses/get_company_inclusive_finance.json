@@ -1,0 +1,48 @@
+{
+  "request": {
+    "name": "get_company_inclusive_finance",
+    "arguments": {
+      "code": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 1.4,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"對促進小型企業及社區發展的貸放件數(件)\":\"N/A\",\"對促進小型企業及社區發展的貸放餘額(仟元)\":\"N/A\",\"對缺少銀行服務之弱勢族群提供金融教育之參與人數(人)\":\"N/A\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:34+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "code": "2330",
+          "fields": {
+            "對促進小型企業及社區發展的貸放件數(件)": "N/A",
+            "對促進小型企業及社區發展的貸放餘額(仟元)": "N/A",
+            "對缺少銀行服務之弱勢族群提供金融教育之參與人數(人)": "N/A"
+          },
+          "name": "台積電",
+          "report_date": "2026-08-25",
+          "year": "114"
+        },
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:34+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

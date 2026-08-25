@@ -163,11 +163,11 @@ func registerBCTools(r *Registry) {
 			},
 		},
 		ReadOnly: true,
-		Handler: webListSpec{ds: provider.TWSEWDBlockTrades}.handler(),
+		Handler:  webListSpec{ds: provider.TWSEWDBlockTrades}.handler(),
 	})
 	r.Register(ToolDef{
-		Symbol:      "get_block_trades_detail",
-		Name:        "get_block_trades_detail",
+		Symbol: "get_block_trades_detail",
+		Name:   "get_block_trades_detail",
 		Description: "查詢集中市場鉅額交易逐筆明細（含配對交易、盤後鉅額等交易別；TWSE-WEB BFIAUU_d date 查詢，T043）。" +
 			"stock_no/name 為本地端過濾；limit 預設 50。",
 		Schema: map[string]any{
@@ -242,8 +242,8 @@ func registerBCTools(r *Registry) {
 		Handler:  webListSpec{ds: provider.TWSEWDDayTradeTargets}.handler(),
 	}) // T116
 	r.Register(ToolDef{
-		Symbol:      "get_financial_program_abnormal_recommendations",
-		Name:        "get_financial_program_abnormal_recommendations",
+		Symbol: "get_financial_program_abnormal_recommendations",
+		Name:   "get_financial_program_abnormal_recommendations",
 		Description: "查詢投資理財節目異常推介個股（TWSE-WEB Announcement/BFZFZU_T，T121）。可選 name 過濾；" +
 			"無異常推介時官方回「本日無」佔位列。",
 		Schema: map[string]any{
@@ -473,8 +473,8 @@ func registerBCTools(r *Registry) {
 		Handler:  webListSpec{ds: provider.TWSEWDTopVolume}.handler(),
 	}) // T184
 	r.Register(ToolDef{
-		Symbol:      "get_etf_regular_investment_ranking",
-		Name:        "get_etf_regular_investment_ranking",
+		Symbol: "get_etf_regular_investment_ranking",
+		Name:   "get_etf_regular_investment_ranking",
 		Description: "查詢定期定額交易戶數統計排行月報表（TWSE-WEB ETFReport/ETFRank，T120）。" +
 			"每列含排名、股票與 ETF 之代碼/名稱/交易戶數。可選 code/name 過濾（比對股票欄）。",
 		Schema: map[string]any{
@@ -494,7 +494,7 @@ func registerBCTools(r *Registry) {
 		Name:        "get_market_institutional_amounts_history",
 		Description: "查詢外資及陸資/投信/自營商買賣超金額彙總歷史（TWSE-WEB BFI82U，T146）。",
 		Schema: map[string]any{
-			"type": "object",
+			"type":       "object",
 			"properties": map[string]any{"date": map[string]any{"type": "string", "description": "查詢日 YYYY-MM-DD（預設最近交易日）"}, "code": map[string]any{"type": "string", "description": "股票代號（選填）"}, "limit": map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"}, "offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"}},
 		},
 		ReadOnly: true,
@@ -505,7 +505,7 @@ func registerBCTools(r *Registry) {
 		Name:        "get_market_turnover_history",
 		Description: "查詢集中市場每日成交資訊（含週轉率）歷史（TWSE-WEB FMTQIK，T147）。",
 		Schema: map[string]any{
-			"type": "object",
+			"type":       "object",
 			"properties": map[string]any{"date": map[string]any{"type": "string", "description": "查詢日 YYYY-MM-DD（預設最近交易日）"}, "code": map[string]any{"type": "string", "description": "股票代號（選填）"}, "limit": map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"}, "offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"}},
 		},
 		ReadOnly: true,
@@ -516,7 +516,7 @@ func registerBCTools(r *Registry) {
 		Name:        "get_short_sale_lending_balance_history",
 		Description: "查詢信用交易融資融券餘額歷史（TWSE-WEB TWT93U，T164）。可選 code/name 過濾。",
 		Schema: map[string]any{
-			"type": "object",
+			"type":       "object",
 			"properties": map[string]any{"date": map[string]any{"type": "string", "description": "查詢日 YYYY-MM-DD（預設最近交易日）"}, "code": map[string]any{"type": "string", "description": "股票代號（選填）"}, "limit": map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"}, "offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"}},
 		},
 		ReadOnly: true,
@@ -527,7 +527,7 @@ func registerBCTools(r *Registry) {
 		Name:        "get_short_sale_lending_trades_history",
 		Description: "查詢借券賣出及借券賣出價量歷史（TWSE-WEB TWTASU，T165）。可選 code/name 過濾。",
 		Schema: map[string]any{
-			"type": "object",
+			"type":       "object",
 			"properties": map[string]any{"date": map[string]any{"type": "string", "description": "查詢日 YYYY-MM-DD（預設最近交易日）"}, "code": map[string]any{"type": "string", "description": "股票代號（選填）"}, "limit": map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"}, "offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"}},
 		},
 		ReadOnly: true,
@@ -537,7 +537,7 @@ func registerBCTools(r *Registry) {
 	r.Register(ToolDef{
 		Symbol:      "get_central_depository_bond_redemption",
 		Name:        "get_central_depository_bond_redemption",
-		Description: "查詢中央登錄公債補息資料表（TWSE-WEB BFI61U，T055）。", 
+		Description: "查詢中央登錄公債補息資料表（TWSE-WEB BFI61U，T055）。",
 		Schema: map[string]any{
 			"type":       "object",
 			"properties": map[string]any{},
@@ -547,10 +547,10 @@ func registerBCTools(r *Registry) {
 	}) // T055
 
 	r.Register(ToolDef{
-		Symbol:      "get_companies_cumulative_voting",
-		Name:        "get_companies_cumulative_voting",
+		Symbol: "get_companies_cumulative_voting",
+		Name:   "get_companies_cumulative_voting",
 		Description: "查詢上市公司採累積投票制、全額連記法、候選人提名制選任董監事及當選資料彙總表" +
-			"（TWSE-API t187ap34_L，T056）。可選 name 過濾。", 
+			"（TWSE-API t187ap34_L，T056）。可選 name 過濾。",
 		Schema: map[string]any{
 			"type": "object",
 			"properties": map[string]any{
@@ -564,10 +564,10 @@ func registerBCTools(r *Registry) {
 	}) // T056
 
 	r.Register(ToolDef{
-		Symbol:      "get_companies_ownership_changes_business_scope",
-		Name:        "get_companies_ownership_changes_business_scope",
+		Symbol: "get_companies_ownership_changes_business_scope",
+		Name:   "get_companies_ownership_changes_business_scope",
 		Description: "查詢上市公司經營權及營業範圍異(變)動專區-經營權異動且營業範圍重大變更停止買賣公司" +
-			"（TWSE-API t187ap26_L，T057）。", 
+			"（TWSE-API t187ap26_L，T057）。",
 		Schema: map[string]any{
 			"type": "object",
 			"properties": map[string]any{
@@ -580,8 +580,8 @@ func registerBCTools(r *Registry) {
 	}) // T057
 
 	r.Register(ToolDef{
-		Symbol:      "get_companies_ownership_changes_business_scope_trading",
-		Name:        "get_companies_ownership_changes_business_scope_trading",
+		Symbol: "get_companies_ownership_changes_business_scope_trading",
+		Name:   "get_companies_ownership_changes_business_scope_trading",
 		Description: "查詢上市公司經營權及營業範圍異(變)動專區-經營權異動且營業範圍重大變更列為變更交易公司" +
 			"（TWSE-API t187ap27_L，T058）。",
 		Schema: map[string]any{
@@ -596,8 +596,8 @@ func registerBCTools(r *Registry) {
 	}) // T058
 
 	r.Register(ToolDef{
-		Symbol:      "get_companies_with_business_scope_changes",
-		Name:        "get_companies_with_business_scope_changes",
+		Symbol: "get_companies_with_business_scope_changes",
+		Name:   "get_companies_with_business_scope_changes",
 		Description: "查詢上市公司經營權及營業範圍異(變)動專區-營業範圍重大變更公司" +
 			"（TWSE-API t187ap25_L，T060）。可選 name 過濾。",
 		Schema: map[string]any{
@@ -645,8 +645,8 @@ func registerBCTools(r *Registry) {
 	}) // T064
 
 	r.Register(ToolDef{
-		Symbol:      "get_after_hours_trading",
-		Name:        "get_after_hours_trading",
+		Symbol: "get_after_hours_trading",
+		Name:   "get_after_hours_trading",
 		Description: "查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。" +
 			"code 選填（單檔查詢）；limit 預設 50；offset 分頁。",
 		Schema: map[string]any{
@@ -726,8 +726,8 @@ func registerBCTools(r *Registry) {
 		Handler:  apiListSpec{ds: provider.TWSEAPIPunish}.handler(),
 	}) // T141
 	for _, e := range []struct{ symbol, desc string }{
-		{"get_market_historical_index", "查詢加權指數歷史資料（每 5 分鐘軌跡；TWSE-WEB MI_5MINS_HIST，T143）"},   // T143
-		{"get_taiex_index_history", "查詢發行量加權股價指數歷史資料（TWSE-WEB MI_5MINS_HIST，T180）"},                 // T180
+		{"get_market_historical_index", "查詢加權指數歷史資料（每 5 分鐘軌跡；TWSE-WEB MI_5MINS_HIST，T143）"}, // T143
+		{"get_taiex_index_history", "查詢發行量加權股價指數歷史資料（TWSE-WEB MI_5MINS_HIST，T180）"},         // T180
 	} {
 		r.Register(ToolDef{
 			Symbol:      e.symbol,
@@ -829,12 +829,17 @@ func registerBCTools(r *Registry) {
 		Handler:  webListSpec{ds: provider.TWSEWDDailyK, withDate: true}.handler(),
 	}) // T170
 	r.Register(ToolDef{
-		Symbol:      "get_stock_monthly_trading",
-		Name:        "get_stock_monthly_trading",
-		Description: "根據股票代號查詢個股月成交資訊（TWSE-WEB FMSRFK，T171）。",
-		Schema:      webCodeSchema(true),
-		ReadOnly:    true,
-		Handler:     webListSpec{ds: provider.TWSEWDStockMonTrade, withDate: true}.handler(),
+		Symbol: "get_stock_monthly_trading",
+		Name:   "get_stock_monthly_trading",
+		Description: "根據股票代號查詢個股月成交資訊（TWSE-WEB FMSRFK，T171）。" +
+			"code 必填：上游以單一個股報表提供，不支援全市場查詢。",
+		Schema: func() map[string]any {
+			s := webCodeSchema(true)
+			s["required"] = []string{"code"}
+			return s
+		}(),
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDStockMonTrade, withDate: true}.handler(),
 	}) // T171
 	r.Register(ToolDef{
 		Symbol:      "get_stock_yearly_history",
@@ -891,13 +896,23 @@ func registerBCTools(r *Registry) {
 			},
 		}
 	}
+	warrantBasicSchema := func() map[string]any {
+		return map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "權證代號或標的證券代號（選填；如 2330 查其標的權證）"},
+				"limit":  map[string]any{"type": "integer", "default": 100, "minimum": 1, "description": "回傳筆數上限（code 省略時預設 100）"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		}
+	}
 	r.Register(ToolDef{
 		Symbol:      "get_warrant_basic_info",
 		Name:        "get_warrant_basic_info",
-		Description: "查詢權證基本資料（TWSE-API t187ap37_L passthrough，T187）。code 選填過濾。",
-		Schema:      warrantCodeSchema(),
+		Description: "查詢權證基本資料（TWSE-API t187ap37_L passthrough，T187）。code 選填：可為權證代號或標的證券代號（經名稱比對）；省略時分頁回傳全部。",
+		Schema:      warrantBasicSchema(),
 		ReadOnly:    true,
-		Handler:     apiCompanySpec{ds: provider.TWSEAPIWarrantBasic, skipRegistryCheck: true}.handler(),
+		Handler:     handlerGetWarrantBasicInfo,
 	}) // T187
 	r.Register(ToolDef{
 		Symbol:      "get_warrant_daily_trading",
@@ -1012,8 +1027,8 @@ func registerBCTools(r *Registry) {
 
 	// ── 上櫃市場（T155/T156/T157）──
 	r.Register(ToolDef{
-		Symbol:      "get_otc_daily",
-		Name:        "get_otc_daily",
+		Symbol: "get_otc_daily",
+		Name:   "get_otc_daily",
 		Description: "查詢上櫃（OTC）市場當日所有股票收盤行情（TPEx-API tpex_mainboard_daily_close_quotes，T155）。" +
 			"stock_no 選填，指定則只回傳該股票。",
 		Schema: map[string]any{
@@ -1042,8 +1057,8 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcIndex,
 	}) // T156
 	r.Register(ToolDef{
-		Symbol:      "get_otc_odd_lot",
-		Name:        "get_otc_odd_lot",
+		Symbol: "get_otc_odd_lot",
+		Name:   "get_otc_odd_lot",
 		Description: "查詢上櫃零股（不足一張）交易行情，包含零股成交價、成交量、成交金額（" +
 			"TPEx-API tpex_odd_stock，T157）。stock_no 選填，指定則只回傳該股票。",
 		Schema: map[string]any{

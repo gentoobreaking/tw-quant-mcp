@@ -322,9 +322,9 @@ func TestBCGetForeignShareholdingHistory(t *testing.T) {
 	mk := func(d string) string {
 		return fmt.Sprintf(`[{"date":"%s","code":"2330","name":"台積電","issue_shares":25930389000,"foreign_shares":1000000,"foreign_percent":10.5,"upper_limit_pct":100.0,"change_reason":"","last_changed_date":""}]`, d)
 	}
-	f.stub("qfiis", url.Values{"dayDate": {"20260730"}}, mk("2026-07-30"))
-	f.stub("qfiis", url.Values{"dayDate": {"20260729"}}, mk("2026-07-29"))
-	f.stub("qfiis", url.Values{"dayDate": {"20260728"}}, mk("2026-07-28"))
+	f.stub("qfiis", url.Values{"dayDate": {"20260730"}, "selectType": {"24"}}, mk("2026-07-30"))
+	f.stub("qfiis", url.Values{"dayDate": {"20260729"}, "selectType": {"24"}}, mk("2026-07-29"))
+	f.stub("qfiis", url.Values{"dayDate": {"20260728"}, "selectType": {"24"}}, mk("2026-07-28"))
 	app := bcApp(t, f)
 	env := callEnv(t, app, "get_foreign_shareholding_history", map[string]any{"symbol": "2330", "range": 3, "date": "2026-07-30"})
 	h := env.Data.(model.ForeignShareholdingHistory)

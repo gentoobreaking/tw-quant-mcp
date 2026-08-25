@@ -1,0 +1,66 @@
+{
+  "request": {
+    "name": "get_options_delta",
+    "arguments": {
+      "contract": "TXO"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 23.4,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"contract_month\":\"202608F4\"},{\"contract_month\":\"202608W4\"},{\"contract_month\":\"202609\"},{\"contract_month\":\"202609F1\"},{\"contract_month\":\"202609W1\"},{\"contract_month\":\"202610\"},{\"contract_month\":\"202611\"},{\"contract_month\":\"202612\"},{\"contract_month\":\"202703\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:49:19+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":20,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "contract_month": "202608F4"
+          },
+          {
+            "contract_month": "202608W4"
+          },
+          {
+            "contract_month": "202609"
+          },
+          {
+            "contract_month": "202609F1"
+          },
+          {
+            "contract_month": "202609W1"
+          },
+          {
+            "contract_month": "202610"
+          },
+          {
+            "contract_month": "202611"
+          },
+          {
+            "contract_month": "202612"
+          },
+          {
+            "contract_month": "202703"
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:49:19+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 20,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

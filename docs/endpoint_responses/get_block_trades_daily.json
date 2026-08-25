@@ -1,0 +1,487 @@
+{
+  "request": {
+    "name": "get_block_trades_daily",
+    "arguments": {}
+  },
+  "http_status": 200,
+  "elapsed_ms": 2347.3,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"amount\":0,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-03\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-03\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":5879333892,\"amount_share\":0.66,\"class\":\"單一證券\",\"date\":\"2026-08-03\",\"trade_type\":\"配對交易\",\"volume\":2979000,\"volume_share\":0.03},{\"amount\":2681258700,\"amount_share\":0.3,\"class\":\"股票組合\",\"date\":\"2026-08-03\",\"trade_type\":\"配對交易\",\"volume\":13001000,\"volume_share\":0.11},{\"amount\":0,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-04\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-04\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":11563143842,\"amount_share\":1.06,\"class\":\"單一證券\",\"date\":\"2026-08-04\",\"trade_type\":\"配對交易\",\"volume\":21537000,\"volume_share\":0.19},{\"amount\":62065300,\"amount_share\":0.01,\"class\":\"股票組合\",\"date\":\"2026-08-04\",\"trade_type\":\"配對交易\",\"volume\":127000,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-05\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-05\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":12265495156,\"amount_share\":1.02,\"class\":\"單一證券\",\"date\":\"2026-08-05\",\"trade_type\":\"配對交易\",\"volume\":18813934,\"volume_share\":0.14},{\"amount\":449761644,\"amount_share\":0.04,\"class\":\"股票組合\",\"date\":\"2026-08-05\",\"trade_type\":\"配對交易\",\"volume\":1535316,\"volume_share\":0.01},{\"amount\":0,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-06\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-06\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":4583859131,\"amount_share\":0.47,\"class\":\"單一證券\",\"date\":\"2026-08-06\",\"trade_type\":\"配對交易\",\"volume\":18090000,\"volume_share\":0.17},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-06\",\"trade_type\":\"配對交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-07\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-07\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":6349809236,\"amount_share\":0.75,\"class\":\"單一證券\",\"date\":\"2026-08-07\",\"trade_type\":\"配對交易\",\"volume\":29501334,\"volume_share\":0.31},{\"amount\":24865850,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-07\",\"trade_type\":\"配對交易\",\"volume\":158000,\"volume_share\":0},{\"amount\":25630000,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-10\",\"trade_type\":\"逐筆交易\",\"volume\":4000,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-10\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":4113288730,\"amount_share\":0.47,\"class\":\"單一證券\",\"date\":\"2026-08-10\",\"trade_type\":\"配對交易\",\"volume\":4016000,\"volume_share\":0.04},{\"amount\":62841000,\"amount_share\":0.01,\"class\":\"股票組合\",\"date\":\"2026-08-10\",\"trade_type\":\"配對交易\",\"volume\":83000,\"volume_share\":0},{\"amount\":202409712,\"amount_share\":0.02,\"class\":\"單一證券\",\"date\":\"2026-08-11\",\"trade_type\":\"逐筆交易\",\"volume\":1874164,\"volume_share\":0.02},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-11\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":1244526775,\"amount_share\":0.14,\"class\":\"單一證券\",\"date\":\"2026-08-11\",\"trade_type\":\"配對交易\",\"volume\":5376368,\"volume_share\":0.06},{\"amount\":4875324060,\"amount_share\":0.54,\"class\":\"股票組合\",\"date\":\"2026-08-11\",\"trade_type\":\"配對交易\",\"volume\":3489397,\"volume_share\":0.04},{\"amount\":0,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-12\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-12\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":3823214914,\"amount_share\":0.43,\"class\":\"單一證券\",\"date\":\"2026-08-12\",\"trade_type\":\"配對交易\",\"volume\":12079926,\"volume_share\":0.12},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-12\",\"trade_type\":\"配對交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-13\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-13\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":10695498884,\"amount_share\":0.97,\"class\":\"單一證券\",\"date\":\"2026-08-13\",\"trade_type\":\"配對交易\",\"volume\":11736000,\"volume_share\":0.1},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-13\",\"trade_type\":\"配對交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-14\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-14\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":4902423549,\"amount_share\":0.44,\"class\":\"單一證券\",\"date\":\"2026-08-14\",\"trade_type\":\"配對交易\",\"volume\":18968579,\"volume_share\":0.16},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-14\",\"trade_type\":\"配對交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"單一證券\",\"date\":\"2026-08-17\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-17\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":1647599446,\"amount_share\":0.17,\"class\":\"單一證券\",\"date\":\"2026-08-17\",\"trade_type\":\"配對交易\",\"volume\":5153000,\"volume_share\":0.05},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-17\",\"trade_type\":\"配對交易\",\"volume\":0,\"volume_share\":0},{\"amount\":92610000,\"amount_share\":0.01,\"class\":\"單一證券\",\"date\":\"2026-08-18\",\"trade_type\":\"逐筆交易\",\"volume\":1245000,\"volume_share\":0.01},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-18\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0},{\"amount\":10156241821,\"amount_share\":1.01,\"class\":\"單一證券\",\"date\":\"2026-08-18\",\"trade_type\":\"配對交易\",\"volume\":27432380,\"volume_share\":0.27},{\"amount\":22619310,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-18\",\"trade_type\":\"配對交易\",\"volume\":51122,\"volume_share\":0},{\"amount\":102960000,\"amount_share\":0.01,\"class\":\"單一證券\",\"date\":\"2026-08-19\",\"trade_type\":\"逐筆交易\",\"volume\":1320000,\"volume_share\":0.01},{\"amount\":0,\"amount_share\":0,\"class\":\"股票組合\",\"date\":\"2026-08-19\",\"trade_type\":\"逐筆交易\",\"volume\":0,\"volume_share\":0}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:23+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":2339,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-03",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-03",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 5879333892,
+            "amount_share": 0.66,
+            "class": "單一證券",
+            "date": "2026-08-03",
+            "trade_type": "配對交易",
+            "volume": 2979000,
+            "volume_share": 0.03
+          },
+          {
+            "amount": 2681258700,
+            "amount_share": 0.3,
+            "class": "股票組合",
+            "date": "2026-08-03",
+            "trade_type": "配對交易",
+            "volume": 13001000,
+            "volume_share": 0.11
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-04",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-04",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 11563143842,
+            "amount_share": 1.06,
+            "class": "單一證券",
+            "date": "2026-08-04",
+            "trade_type": "配對交易",
+            "volume": 21537000,
+            "volume_share": 0.19
+          },
+          {
+            "amount": 62065300,
+            "amount_share": 0.01,
+            "class": "股票組合",
+            "date": "2026-08-04",
+            "trade_type": "配對交易",
+            "volume": 127000,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-05",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-05",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 12265495156,
+            "amount_share": 1.02,
+            "class": "單一證券",
+            "date": "2026-08-05",
+            "trade_type": "配對交易",
+            "volume": 18813934,
+            "volume_share": 0.14
+          },
+          {
+            "amount": 449761644,
+            "amount_share": 0.04,
+            "class": "股票組合",
+            "date": "2026-08-05",
+            "trade_type": "配對交易",
+            "volume": 1535316,
+            "volume_share": 0.01
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-06",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-06",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 4583859131,
+            "amount_share": 0.47,
+            "class": "單一證券",
+            "date": "2026-08-06",
+            "trade_type": "配對交易",
+            "volume": 18090000,
+            "volume_share": 0.17
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-06",
+            "trade_type": "配對交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-07",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-07",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 6349809236,
+            "amount_share": 0.75,
+            "class": "單一證券",
+            "date": "2026-08-07",
+            "trade_type": "配對交易",
+            "volume": 29501334,
+            "volume_share": 0.31
+          },
+          {
+            "amount": 24865850,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-07",
+            "trade_type": "配對交易",
+            "volume": 158000,
+            "volume_share": 0
+          },
+          {
+            "amount": 25630000,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-10",
+            "trade_type": "逐筆交易",
+            "volume": 4000,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-10",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 4113288730,
+            "amount_share": 0.47,
+            "class": "單一證券",
+            "date": "2026-08-10",
+            "trade_type": "配對交易",
+            "volume": 4016000,
+            "volume_share": 0.04
+          },
+          {
+            "amount": 62841000,
+            "amount_share": 0.01,
+            "class": "股票組合",
+            "date": "2026-08-10",
+            "trade_type": "配對交易",
+            "volume": 83000,
+            "volume_share": 0
+          },
+          {
+            "amount": 202409712,
+            "amount_share": 0.02,
+            "class": "單一證券",
+            "date": "2026-08-11",
+            "trade_type": "逐筆交易",
+            "volume": 1874164,
+            "volume_share": 0.02
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-11",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 1244526775,
+            "amount_share": 0.14,
+            "class": "單一證券",
+            "date": "2026-08-11",
+            "trade_type": "配對交易",
+            "volume": 5376368,
+            "volume_share": 0.06
+          },
+          {
+            "amount": 4875324060,
+            "amount_share": 0.54,
+            "class": "股票組合",
+            "date": "2026-08-11",
+            "trade_type": "配對交易",
+            "volume": 3489397,
+            "volume_share": 0.04
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-12",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-12",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 3823214914,
+            "amount_share": 0.43,
+            "class": "單一證券",
+            "date": "2026-08-12",
+            "trade_type": "配對交易",
+            "volume": 12079926,
+            "volume_share": 0.12
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-12",
+            "trade_type": "配對交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-13",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-13",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 10695498884,
+            "amount_share": 0.97,
+            "class": "單一證券",
+            "date": "2026-08-13",
+            "trade_type": "配對交易",
+            "volume": 11736000,
+            "volume_share": 0.1
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-13",
+            "trade_type": "配對交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-14",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-14",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 4902423549,
+            "amount_share": 0.44,
+            "class": "單一證券",
+            "date": "2026-08-14",
+            "trade_type": "配對交易",
+            "volume": 18968579,
+            "volume_share": 0.16
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-14",
+            "trade_type": "配對交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "單一證券",
+            "date": "2026-08-17",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-17",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 1647599446,
+            "amount_share": 0.17,
+            "class": "單一證券",
+            "date": "2026-08-17",
+            "trade_type": "配對交易",
+            "volume": 5153000,
+            "volume_share": 0.05
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-17",
+            "trade_type": "配對交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 92610000,
+            "amount_share": 0.01,
+            "class": "單一證券",
+            "date": "2026-08-18",
+            "trade_type": "逐筆交易",
+            "volume": 1245000,
+            "volume_share": 0.01
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-18",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          },
+          {
+            "amount": 10156241821,
+            "amount_share": 1.01,
+            "class": "單一證券",
+            "date": "2026-08-18",
+            "trade_type": "配對交易",
+            "volume": 27432380,
+            "volume_share": 0.27
+          },
+          {
+            "amount": 22619310,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-18",
+            "trade_type": "配對交易",
+            "volume": 51122,
+            "volume_share": 0
+          },
+          {
+            "amount": 102960000,
+            "amount_share": 0.01,
+            "class": "單一證券",
+            "date": "2026-08-19",
+            "trade_type": "逐筆交易",
+            "volume": 1320000,
+            "volume_share": 0.01
+          },
+          {
+            "amount": 0,
+            "amount_share": 0,
+            "class": "股票組合",
+            "date": "2026-08-19",
+            "trade_type": "逐筆交易",
+            "volume": 0,
+            "volume_share": 0
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:23+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 2339,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "request": {
+    "name": "get_attention_disposition_stocks",
+    "arguments": {
+      "market": "tse"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 1816.1,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "provider: abnormal_volume 無有效資料列"
+        }
+      ],
+      "isError": true
+    }
+  }
+}

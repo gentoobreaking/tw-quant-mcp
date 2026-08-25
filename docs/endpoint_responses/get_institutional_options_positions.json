@@ -1,0 +1,312 @@
+{
+  "request": {
+    "name": "get_institutional_options_positions",
+    "arguments": {}
+  },
+  "http_status": 200,
+  "elapsed_ms": 5.3,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-08-24\",\"contract\":\"臺指選擇權\",\"investor\":\"自營商\",\"long_volume\":64739,\"long_value\":626455000,\"short_volume\":65005,\"short_value\":626587000,\"net_volume\":-266,\"net_value\":-132000,\"oi_long\":35319,\"oi_long_value\":1204116000,\"oi_short\":32682,\"oi_short_value\":1031759000,\"oi_net\":2637,\"oi_net_value\":172357000},{\"date\":\"2026-08-24\",\"contract\":\"臺指選擇權\",\"investor\":\"投信\",\"long_volume\":0,\"long_value\":0,\"short_volume\":620,\"short_value\":30468000,\"net_volume\":-620,\"net_value\":-30468000,\"oi_long\":6,\"oi_long_value\":330000,\"oi_short\":3911,\"oi_short_value\":193742000,\"oi_net\":-3905,\"oi_net_value\":-193412000},{\"date\":\"2026-08-24\",\"contract\":\"臺指選擇權\",\"investor\":\"外資及陸資\",\"long_volume\":67780,\"long_value\":786794000,\"short_volume\":68569,\"short_value\":790107000,\"net_volume\":-789,\"net_value\":-3313000,\"oi_long\":9296,\"oi_long_value\":385441000,\"oi_short\":13100,\"oi_short_value\":606658000,\"oi_net\":-3804,\"oi_net_value\":-221217000},{\"date\":\"2026-08-24\",\"contract\":\"電子選擇權\",\"investor\":\"自營商\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":8,\"oi_long_value\":209000,\"oi_short\":12,\"oi_short_value\":389000,\"oi_net\":-4,\"oi_net_value\":-180000},{\"date\":\"2026-08-24\",\"contract\":\"電子選擇權\",\"investor\":\"投信\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":0,\"oi_net_value\":0},{\"date\":\"2026-08-24\",\"contract\":\"電子選擇權\",\"investor\":\"外資及陸資\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":0,\"oi_net_value\":0},{\"date\":\"2026-08-24\",\"contract\":\"金融選擇權\",\"investor\":\"自營商\",\"long_volume\":9,\"long_value\":15000,\"short_volume\":26,\"short_value\":252000,\"net_volume\":-17,\"net_value\":-237000,\"oi_long\":143,\"oi_long_value\":1578000,\"oi_short\":226,\"oi_short_value\":1569000,\"oi_net\":-83,\"oi_net_value\":9000},{\"date\":\"2026-08-24\",\"contract\":\"金融選擇權\",\"investor\":\"投信\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":0,\"oi_net_value\":0},{\"date\":\"2026-08-24\",\"contract\":\"金融選擇權\",\"investor\":\"外資及陸資\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":0,\"oi_net_value\":0},{\"date\":\"2026-08-24\",\"contract\":\"股票選擇權\",\"investor\":\"自營商\",\"long_volume\":225,\"long_value\":3298000,\"short_volume\":268,\"short_value\":3581000,\"net_volume\":-43,\"net_value\":-283000,\"oi_long\":1374,\"oi_long_value\":28049000,\"oi_short\":1443,\"oi_short_value\":32491000,\"oi_net\":-69,\"oi_net_value\":-4442000},{\"date\":\"2026-08-24\",\"contract\":\"股票選擇權\",\"investor\":\"投信\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":0,\"oi_net_value\":0},{\"date\":\"2026-08-24\",\"contract\":\"股票選擇權\",\"investor\":\"外資及陸資\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":40,\"oi_long_value\":2990000,\"oi_short\":92,\"oi_short_value\":3120000,\"oi_net\":-52,\"oi_net_value\":-130000},{\"date\":\"2026-08-24\",\"contract\":\"ETF選擇權\",\"investor\":\"自營商\",\"long_volume\":76,\"long_value\":1088000,\"short_volume\":81,\"short_value\":1170000,\"net_volume\":-5,\"net_value\":-82000,\"oi_long\":397,\"oi_long_value\":3535000,\"oi_short\":513,\"oi_short_value\":4959000,\"oi_net\":-116,\"oi_net_value\":-1424000},{\"date\":\"2026-08-24\",\"contract\":\"ETF選擇權\",\"investor\":\"投信\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":0,\"oi_net_value\":0},{\"date\":\"2026-08-24\",\"contract\":\"ETF選擇權\",\"investor\":\"外資及陸資\",\"long_volume\":0,\"long_value\":0,\"short_volume\":0,\"short_value\":0,\"net_volume\":0,\"net_value\":0,\"oi_long\":0,\"oi_long_value\":0,\"oi_short\":0,\"oi_short_value\":0,\"oi_net\":0,\"oi_net_value\":0}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:54+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"investor\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"net_volume\"],\"title\":\"三大法人淨口數 (口)\"},\"series\":[{\"key\":\"net_volume\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-08-24",
+            "contract": "臺指選擇權",
+            "investor": "自營商",
+            "long_volume": 64739,
+            "long_value": 626455000,
+            "short_volume": 65005,
+            "short_value": 626587000,
+            "net_volume": -266,
+            "net_value": -132000,
+            "oi_long": 35319,
+            "oi_long_value": 1204116000,
+            "oi_short": 32682,
+            "oi_short_value": 1031759000,
+            "oi_net": 2637,
+            "oi_net_value": 172357000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "臺指選擇權",
+            "investor": "投信",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 620,
+            "short_value": 30468000,
+            "net_volume": -620,
+            "net_value": -30468000,
+            "oi_long": 6,
+            "oi_long_value": 330000,
+            "oi_short": 3911,
+            "oi_short_value": 193742000,
+            "oi_net": -3905,
+            "oi_net_value": -193412000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "臺指選擇權",
+            "investor": "外資及陸資",
+            "long_volume": 67780,
+            "long_value": 786794000,
+            "short_volume": 68569,
+            "short_value": 790107000,
+            "net_volume": -789,
+            "net_value": -3313000,
+            "oi_long": 9296,
+            "oi_long_value": 385441000,
+            "oi_short": 13100,
+            "oi_short_value": 606658000,
+            "oi_net": -3804,
+            "oi_net_value": -221217000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "電子選擇權",
+            "investor": "自營商",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 0,
+            "short_value": 0,
+            "net_volume": 0,
+            "net_value": 0,
+            "oi_long": 8,
+            "oi_long_value": 209000,
+            "oi_short": 12,
+            "oi_short_value": 389000,
+            "oi_net": -4,
+            "oi_net_value": -180000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "電子選擇權",
+            "investor": "投信",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 0,
+            "short_value": 0,
+            "net_volume": 0,
+            "net_value": 0,
+            "oi_long": 0,
+            "oi_long_value": 0,
+            "oi_short": 0,
+            "oi_short_value": 0,
+            "oi_net": 0,
+            "oi_net_value": 0
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "電子選擇權",
+            "investor": "外資及陸資",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 0,
+            "short_value": 0,
+            "net_volume": 0,
+            "net_value": 0,
+            "oi_long": 0,
+            "oi_long_value": 0,
+            "oi_short": 0,
+            "oi_short_value": 0,
+            "oi_net": 0,
+            "oi_net_value": 0
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "金融選擇權",
+            "investor": "自營商",
+            "long_volume": 9,
+            "long_value": 15000,
+            "short_volume": 26,
+            "short_value": 252000,
+            "net_volume": -17,
+            "net_value": -237000,
+            "oi_long": 143,
+            "oi_long_value": 1578000,
+            "oi_short": 226,
+            "oi_short_value": 1569000,
+            "oi_net": -83,
+            "oi_net_value": 9000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "金融選擇權",
+            "investor": "投信",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 0,
+            "short_value": 0,
+            "net_volume": 0,
+            "net_value": 0,
+            "oi_long": 0,
+            "oi_long_value": 0,
+            "oi_short": 0,
+            "oi_short_value": 0,
+            "oi_net": 0,
+            "oi_net_value": 0
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "金融選擇權",
+            "investor": "外資及陸資",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 0,
+            "short_value": 0,
+            "net_volume": 0,
+            "net_value": 0,
+            "oi_long": 0,
+            "oi_long_value": 0,
+            "oi_short": 0,
+            "oi_short_value": 0,
+            "oi_net": 0,
+            "oi_net_value": 0
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "股票選擇權",
+            "investor": "自營商",
+            "long_volume": 225,
+            "long_value": 3298000,
+            "short_volume": 268,
+            "short_value": 3581000,
+            "net_volume": -43,
+            "net_value": -283000,
+            "oi_long": 1374,
+            "oi_long_value": 28049000,
+            "oi_short": 1443,
+            "oi_short_value": 32491000,
+            "oi_net": -69,
+            "oi_net_value": -4442000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "股票選擇權",
+            "investor": "投信",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 0,
+            "short_value": 0,
+            "net_volume": 0,
+            "net_value": 0,
+            "oi_long": 0,
+            "oi_long_value": 0,
+            "oi_short": 0,
+            "oi_short_value": 0,
+            "oi_net": 0,
+            "oi_net_value": 0
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "股票選擇權",
+            "investor": "外資及陸資",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 0,
+            "short_value": 0,
+            "net_volume": 0,
+            "net_value": 0,
+            "oi_long": 40,
+            "oi_long_value": 2990000,
+            "oi_short": 92,
+            "oi_short_value": 3120000,
+            "oi_net": -52,
+            "oi_net_value": -130000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "ETF選擇權",
+            "investor": "自營商",
+            "long_volume": 76,
+            "long_value": 1088000,
+            "short_volume": 81,
+            "short_value": 1170000,
+            "net_volume": -5,
+            "net_value": -82000,
+            "oi_long": 397,
+            "oi_long_value": 3535000,
+            "oi_short": 513,
+            "oi_short_value": 4959000,
+            "oi_net": -116,
+            "oi_net_value": -1424000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "ETF選擇權",
+            "investor": "投信",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 0,
+            "short_value": 0,
+            "net_volume": 0,
+            "net_value": 0,
+            "oi_long": 0,
+            "oi_long_value": 0,
+            "oi_short": 0,
+            "oi_short_value": 0,
+            "oi_net": 0,
+            "oi_net_value": 0
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "ETF選擇權",
+            "investor": "外資及陸資",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 0,
+            "short_value": 0,
+            "net_volume": 0,
+            "net_value": 0,
+            "oi_long": 0,
+            "oi_long_value": 0,
+            "oi_short": 0,
+            "oi_short_value": 0,
+            "oi_net": 0,
+            "oi_net_value": 0
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:54+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "_chart_meta": {
+          "recommended_type": "bar",
+          "x_axis": {
+            "key": "investor",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "net_volume"
+            ],
+            "title": "三大法人淨口數 (口)"
+          },
+          "series": [
+            {
+              "key": "net_volume",
+              "type": "bar",
+              "style": "diverging"
+            }
+          ]
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "request": {
+    "name": "get_company_greenhouse_gas_emissions",
+    "arguments": {
+      "code": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 8.5,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"溫室氣體排放密集度(噸CO2e/單位)\":\"3.4000\",\"範疇一取得驗證\":\"是\",\"範疇一排放量(噸CO2e)\":\"2196493.0000\",\"範疇一資料邊界\":\"已完成合併財務報表之母子公司\",\"範疇三取得驗證\":\"是\",\"範疇三排放量(噸CO2e)\":\"36298970.0000\",\"範疇三資料邊界\":\"已完成合併財務報表之母子公司\",\"範疇二取得驗證\":\"是\",\"範疇二排放量(噸CO2e)\":\"11130568.0000\",\"範疇二資料邊界\":\"已完成合併財務報表之母子公司\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:34+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":6,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "code": "2330",
+          "fields": {
+            "溫室氣體排放密集度(噸CO2e/單位)": "3.4000",
+            "範疇一取得驗證": "是",
+            "範疇一排放量(噸CO2e)": "2196493.0000",
+            "範疇一資料邊界": "已完成合併財務報表之母子公司",
+            "範疇三取得驗證": "是",
+            "範疇三排放量(噸CO2e)": "36298970.0000",
+            "範疇三資料邊界": "已完成合併財務報表之母子公司",
+            "範疇二取得驗證": "是",
+            "範疇二排放量(噸CO2e)": "11130568.0000",
+            "範疇二資料邊界": "已完成合併財務報表之母子公司"
+          },
+          "name": "台積電",
+          "report_date": "2026-08-25",
+          "year": "114"
+        },
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:34+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 6,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

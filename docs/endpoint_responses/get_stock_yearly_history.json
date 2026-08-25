@@ -1,0 +1,38 @@
+{
+  "request": {
+    "name": "get_stock_yearly_history",
+    "arguments": {
+      "stock_no": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 2.9,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:49:44+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [],
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:49:44+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

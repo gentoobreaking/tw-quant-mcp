@@ -1,0 +1,94 @@
+{
+  "request": {
+    "name": "get_financial_statements",
+    "arguments": {
+      "symbol": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 16.2,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"year\":2026,\"quarter\":2,\"income\":[{\"table_date\":\"2026-08-25\",\"year\":2026,\"quarter\":2,\"code\":\"2330\",\"name\":\"台灣積體電路製造股份有限公司\",\"industry\":\"半導體業\",\"eps\":49.33,\"par_value\":\"新台幣                 10.0000元\",\"revenue\":2404483690000,\"operating_profit\":1425568793000,\"non_operating_items\":124660980000,\"net_income\":1279582227000}],\"balance_sheet\":{\"table_date\":\"2026-04-01\",\"year\":2026,\"quarter\":2,\"total_assets\":9375654727000,\"current_assets\":4565700742000,\"non_current_assets\":4809953985000,\"total_liabilities\":2901183746000,\"current_liabilities\":1857761825000,\"non_current_liabilities\":1043421921000,\"total_equity\":6474470981000},\"cash_flow\":{\"table_date\":\"2026-04-01\",\"year\":2026,\"quarter\":2,\"operating_cash_flow\":1482341242000,\"investing_cash_flow\":-849664174000,\"financing_cash_flow\":-304563833000,\"ending_cash_balance\":3134218213000},\"profit_ratios\":[{\"table_date\":\"2026-08-25\",\"year\":2026,\"quarter\":2,\"code\":\"2330\",\"name\":\"台積電\",\"revenue_million\":2404483.69,\"gross_margin_pct\":67.03,\"operating_margin_pct\":59.29,\"pretax_margin_pct\":64.47,\"net_margin_pct\":53.22}]},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:42+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":12,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "symbol": "2330",
+          "name": "台積電",
+          "year": 2026,
+          "quarter": 2,
+          "income": [
+            {
+              "table_date": "2026-08-25",
+              "year": 2026,
+              "quarter": 2,
+              "code": "2330",
+              "name": "台灣積體電路製造股份有限公司",
+              "industry": "半導體業",
+              "eps": 49.33,
+              "par_value": "新台幣                 10.0000元",
+              "revenue": 2404483690000,
+              "operating_profit": 1425568793000,
+              "non_operating_items": 124660980000,
+              "net_income": 1279582227000
+            }
+          ],
+          "balance_sheet": {
+            "table_date": "2026-04-01",
+            "year": 2026,
+            "quarter": 2,
+            "total_assets": 9375654727000,
+            "current_assets": 4565700742000,
+            "non_current_assets": 4809953985000,
+            "total_liabilities": 2901183746000,
+            "current_liabilities": 1857761825000,
+            "non_current_liabilities": 1043421921000,
+            "total_equity": 6474470981000
+          },
+          "cash_flow": {
+            "table_date": "2026-04-01",
+            "year": 2026,
+            "quarter": 2,
+            "operating_cash_flow": 1482341242000,
+            "investing_cash_flow": -849664174000,
+            "financing_cash_flow": -304563833000,
+            "ending_cash_balance": 3134218213000
+          },
+          "profit_ratios": [
+            {
+              "table_date": "2026-08-25",
+              "year": 2026,
+              "quarter": 2,
+              "code": "2330",
+              "name": "台積電",
+              "revenue_million": 2404483.69,
+              "gross_margin_pct": 67.03,
+              "operating_margin_pct": 59.29,
+              "pretax_margin_pct": 64.47,
+              "net_margin_pct": 53.22
+            }
+          ]
+        },
+        "_lineage": {
+          "source": "MOPS",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:42+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 12,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

@@ -21,7 +21,7 @@ func testClock() time.Time {
 func seedSymbols() *model.Registry {
 	reg := model.NewRegistry()
 	_ = reg.Set([]model.Symbol{
-		{Code: "2330", Name: "台積電", Market: model.MarketTSE},
+		{Code: "2330", Name: "台積電", Market: model.MarketTSE, Category: "半導體業"},
 		{Code: "2317", Name: "鴻海", Market: model.MarketTSE},
 		{Code: "6147", Name: "頎邦", Market: model.MarketOTC},
 		{Code: "6547", Name: "高端疫苗", Market: model.MarketOTC},

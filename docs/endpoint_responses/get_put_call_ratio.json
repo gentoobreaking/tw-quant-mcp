@@ -1,0 +1,135 @@
+{
+  "request": {
+    "name": "get_put_call_ratio",
+    "arguments": {
+      "start": "2026-08-19",
+      "start_date": "2026-08-19",
+      "end": "2026-08-26",
+      "end_date": "2026-08-26"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 1.9,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-08-18\",\"call_volume\":163376,\"put_volume\":172362,\"volume_ratio\":105.5,\"call_oi\":89500,\"put_oi\":93656,\"oi_ratio\":104.64},{\"date\":\"2026-08-19\",\"call_volume\":339418,\"put_volume\":390549,\"volume_ratio\":115.06,\"call_oi\":31036,\"put_oi\":31742,\"oi_ratio\":102.27},{\"date\":\"2026-08-20\",\"call_volume\":163649,\"put_volume\":182976,\"volume_ratio\":111.81,\"call_oi\":54415,\"put_oi\":54070,\"oi_ratio\":99.37},{\"date\":\"2026-08-21\",\"call_volume\":323629,\"put_volume\":358085,\"volume_ratio\":110.65,\"call_oi\":34409,\"put_oi\":35710,\"oi_ratio\":103.78},{\"date\":\"2026-08-21\",\"call_volume\":323629,\"put_volume\":358085,\"volume_ratio\":110.65,\"call_oi\":34409,\"put_oi\":35710,\"oi_ratio\":103.78},{\"date\":\"2026-08-24\",\"call_volume\":109801,\"put_volume\":116587,\"volume_ratio\":106.18,\"call_oi\":53212,\"put_oi\":50982,\"oi_ratio\":95.81},{\"date\":\"2026-08-25\",\"call_volume\":178414,\"put_volume\":197640,\"volume_ratio\":110.78,\"call_oi\":61102,\"put_oi\":62319,\"oi_ratio\":101.99},{\"date\":\"2026-08-25\",\"call_volume\":178414,\"put_volume\":197640,\"volume_ratio\":110.78,\"call_oi\":61102,\"put_oi\":62319,\"oi_ratio\":101.99}],\"_lineage\":{\"source\":\"TAIFEX_DL\",\"source_role\":\"FALLBACK\",\"fetched_at\":\"2026-08-26T00:49:38+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"volume_ratio\"],\"title\":\"買賣權成交量比 (%)\"},\"annotations\":[{\"type\":\"hline\",\"value\":1,\"label\":\"多空分界\"}],\"note\":\"volume_ratio 單位 %（100 = 多空均衡；annotation 1.0 為對數刻度之分界）\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-08-18",
+            "call_volume": 163376,
+            "put_volume": 172362,
+            "volume_ratio": 105.5,
+            "call_oi": 89500,
+            "put_oi": 93656,
+            "oi_ratio": 104.64
+          },
+          {
+            "date": "2026-08-19",
+            "call_volume": 339418,
+            "put_volume": 390549,
+            "volume_ratio": 115.06,
+            "call_oi": 31036,
+            "put_oi": 31742,
+            "oi_ratio": 102.27
+          },
+          {
+            "date": "2026-08-20",
+            "call_volume": 163649,
+            "put_volume": 182976,
+            "volume_ratio": 111.81,
+            "call_oi": 54415,
+            "put_oi": 54070,
+            "oi_ratio": 99.37
+          },
+          {
+            "date": "2026-08-21",
+            "call_volume": 323629,
+            "put_volume": 358085,
+            "volume_ratio": 110.65,
+            "call_oi": 34409,
+            "put_oi": 35710,
+            "oi_ratio": 103.78
+          },
+          {
+            "date": "2026-08-21",
+            "call_volume": 323629,
+            "put_volume": 358085,
+            "volume_ratio": 110.65,
+            "call_oi": 34409,
+            "put_oi": 35710,
+            "oi_ratio": 103.78
+          },
+          {
+            "date": "2026-08-24",
+            "call_volume": 109801,
+            "put_volume": 116587,
+            "volume_ratio": 106.18,
+            "call_oi": 53212,
+            "put_oi": 50982,
+            "oi_ratio": 95.81
+          },
+          {
+            "date": "2026-08-25",
+            "call_volume": 178414,
+            "put_volume": 197640,
+            "volume_ratio": 110.78,
+            "call_oi": 61102,
+            "put_oi": 62319,
+            "oi_ratio": 101.99
+          },
+          {
+            "date": "2026-08-25",
+            "call_volume": 178414,
+            "put_volume": 197640,
+            "volume_ratio": 110.78,
+            "call_oi": 61102,
+            "put_oi": 62319,
+            "oi_ratio": 101.99
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_DL",
+          "source_role": "FALLBACK",
+          "fetched_at": "2026-08-26T00:49:38+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "_chart_meta": {
+          "recommended_type": "line",
+          "x_axis": {
+            "key": "date",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "volume_ratio"
+            ],
+            "title": "買賣權成交量比 (%)"
+          },
+          "annotations": [
+            {
+              "type": "hline",
+              "value": 1,
+              "label": "多空分界"
+            }
+          ],
+          "note": "volume_ratio 單位 %（100 = 多空均衡；annotation 1.0 為對數刻度之分界）"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

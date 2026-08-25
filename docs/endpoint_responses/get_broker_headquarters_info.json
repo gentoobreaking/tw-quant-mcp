@@ -1,0 +1,387 @@
+{
+  "request": {
+    "name": "get_broker_headquarters_info",
+    "arguments": {}
+  },
+  "http_status": 200,
+  "elapsed_ms": 4.6,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"Address\":\"台北市大安區忠孝東路四段285號1樓(部分)\",\"Code\":\"1020\",\"EstablishmentDate\":\"1001202\",\"Name\":\"合庫\",\"Telephone\":\"(02)27528000\"},{\"Address\":\"台北市延平南路八十一號\",\"Code\":\"1030\",\"EstablishmentDate\":\"0510209\",\"Name\":\"土銀\",\"Telephone\":\"(02)23483948\"},{\"Address\":\"台北市重慶南路1段58號4樓、5樓部分\",\"Code\":\"1040\",\"EstablishmentDate\":\"0970102\",\"Name\":\"臺銀證券\",\"Telephone\":\"(02)23882188\"},{\"Address\":\"台北市塔城街30號4樓\",\"Code\":\"1110\",\"EstablishmentDate\":\"0650701\",\"Name\":\"台灣企銀\",\"Telephone\":\"(02)25597171\"},{\"Address\":\"台北市衡陽路68號3樓\",\"Code\":\"1230\",\"EstablishmentDate\":\"0630413\",\"Name\":\"彰銀\",\"Telephone\":\"(02)23619654\"},{\"Address\":\"台北市信義路4段236號4樓部分、5樓部分、7樓部分及台北市信義路五段7號46樓之1部分\",\"Code\":\"1260\",\"EstablishmentDate\":\"0510209\",\"Name\":\"宏遠\",\"Telephone\":\"(02)27008899\"},{\"Address\":\"台北市復興南路1段2號5樓及5樓之1\",\"Code\":\"1360\",\"EstablishmentDate\":\"0850325\",\"Name\":\"港商麥格理\",\"Telephone\":\"(02)27347500\"},{\"Address\":\"台北市信義路五段7號48樓部分及48樓之1部分\",\"Code\":\"1440\",\"EstablishmentDate\":\"0970901\",\"Name\":\"美林\",\"Telephone\":\"(02)23763766\"},{\"Address\":\"臺北市信義區信義路5段7號83樓\",\"Code\":\"1470\",\"EstablishmentDate\":\"0951002\",\"Name\":\"台灣摩根士丹利\",\"Telephone\":\"(02)27302888\"},{\"Address\":\"台北市敦化南路2段207號11樓\",\"Code\":\"1480\",\"EstablishmentDate\":\"0890717\",\"Name\":\"美商高盛\",\"Telephone\":\"(02)27304000\"},{\"Address\":\"台北市松智路1號17樓部分\",\"Code\":\"1560\",\"EstablishmentDate\":\"0940401\",\"Name\":\"港商野村\",\"Telephone\":\"(02)21769999\"},{\"Address\":\"台北市信義區松智路１號14樓(部分)、15樓(部分)\",\"Code\":\"1590\",\"EstablishmentDate\":\"0960806\",\"Name\":\"花旗環球\",\"Telephone\":\"87269000\"},{\"Address\":\"台北市松仁路7號5樓部分\",\"Code\":\"1650\",\"EstablishmentDate\":\"0950403\",\"Name\":\"新加坡商瑞銀\",\"Telephone\":\"(02)87227200\"},{\"Address\":\"台北市中正區重慶南路一段86號2樓\",\"Code\":\"2180\",\"EstablishmentDate\":\"0680621\",\"Name\":\"亞東\",\"Telephone\":\"(02)77531899\"},{\"Address\":\"台北市中山區南京東路2段77號4樓\",\"Code\":\"2200\",\"EstablishmentDate\":\"0990702\",\"Name\":\"元大期貨\",\"Telephone\":\"(02)27176000\"},{\"Address\":\"台北市大安區敦化南路2段97號32樓及地下1樓\",\"Code\":\"2210\",\"EstablishmentDate\":\"1040901\",\"Name\":\"群益期貨\",\"Telephone\":\"(02)27002888\"},{\"Address\":\"台北市松山區南京東路五段188號15樓部分、15樓之1部分\",\"Code\":\"2300\",\"EstablishmentDate\":\"1150206\",\"Name\":\"國票期貨\",\"Telephone\":\"(02)27683998\"},{\"Address\":\"台北市承德路1段17號17樓、17樓之1、之2、之3\",\"Code\":\"5050\",\"EstablishmentDate\":\"0770811\",\"Name\":\"大展\",\"Telephone\":\"(02)25551234\"},{\"Address\":\"台北市南京東路3段287號3樓部份\",\"Code\":\"5110\",\"EstablishmentDate\":\"0770829\",\"Name\":\"富隆\",\"Telephone\":\"(02)27182788\"},{\"Address\":\"台北市民生東路2段174、176號3樓部份、4樓、174號12樓\",\"Code\":\"5260\",\"EstablishmentDate\":\"0770906\",\"Name\":\"美好\",\"Telephone\":\"(02)25084888\"},{\"Address\":\"桃園市中壢區中和路92.94.96.98號\",\"Code\":\"5320\",\"EstablishmentDate\":\"0770923\",\"Name\":\"高橋\",\"Telephone\":\"(03)4224243\"},{\"Address\":\"台北市中山區長安東路一段22號4樓部分及5樓部分\",\"Code\":\"5380\",\"EstablishmentDate\":\"0771006\",\"Name\":\"第一金\",\"Telephone\":\"(02)25636262\"},{\"Address\":\"台中市北屯區北興街43號1樓、2樓\",\"Code\":\"5460\",\"EstablishmentDate\":\"0771102\",\"Name\":\"寶盛\",\"Telephone\":\"(04)22309377\"},{\"Address\":\"台北市南海路20號2樓部分、3樓部分\",\"Code\":\"5600\",\"EstablishmentDate\":\"0771201\",\"Name\":\"永興\",\"Telephone\":\"(02)23218200\"},{\"Address\":\"苗栗縣苗栗市中正路426號4F\",\"Code\":\"5660\",\"EstablishmentDate\":\"0771213\",\"Name\":\"日進\",\"Telephone\":\"(037)332266\"},{\"Address\":\"台北市東興路8號1樓、2樓部分、3樓部分、4樓部分、5樓、6樓部分、7樓部分\",\"Code\":\"5850\",\"EstablishmentDate\":\"0780403\",\"Name\":\"統一\",\"Telephone\":\"(02)27478266\"},{\"Address\":\"高雄市新興區七賢二路38號\",\"Code\":\"5860\",\"EstablishmentDate\":\"0780403\",\"Name\":\"盈溢\",\"Telephone\":\"(07)2888516\"},{\"Address\":\"南投縣草屯鎮草溪路1020號2、3樓\",\"Code\":\"5960\",\"EstablishmentDate\":\"0780703\",\"Name\":\"日茂\",\"Telephone\":\"(049)2353266\"},{\"Address\":\"台北市復興北路99號3樓、4樓、4樓之1\",\"Code\":\"6010\",\"EstablishmentDate\":\"0780725\",\"Name\":\"犇亞證券\",\"Telephone\":\"(02)27180101\"},{\"Address\":\"台中市民族路45號1、2樓\",\"Code\":\"6110\",\"EstablishmentDate\":\"1020502\",\"Name\":\"台中銀\",\"Telephone\":\"(04)22268588\"},{\"Address\":\"臺北市南港區經貿二路168號3樓及臺北市南港區經貿二路188號14樓(部分)\",\"Code\":\"6160\",\"EstablishmentDate\":\"0780819\",\"Name\":\"中國信託\",\"Telephone\":\"(02)66392000\"},{\"Address\":\"高雄市前金區中華三路11號5樓及地下一樓\",\"Code\":\"6210\",\"EstablishmentDate\":\"0780821\",\"Name\":\"新百王\",\"Telephone\":\"(07)2118888\"},{\"Address\":\"彰化縣北斗鎮光復路166號3、4樓\",\"Code\":\"6380\",\"EstablishmentDate\":\"0780922\",\"Name\":\"光和\",\"Telephone\":\"(04)8886500\"},{\"Address\":\"桃園市桃園區縣府路82號2至7樓\",\"Code\":\"6450\",\"EstablishmentDate\":\"0780930\",\"Name\":\"永全\",\"Telephone\":\"(03)3352155\"},{\"Address\":\"新北市板橋區東門街30之2號2樓之1至85及9樓之1、2\",\"Code\":\"6460\",\"EstablishmentDate\":\"0780930\",\"Name\":\"大昌\",\"Telephone\":\"(02)29689685\"},{\"Address\":\"台北市中正區忠孝西路一段6號5樓部分\",\"Code\":\"6480\",\"EstablishmentDate\":\"0781007\",\"Name\":\"福邦\",\"Telephone\":\"(02)23836888\"},{\"Address\":\"新北市板橋區三民路一段216號9樓\",\"Code\":\"6620\",\"EstablishmentDate\":\"0781017\",\"Name\":\"口袋\",\"Telephone\":\"(02)29526620\"},{\"Address\":\"台北市新生南路一段五十號三樓(部分)\",\"Code\":\"6910\",\"EstablishmentDate\":\"0781114\",\"Name\":\"德信\",\"Telephone\":\"(02)23939988\"},{\"Address\":\"新北市淡水區中正路六十三號三、四、五樓\",\"Code\":\"6950\",\"EstablishmentDate\":\"0781117\",\"Name\":\"福勝\",\"Telephone\":\"(02)26251818\"},{\"Address\":\"台北市忠孝東路2段95號3樓、4樓、6樓、7樓、8樓及11至13樓\",\"Code\":\"7000\",\"EstablishmentDate\":\"0781116\",\"Name\":\"兆豐\",\"Telephone\":\"(02)23278988\"},{\"Address\":\"台南市西門路3段10號地下1樓、1、2、3、4、5、6、7樓\",\"Code\":\"7030\",\"EstablishmentDate\":\"0781127\",\"Name\":\"致和\",\"Telephone\":\"(06)2219777\"},{\"Address\":\"桃園市平鎮區環南路二段16號\",\"Code\":\"7080\",\"EstablishmentDate\":\"0781130\",\"Name\":\"石橋\",\"Telephone\":\"(03)4927373\"},{\"Address\":\"新北市永和區永和路2段116號3樓部分\",\"Code\":\"7750\",\"EstablishmentDate\":\"0790331\",\"Name\":\"北城\",\"Telephone\":\"(02)29283456\"},{\"Address\":\"台北市重慶北路3段199號地下1樓及6樓部分、台北市中山區樂群三路126號3樓部分\",\"Code\":\"7790\",\"EstablishmentDate\":\"0790410\",\"Name\":\"國票\",\"Telephone\":\"(02)85021999\"},{\"Address\":\"高雄市鳳山區五福二路36號1,2樓\",\"Code\":\"8380\",\"EstablishmentDate\":\"0791022\",\"Name\":\"安泰\",\"Telephone\":\"(07)8122789\"},{\"Address\":\"台北市信義路5段106號3樓部分\",\"Code\":\"8440\",\"EstablishmentDate\":\"0791124\",\"Name\":\"摩根大通\",\"Telephone\":\"(02)87862288\"},{\"Address\":\"台北市信義區基隆路1段176號地下1樓部分、2樓\",\"Code\":\"8450\",\"EstablishmentDate\":\"0791204\",\"Name\":\"康和\",\"Telephone\":\"(02)87871888\"},{\"Address\":\"臺北市松山區南京東路三段289號3樓\",\"Code\":\"8490\",\"EstablishmentDate\":\"0791215\",\"Name\":\"京城\",\"Telephone\":\"(02)25631168\"},{\"Address\":\"台中市梧棲區四維中路157巷1號2樓\",\"Code\":\"8520\",\"EstablishmentDate\":\"0800727\",\"Name\":\"中農\",\"Telephone\":\"(04)26572801\"},{\"Address\":\"台北市重慶南路1段66之1號5樓\",\"Code\":\"8560\",\"EstablishmentDate\":\"0830105\",\"Name\":\"新光\",\"Telephone\":\"(02)23118181\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:31+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "Address": "台北市大安區忠孝東路四段285號1樓(部分)",
+            "Code": "1020",
+            "EstablishmentDate": "1001202",
+            "Name": "合庫",
+            "Telephone": "(02)27528000"
+          },
+          {
+            "Address": "台北市延平南路八十一號",
+            "Code": "1030",
+            "EstablishmentDate": "0510209",
+            "Name": "土銀",
+            "Telephone": "(02)23483948"
+          },
+          {
+            "Address": "台北市重慶南路1段58號4樓、5樓部分",
+            "Code": "1040",
+            "EstablishmentDate": "0970102",
+            "Name": "臺銀證券",
+            "Telephone": "(02)23882188"
+          },
+          {
+            "Address": "台北市塔城街30號4樓",
+            "Code": "1110",
+            "EstablishmentDate": "0650701",
+            "Name": "台灣企銀",
+            "Telephone": "(02)25597171"
+          },
+          {
+            "Address": "台北市衡陽路68號3樓",
+            "Code": "1230",
+            "EstablishmentDate": "0630413",
+            "Name": "彰銀",
+            "Telephone": "(02)23619654"
+          },
+          {
+            "Address": "台北市信義路4段236號4樓部分、5樓部分、7樓部分及台北市信義路五段7號46樓之1部分",
+            "Code": "1260",
+            "EstablishmentDate": "0510209",
+            "Name": "宏遠",
+            "Telephone": "(02)27008899"
+          },
+          {
+            "Address": "台北市復興南路1段2號5樓及5樓之1",
+            "Code": "1360",
+            "EstablishmentDate": "0850325",
+            "Name": "港商麥格理",
+            "Telephone": "(02)27347500"
+          },
+          {
+            "Address": "台北市信義路五段7號48樓部分及48樓之1部分",
+            "Code": "1440",
+            "EstablishmentDate": "0970901",
+            "Name": "美林",
+            "Telephone": "(02)23763766"
+          },
+          {
+            "Address": "臺北市信義區信義路5段7號83樓",
+            "Code": "1470",
+            "EstablishmentDate": "0951002",
+            "Name": "台灣摩根士丹利",
+            "Telephone": "(02)27302888"
+          },
+          {
+            "Address": "台北市敦化南路2段207號11樓",
+            "Code": "1480",
+            "EstablishmentDate": "0890717",
+            "Name": "美商高盛",
+            "Telephone": "(02)27304000"
+          },
+          {
+            "Address": "台北市松智路1號17樓部分",
+            "Code": "1560",
+            "EstablishmentDate": "0940401",
+            "Name": "港商野村",
+            "Telephone": "(02)21769999"
+          },
+          {
+            "Address": "台北市信義區松智路１號14樓(部分)、15樓(部分)",
+            "Code": "1590",
+            "EstablishmentDate": "0960806",
+            "Name": "花旗環球",
+            "Telephone": "87269000"
+          },
+          {
+            "Address": "台北市松仁路7號5樓部分",
+            "Code": "1650",
+            "EstablishmentDate": "0950403",
+            "Name": "新加坡商瑞銀",
+            "Telephone": "(02)87227200"
+          },
+          {
+            "Address": "台北市中正區重慶南路一段86號2樓",
+            "Code": "2180",
+            "EstablishmentDate": "0680621",
+            "Name": "亞東",
+            "Telephone": "(02)77531899"
+          },
+          {
+            "Address": "台北市中山區南京東路2段77號4樓",
+            "Code": "2200",
+            "EstablishmentDate": "0990702",
+            "Name": "元大期貨",
+            "Telephone": "(02)27176000"
+          },
+          {
+            "Address": "台北市大安區敦化南路2段97號32樓及地下1樓",
+            "Code": "2210",
+            "EstablishmentDate": "1040901",
+            "Name": "群益期貨",
+            "Telephone": "(02)27002888"
+          },
+          {
+            "Address": "台北市松山區南京東路五段188號15樓部分、15樓之1部分",
+            "Code": "2300",
+            "EstablishmentDate": "1150206",
+            "Name": "國票期貨",
+            "Telephone": "(02)27683998"
+          },
+          {
+            "Address": "台北市承德路1段17號17樓、17樓之1、之2、之3",
+            "Code": "5050",
+            "EstablishmentDate": "0770811",
+            "Name": "大展",
+            "Telephone": "(02)25551234"
+          },
+          {
+            "Address": "台北市南京東路3段287號3樓部份",
+            "Code": "5110",
+            "EstablishmentDate": "0770829",
+            "Name": "富隆",
+            "Telephone": "(02)27182788"
+          },
+          {
+            "Address": "台北市民生東路2段174、176號3樓部份、4樓、174號12樓",
+            "Code": "5260",
+            "EstablishmentDate": "0770906",
+            "Name": "美好",
+            "Telephone": "(02)25084888"
+          },
+          {
+            "Address": "桃園市中壢區中和路92.94.96.98號",
+            "Code": "5320",
+            "EstablishmentDate": "0770923",
+            "Name": "高橋",
+            "Telephone": "(03)4224243"
+          },
+          {
+            "Address": "台北市中山區長安東路一段22號4樓部分及5樓部分",
+            "Code": "5380",
+            "EstablishmentDate": "0771006",
+            "Name": "第一金",
+            "Telephone": "(02)25636262"
+          },
+          {
+            "Address": "台中市北屯區北興街43號1樓、2樓",
+            "Code": "5460",
+            "EstablishmentDate": "0771102",
+            "Name": "寶盛",
+            "Telephone": "(04)22309377"
+          },
+          {
+            "Address": "台北市南海路20號2樓部分、3樓部分",
+            "Code": "5600",
+            "EstablishmentDate": "0771201",
+            "Name": "永興",
+            "Telephone": "(02)23218200"
+          },
+          {
+            "Address": "苗栗縣苗栗市中正路426號4F",
+            "Code": "5660",
+            "EstablishmentDate": "0771213",
+            "Name": "日進",
+            "Telephone": "(037)332266"
+          },
+          {
+            "Address": "台北市東興路8號1樓、2樓部分、3樓部分、4樓部分、5樓、6樓部分、7樓部分",
+            "Code": "5850",
+            "EstablishmentDate": "0780403",
+            "Name": "統一",
+            "Telephone": "(02)27478266"
+          },
+          {
+            "Address": "高雄市新興區七賢二路38號",
+            "Code": "5860",
+            "EstablishmentDate": "0780403",
+            "Name": "盈溢",
+            "Telephone": "(07)2888516"
+          },
+          {
+            "Address": "南投縣草屯鎮草溪路1020號2、3樓",
+            "Code": "5960",
+            "EstablishmentDate": "0780703",
+            "Name": "日茂",
+            "Telephone": "(049)2353266"
+          },
+          {
+            "Address": "台北市復興北路99號3樓、4樓、4樓之1",
+            "Code": "6010",
+            "EstablishmentDate": "0780725",
+            "Name": "犇亞證券",
+            "Telephone": "(02)27180101"
+          },
+          {
+            "Address": "台中市民族路45號1、2樓",
+            "Code": "6110",
+            "EstablishmentDate": "1020502",
+            "Name": "台中銀",
+            "Telephone": "(04)22268588"
+          },
+          {
+            "Address": "臺北市南港區經貿二路168號3樓及臺北市南港區經貿二路188號14樓(部分)",
+            "Code": "6160",
+            "EstablishmentDate": "0780819",
+            "Name": "中國信託",
+            "Telephone": "(02)66392000"
+          },
+          {
+            "Address": "高雄市前金區中華三路11號5樓及地下一樓",
+            "Code": "6210",
+            "EstablishmentDate": "0780821",
+            "Name": "新百王",
+            "Telephone": "(07)2118888"
+          },
+          {
+            "Address": "彰化縣北斗鎮光復路166號3、4樓",
+            "Code": "6380",
+            "EstablishmentDate": "0780922",
+            "Name": "光和",
+            "Telephone": "(04)8886500"
+          },
+          {
+            "Address": "桃園市桃園區縣府路82號2至7樓",
+            "Code": "6450",
+            "EstablishmentDate": "0780930",
+            "Name": "永全",
+            "Telephone": "(03)3352155"
+          },
+          {
+            "Address": "新北市板橋區東門街30之2號2樓之1至85及9樓之1、2",
+            "Code": "6460",
+            "EstablishmentDate": "0780930",
+            "Name": "大昌",
+            "Telephone": "(02)29689685"
+          },
+          {
+            "Address": "台北市中正區忠孝西路一段6號5樓部分",
+            "Code": "6480",
+            "EstablishmentDate": "0781007",
+            "Name": "福邦",
+            "Telephone": "(02)23836888"
+          },
+          {
+            "Address": "新北市板橋區三民路一段216號9樓",
+            "Code": "6620",
+            "EstablishmentDate": "0781017",
+            "Name": "口袋",
+            "Telephone": "(02)29526620"
+          },
+          {
+            "Address": "台北市新生南路一段五十號三樓(部分)",
+            "Code": "6910",
+            "EstablishmentDate": "0781114",
+            "Name": "德信",
+            "Telephone": "(02)23939988"
+          },
+          {
+            "Address": "新北市淡水區中正路六十三號三、四、五樓",
+            "Code": "6950",
+            "EstablishmentDate": "0781117",
+            "Name": "福勝",
+            "Telephone": "(02)26251818"
+          },
+          {
+            "Address": "台北市忠孝東路2段95號3樓、4樓、6樓、7樓、8樓及11至13樓",
+            "Code": "7000",
+            "EstablishmentDate": "0781116",
+            "Name": "兆豐",
+            "Telephone": "(02)23278988"
+          },
+          {
+            "Address": "台南市西門路3段10號地下1樓、1、2、3、4、5、6、7樓",
+            "Code": "7030",
+            "EstablishmentDate": "0781127",
+            "Name": "致和",
+            "Telephone": "(06)2219777"
+          },
+          {
+            "Address": "桃園市平鎮區環南路二段16號",
+            "Code": "7080",
+            "EstablishmentDate": "0781130",
+            "Name": "石橋",
+            "Telephone": "(03)4927373"
+          },
+          {
+            "Address": "新北市永和區永和路2段116號3樓部分",
+            "Code": "7750",
+            "EstablishmentDate": "0790331",
+            "Name": "北城",
+            "Telephone": "(02)29283456"
+          },
+          {
+            "Address": "台北市重慶北路3段199號地下1樓及6樓部分、台北市中山區樂群三路126號3樓部分",
+            "Code": "7790",
+            "EstablishmentDate": "0790410",
+            "Name": "國票",
+            "Telephone": "(02)85021999"
+          },
+          {
+            "Address": "高雄市鳳山區五福二路36號1,2樓",
+            "Code": "8380",
+            "EstablishmentDate": "0791022",
+            "Name": "安泰",
+            "Telephone": "(07)8122789"
+          },
+          {
+            "Address": "台北市信義路5段106號3樓部分",
+            "Code": "8440",
+            "EstablishmentDate": "0791124",
+            "Name": "摩根大通",
+            "Telephone": "(02)87862288"
+          },
+          {
+            "Address": "台北市信義區基隆路1段176號地下1樓部分、2樓",
+            "Code": "8450",
+            "EstablishmentDate": "0791204",
+            "Name": "康和",
+            "Telephone": "(02)87871888"
+          },
+          {
+            "Address": "臺北市松山區南京東路三段289號3樓",
+            "Code": "8490",
+            "EstablishmentDate": "0791215",
+            "Name": "京城",
+            "Telephone": "(02)25631168"
+          },
+          {
+            "Address": "台中市梧棲區四維中路157巷1號2樓",
+            "Code": "8520",
+            "EstablishmentDate": "0800727",
+            "Name": "中農",
+            "Telephone": "(04)26572801"
+          },
+          {
+            "Address": "台北市重慶南路1段66之1號5樓",
+            "Code": "8560",
+            "EstablishmentDate": "0830105",
+            "Name": "新光",
+            "Telephone": "(02)23118181"
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:31+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

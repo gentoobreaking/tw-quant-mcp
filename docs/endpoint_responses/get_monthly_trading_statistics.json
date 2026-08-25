@@ -1,0 +1,117 @@
+{
+  "request": {
+    "name": "get_monthly_trading_statistics",
+    "arguments": {}
+  },
+  "http_status": 200,
+  "elapsed_ms": 2.3,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"month\":\"202607\",\"category\":\"股價指數期貨\",\"total_volume\":23656674,\"individual_buy\":11620813,\"individual_sell\":11650825,\"dealer_buy\":38078,\"dealer_sell\":37942,\"trust_buy\":116561,\"trust_sell\":97774,\"foreign_buy\":10679002,\"foreign_sell\":10660793,\"managed_futures_buy\":2639,\"managed_futures_sell\":3043,\"other_institutional_buy\":64687,\"other_institutional_sell\":67571,\"proprietary_buy\":1134894,\"proprietary_sell\":1138726,\"month_end_open_interest\":231222},{\"month\":\"202607\",\"category\":\"股票期貨\",\"total_volume\":15667872,\"individual_buy\":5224890,\"individual_sell\":5367331,\"dealer_buy\":185422,\"dealer_sell\":146782,\"trust_buy\":20485,\"trust_sell\":28836,\"foreign_buy\":8716872,\"foreign_sell\":8652962,\"managed_futures_buy\":263,\"managed_futures_sell\":134,\"other_institutional_buy\":99015,\"other_institutional_sell\":91754,\"proprietary_buy\":1420925,\"proprietary_sell\":1380073,\"month_end_open_interest\":1051835},{\"month\":\"202607\",\"category\":\"商品期貨\",\"total_volume\":11315,\"individual_buy\":2108,\"individual_sell\":2694,\"dealer_buy\":0,\"dealer_sell\":0,\"trust_buy\":0,\"trust_sell\":0,\"foreign_buy\":3029,\"foreign_sell\":3556,\"managed_futures_buy\":0,\"managed_futures_sell\":0,\"other_institutional_buy\":15,\"other_institutional_sell\":16,\"proprietary_buy\":6163,\"proprietary_sell\":5049,\"month_end_open_interest\":3261},{\"month\":\"202607\",\"category\":\"匯率期貨\",\"total_volume\":4862,\"individual_buy\":921,\"individual_sell\":705,\"dealer_buy\":0,\"dealer_sell\":0,\"trust_buy\":0,\"trust_sell\":0,\"foreign_buy\":1134,\"foreign_sell\":1372,\"managed_futures_buy\":0,\"managed_futures_sell\":0,\"other_institutional_buy\":1493,\"other_institutional_sell\":1517,\"proprietary_buy\":1314,\"proprietary_sell\":1268,\"month_end_open_interest\":876}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:49:17+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "month": "202607",
+            "category": "股價指數期貨",
+            "total_volume": 23656674,
+            "individual_buy": 11620813,
+            "individual_sell": 11650825,
+            "dealer_buy": 38078,
+            "dealer_sell": 37942,
+            "trust_buy": 116561,
+            "trust_sell": 97774,
+            "foreign_buy": 10679002,
+            "foreign_sell": 10660793,
+            "managed_futures_buy": 2639,
+            "managed_futures_sell": 3043,
+            "other_institutional_buy": 64687,
+            "other_institutional_sell": 67571,
+            "proprietary_buy": 1134894,
+            "proprietary_sell": 1138726,
+            "month_end_open_interest": 231222
+          },
+          {
+            "month": "202607",
+            "category": "股票期貨",
+            "total_volume": 15667872,
+            "individual_buy": 5224890,
+            "individual_sell": 5367331,
+            "dealer_buy": 185422,
+            "dealer_sell": 146782,
+            "trust_buy": 20485,
+            "trust_sell": 28836,
+            "foreign_buy": 8716872,
+            "foreign_sell": 8652962,
+            "managed_futures_buy": 263,
+            "managed_futures_sell": 134,
+            "other_institutional_buy": 99015,
+            "other_institutional_sell": 91754,
+            "proprietary_buy": 1420925,
+            "proprietary_sell": 1380073,
+            "month_end_open_interest": 1051835
+          },
+          {
+            "month": "202607",
+            "category": "商品期貨",
+            "total_volume": 11315,
+            "individual_buy": 2108,
+            "individual_sell": 2694,
+            "dealer_buy": 0,
+            "dealer_sell": 0,
+            "trust_buy": 0,
+            "trust_sell": 0,
+            "foreign_buy": 3029,
+            "foreign_sell": 3556,
+            "managed_futures_buy": 0,
+            "managed_futures_sell": 0,
+            "other_institutional_buy": 15,
+            "other_institutional_sell": 16,
+            "proprietary_buy": 6163,
+            "proprietary_sell": 5049,
+            "month_end_open_interest": 3261
+          },
+          {
+            "month": "202607",
+            "category": "匯率期貨",
+            "total_volume": 4862,
+            "individual_buy": 921,
+            "individual_sell": 705,
+            "dealer_buy": 0,
+            "dealer_sell": 0,
+            "trust_buy": 0,
+            "trust_sell": 0,
+            "foreign_buy": 1134,
+            "foreign_sell": 1372,
+            "managed_futures_buy": 0,
+            "managed_futures_sell": 0,
+            "other_institutional_buy": 1493,
+            "other_institutional_sell": 1517,
+            "proprietary_buy": 1314,
+            "proprietary_sell": 1268,
+            "month_end_open_interest": 876
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:49:17+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

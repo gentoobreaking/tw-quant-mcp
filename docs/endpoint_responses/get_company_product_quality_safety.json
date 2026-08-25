@@ -1,0 +1,48 @@
+{
+  "request": {
+    "name": "get_company_product_quality_safety",
+    "arguments": {
+      "code": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 5.2,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"依產品類別之產品產量\":\"達1,500萬片十二吋晶圓約當量\",\"售出產品重量(公噸(t))\":\"N/A\",\"生產設施場所數量(座)\":\"N/A\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:34+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":3,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "code": "2330",
+          "fields": {
+            "依產品類別之產品產量": "達1,500萬片十二吋晶圓約當量",
+            "售出產品重量(公噸(t))": "N/A",
+            "生產設施場所數量(座)": "N/A"
+          },
+          "name": "台積電",
+          "report_date": "2026-08-25",
+          "year": "114"
+        },
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:34+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 3,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

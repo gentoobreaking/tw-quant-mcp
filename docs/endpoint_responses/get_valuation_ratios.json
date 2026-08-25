@@ -1,0 +1,50 @@
+{
+  "request": {
+    "name": "get_valuation_ratios",
+    "arguments": {
+      "symbol": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 8.0,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"date\":\"2026-08-24\",\"pe\":27.53,\"pe_available\":true,\"pb\":9.57,\"dividend_yield_pct\":0.93,\"roe_pct\":39.527004777844105,\"roe_method\":\"MOPS 損益表摘要 2026Q2 累計稅後淨利 ×4/2 ÷ 資產負債表權益（年化估計）\",\"dividend_per_share\":7},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:49:55+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":5,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "symbol": "2330",
+          "name": "台積電",
+          "market": "tse",
+          "date": "2026-08-24",
+          "pe": 27.53,
+          "pe_available": true,
+          "pb": 9.57,
+          "dividend_yield_pct": 0.93,
+          "roe_pct": 39.527004777844105,
+          "roe_method": "MOPS 損益表摘要 2026Q2 累計稅後淨利 ×4/2 ÷ 資產負債表權益（年化估計）",
+          "dividend_per_share": 7
+        },
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:49:55+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 5,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

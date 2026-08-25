@@ -1,0 +1,23 @@
+{
+  "request": {
+    "name": "get_public_company_income_statement",
+    "arguments": {
+      "code": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 5.5,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "查無 2330 之公開發行公司綜合損益表資料"
+        }
+      ],
+      "isError": true
+    }
+  }
+}

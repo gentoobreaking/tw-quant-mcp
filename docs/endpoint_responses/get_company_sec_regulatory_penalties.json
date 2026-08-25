@@ -1,0 +1,23 @@
+{
+  "request": {
+    "name": "get_company_sec_regulatory_penalties",
+    "arguments": {
+      "code": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 1.8,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "查無 2330 之資料"
+        }
+      ],
+      "isError": true
+    }
+  }
+}

@@ -7,6 +7,7 @@ package mcp
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -212,9 +213,13 @@ func TestPrewarmEOD(t *testing.T) {
 	if env.HTTPCalls != 0 {
 		t.Errorf("attention_disposition 預熱後查詢 http_calls 應為 0，實際 %d", env.HTTPCalls)
 	}
-	// 未預熱之資料集（外資持股歷史）仍會打上游（http_calls>0，控制組）
-	f.stub("qfiis", url.Values{"dayDate": {"20260730"}},
-		`[{"date":"2026-07-30","code":"2330","name":"台積電","issue_shares":25930389000,"foreign_shares":1000000,"foreign_percent":10.5,"upper_limit_pct":100.0}]`)
+	// 未預熱之資料集（外資持股歷史）仍會打上游（http_calls>0，控制組）。
+	// selectType 視 registry 是否含產業別而定（01=預設；24=半導體），
+	// 故 stub 涵蓋全部類別以避免未 stub 鍵。
+	for i := 1; i <= 40; i++ {
+		f.stub("qfiis", url.Values{"dayDate": {"20260730"}, "selectType": {fmt.Sprintf("%02d", i)}},
+			`[{"date":"2026-07-30","code":"2330","name":"台積電","issue_shares":25930389000,"foreign_shares":1000000,"foreign_percent":10.5,"upper_limit_pct":100.0}]`)
+	}
 	env = callEnv(t, app, "get_foreign_shareholding_history",
 		map[string]any{"symbol": "2330", "range": 1, "date": "2026-07-30"})
 	if env.HTTPCalls == 0 {

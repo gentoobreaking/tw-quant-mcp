@@ -1,0 +1,23 @@
+{
+  "request": {
+    "name": "get_intraday_quote",
+    "arguments": {
+      "symbol": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 2.7,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "非交易時段（00:49:14）無法提供盤中資料"
+        }
+      ],
+      "isError": true
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "request": {
+    "name": "get_monthly_revenue",
+    "arguments": {
+      "symbol": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 8.7,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"rows\":[{\"table_date\":\"2026-08-17\",\"data_year_month\":\"202607\",\"code\":\"2330\",\"name\":\"台積電\",\"industry\":\"半導體業\",\"revenue\":467580548000,\"last_month_revenue\":442679969000,\"last_year_revenue\":323165707000,\"mom_change_pct\":5.624961765550318,\"yoy_change_pct\":44.68755126916978,\"cum_revenue\":2872064238000,\"cum_last_year\":2096211240000,\"cum_change_pct\":37.01215713355301,\"note\":\"-\"}]},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:49:17+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":6,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"data_year_month\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"revenue\"],\"title\":\"月營收 (元)\"},\"series\":[{\"key\":\"revenue\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "symbol": "2330",
+          "name": "台積電",
+          "market": "tse",
+          "rows": [
+            {
+              "table_date": "2026-08-17",
+              "data_year_month": "202607",
+              "code": "2330",
+              "name": "台積電",
+              "industry": "半導體業",
+              "revenue": 467580548000,
+              "last_month_revenue": 442679969000,
+              "last_year_revenue": 323165707000,
+              "mom_change_pct": 5.624961765550318,
+              "yoy_change_pct": 44.68755126916978,
+              "cum_revenue": 2872064238000,
+              "cum_last_year": 2096211240000,
+              "cum_change_pct": 37.01215713355301,
+              "note": "-"
+            }
+          ]
+        },
+        "_lineage": {
+          "source": "MOPS",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:49:17+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 6,
+          "grade": "AVAILABLE"
+        },
+        "_chart_meta": {
+          "recommended_type": "bar",
+          "x_axis": {
+            "key": "data_year_month",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "revenue"
+            ],
+            "title": "月營收 (元)"
+          },
+          "series": [
+            {
+              "key": "revenue",
+              "type": "bar",
+              "style": "diverging"
+            }
+          ]
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

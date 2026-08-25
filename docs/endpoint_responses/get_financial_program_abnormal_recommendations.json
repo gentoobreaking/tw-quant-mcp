@@ -1,0 +1,43 @@
+{
+  "request": {
+    "name": "get_financial_program_abnormal_recommendations",
+    "arguments": {}
+  },
+  "http_status": 200,
+  "elapsed_ms": 49.1,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"日期\":\"115年08月25日\",\"編號\":\"本日無\",\"證券代號\":\"本日無\",\"證券名稱\":\"本日無\"}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:42+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":45,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "日期": "115年08月25日",
+            "編號": "本日無",
+            "證券代號": "本日無",
+            "證券名稱": "本日無"
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:42+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 45,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

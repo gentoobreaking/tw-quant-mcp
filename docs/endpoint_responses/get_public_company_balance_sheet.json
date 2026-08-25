@@ -1,0 +1,23 @@
+{
+  "request": {
+    "name": "get_public_company_balance_sheet",
+    "arguments": {
+      "code": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 8.2,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "查無 2330 之公開發行公司資產負債表資料"
+        }
+      ],
+      "isError": true
+    }
+  }
+}

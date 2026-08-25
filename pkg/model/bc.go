@@ -78,6 +78,9 @@ type ForeignShareholdingHistory struct {
 	Name   string                `json:"name"`
 	Range  int                   `json:"range"`  // 請求交易日數
 	Series []ForeignHoldingPoint `json:"series"` // 由近至遠（最新在前）
+	// Note 補充說明：2026-08 起 MI_QFIIS 恆回最新快照，歷史日僅能取得
+	// 與最新相同之快照，故去重後 series 可能少於 range。
+	Note string `json:"note,omitempty"`
 }
 
 // AbnormalTrade 為一檔異常交易/注意股（get_abnormal_trading）。

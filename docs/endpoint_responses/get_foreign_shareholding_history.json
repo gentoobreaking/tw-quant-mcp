@@ -1,0 +1,63 @@
+{
+  "request": {
+    "name": "get_foreign_shareholding_history",
+    "arguments": {
+      "symbol": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 3918.7,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"range\":5,\"series\":[{\"date\":\"2026-08-25\",\"foreign_shares\":17938784228,\"foreign_percent\":69.17}],\"note\":\"MI_QFIIS 現僅提供最新快照，歷史交易日資料已不再供查詢，series 僅含可取得之快照\"},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:44+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":3915,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"foreign_percent\"],\"title\":\"外資持股比率 (%)\"}},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "symbol": "2330",
+          "name": "台積電",
+          "range": 5,
+          "series": [
+            {
+              "date": "2026-08-25",
+              "foreign_shares": 17938784228,
+              "foreign_percent": 69.17
+            }
+          ],
+          "note": "MI_QFIIS 現僅提供最新快照，歷史交易日資料已不再供查詢，series 僅含可取得之快照"
+        },
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:44+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 3915,
+          "grade": "AVAILABLE"
+        },
+        "_chart_meta": {
+          "recommended_type": "line",
+          "x_axis": {
+            "key": "date",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "foreign_percent"
+            ],
+            "title": "外資持股比率 (%)"
+          }
+        },
+        "http_calls": 2,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

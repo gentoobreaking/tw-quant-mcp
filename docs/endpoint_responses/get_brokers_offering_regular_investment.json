@@ -1,0 +1,163 @@
+{
+  "request": {
+    "name": "get_brokers_offering_regular_investment",
+    "arguments": {}
+  },
+  "http_status": 200,
+  "elapsed_ms": 2.0,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"BrokerageBusinessStartingDate\":\"1100701\",\"Name\":\"合庫\",\"SecuritiesFirmCode\":\"1020\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1070103\",\"Name\":\"土銀\",\"SecuritiesFirmCode\":\"1030\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1100726\",\"Name\":\"臺銀證券\",\"SecuritiesFirmCode\":\"1040\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1130318\",\"Name\":\"彰銀\",\"SecuritiesFirmCode\":\"1230\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1120502\",\"Name\":\"宏遠\",\"SecuritiesFirmCode\":\"1260\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1110211\",\"Name\":\"亞東\",\"SecuritiesFirmCode\":\"2180\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1060918\",\"Name\":\"第一金\",\"SecuritiesFirmCode\":\"5380\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1080102\",\"Name\":\"台中銀\",\"SecuritiesFirmCode\":\"6110\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1150402\",\"Name\":\"光和\",\"SecuritiesFirmCode\":\"6380\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1060801\",\"Name\":\"兆豐\",\"SecuritiesFirmCode\":\"7000\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1091015\",\"Name\":\"國票\",\"SecuritiesFirmCode\":\"7790\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1100923\",\"Name\":\"新光\",\"SecuritiesFirmCode\":\"8560\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1120914\",\"Name\":\"聯邦\",\"SecuritiesFirmCode\":\"8580\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1060428\",\"Name\":\"國泰\",\"SecuritiesFirmCode\":\"8880\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1100104\",\"Name\":\"群益金鼎\",\"SecuritiesFirmCode\":\"9100\",\"WealthManagementBusinessStartingDate\":\"1070501\"},{\"BrokerageBusinessStartingDate\":\"1060424\",\"Name\":\"凱基\",\"SecuritiesFirmCode\":\"9200\",\"WealthManagementBusinessStartingDate\":\"1060116\"},{\"BrokerageBusinessStartingDate\":\"1060329\",\"Name\":\"華南永昌\",\"SecuritiesFirmCode\":\"9300\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1060116\",\"Name\":\"富邦\",\"SecuritiesFirmCode\":\"9600\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1060221\",\"Name\":\"元大\",\"SecuritiesFirmCode\":\"9800\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1060418\",\"Name\":\"永豐金\",\"SecuritiesFirmCode\":\"9A00\",\"WealthManagementBusinessStartingDate\":\"\"},{\"BrokerageBusinessStartingDate\":\"1150202\",\"Name\":\"台新\",\"SecuritiesFirmCode\":\"9B00\",\"WealthManagementBusinessStartingDate\":\"\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:32+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "BrokerageBusinessStartingDate": "1100701",
+            "Name": "合庫",
+            "SecuritiesFirmCode": "1020",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1070103",
+            "Name": "土銀",
+            "SecuritiesFirmCode": "1030",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1100726",
+            "Name": "臺銀證券",
+            "SecuritiesFirmCode": "1040",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1130318",
+            "Name": "彰銀",
+            "SecuritiesFirmCode": "1230",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1120502",
+            "Name": "宏遠",
+            "SecuritiesFirmCode": "1260",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1110211",
+            "Name": "亞東",
+            "SecuritiesFirmCode": "2180",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1060918",
+            "Name": "第一金",
+            "SecuritiesFirmCode": "5380",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1080102",
+            "Name": "台中銀",
+            "SecuritiesFirmCode": "6110",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1150402",
+            "Name": "光和",
+            "SecuritiesFirmCode": "6380",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1060801",
+            "Name": "兆豐",
+            "SecuritiesFirmCode": "7000",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1091015",
+            "Name": "國票",
+            "SecuritiesFirmCode": "7790",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1100923",
+            "Name": "新光",
+            "SecuritiesFirmCode": "8560",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1120914",
+            "Name": "聯邦",
+            "SecuritiesFirmCode": "8580",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1060428",
+            "Name": "國泰",
+            "SecuritiesFirmCode": "8880",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1100104",
+            "Name": "群益金鼎",
+            "SecuritiesFirmCode": "9100",
+            "WealthManagementBusinessStartingDate": "1070501"
+          },
+          {
+            "BrokerageBusinessStartingDate": "1060424",
+            "Name": "凱基",
+            "SecuritiesFirmCode": "9200",
+            "WealthManagementBusinessStartingDate": "1060116"
+          },
+          {
+            "BrokerageBusinessStartingDate": "1060329",
+            "Name": "華南永昌",
+            "SecuritiesFirmCode": "9300",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1060116",
+            "Name": "富邦",
+            "SecuritiesFirmCode": "9600",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1060221",
+            "Name": "元大",
+            "SecuritiesFirmCode": "9800",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1060418",
+            "Name": "永豐金",
+            "SecuritiesFirmCode": "9A00",
+            "WealthManagementBusinessStartingDate": ""
+          },
+          {
+            "BrokerageBusinessStartingDate": "1150202",
+            "Name": "台新",
+            "SecuritiesFirmCode": "9B00",
+            "WealthManagementBusinessStartingDate": ""
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:32+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

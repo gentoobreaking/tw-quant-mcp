@@ -1,0 +1,76 @@
+{
+  "request": {
+    "name": "get_options_daily_history",
+    "arguments": {
+      "start": "2026-08-19",
+      "start_date": "2026-08-19",
+      "end": "2026-08-26",
+      "end_date": "2026-08-26",
+      "contract": "TXO"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 197.4,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"contract_month\":\"202608\"},{\"contract_month\":\"202608F3\"},{\"contract_month\":\"202608F4\"},{\"contract_month\":\"202608W4\"},{\"contract_month\":\"202609\"},{\"contract_month\":\"202609F1\"},{\"contract_month\":\"202609W1\"},{\"contract_month\":\"202610\"},{\"contract_month\":\"202611\"},{\"contract_month\":\"202612\"},{\"contract_month\":\"202703\"}],\"_lineage\":{\"source\":\"TAIFEX_DL\",\"source_role\":\"FALLBACK\",\"fetched_at\":\"2026-08-26T00:49:18+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":194,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "contract_month": "202608"
+          },
+          {
+            "contract_month": "202608F3"
+          },
+          {
+            "contract_month": "202608F4"
+          },
+          {
+            "contract_month": "202608W4"
+          },
+          {
+            "contract_month": "202609"
+          },
+          {
+            "contract_month": "202609F1"
+          },
+          {
+            "contract_month": "202609W1"
+          },
+          {
+            "contract_month": "202610"
+          },
+          {
+            "contract_month": "202611"
+          },
+          {
+            "contract_month": "202612"
+          },
+          {
+            "contract_month": "202703"
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_DL",
+          "source_role": "FALLBACK",
+          "fetched_at": "2026-08-26T00:49:18+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 194,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

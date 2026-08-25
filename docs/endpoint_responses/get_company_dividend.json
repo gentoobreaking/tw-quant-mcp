@@ -1,0 +1,75 @@
+{
+  "request": {
+    "name": "get_company_dividend",
+    "arguments": {
+      "code": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 5.8,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"cash_dividend\":7,\"cash_total\":181526590469,\"code\":\"2330\",\"dividend_year\":\"115\",\"name\":\"台積電\",\"net_income\":706561938461,\"progress\":\"董事會決議\",\"retained\":5739966199600,\"stock_dividend\":0,\"table_date\":\"2026-08-24\"},{\"cash_dividend\":7,\"cash_total\":181526590469,\"code\":\"2330\",\"dividend_year\":\"115\",\"name\":\"台積電\",\"net_income\":572479752038,\"progress\":\"董事會決議\",\"retained\":5209341584302,\"stock_dividend\":0,\"table_date\":\"2026-08-24\"},{\"cash_dividend\":6,\"cash_total\":155595147126,\"code\":\"2330\",\"dividend_year\":\"114\",\"name\":\"台積電\",\"net_income\":505743990228,\"progress\":\"董事會決議\",\"retained\":4776155250562,\"stock_dividend\":0,\"table_date\":\"2026-08-24\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:34+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":4,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "cash_dividend": 7,
+            "cash_total": 181526590469,
+            "code": "2330",
+            "dividend_year": "115",
+            "name": "台積電",
+            "net_income": 706561938461,
+            "progress": "董事會決議",
+            "retained": 5739966199600,
+            "stock_dividend": 0,
+            "table_date": "2026-08-24"
+          },
+          {
+            "cash_dividend": 7,
+            "cash_total": 181526590469,
+            "code": "2330",
+            "dividend_year": "115",
+            "name": "台積電",
+            "net_income": 572479752038,
+            "progress": "董事會決議",
+            "retained": 5209341584302,
+            "stock_dividend": 0,
+            "table_date": "2026-08-24"
+          },
+          {
+            "cash_dividend": 6,
+            "cash_total": 155595147126,
+            "code": "2330",
+            "dividend_year": "114",
+            "name": "台積電",
+            "net_income": 505743990228,
+            "progress": "董事會決議",
+            "retained": 4776155250562,
+            "stock_dividend": 0,
+            "table_date": "2026-08-24"
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:34+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 4,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

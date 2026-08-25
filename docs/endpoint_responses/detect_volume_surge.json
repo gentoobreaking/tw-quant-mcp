@@ -1,0 +1,23 @@
+{
+  "request": {
+    "name": "detect_volume_surge",
+    "arguments": {
+      "symbol": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 11.9,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "非交易時段（00:48:21）無法提供盤中資料"
+        }
+      ],
+      "isError": true
+    }
+  }
+}

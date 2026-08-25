@@ -60,6 +60,21 @@ func (s webListSpec) handler() func(*App, map[string]any) (HandlerResult, error)
 			params.Set("stockNo", sn)
 		}
 
+		// FMSRFK（個股月成交資訊，T171）為「單一個股」報表：上游以 stockNo
+		// 參數過濾，回應列無代號欄位（欄為 年度/月份/…）。schema 暴露的參數
+		// 名為 code（非 stock_no），故在此轉發並取消本地 code 過濾。
+		filterCode := codeArg
+		if s.ds == provider.TWSEWDStockMonTrade {
+			if codeArg == "" {
+				return HandlerResult{}, fmt.Errorf("code 為必填參數（FMSRFK 個股月成交僅提供單一個股查詢）")
+			}
+			if params == nil {
+				params = url.Values{}
+			}
+			params.Set("stockNo", codeArg)
+			filterCode = ""
+		}
+
 		rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
 			string(s.ds), dataDate,
 			cache.KeyString(model.SourceTWSEWeb, string(s.ds), dataDate,
@@ -75,7 +90,7 @@ func (s webListSpec) handler() func(*App, map[string]any) (HandlerResult, error)
 		if rows == nil {
 			return HandlerResult{Data: []any{}, Lineage: lineage}, nil
 		}
-		return HandlerResult{Data: paginateRows(rows, codeArg, nameArg, offset, limit), Lineage: lineage}, nil
+		return HandlerResult{Data: paginateRows(rows, filterCode, nameArg, offset, limit), Lineage: lineage}, nil
 	}
 }
 
@@ -237,7 +252,7 @@ func financialSuffix(category string) string {
 }
 
 // fetchFinancialRowsForCode 取得指定資料集全量並過濾出公司代號相符之列
-//（官方端點恆回全量最新，code 過濾於本地端進行）。
+// （官方端點恆回全量最新，code 過濾於本地端進行）。
 func fetchFinancialRowsForCode(a *App, ctx context.Context, ds provider.TWSEAPIDataset,
 	dataDate, code string) ([]map[string]any, bool, bool, error) {
 	return fetchNormalize[[]map[string]any](a, ctx,
@@ -468,13 +483,13 @@ func handlerGetCompanyIncomeStatement(a *App, args map[string]any) (HandlerResul
 
 // profitabilityNumericFields 為營益分析之數值排序欄位（官方中文欄名）。
 var profitabilityNumericFields = map[string]bool{
-	"營業收入(百萬元)":                true,
-	"毛利率(%)(營業毛利)/(營業收入)":     true,
+	"營業收入(百萬元)":             true,
+	"毛利率(%)(營業毛利)/(營業收入)":   true,
 	"營業利益率(%)(營業利益)/(營業收入)": true,
-	"稅前純益率(%)(稅前純益)/(營業收入)":   true,
-	"稅後純益率(%)(稅後純益)/(營業收入)":   true,
-	"年度":                             true,
-	"季別":                             true,
+	"稅前純益率(%)(稅前純益)/(營業收入)": true,
+	"稅後純益率(%)(稅後純益)/(營業收入)": true,
+	"年度": true,
+	"季別": true,
 }
 
 // handlerGetProfitabilitySummary：營益分析彙總表（排序＋分頁，T102）。
@@ -534,7 +549,6 @@ func handlerGetProfitabilitySummary(a *App, args map[string]any) (HandlerResult,
 	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
-
 
 // pubIncomeStatementDatasets 為公開發行公司綜合損益表六種產業格式（T160）。
 var pubIncomeStatementDatasets = map[string]provider.TWSEAPIDataset{

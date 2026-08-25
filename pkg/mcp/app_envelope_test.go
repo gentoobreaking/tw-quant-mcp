@@ -130,7 +130,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["total_return|"] = `[{"日　期":"20260825","發行量加權股價報酬指數":"26000.00"}]`
 	f.bodies["index_history|"] = `[{"date":"2026-07-30","open":23000.0,"high":23100.0,"low":22950.0,"close":23050.0},{"date":"2026-07-29","open":22900.0,"high":23050.0,"low":22880.0,"close":23000.0}]`
 	f.bodies["monthly_avg_all|"] = `[{"股票代號":"2330","股票名稱":"台積電","收盤價":"1150.00","月平均價":"1130.00"}]`
-	f.bodies["stock_mon_trade|date=20260730"] = `[{"年度月份":"115/07","最高價":"1180","最低價":"1100"}]`
+	f.bodies["stock_mon_trade|date=20260730&stockNo=2330"] = `[{"年度月份":"115/07","最高價":"1180","最低價":"1100"}]`
 	f.bodies["stock_year_his|date=20260730&stockNo=2330"] = `[{"年度":"114","最高價":"1180","最低價":"650"}]`
 	f.bodies["stock_year_trade|"] = `[{"股票代號":"2330","股票名稱":"台積電","成交股數":"50000000"}]`
 	f.bodies["top_foreign|"] = `[{"Rank":"1","Code":"2923","Name":"鼎固-KY"}]`
@@ -173,9 +173,9 @@ func stubBCEnvelope(f *fakeFetch) {
 	// get_foreign_industry_holdings
 	f.stub("foreign_holdings", nil,
 		`[{"industry":"半導體業","company_count":10,"share_number":1000,"foreign_share":500,"percentage":50.0}]`)
-	// get_foreign_shareholding_history（range=3）
+	// get_foreign_shareholding_history（range=3；selectType=24 半導體業）
 	for _, d := range []string{"20260730", "20260729", "20260728"} {
-		f.stub("qfiis", url.Values{"dayDate": {d}},
+		f.stub("qfiis", url.Values{"dayDate": {d}, "selectType": {"24"}},
 			`[{"date":"`+d[:4]+`-`+d[4:6]+`-`+d[6:]+`","code":"2330","name":"台積電","issue_shares":25930389000,"foreign_shares":1000000,"foreign_percent":10.5,"upper_limit_pct":100.0,"change_reason":"","last_changed_date":""}]`)
 	}
 	// get_margin_trading（TSE）
@@ -385,7 +385,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_taiwan_total_return_index", args: map[string]any{}},
 		{name: "get_stock_daily_trading", args: map[string]any{"code": "2330"}},
 		{name: "get_stock_monthly_average", args: map[string]any{}},
-		{name: "get_stock_monthly_trading", args: map[string]any{}},
+		{name: "get_stock_monthly_trading", args: map[string]any{"code": "2330"}},
 		{name: "get_stock_yearly_trading", args: map[string]any{}},
 		{name: "get_top_foreign_holdings", args: map[string]any{}},
 		{name: "get_twse_news", args: map[string]any{}},

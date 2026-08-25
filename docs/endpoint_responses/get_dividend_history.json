@@ -1,0 +1,96 @@
+{
+  "request": {
+    "name": "get_dividend_history",
+    "arguments": {
+      "symbol": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 124.0,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"years\":[{\"dividend_year\":\"115\",\"progress\":\"董事會決議\",\"cash_dividend\":7,\"stock_dividend\":0,\"cash_total\":181526590469,\"net_income\":706561938461,\"retained\":5739966199600},{\"dividend_year\":\"115\",\"progress\":\"董事會決議\",\"cash_dividend\":7,\"stock_dividend\":0,\"cash_total\":181526590469,\"net_income\":572479752038,\"retained\":5209341584302},{\"dividend_year\":\"114\",\"progress\":\"董事會決議\",\"cash_dividend\":6,\"stock_dividend\":0,\"cash_total\":155595147126,\"net_income\":505743990228,\"retained\":4776155250562}],\"total_years\":3,\"consecutive_years\":3,\"avg_cash_dividend\":6.666666666666667,\"last_yield_pct\":0.93,\"note\":\"股利年度以官方（民國）為準；連續配息年數僅以官方現行提供之年度計算\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:40+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":121,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"dividend_year\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"cash_dividend\"],\"title\":\"每股現金股利 (元/股)\"},\"series\":[{\"key\":\"cash_dividend\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "symbol": "2330",
+          "name": "台積電",
+          "market": "tse",
+          "years": [
+            {
+              "dividend_year": "115",
+              "progress": "董事會決議",
+              "cash_dividend": 7,
+              "stock_dividend": 0,
+              "cash_total": 181526590469,
+              "net_income": 706561938461,
+              "retained": 5739966199600
+            },
+            {
+              "dividend_year": "115",
+              "progress": "董事會決議",
+              "cash_dividend": 7,
+              "stock_dividend": 0,
+              "cash_total": 181526590469,
+              "net_income": 572479752038,
+              "retained": 5209341584302
+            },
+            {
+              "dividend_year": "114",
+              "progress": "董事會決議",
+              "cash_dividend": 6,
+              "stock_dividend": 0,
+              "cash_total": 155595147126,
+              "net_income": 505743990228,
+              "retained": 4776155250562
+            }
+          ],
+          "total_years": 3,
+          "consecutive_years": 3,
+          "avg_cash_dividend": 6.666666666666667,
+          "last_yield_pct": 0.93,
+          "note": "股利年度以官方（民國）為準；連續配息年數僅以官方現行提供之年度計算"
+        },
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:40+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 121,
+          "grade": "AVAILABLE"
+        },
+        "_chart_meta": {
+          "recommended_type": "bar",
+          "x_axis": {
+            "key": "dividend_year",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "cash_dividend"
+            ],
+            "title": "每股現金股利 (元/股)"
+          },
+          "series": [
+            {
+              "key": "cash_dividend",
+              "type": "bar",
+              "style": "diverging"
+            }
+          ]
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

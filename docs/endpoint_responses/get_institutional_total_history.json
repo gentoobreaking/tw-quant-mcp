@@ -1,0 +1,26 @@
+{
+  "request": {
+    "name": "get_institutional_total_history",
+    "arguments": {
+      "start": "2026-08-19",
+      "start_date": "2026-08-19",
+      "end": "2026-08-26",
+      "end_date": "2026-08-26"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 9984.7,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "insti_total 範圍查詢失敗: provider: insti_total CSV 表頭欄位數不符（期望 14，實際 1）：[<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">]"
+        }
+      ],
+      "isError": true
+    }
+  }
+}

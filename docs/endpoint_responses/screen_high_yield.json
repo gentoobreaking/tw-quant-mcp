@@ -1,0 +1,379 @@
+{
+  "request": {
+    "name": "screen_high_yield",
+    "arguments": {}
+  },
+  "http_status": 200,
+  "elapsed_ms": 257.0,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"total\":1969,\"matched\":20,\"limit\":20,\"rows\":[{\"code\":\"6596\",\"name\":\"寬宏藝術\",\"market\":\"otc\",\"pe\":4.82,\"pe_available\":true,\"pb\":2.97,\"dividend_yield_pct\":19.42,\"dividend_per_share\":18.7,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"6186\",\"name\":\"新潤\",\"market\":\"otc\",\"pe\":6.64,\"pe_available\":true,\"pb\":1.43,\"dividend_yield_pct\":14.88,\"dividend_per_share\":5.01,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"2528\",\"name\":\"皇普\",\"market\":\"tse\",\"pe\":8.31,\"pe_available\":true,\"pb\":1.18,\"dividend_yield_pct\":14.67,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"2442\",\"name\":\"新美齊\",\"market\":\"tse\",\"pe\":3.86,\"pe_available\":true,\"pb\":0.92,\"dividend_yield_pct\":13.78,\"dividend_per_share\":2,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"5519\",\"name\":\"隆大\",\"market\":\"tse\",\"pe\":5.59,\"pe_available\":true,\"pb\":1.08,\"dividend_yield_pct\":13.64,\"dividend_per_share\":3.3,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"1432\",\"name\":\"大魯閣\",\"market\":\"tse\",\"pe\":2.94,\"pe_available\":true,\"pb\":1.22,\"dividend_yield_pct\":13.33,\"dividend_per_share\":2,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"3188\",\"name\":\"鑫龍騰\",\"market\":\"otc\",\"pe\":3.41,\"pe_available\":true,\"pb\":1.35,\"dividend_yield_pct\":13.26,\"dividend_per_share\":3.2,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"3489\",\"name\":\"森寶\",\"market\":\"otc\",\"pe\":0,\"pe_available\":false,\"pb\":2.2,\"dividend_yield_pct\":13.16,\"dividend_per_share\":3,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"5213\",\"name\":\"亞昕\",\"market\":\"otc\",\"pe\":13.29,\"pe_available\":true,\"pb\":1.07,\"dividend_yield_pct\":13.08,\"dividend_per_share\":2.8,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"1436\",\"name\":\"華友聯\",\"market\":\"tse\",\"pe\":13.76,\"pe_available\":true,\"pb\":1.36,\"dividend_yield_pct\":13.02,\"dividend_per_share\":5.05,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"2540\",\"name\":\"愛山林\",\"market\":\"tse\",\"pe\":0,\"pe_available\":false,\"pb\":4.06,\"dividend_yield_pct\":12.96,\"dividend_per_share\":6,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"5225\",\"name\":\"東科-KY\",\"market\":\"tse\",\"pe\":8.98,\"pe_available\":true,\"pb\":1.48,\"dividend_yield_pct\":12.1,\"dividend_per_share\":7.21,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"6743\",\"name\":\"安普新\",\"market\":\"tse\",\"pe\":22.57,\"pe_available\":true,\"pb\":1.62,\"dividend_yield_pct\":11.98,\"dividend_per_share\":3,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"2530\",\"name\":\"華建\",\"market\":\"tse\",\"pe\":29.47,\"pe_available\":true,\"pb\":1.64,\"dividend_yield_pct\":11.88,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"4137\",\"name\":\"麗豐-KY\",\"market\":\"tse\",\"pe\":11.26,\"pe_available\":true,\"pb\":1.31,\"dividend_yield_pct\":11.3,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"2718\",\"name\":\"全心投控\",\"market\":\"otc\",\"pe\":4.76,\"pe_available\":true,\"pb\":0.7,\"dividend_yield_pct\":11.25,\"dividend_per_share\":5.57,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"6523\",\"name\":\"達爾膚\",\"market\":\"otc\",\"pe\":13.62,\"pe_available\":true,\"pb\":3.18,\"dividend_yield_pct\":11.11,\"dividend_per_share\":10,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"4523\",\"name\":\"永彰\",\"market\":\"otc\",\"pe\":0.89,\"pe_available\":true,\"pb\":0.85,\"dividend_yield_pct\":11.05,\"dividend_per_share\":2.64,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"1446\",\"name\":\"宏和\",\"market\":\"tse\",\"pe\":14.47,\"pe_available\":true,\"pb\":0.7,\"dividend_yield_pct\":11.03,\"dividend_per_share\":1.5,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"2387\",\"name\":\"精元\",\"market\":\"tse\",\"pe\":12.2,\"pe_available\":true,\"pb\":0.67,\"dividend_yield_pct\":11,\"dividend_per_share\":4,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:49:56+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":254,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"scatter\",\"x_axis\":{\"key\":\"pe\",\"type\":\"value\"},\"y_axis\":{\"key\":\"dividend_yield_pct\",\"title\":\"殖利率 / PE 散佈\"},\"series\":[{\"key\":\"dividend_per_share\",\"type\":\"bubble\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "total": 1969,
+          "matched": 20,
+          "limit": 20,
+          "rows": [
+            {
+              "code": "6596",
+              "name": "寬宏藝術",
+              "market": "otc",
+              "pe": 4.82,
+              "pe_available": true,
+              "pb": 2.97,
+              "dividend_yield_pct": 19.42,
+              "dividend_per_share": 18.7,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "6186",
+              "name": "新潤",
+              "market": "otc",
+              "pe": 6.64,
+              "pe_available": true,
+              "pb": 1.43,
+              "dividend_yield_pct": 14.88,
+              "dividend_per_share": 5.01,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "2528",
+              "name": "皇普",
+              "market": "tse",
+              "pe": 8.31,
+              "pe_available": true,
+              "pb": 1.18,
+              "dividend_yield_pct": 14.67,
+              "dividend_per_share": 0,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "2442",
+              "name": "新美齊",
+              "market": "tse",
+              "pe": 3.86,
+              "pe_available": true,
+              "pb": 0.92,
+              "dividend_yield_pct": 13.78,
+              "dividend_per_share": 2,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 1,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "5519",
+              "name": "隆大",
+              "market": "tse",
+              "pe": 5.59,
+              "pe_available": true,
+              "pb": 1.08,
+              "dividend_yield_pct": 13.64,
+              "dividend_per_share": 3.3,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 1,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "1432",
+              "name": "大魯閣",
+              "market": "tse",
+              "pe": 2.94,
+              "pe_available": true,
+              "pb": 1.22,
+              "dividend_yield_pct": 13.33,
+              "dividend_per_share": 2,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 1,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "3188",
+              "name": "鑫龍騰",
+              "market": "otc",
+              "pe": 3.41,
+              "pe_available": true,
+              "pb": 1.35,
+              "dividend_yield_pct": 13.26,
+              "dividend_per_share": 3.2,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "3489",
+              "name": "森寶",
+              "market": "otc",
+              "pe": 0,
+              "pe_available": false,
+              "pb": 2.2,
+              "dividend_yield_pct": 13.16,
+              "dividend_per_share": 3,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "5213",
+              "name": "亞昕",
+              "market": "otc",
+              "pe": 13.29,
+              "pe_available": true,
+              "pb": 1.07,
+              "dividend_yield_pct": 13.08,
+              "dividend_per_share": 2.8,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "1436",
+              "name": "華友聯",
+              "market": "tse",
+              "pe": 13.76,
+              "pe_available": true,
+              "pb": 1.36,
+              "dividend_yield_pct": 13.02,
+              "dividend_per_share": 5.05,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 1,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "2540",
+              "name": "愛山林",
+              "market": "tse",
+              "pe": 0,
+              "pe_available": false,
+              "pb": 4.06,
+              "dividend_yield_pct": 12.96,
+              "dividend_per_share": 6,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 1,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "5225",
+              "name": "東科-KY",
+              "market": "tse",
+              "pe": 8.98,
+              "pe_available": true,
+              "pb": 1.48,
+              "dividend_yield_pct": 12.1,
+              "dividend_per_share": 7.21,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 1,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "6743",
+              "name": "安普新",
+              "market": "tse",
+              "pe": 22.57,
+              "pe_available": true,
+              "pb": 1.62,
+              "dividend_yield_pct": 11.98,
+              "dividend_per_share": 3,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 1,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "2530",
+              "name": "華建",
+              "market": "tse",
+              "pe": 29.47,
+              "pe_available": true,
+              "pb": 1.64,
+              "dividend_yield_pct": 11.88,
+              "dividend_per_share": 0,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "4137",
+              "name": "麗豐-KY",
+              "market": "tse",
+              "pe": 11.26,
+              "pe_available": true,
+              "pb": 1.31,
+              "dividend_yield_pct": 11.3,
+              "dividend_per_share": 0,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "2718",
+              "name": "全心投控",
+              "market": "otc",
+              "pe": 4.76,
+              "pe_available": true,
+              "pb": 0.7,
+              "dividend_yield_pct": 11.25,
+              "dividend_per_share": 5.57,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "6523",
+              "name": "達爾膚",
+              "market": "otc",
+              "pe": 13.62,
+              "pe_available": true,
+              "pb": 3.18,
+              "dividend_yield_pct": 11.11,
+              "dividend_per_share": 10,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "4523",
+              "name": "永彰",
+              "market": "otc",
+              "pe": 0.89,
+              "pe_available": true,
+              "pb": 0.85,
+              "dividend_yield_pct": 11.05,
+              "dividend_per_share": 2.64,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "1446",
+              "name": "宏和",
+              "market": "tse",
+              "pe": 14.47,
+              "pe_available": true,
+              "pb": 0.7,
+              "dividend_yield_pct": 11.03,
+              "dividend_per_share": 1.5,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 1,
+              "matched": [
+                "高殖利率"
+              ]
+            },
+            {
+              "code": "2387",
+              "name": "精元",
+              "market": "tse",
+              "pe": 12.2,
+              "pe_available": true,
+              "pb": 0.67,
+              "dividend_yield_pct": 11,
+              "dividend_per_share": 4,
+              "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 1,
+              "matched": [
+                "高殖利率"
+              ]
+            }
+          ]
+        },
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:49:56+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 254,
+          "grade": "AVAILABLE"
+        },
+        "_chart_meta": {
+          "recommended_type": "scatter",
+          "x_axis": {
+            "key": "pe",
+            "type": "value"
+          },
+          "y_axis": {
+            "key": "dividend_yield_pct",
+            "title": "殖利率 / PE 散佈"
+          },
+          "series": [
+            {
+              "key": "dividend_per_share",
+              "type": "bubble"
+            }
+          ]
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

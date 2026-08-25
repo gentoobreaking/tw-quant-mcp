@@ -1,0 +1,72 @@
+{
+  "request": {
+    "name": "get_company_profile",
+    "arguments": {
+      "symbol": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 27.3,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"table_date\":\"2026-08-25\",\"code\":\"2330\",\"name\":\"台灣積體電路製造股份有限公司\",\"short_name\":\"台積電\",\"foreign_reg\":\"－\",\"industry\":\"24\",\"address\":\"新竹科學園區力行六路8號\",\"tax_id\":\"22099131\",\"chairman\":\"魏哲家\",\"president\":\"總裁: 魏哲家\",\"spokesman\":\"黃仁昭\",\"spokesman_title\":\"資深副總經理暨財務長\",\"deputy_spokesman\":\"高孟華\",\"phone\":\"03-5636688\",\"established\":\"1987-02-21\",\"listed\":\"1994-09-05\",\"par_value\":\"新台幣                 10.0000元\",\"capital\":259323700670000,\"private_stock\":0,\"preferred_stock\":0,\"fin_report_type\":\"1\",\"transfer_agent\":\"中國信託商業銀行 代理部\",\"transfer_phone\":\"02-6636-5566\",\"transfer_address\":\"台北市重慶南路一段83號5樓\",\"auditor_firm\":\"勤業眾信聯合會計師事務所\",\"auditor_1\":\"吳世宗\",\"auditor_2\":\"陳彥君\",\"english_name\":\"TSMC\",\"english_address\":\"No. 8, Li-Hsin Rd. 6, Hsinchu Science Park,Hsin-Chu 300096, Taiwan, R.O.C.\",\"fax\":\"03-5797337\",\"email\":\"invest@tsmc.com\",\"website\":\"https://www.tsmc.com\",\"shares_outstanding\":25932370067},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:34+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":25,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "table_date": "2026-08-25",
+          "code": "2330",
+          "name": "台灣積體電路製造股份有限公司",
+          "short_name": "台積電",
+          "foreign_reg": "－",
+          "industry": "24",
+          "address": "新竹科學園區力行六路8號",
+          "tax_id": "22099131",
+          "chairman": "魏哲家",
+          "president": "總裁: 魏哲家",
+          "spokesman": "黃仁昭",
+          "spokesman_title": "資深副總經理暨財務長",
+          "deputy_spokesman": "高孟華",
+          "phone": "03-5636688",
+          "established": "1987-02-21",
+          "listed": "1994-09-05",
+          "par_value": "新台幣                 10.0000元",
+          "capital": 259323700670000,
+          "private_stock": 0,
+          "preferred_stock": 0,
+          "fin_report_type": "1",
+          "transfer_agent": "中國信託商業銀行 代理部",
+          "transfer_phone": "02-6636-5566",
+          "transfer_address": "台北市重慶南路一段83號5樓",
+          "auditor_firm": "勤業眾信聯合會計師事務所",
+          "auditor_1": "吳世宗",
+          "auditor_2": "陳彥君",
+          "english_name": "TSMC",
+          "english_address": "No. 8, Li-Hsin Rd. 6, Hsinchu Science Park,Hsin-Chu 300096, Taiwan, R.O.C.",
+          "fax": "03-5797337",
+          "email": "invest@tsmc.com",
+          "website": "https://www.tsmc.com",
+          "shares_outstanding": 25932370067
+        },
+        "_lineage": {
+          "source": "MOPS",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:34+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 25,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

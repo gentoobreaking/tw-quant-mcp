@@ -1,0 +1,46 @@
+{
+  "request": {
+    "name": "get_companies_with_business_scope_changes",
+    "arguments": {}
+  },
+  "http_status": 200,
+  "elapsed_ms": 1.4,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"公司代號\":\"1340\",\"公司名稱\":\"勝悅-KY\",\"出表日期\":\"1150824\",\"季別\":\"1\",\"年度\":\"115\",\"序號\":\"1\",\"營業範圍重大變更說明\":\"●將上一會計年度占營業收入達百分之五十以上之經營業務變更，導致本期來自該業務之營業收入占本期營業收入低於百分之二十。\\n\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:34+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "公司代號": "1340",
+            "公司名稱": "勝悅-KY",
+            "出表日期": "1150824",
+            "季別": "1",
+            "年度": "115",
+            "序號": "1",
+            "營業範圍重大變更說明": "●將上一會計年度占營業收入達百分之五十以上之經營業務變更，導致本期來自該業務之營業收入占本期營業收入低於百分之二十。\n"
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:34+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

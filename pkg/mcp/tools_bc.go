@@ -341,6 +341,102 @@ func handlerGetForeignIndustryHoldings(a *App, args map[string]any) (HandlerResu
 	return HandlerResult{Data: rows, Lineage: postLineage(model.SourceTWSEAPI, date, cached || stale, stale, ttl)}, nil
 }
 
+// qfiisSelectTypeByCategory：MI_QFIIS selectType（產業別代碼）→ Symbol
+// Registry 產業類別名稱之對照。2026-08 實測：TWSE 已將 MI_QFIIS 改為
+// 依 selectType 產業別查詢，未帶參數時僅回傳類別 01（水泥，約 8 列），
+// 導致 get_foreign_shareholding_history 恆回「無資料」。
+var qfiisSelectTypeByCategory = map[string]string{
+	"水泥工業": "01", "食品工業": "02", "塑膠工業": "03", "紡織纖維": "04",
+	"電機機械": "05", "電器電纜": "06", "玻璃陶瓷": "08", "造紙工業": "09",
+	"鋼鐵工業": "10", "橡膠工業": "11", "汽車工業": "12", "建材營造": "14",
+	"航運業": "15", "觀光餐旅": "16", "金融保險業": "17", "貿易百貨": "18",
+	"其他": "20", "化學工業": "21", "生技醫療業": "22", "油電燃氣業": "23",
+	"半導體業": "24", "電腦及週邊設備業": "25", "光電業": "26", "通信網路業": "27",
+	"電子零組件業": "28", "電子通路業": "29", "資訊服務業": "30", "其他電子業": "31",
+	"綠能環保": "35", "數位雲端": "36", "運動休閒": "37", "居家生活": "38",
+}
+
+// fetchQFIISDay 取得指定日期、指定 selectType 類別之外資持股快照。
+func (a *App) fetchQFIISDay(ctx context.Context, d, sel string) (
+	[]provider.ForeignHoldingPointRow, bool, bool, error) {
+	params := url.Values{"dayDate": {dateYMD(d)}, "selectType": {sel}}
+	return fetchNormalize[[]provider.ForeignHoldingPointRow](a, ctx,
+		string(provider.TWSEWDForeignQFIIS), d,
+		cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDForeignQFIIS), d, "", vals(params)),
+		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDForeignQFIIS, params) })
+}
+
+// qfiisDayPoints 取得單日快照中 code 之持股點。先查 sym.Category 對應類別；
+// 未命中時掃描全部類別（01..40，含未映射之保留/特殊類別）。掃描路徑較慢
+// （受上游 rate limit），但結果會寫入 per-(date,selectType) 快取。
+func (a *App) qfiisDayPoints(ctx context.Context, d, code, category string) (
+	*model.ForeignHoldingPoint, bool, bool, error) {
+	type result struct {
+		rows          []provider.ForeignHoldingPointRow
+		cached, stale bool
+	}
+	fetchOne := func(sel string) (*result, error) {
+		rows, cached, stale, err := a.fetchQFIISDay(ctx, d, sel)
+		if err != nil {
+			return nil, err
+		}
+		return &result{rows: rows, cached: cached, stale: stale}, nil
+	}
+	pick := func(res *result) *model.ForeignHoldingPoint {
+		for _, r := range res.rows {
+			if r.Code == code {
+				return &model.ForeignHoldingPoint{
+					Date: r.Date, ForeignShares: r.ForeignShares, ForeignPercent: r.ForeignPercent,
+				}
+			}
+		}
+		return nil
+	}
+	primary, mapped := qfiisSelectTypeByCategory[category]
+	if !mapped {
+		primary = "01"
+	}
+	var lastErr error
+	anyOK := false
+	var cachedAny, staleAny bool
+	pickFrom := func(res *result) *model.ForeignHoldingPoint {
+		cachedAny = cachedAny || res.cached
+		staleAny = staleAny || res.stale
+		return pick(res)
+	}
+	res, err := fetchOne(primary)
+	if err != nil {
+		lastErr = err
+	} else {
+		anyOK = true
+		if p := pickFrom(res); p != nil {
+			return p, cachedAny, staleAny, nil
+		}
+	}
+	// fallback：掃描其餘類別（空類別或暫時性錯誤則略過）
+	for i := 1; i <= 40; i++ {
+		sel := fmt.Sprintf("%02d", i)
+		if sel == primary {
+			continue
+		}
+		r2, err2 := fetchOne(sel)
+		if err2 != nil {
+			if lastErr == nil {
+				lastErr = err2
+			}
+			continue
+		}
+		anyOK = true
+		if p := pickFrom(r2); p != nil {
+			return p, cachedAny, staleAny, nil
+		}
+	}
+	if !anyOK && lastErr != nil {
+		return nil, false, false, lastErr
+	}
+	return nil, cachedAny, staleAny, nil
+}
+
 // handlerGetForeignShareholdingHistory：外資持股歷史（§10.B，逐日快照）。
 func handlerGetForeignShareholdingHistory(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
@@ -363,26 +459,28 @@ func handlerGetForeignShareholdingHistory(a *App, args map[string]any) (HandlerR
 		return HandlerResult{}, err
 	}
 	series := make([]model.ForeignHoldingPoint, 0, rnge)
+	seenDates := make(map[string]bool, rnge)
+	snapshotTruncated := false
 	cachedAny := false
 	staleAny := false
 	day, _ := model.ParseDate(date)
 	for i := 0; i < rnge; i++ {
 		d := model.FormatDate(day)
-		params := url.Values{"dayDate": {dateYMD(d)}}
-		rows, cached, stale, err := fetchNormalize[[]provider.ForeignHoldingPointRow](a, ctx, string(provider.TWSEWDForeignQFIIS),
-			d, cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDForeignQFIIS), d, sym.Code, vals(params)),
-			func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDForeignQFIIS, params) })
+		point, cached, stale, err := a.qfiisDayPoints(ctx, d, sym.Code, sym.Category)
 		if err != nil {
 			return HandlerResult{}, err
 		}
 		cachedAny = cachedAny || cached
 		staleAny = staleAny || stale
-		for _, r := range rows {
-			if r.Code == sym.Code {
-				series = append(series, model.ForeignHoldingPoint{
-					Date: r.Date, ForeignShares: r.ForeignShares, ForeignPercent: r.ForeignPercent,
-				})
+		// 2026-08 起 MI_QFIIS 對過去日期恆回最新快照（resp.date 固定），
+		// 以快照日期去重，避免同一快照重複出現偽裝成歷史序列。
+		if point != nil {
+			if seenDates[point.Date] {
+				snapshotTruncated = true
+				break
 			}
+			seenDates[point.Date] = true
+			series = append(series, *point)
 		}
 		if prev, err := a.prevTradingDay(day, 1); err == nil {
 			day = prev
@@ -395,8 +493,12 @@ func handlerGetForeignShareholdingHistory(a *App, args map[string]any) (HandlerR
 	}
 	ttl, _ := a.ttlOf(string(provider.TWSEWDForeignQFIIS))
 	lg := postLineage(model.SourceTWSEWeb, date, cachedAny || staleAny, staleAny, ttl)
+	note := ""
+	if snapshotTruncated {
+		note = "MI_QFIIS 現僅提供最新快照，歷史交易日資料已不再供查詢，series 僅含可取得之快照"
+	}
 	return HandlerResult{Data: model.ForeignShareholdingHistory{
-		Symbol: sym.Code, Name: sym.Name, Range: rnge, Series: series,
+		Symbol: sym.Code, Name: sym.Name, Range: rnge, Series: series, Note: note,
 	}, Lineage: lg}, nil
 }
 
@@ -496,6 +598,80 @@ func handlerGetAbnormalTrading(a *App, args map[string]any) (HandlerResult, erro
 }
 
 // handlerGetWarrantActivity：權證活躍度（成交金額/張數排名，§10.B）。
+// handlerGetWarrantBasicInfo：權證基本資料查詢（TWSE-API t187ap37_L，T187）。
+// code 可為：
+//   - 權證代號（精確比對 權證代號 欄）；或
+//   - 標的證券代號（經 Symbol Registry 解析名稱後與 標的證券/指數 欄比對，
+//     因上游該欄存名稱而非代號，如 2330 → 台積電）。
+//
+// 省略時分頁回傳全部（limit 預設 100；全量約 3.8 萬列不宜一次回傳）。
+func handlerGetWarrantBasicInfo(a *App, args map[string]any) (HandlerResult, error) {
+	code := strVal(args["code"])
+	limit, offset := 100, 0
+	if v, ok := args["limit"]; ok {
+		if n, err := asInt(v); err == nil && n > 0 {
+			limit = n
+		}
+	}
+	if v, ok := args["offset"]; ok {
+		if n, err := asInt(v); err == nil && n >= 0 {
+			offset = n
+		}
+	}
+	var underlyingName string
+	if code != "" {
+		if sym, err := a.symbolOf(code); err == nil {
+			underlyingName = sym.Name // 標的證券代號 → 名稱（如 2330 → 台積電）
+		}
+	}
+	ctx := context.Background()
+	dataDate := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchFinancialRowsForCode(a, ctx,
+		provider.TWSEAPIWarrantBasic, dataDate, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(string(provider.TWSEAPIWarrantBasic))
+	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+	out := make([]any, 0, limit)
+	matched := 0
+	for _, r := range rows {
+		if !warrantBasicMatches(r, code, underlyingName) {
+			continue
+		}
+		if matched < offset {
+			matched++
+			continue
+		}
+		if len(out) >= limit {
+			break
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		if code != "" {
+			return HandlerResult{}, fmt.Errorf("查無 %s 之權證基本資料（權證代號或標的代號皆未命中）", code)
+		}
+		return HandlerResult{Data: []any{}, Lineage: lineage}, nil
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
+// warrantBasicMatches 判定單列是否符合 code（權證代號或標的名稱）。
+func warrantBasicMatches(r map[string]any, code, underlyingName string) bool {
+	if code == "" {
+		return true
+	}
+	if rowField(r, "權證代號", "code") == code {
+		return true
+	}
+	if underlyingName == "" {
+		return false
+	}
+	target := rowField(r, "標的證券/指數")
+	return target != "" && strings.Contains(target, underlyingName)
+}
+
 func handlerGetWarrantActivity(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	date, err := a.resolveDate(strVal(args["date"]))

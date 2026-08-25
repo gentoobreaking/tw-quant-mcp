@@ -1,0 +1,211 @@
+{
+  "request": {
+    "name": "get_institutional_investors",
+    "arguments": {
+      "market": "tse"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 4.6,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"market\":\"tse\",\"date\":\"2026-08-25\",\"rows\":[{\"code\":\"1102\",\"name\":\"亞泥\",\"foreign_buy\":5900147,\"foreign_sell\":3042857,\"foreign_net\":2857290,\"foreign_dealer_buy\":0,\"foreign_dealer_sell\":0,\"foreign_dealer_net\":0,\"investment_buy\":58000,\"investment_sell\":42536,\"investment_net\":15464,\"dealer_net\":-567881,\"dealer_self_buy\":5000,\"dealer_self_sell\":582000,\"dealer_self_net\":-577000,\"dealer_hedge_buy\":28297,\"dealer_hedge_sell\":19178,\"dealer_hedge_net\":9119,\"total_net\":2304873},{\"code\":\"1110\",\"name\":\"東泥\",\"foreign_buy\":46000,\"foreign_sell\":22000,\"foreign_net\":24000,\"foreign_dealer_buy\":0,\"foreign_dealer_sell\":0,\"foreign_dealer_net\":0,\"investment_buy\":0,\"investment_sell\":0,\"investment_net\":0,\"dealer_net\":1000,\"dealer_self_buy\":1000,\"dealer_self_sell\":0,\"dealer_self_net\":1000,\"dealer_hedge_buy\":0,\"dealer_hedge_sell\":0,\"dealer_hedge_net\":0,\"total_net\":25000},{\"code\":\"1108\",\"name\":\"幸福\",\"foreign_buy\":27000,\"foreign_sell\":20000,\"foreign_net\":7000,\"foreign_dealer_buy\":0,\"foreign_dealer_sell\":0,\"foreign_dealer_net\":0,\"investment_buy\":0,\"investment_sell\":0,\"investment_net\":0,\"dealer_net\":0,\"dealer_self_buy\":0,\"dealer_self_sell\":0,\"dealer_self_net\":0,\"dealer_hedge_buy\":0,\"dealer_hedge_sell\":0,\"dealer_hedge_net\":0,\"total_net\":7000},{\"code\":\"1109\",\"name\":\"信大\",\"foreign_buy\":28000,\"foreign_sell\":57000,\"foreign_net\":-29000,\"foreign_dealer_buy\":0,\"foreign_dealer_sell\":0,\"foreign_dealer_net\":0,\"investment_buy\":0,\"investment_sell\":0,\"investment_net\":0,\"dealer_net\":0,\"dealer_self_buy\":0,\"dealer_self_sell\":0,\"dealer_self_net\":0,\"dealer_hedge_buy\":0,\"dealer_hedge_sell\":0,\"dealer_hedge_net\":0,\"total_net\":-29000},{\"code\":\"1103\",\"name\":\"嘉泥\",\"foreign_buy\":45236,\"foreign_sell\":123088,\"foreign_net\":-77852,\"foreign_dealer_buy\":0,\"foreign_dealer_sell\":0,\"foreign_dealer_net\":0,\"investment_buy\":0,\"investment_sell\":0,\"investment_net\":0,\"dealer_net\":1000,\"dealer_self_buy\":1000,\"dealer_self_sell\":0,\"dealer_self_net\":1000,\"dealer_hedge_buy\":0,\"dealer_hedge_sell\":0,\"dealer_hedge_net\":0,\"total_net\":-76852},{\"code\":\"1104\",\"name\":\"環泥\",\"foreign_buy\":199000,\"foreign_sell\":552000,\"foreign_net\":-353000,\"foreign_dealer_buy\":0,\"foreign_dealer_sell\":0,\"foreign_dealer_net\":0,\"investment_buy\":0,\"investment_sell\":0,\"investment_net\":0,\"dealer_net\":918,\"dealer_self_buy\":1000,\"dealer_self_sell\":82,\"dealer_self_net\":918,\"dealer_hedge_buy\":0,\"dealer_hedge_sell\":0,\"dealer_hedge_net\":0,\"total_net\":-352082},{\"code\":\"1101\",\"name\":\"台泥\",\"foreign_buy\":14913001,\"foreign_sell\":18357975,\"foreign_net\":-3444974,\"foreign_dealer_buy\":0,\"foreign_dealer_sell\":0,\"foreign_dealer_net\":0,\"investment_buy\":0,\"investment_sell\":0,\"investment_net\":0,\"dealer_net\":-103264,\"dealer_self_buy\":35000,\"dealer_self_sell\":0,\"dealer_self_net\":35000,\"dealer_hedge_buy\":26217,\"dealer_hedge_sell\":164481,\"dealer_hedge_net\":-138264,\"total_net\":-3548238}],\"total_net\":-1001072},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:54+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"code\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"foreign_net\"],\"title\":\"三大法人買賣超 (股)\"},\"series\":[{\"key\":\"foreign_net\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "market": "tse",
+          "date": "2026-08-25",
+          "rows": [
+            {
+              "code": "1102",
+              "name": "亞泥",
+              "foreign_buy": 5900147,
+              "foreign_sell": 3042857,
+              "foreign_net": 2857290,
+              "foreign_dealer_buy": 0,
+              "foreign_dealer_sell": 0,
+              "foreign_dealer_net": 0,
+              "investment_buy": 58000,
+              "investment_sell": 42536,
+              "investment_net": 15464,
+              "dealer_net": -567881,
+              "dealer_self_buy": 5000,
+              "dealer_self_sell": 582000,
+              "dealer_self_net": -577000,
+              "dealer_hedge_buy": 28297,
+              "dealer_hedge_sell": 19178,
+              "dealer_hedge_net": 9119,
+              "total_net": 2304873
+            },
+            {
+              "code": "1110",
+              "name": "東泥",
+              "foreign_buy": 46000,
+              "foreign_sell": 22000,
+              "foreign_net": 24000,
+              "foreign_dealer_buy": 0,
+              "foreign_dealer_sell": 0,
+              "foreign_dealer_net": 0,
+              "investment_buy": 0,
+              "investment_sell": 0,
+              "investment_net": 0,
+              "dealer_net": 1000,
+              "dealer_self_buy": 1000,
+              "dealer_self_sell": 0,
+              "dealer_self_net": 1000,
+              "dealer_hedge_buy": 0,
+              "dealer_hedge_sell": 0,
+              "dealer_hedge_net": 0,
+              "total_net": 25000
+            },
+            {
+              "code": "1108",
+              "name": "幸福",
+              "foreign_buy": 27000,
+              "foreign_sell": 20000,
+              "foreign_net": 7000,
+              "foreign_dealer_buy": 0,
+              "foreign_dealer_sell": 0,
+              "foreign_dealer_net": 0,
+              "investment_buy": 0,
+              "investment_sell": 0,
+              "investment_net": 0,
+              "dealer_net": 0,
+              "dealer_self_buy": 0,
+              "dealer_self_sell": 0,
+              "dealer_self_net": 0,
+              "dealer_hedge_buy": 0,
+              "dealer_hedge_sell": 0,
+              "dealer_hedge_net": 0,
+              "total_net": 7000
+            },
+            {
+              "code": "1109",
+              "name": "信大",
+              "foreign_buy": 28000,
+              "foreign_sell": 57000,
+              "foreign_net": -29000,
+              "foreign_dealer_buy": 0,
+              "foreign_dealer_sell": 0,
+              "foreign_dealer_net": 0,
+              "investment_buy": 0,
+              "investment_sell": 0,
+              "investment_net": 0,
+              "dealer_net": 0,
+              "dealer_self_buy": 0,
+              "dealer_self_sell": 0,
+              "dealer_self_net": 0,
+              "dealer_hedge_buy": 0,
+              "dealer_hedge_sell": 0,
+              "dealer_hedge_net": 0,
+              "total_net": -29000
+            },
+            {
+              "code": "1103",
+              "name": "嘉泥",
+              "foreign_buy": 45236,
+              "foreign_sell": 123088,
+              "foreign_net": -77852,
+              "foreign_dealer_buy": 0,
+              "foreign_dealer_sell": 0,
+              "foreign_dealer_net": 0,
+              "investment_buy": 0,
+              "investment_sell": 0,
+              "investment_net": 0,
+              "dealer_net": 1000,
+              "dealer_self_buy": 1000,
+              "dealer_self_sell": 0,
+              "dealer_self_net": 1000,
+              "dealer_hedge_buy": 0,
+              "dealer_hedge_sell": 0,
+              "dealer_hedge_net": 0,
+              "total_net": -76852
+            },
+            {
+              "code": "1104",
+              "name": "環泥",
+              "foreign_buy": 199000,
+              "foreign_sell": 552000,
+              "foreign_net": -353000,
+              "foreign_dealer_buy": 0,
+              "foreign_dealer_sell": 0,
+              "foreign_dealer_net": 0,
+              "investment_buy": 0,
+              "investment_sell": 0,
+              "investment_net": 0,
+              "dealer_net": 918,
+              "dealer_self_buy": 1000,
+              "dealer_self_sell": 82,
+              "dealer_self_net": 918,
+              "dealer_hedge_buy": 0,
+              "dealer_hedge_sell": 0,
+              "dealer_hedge_net": 0,
+              "total_net": -352082
+            },
+            {
+              "code": "1101",
+              "name": "台泥",
+              "foreign_buy": 14913001,
+              "foreign_sell": 18357975,
+              "foreign_net": -3444974,
+              "foreign_dealer_buy": 0,
+              "foreign_dealer_sell": 0,
+              "foreign_dealer_net": 0,
+              "investment_buy": 0,
+              "investment_sell": 0,
+              "investment_net": 0,
+              "dealer_net": -103264,
+              "dealer_self_buy": 35000,
+              "dealer_self_sell": 0,
+              "dealer_self_net": 35000,
+              "dealer_hedge_buy": 26217,
+              "dealer_hedge_sell": 164481,
+              "dealer_hedge_net": -138264,
+              "total_net": -3548238
+            }
+          ],
+          "total_net": -1001072
+        },
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:54+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "_chart_meta": {
+          "recommended_type": "bar",
+          "x_axis": {
+            "key": "code",
+            "type": "category"
+          },
+          "y_axis": {
+            "keys": [
+              "foreign_net"
+            ],
+            "title": "三大法人買賣超 (股)"
+          },
+          "series": [
+            {
+              "key": "foreign_net",
+              "type": "bar",
+              "style": "diverging"
+            }
+          ]
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

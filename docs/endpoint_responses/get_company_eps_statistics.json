@@ -1,0 +1,53 @@
+{
+  "request": {
+    "name": "get_company_eps_statistics",
+    "arguments": {
+      "code": "2330"
+    }
+  },
+  "http_status": 200,
+  "elapsed_ms": 5.9,
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"公司代號\":\"2330\",\"公司名稱\":\"台灣積體電路製造股份有限公司\",\"出表日期\":\"1150825\",\"基本每股盈餘(元)\":\"49.33\",\"季別\":\"2\",\"年度\":\"115\",\"普通股每股面額\":\"新台幣                 10.0000元\",\"營業利益\":\"1425568793.00\",\"營業外收入及支出\":\"124660980.00\",\"營業收入\":\"2404483690.00\",\"產業別\":\"半導體業\",\"稅後淨利\":\"1279582227.00\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T00:48:34+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":4,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "公司代號": "2330",
+            "公司名稱": "台灣積體電路製造股份有限公司",
+            "出表日期": "1150825",
+            "基本每股盈餘(元)": "49.33",
+            "季別": "2",
+            "年度": "115",
+            "普通股每股面額": "新台幣                 10.0000元",
+            "營業利益": "1425568793.00",
+            "營業外收入及支出": "124660980.00",
+            "營業收入": "2404483690.00",
+            "產業別": "半導體業",
+            "稅後淨利": "1279582227.00"
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T00:48:34+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 4,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}
