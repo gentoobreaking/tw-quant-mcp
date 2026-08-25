@@ -197,7 +197,7 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 └───────────────────────────────────────────────────────────────────┘
 ```
 
-## 工具清單（40 個，§10）
+## 工具清單（40 個，§10；⚠️ 已過時——完整目錄見文末附錄）
 
 > 其中 `get_stock_trend_composite`（§9.1）為 v2.1 新增工具，Data Grade 為 `PREVIEW`；
 > `get_twse_index`（T032）、`get_etf_nav`（T032-fix，§30.1 L1）、`get_etf_dividend`（T038）為 ETF/指數支援新增工具。
@@ -393,3 +393,166 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 > 使用/修改/再散佈前請詳閱 LICENSE 全文。
 
 本專案僅供個人量化研究與教育用途。資料來源（FinMind、TWSE、TPEX）之使用請遵守各平台之服務條款。
+
+## 附錄：完整工具目錄（155 個，自動產生 2026-08-25）
+
+> 本目錄由 `pkg/mcp/registry_*.go` 之註冊資訊自動彙出；上方「工具清單（40 個）」章節
+> 為 v2.1 發布時之手寫清單，兩者以此附錄為準。各工具之 Envelope、`_lineage`、
+> 快取政策與真實呼叫快照見 `snapshots/raw/<tool>.json`。
+
+- `get_abnormal_trading`：查詢異常成交量（注意股）排名（上市 TWSE-WEB notice / 上櫃 TPEx 注意股）。top_n 預設 20，最大 100。
+- `get_after_hours_trading`：查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。code 選填（單檔查詢）；limit 預設 50；offset 分頁。
+- `get_annual_trading_volume`：查詢各期貨商品年成交量統計（年度總成交量、交易日數、平均日成交量；TAIFEX-API，T041）。contract 省略則回傳全部商品。
+- `get_attention_disposition_stocks`：查詢注意股/處置股清單（買前風險掃描）。上市：TWSE-WEB notice + TWSE-API punish；上櫃：TPEx 注意/處置。結果同步注入 scan_daytrade_eligibility 名單。
+- `get_block_trades_daily`：查詢集中市場鉅額交易日成交量值統計（TWSE-WEB BFIAUU_d，T042）。
+- `get_block_trades_detail`：查詢集中市場鉅額交易逐筆明細（含配對交易、盤後鉅額等交易別；TWSE-WEB BFIAUU_d date 查詢，T043）。stock_no/name 為本地端過濾；limit 預設 50。
+- `get_block_trades_monthly`：查詢集中市場鉅額交易月成交量值統計（TWSE-WEB BFIAUU_m，T044）。
+- `get_block_trades_yearly`：查詢集中市場鉅額交易年成交量值統計（TWSE-WEB BFIAUU_y，T045）。
+- `get_central_depository_bond_redemption`：查詢中央登錄公債補息資料表（TWSE-WEB BFI61U，T055）。
+- `get_companies_cumulative_voting`：查詢上市公司採累積投票制、全額連記法、候選人提名制選任董監事及當選資料彙總表（TWSE-API t187ap34_L，T056）。可選 name 過濾。
+- `get_companies_ownership_changes_business_scope`：查詢上市公司經營權及營業範圍異(變)動專區-經營權異動且營業範圍重大變更停止買賣公司（TWSE-API t187ap26_L，T057）。
+- `get_companies_ownership_changes_business_scope_trading`：查詢上市公司經營權及營業範圍異(變)動專區-經營權異動且營業範圍重大變更列為變更交易公司（TWSE-API t187ap27_L，T058）。
+- `get_companies_with_anticompetitive_losses`：查詢所有已申報反競爭行為法律訴訟損失的上市公司，排除零值及 N/A（TWSE-API t187ap46_L_20，T059）。
+- `get_companies_with_business_scope_changes`：查詢上市公司經營權及營業範圍異(變)動專區-營業範圍重大變更公司（TWSE-API t187ap25_L，T060）。可選 name 過濾。
+- `get_companies_with_csr_reports_103`：查詢民國103年應編製及申報企業社會責任報告書之公司（T061）。注意：官方資料源已下架，目前回明確錯誤訊息。
+- `get_companies_with_inclusive_finance_data`：查詢所有已申報普惠金融活動的上市公司，排除零值及 N/A（TWSE-API t187ap46_L_17，T062）。
+- `get_companies_with_independent_directors`：查詢上市公司獨立董監事兼任情形彙總表（TWSE-API t187ap30_L，T063）。可選 name 過濾。
+- `get_companies_with_ownership_changes`：查詢上市公司經營權及營業範圍異(變)動專區-經營權異動公司（TWSE-API t187ap24_L，T064）。可選 name 過濾。
+- `get_companies_with_refineries_in_populated_areas`：查詢所有已申報在人口密集區設有煉油廠的上市公司（排除零值及 N/A；TWSE-API ESG t187ap46_L_15，T065）。
+- `get_company_balance_sheet`：根據股票代號查詢上市公司資產負債表（TWSE-API t187ap07_L，T067）。自動偵測公司所屬產業並使用對應的財務報表格式（一般業、金融業、證券期貨業、金控業、保險業、異業）。
+- `get_company_board_info`：根據股票代號查詢上市公司董事會資訊（ESG 揭露 t187ap46_L_6，T068）。
+- `get_company_board_insufficient_shares`：查詢上市公司董事、監察人持股不足法定成數彙總表（TWSE-API t187ap08_L，T069）。可選 name 過濾。
+- `get_company_board_insufficient_shares_consecutive`：查詢上市公司董事、監察人持股連續不足月數彙總表（TWSE-API t187ap10_L，T070）。
+- `get_company_board_pledged_shares`：查詢上市公司董事、監察人質權設定占董事及監察人實際持有股數彙總表（TWSE-API t187ap09_L，T071）。
+- `get_company_board_shareholdings`：根據股票代號查詢上市公司董監事持股餘額明細資料（TWSE-API t187ap11_L，T072）。
+- `get_company_ceo_dual_role`：查詢上市公司董事長是否兼任總經理資訊彙總表（TWSE-API t187ap33_L，T073）。可選 name 過濾。
+- `get_company_consolidated_director_compensation`：根據股票代號查詢上市公司合併報表董事酬金相關資訊（TWSE-API t187ap29_C_L，T076）。
+- `get_company_consolidated_supervisor_compensation`：根據股票代號查詢上市公司合併報表監察人酬金相關資訊（TWSE-API t187ap29_D_L，T077）。
+- `get_company_daily_insider_trades_preannounced`：根據股票代號查詢上市公司每日內部人持股轉讓事前申報表-持股轉讓日報表（TWSE-API t187ap12_L，T078）。
+- `get_company_daily_insider_trades_untransferred`：根據股票代號查詢上市公司每日內部人持股轉讓事前申報表-持股未轉讓日報表（TWSE-API t187ap13_L，T079）。
+- `get_company_director_compensation`：根據股票代號查詢上市公司董事酬金相關資訊（TWSE-API t187ap29_A_L，T080）。
+- `get_company_dividend`：根據股票代號查詢上市公司股利分派情形（TWSE-API t187ap45_L 正規化模型，T081）。
+- `get_company_eps_statistics`：根據股票代號查詢上市公司各產業EPS統計資訊（TWSE-API t187ap14_L，T083）。
+- `get_company_financial_reports_supervisor_acknowledgment`：根據股票代號查詢上市公司財務報告經監察人承認情形（TWSE-API t187ap31_L，T084）。
+- `get_company_governance_info`：根據股票代號查詢上市公司公司治理資訊（ESG 揭露 t187ap46_L_9，T087）。
+- `get_company_governance_regulations`：根據股票代號查詢上市公司公司治理之相關規程規則（TWSE-API t187ap32_L 正規化模型，T088）。
+- `get_company_income_statement`：根據股票代號查詢上市公司綜合損益表（TWSE-API t187ap06_L，T092）。自動偵測公司所屬產業並使用對應的財務報表格式（一般業、金融業、證券期貨業、金控業、保險業、異業）。
+- `get_company_information_disclosure_violations`：根據股票代號查詢上市公司資訊揭露違法情形（金管會證期局裁罰/揭露違法，TWSE-API t187ap23_L，T094）。
+- `get_company_major_news`：查詢上市公司每日重大訊息（MOPS t187ap04_L，T096）。code 選填，指定則僅回傳該公司。
+- `get_company_major_shareholders`：根據股票代號查詢上市公司持股逾10%大股東名單（TWSE-API t187ap02_L，T097）。
+- `get_company_profile`：查詢公司基本資料（MOPS t187ap03_L：董事長、資本額、上市日期、產業別、發言人、過戶機構等）。
+- `get_company_profitability_analysis`：根據股票代號查詢上市公司營益分析（毛利率/營業利益率/純益率，TWSE-API t187ap17_L，T101）。
+- `get_company_profitability_analysis_summary`：查詢上市公司營益分析彙總表（全體公司，支援排序與分頁；TWSE-API t187ap17_L，T102）。order_by 可用欄位：公司代號、公司名稱、年度、季別、營業收入(百萬元)、毛利率(%)(營業毛利)/(營業收入)等比率欄。
+- `get_company_quarterly_audit_variance`：根據股票代號查詢上市公司當季綜合損益經會計師查核(核閱)數與當季預測數差異達百分之十以上者(簡式)（TWSE-API t187ap16_L，T103）。
+- `get_company_quarterly_earnings_forecast_achievement`：根據股票代號查詢上市公司截至各季綜合損益財測達成情形(簡式)（TWSE-API t187ap15_L，T104）。
+- `get_company_sec_regulatory_penalties`：根據股票代號查詢上市公司金管會證券期貨局裁罰案件專區（TWSE-API t187ap22_L passthrough，T106）。
+- `get_company_shareholder_meeting_announcements`：查詢上市公司股東會公告-召集股東常(臨時)會公告資料彙總表(95年度起適用)（TWSE-API t187ap38_L，T107）。可選 name 過濾。
+- `get_company_shareholder_meeting_announcements_by_code`：根據股票代號查詢上市公司股東會公告資料（TWSE-API t187ap38_L，T108）。
+- `get_company_shareholder_meeting_dates`：查詢上市公司召開股東常(臨時)會日期、地點及採用電子投票情形等資料彙總表（TWSE-API t187ap41_L，T109）。可選 name 過濾。
+- `get_company_shareholder_proposal_exercise`：查詢上市公司股東行使提案權情形彙總表（TWSE-API t187ap35_L，T110）。可選 name 過濾。
+- `get_company_supervisor_compensation`：根據股票代號查詢上市公司監察人酬金相關資訊（TWSE-API t187ap29_B_L，T111）。
+- `get_cross_market_trading_info`：查詢每日上市上櫃跨市場成交資訊（T115）。
+- `get_daily_day_trading_targets`：查詢上市股票每日當日沖銷交易標的及統計（T116）。可選 name 過濾。
+- `get_daily_futures_market_report`：查詢期貨每日交易行情，包含開高低收、成交量、未平倉量等資訊（TAIFEX-API DailyMarketReportFut，T117）。常用契約代碼：TX（臺指期貨）、MTX（小型臺指）等白名單契約；contract 留空可列出所有可用契約代碼。
+- `get_daily_options_market_report`：查詢選擇權每日交易行情，篩選有成交量的履約價資料，按成交量由大到小排序（TAIFEX-API DailyMarketReportOpt，T118）。常用契約代碼：TXO（臺指選擇權）、TEO（電子選擇權）、TFO（金融選擇權）；contract 留空可列出所有可用契約代碼。
+- `get_daily_securities_lending_volume`：查詢集中市場借券賣出每日量（T119）。
+- `get_dividend_history`：查詢個股配息歷史與穩定性（上市 t187ap45_L 股利分派；上櫃 TPEx 最新年度）。輸出：各股利年度現金/股票股利、連續配息年數、平均每股現金股利、最新殖利率。官方 Open API 僅提供現行年度分派資料，歷史深度有限（note 說明）。
+- `get_esg_report`：查詢個股 ESG 揭露完整報告（T037 雙來源：TWSE OpenAPI / MOPS CSV t187ap46_L_1~8 八主題——溫室氣體排放/再生能源/用水/廢棄物/員工薪資福利/董事會組成/法說會/TCFD，另附 t187ap32_L 公司治理規程）。首次呼叫自動速度選源（快者為主來源），主來源失敗自動 fallback。
+- `get_etf_dividend`：查詢 ETF 歷史分配收益（配息/收益分配）。資料源：TWSE ETF 分配收益 API（etfDiv）；回傳期間內每筆除息日、基準日、發放日、配息金額、分配標準。僅上市 ETF。start/end 省略時為近 2 年。
+- `get_etf_nav`：查詢 ETF 歷史淨值（NAV）與折溢價（spec §30.1 L1）。資料源：TWSE ETF e添富平台（ajaxEtfInfoChart）；回傳期間內逐日 NAV/市價/折溢價率。僅上市 ETF（上櫃 ETF 暫無資料源）。start/end 省略時為近 3 個月。
+- `get_etf_regular_investment_ranking`：查詢定期定額交易戶數統計排行月報表（TWSE-WEB ETFReport/ETFRank，T120）。每列含排名、股票與 ETF 之代碼/名稱/交易戶數。可選 code/name 過濾（比對股票欄）。
+- `get_exdividend_calendar`：查詢除權除息行事曆（上市 TWT48U_ALL + 上櫃 TPEx 預告；§10.E）。start/end 省略時為今日起 6 個月；事件依日期排序。資料 L2 持久（§4.1/4.2），L1 24h 內重取以納入新公告。
+- `get_financial_health_check`：查詢個股財務健康五面向評分（獲利/成長/結構/配息/治理，各 0-100）。評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）；評分規則版本化（scoring_version，config 可調）；輸出為 helper 資料（_lineage.source_role=helper）。
+- `get_financial_program_abnormal_recommendations`：查詢投資理財節目異常推介個股（TWSE-WEB Announcement/BFZFZU_T，T121）。可選 name 過濾；無異常推介時官方回「本日無」佔位列。
+- `get_financial_statements`：查詢個股財報三表（MOPS）。period 支援 \
+- `get_first_listed_foreign_stocks_daily`：查詢每日第一上市外國股票成交量值（T122）。可選 name 過濾。
+- `get_foreign_companies_applying_for_listing`：查詢外國公司向證交所申請第一上市之公司（TWSE-API company/applylistingForeign，T123）。可選 name 過濾。
+- `get_foreign_industry_holdings`：查詢外資產業配置（TWSE-API 類股外資持股比率，chart pie）。date 省略時為最近交易日。
+- `get_foreign_shareholding_history`：查詢個股外資及陸資持股歷史（TWSE-WEB MI_QFIIS 逐日快照，T-1 翌日釋出）。僅上市股票。series 由近至遠。
+- `get_fund_basic_info`：查詢基金基本資料彙總表（TWSE-API t187ap47_L，T124）。
+- `get_futures_daily_history`：查詢期貨每日OHLC歷史行情（可回溯查詢，非僅最新一日；TAIFEX-DL 下載頁回溯，T125）。contract 省略時預設 TX（臺股期貨）；回傳區間內每個交易日、每個到期月份、一般與盤後時段行情。
+- `get_futures_daily_ohlc`：查詢期貨契約每日 OHLC（TAIFEX，openapi 最新交易日 hot tier）。date 省略時為最新交易日；回傳該日該契約全到期月份/時段之行情（價格單位：點）。契約代號限白名單（TX/MTX/GTX/G2F/G1F/G9F/E4F/XIF/GXF/T5F）。
+- `get_futures_history`：查詢期貨 OHLC 歷史（TAIFEX-DL 下載頁回溯，§9.3；L2 永久快取）。start/end 跨度 ≤ 366 日；回傳依日期/到期月份排序之行情。
+- `get_futures_institutional`：查詢三大法人期貨與選擇權每日交易資訊（期貨+選擇權合計；多空交易量/金額、未平倉與契約價值；TAIFEX-API DividedByFuturesAndOptionsBytheDate，T126）。date 省略為最新交易日。
+- `get_index_futures_margin`：查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；TAIFEX-API IndexFuturesAndOptionsMargining，T127）。contract 為中文商品名子字串（如「臺股期貨」），留空顯示全部。
+- `get_institutional_fut_opt_split_history`：查詢三大法人期貨與選擇權分計交易歷史（期貨、選擇權並列顯示，可回溯查詢；TAIFEX-DL futAndOptDateDown，T128）。與 get_institutional_total_history（合計）不同，本工具將期貨與選擇權之多空交易口數、契約金額（千元）、未平倉分開列出。區間不可超過 92 日。
+- `get_institutional_futures_history`：查詢三大法人期貨部位歷史（TAIFEX-DL 回溯，§9.3；L2 永久快取）。start/end 跨度 ≤ 366 日；回傳依日期/身份別排序之部位。
+- `get_institutional_futures_positions`：查詢三大法人期貨部位（自營/投信/外資之多方、空方、未平倉口數與金額，§10.F；TAIFEX API 最新交易日，date 省略為最新交易日）。
+- `get_institutional_general`：查詢三大法人（自營商、投信、外資）當日期貨與選擇權市場整體交易總表，包含交易量、交易金額（百萬元）、未平倉口數及契約價值（TAIFEX-API GeneralBytheDate，T129）。date 省略為最新交易日。
+- `get_institutional_investors`：查詢三大法人買賣超（個股 + 市場彙總）。上市 TWSE-WEB T86 / 上櫃 TPEx 三大法人明細。15:00 前資料可能未齊全（lineage 註記）。
+- `get_institutional_options_positions`：查詢三大法人選擇權部位（自營/投信/外資之多方、空方、未平倉口數與金額，§10.F；TAIFEX API 最新交易日，date 省略為最新交易日）。
+- `get_institutional_total_history`：查詢三大法人期貨與選擇權合計總表歷史（可回溯查詢；TAIFEX-DL totalTableDateDown，T130）。與 get_institutional_traders_by_futures_history（僅期貨）不同，本工具為期貨+選擇權合計數字。區間不可超過 92 日。
+- `get_institutional_traders_by_futures`：查詢三大法人依各期貨契約分類的交易資料，可觀察各期貨商品的法人買賣情況（TAIFEX-API DetailsOfFuturesContracts，T131）。contract_code 為中文契約名子字串（如「臺股期貨」），留空顯示全部。
+- `get_institutional_traders_by_futures_history`：查詢三大法人期貨部位歷史資料（可回溯查詢；TAIFEX-DL futContractsDateDown，T132）。contract 為期貨契約代碼（TXF/MXF/EXF/FXF/TMF 等，預設 TXF），與日行情之 TX/MTX 為不同代碼系統。區間不可超過 92 日。
+- `get_institutional_traders_by_options`：查詢三大法人依各選擇權契約分類的交易資料，可觀察各選擇權商品的法人買賣情況（TAIFEX-API DetailsOfOptionsContracts，T133）。contract_code 為中文契約名子字串（如「臺指選擇權」），留空顯示全部。
+- `get_institutional_traders_calls_puts`：查詢三大法人選擇權買賣權分計交易資料，分別顯示 CALL 與 PUT 的法人持倉情況（TAIFEX-API DetailsOfCallsAndPuts，T134）。外資偏多時 CALL 淨多單會大幅增加。contract_code 留空顯示全部。
+- `get_large_trader_positions`：查詢大額交易人未沖銷部位（期貨 + 選擇權合併；§10.F）。單日（date，省略為最新交易日）或範圍（start/end）；回傳前五大/前十大交易人買賣方口數與全市場未沖銷部位。
+- `get_large_traders_futures_history`：查詢期貨大額交易人未沖銷部位歷史資料（可回溯查詢；TAIFEX-DL largeTraderFutDown，T135）。contract 為必填契約代碼（如 TX、MTX、TE、TF），由本工具取得資料後本地端篩選。區間不可超過 31 日。
+- `get_large_traders_futures_oi`：查詢期貨大額交易人（前五大、前十大）未沖銷部位資料，可觀察大戶持倉方向（TAIFEX-API OpenInterestOfLargeTradersFutures，T136）。contract 精確比對契約代碼，預設 TX；留空列出所有可用契約代碼。
+- `get_large_traders_options_oi`：查詢選擇權大額交易人（前五大、前十大）未沖銷部位資料，可觀察大戶選擇權布局（TAIFEX-API OpenInterestOfLargeTradersOptions，T137）。contract 精確比對契約代碼，預設 TXO；留空列出所有可用契約代碼。
+- `get_local_companies_applying_for_listing`：查詢申請上市之本國公司（TWSE-API company/applylistingLocal，T138）。可選 name 過濾。
+- `get_major_announcements`：查詢上市/上櫃重大訊息（MOPS 公開資訊觀測站 Open Data，T012）。支援依日期、股票代號、關鍵字過濾。資料來源：mopsfin.twse.com.tw
+- `get_margin_loan_restrictions_announcement`：查詢集中市場停資停券預告表（T139）。可選 name 過濾。
+- `get_margin_trading`：查詢個股盤後融資融券（上市 TWSE-WEB MI_MARGN / 上櫃 TPEx 融資融券）。date 省略時為最近交易日。
+- `get_margin_trading_info`：查詢信用交易統計（融資融券餘額；TWSE-WEB MI_MARGN tables 型，T140）。
+- `get_market_disposal_stocks`：查詢集中市場公布處置股票（TWSE-API announcement/punish 正規化模型，T141）。可選 name 過濾。
+- `get_market_holiday_schedule`：查詢有價證券集中交易市場開（休）市日期（TWSE-WEB holidaySchedule，T144）。
+- `get_market_index_info`：查詢每日市場各類指數行情明細（TWSE-API MI_INDEX 正規化模型，T145）。可選 name 過濾。
+- `get_market_institutional_amounts_history`：查詢外資及陸資/投信/自營商買賣超金額彙總歷史（TWSE-WEB BFI82U，T146）。
+- `get_market_summary`：查詢全市場盤後漲跌家數/成交量/漲跌停（上市 TWSE-WEB 收盤行情 + 上櫃 TPEx 收盤行情）。date 省略時為最近交易日。
+- `get_market_turnover_history`：查詢集中市場每日成交資訊（含週轉率）歷史（TWSE-WEB FMTQIK，T147）。
+- `get_monthly_revenue`：查詢個股月營收與成長率（MOPS t187ap05_L，含 YoY/MoM/累計）。years 指定回傳年數（預設 2，上限 10），列由近至遠。
+- `get_monthly_trading_statistics`：查詢期貨市場月統計資料，依商品類別（股價指數、利率、商品、股票）分類，顯示各類型交易人（自營商、投信、外資、散戶等）的買賣量與月底未平倉量（TAIFEX-API MonthlyTradingStatisticsFutures，T148）。
+- `get_odd_lot_trading_quotes`：查詢集中市場盤後零股交易行情單（T149）。可選 name 過濾。
+- `get_options_daily_history`：查詢選擇權每日OHLC歷史行情（可回溯查詢；TAIFEX-DL dlOptDataDown，T150）。contract 預設 TXO。資料量龐大，建議指定 contract_month（如 202606、202606W1）；未指定且資料量過大時改為列出可用到期月份。區間跨度上限 366 日。
+- `get_options_delta`：查詢選擇權每日 Delta 值，了解各履約價的風險敏感度與隱含方向性（TAIFEX-API DailyOptionsDelta，T151）。contract 預設 TXO；contract_month 留空則列出可用月份；call_put 可篩選買賣權。
+- `get_options_institutional_by_contract_history`：查詢三大法人各選擇權契約交易歷史（CALL+PUT合計，可回溯查詢；TAIFEX-DL optContractsDateDown，T152）。contract 為選擇權契約代碼（TXO/TEO/TFO 等，預設 TXO）。區間不可超過 92 日。
+- `get_options_institutional_calls_puts_history`：查詢三大法人選擇權買賣權（CALL/PUT）分計交易歷史（可回溯查詢；TAIFEX-DL callsAndPutsDateDown，T153）。適合觀察外資對選擇權 CALL/PUT 布局隨時間的變化趨勢。contract 預設 TXO。區間不可超過 92 日。
+- `get_options_oi_change`：查詢台指選擇權每日未平倉量增減，顯示今日與前一交易日的未平倉量及變化量（TAIFEX-API va01，T154）。未平倉大幅增加代表新部位建立，大幅減少代表部位了結或到期。
+- `get_otc_daily`：查詢上櫃（OTC）市場當日所有股票收盤行情（TPEx-API tpex_mainboard_daily_close_quotes，T155）。stock_no 選填，指定則只回傳該股票。
+- `get_otc_index`：查詢櫃買市場（上櫃）指數歷史行情，包含開高低收、漲跌幅（TPEx-API tpex_index，T156）。
+- `get_otc_odd_lot`：查詢上櫃零股（不足一張）交易行情，包含零股成交價、成交量、成交金額（TPEx-API tpex_odd_stock，T157）。stock_no 選填，指定則只回傳該股票。
+- `get_public_company_balance_sheet`：根據股票代號查詢公開發行公司資產負債表（TWSE-API t187ap07_X 系列，T158）。自動偵測公司所屬產業並使用對應的財務報表格式。
+- `get_public_company_board_shareholdings`：根據股票代號查詢公開發行公司董監事持股餘額明細（TWSE-API t187ap11_P，T159）。
+- `get_public_company_income_statement`：根據股票代號查詢公開發行公司綜合損益表（TWSE-API t187ap06_X，T160）。自動偵測公司所屬產業並使用對應的財務報表格式。
+- `get_put_call_ratio`：查詢買賣權比（Put/Call Ratio，成交量/未平倉比；§10.F）。單日（date，省略為最新交易日）或範圍（start/end，支援歷史回溯）；多空分界線 1.0 由 _chart_meta 標示。
+- `get_real_time_trading_stats`：查詢每 5 秒委託成交統計（盤中即時；TWSE-WEB MI_5MINS，T161）。
+- `get_recently_listed_companies`：查詢最近上市公司（TWSE-API company/newlisting，T162）。可選 name 過濾。
+- `get_securities_trading_changes`：查詢集中市場證券變更交易（T163）。可選 name 過濾。
+- `get_short_sale_lending_balance_history`：查詢信用交易融資融券餘額歷史（TWSE-WEB TWT93U，T164）。可選 code/name 過濾。
+- `get_short_sale_lending_trades_history`：查詢借券賣出及借券賣出價量歷史（TWSE-WEB TWTASU，T165）。可選 code/name 過濾。
+- `get_stock_daily_kline`：查詢個股盤後日/週/月 K 線（TWSE-WEB STOCK_DAY，period/adjust 官方參數）。date 為月份起點，省略時為最近交易日。上櫃資料源未接線（錯誤）。
+- `get_stock_daily_quote`：查詢個股盤後日收盤報價（含 MA20/MA60、RSI14、MACD helper 指標）。上市以 TWSE-WEB 日 K（近 3 個月）計算指標；上櫃以 TPEx 收盤行情（指標暫缺）。date 省略時回傳最近交易日。
+- `get_stock_daily_trading`：根據股票代號查詢個股日成交資訊（TWSE-API STOCK_DAY_ALL 正規化模型，T166）。
+- `get_stock_futures_margin`：查詢股票期貨保證金一覽表，顯示各股票期貨的保證金率及分組級距（TAIFEX-API SingleStockFuturesMargining，T167）。stock_code 可輸入股票代號（如 2330）或期貨契約代碼（如 CAF），留空顯示全部。
+- `get_stock_monthly_average`：根據股票代號過濾個股日收盤價及月平均價全市場報表（TWSE-WEB STOCK_DAY_AVG_ALL，T168）。
+- `get_stock_monthly_avg_history`：查詢個股月平均價歷史（指定年度逐月；TWSE-WEB STOCK_DAY_AVG，T169）。
+- `get_stock_monthly_history`：查詢個股月 K 歷史（指定年度逐月行情；TWSE-WEB STOCK_DAY，T170）。
+- `get_stock_monthly_trading`：根據股票代號查詢個股月成交資訊（TWSE-WEB FMSRFK，T171）。
+- `get_stock_price_changes`：查詢上市個股股價升降幅（漲跌停參考價；T172）。可選 name 過濾。
+- `get_stock_trend_composite`：短中長期「技術面+基本面+籌碼面」綜合研判（v2.1 §9.1，Grade PREVIEW）。horizon 為 short（近 1 月 MA5/MA20 + 法人 5 日）/mid（近 3 月 MA20/MA60 + 法人 20 日）/long（近 6 月 MA20/MA60 + 法人 60 日）。跨來源聚合（TWSE Web API 日K/法人 + TWSE-API/TPEx 估值 + MOPS 損益表），_lineage 為 []Lineage 陣列；上櫃無歷史 K 線，技術面從缺（note 標註）。
+- `get_stock_yearly_history`：查詢個股歷年成交資訊彙總（每年一筆長期彙總；TWSE-WEB FMNPTK，T173）。
+- `get_stock_yearly_trading`：根據股票代號過濾年度成交資訊全市場報表（TWSE-WEB FMNPTK_ALL，T174）。
+- `get_stocks_no_price_change_first_five_days`：查詢上市個股首五日無漲跌幅（T175）。可選 name 過濾。
+- `get_suspended_day_trading_announcement`：查詢暫停先賣後買當日沖銷標的預告表（T176）。可選 name 過濾。
+- `get_suspended_day_trading_history`：查詢暫停先賣後買當日沖銷交易歷史（T177）。可選 name 過濾。
+- `get_suspended_listed_companies`：查詢終止上市公司（TWSE-API company/suspendListingCsvAndHtml，T178）。可選 name 過濾。
+- `get_suspended_trading_stocks`：查詢集中市場暫停交易證券（T179）。可選 name 過濾。
+- `get_symbol_list`：查詢上市/上櫃代碼表（§10.G；Symbol Registry，§5.2）。來源為 TWSE/TPEx 官方清單（24h 快取每日預熱）；market 省略時回傳全部（依代碼排序）。
+- `get_taiwan_50_index_history`：查詢臺灣50指數歷史資料（TWSE-WEB TAI50I，T181）。
+- `get_taiwan_island_index_history`：查詢寶島股價指數歷史資料（TWSE-WEB FRMSA，T182）。
+- `get_taiwan_total_return_index`：查詢發行量加權股價報酬指數歷史資料（TWSE-WEB MFI94U，T183）。
+- `get_top_20_volume_stocks`：查詢當日成交量 Top20（TWSE-WEB MI_INDEX20，T184）。可選 name 過濾。
+- `get_top_foreign_holdings`：查詢外資持股前 20 名上市公司（TWSE-API MI_QFIIS_sort_20 passthrough，T185）。
+- `get_trading_calendar`：查詢交易日曆（§10.G；TWSE 官方開休市表，內嵌 2026 年資料）。year/month 省略時為今年/全年；回傳交易日清單與官方休市日（含名稱）。
+- `get_twse_index`：查詢 TWSE 指數盤後行情與歷史日 K（加權指數、寶島、臺灣50 等）。symbol 為指數名稱（省略預設「發行量加權股價指數」）；date 省略時為最近交易日。資料來源：TWSE-API MI_INDEX（單日收盤）+ TWSE-WEB MI_5MINS_HIST（歷史日 K）。
+- `get_twse_news`：查詢證交所新聞清單（TWSE-API news/newsList passthrough，T186）。
+- `get_valuation_ratios`：查詢個股估值指標（PE/PB/殖利率/ROE/每股股利）。上市 TWSE-API BWIBBU_ALL + MOPS；上櫃 TPEx 本益比/殖利率/淨值比。ROE 為 MOPS 損益表摘要年化 ÷ 權益之年化估計（官方無直接端點）。
+- `get_warrant_activity`：查詢權證活躍度（TWSE-API 權證每日成交：成交金額/張數 Top N）。top_n 預設 10，最大 50。
+- `get_warrant_basic_info`：查詢權證基本資料（TWSE-API t187ap37_L passthrough，T187）。code 選填過濾。
+- `get_warrant_daily_trading`：根據股票代號查詢權證每日成交資訊（TWSE-API t187ap42_L 正規化模型，T188）。code 選填過濾。
+- `get_warrant_trader_count`：查詢權證流動量提供者報價方式統計（TWSE-API t187ap43_L passthrough，T189）。
+- `get_warrant_yearly_issuance_statistics`：查詢權證年度發行統計（TWSE-API t187ap36_L passthrough，T190）。
+- `screen_high_yield`：高殖利率排行（§10.E；T017 composite 引擎批次過濾）。條件：min_yield（預設 3%）、min_dividend（每股現金股利下限）、max_pe、min_consecutive（最低連年配息年數，配息穩定性）。結果依殖利率遞減；整批快取 + 記憶體計算（§12.4）。
+- `screen_stocks`：價值/成長篩選全市場股票（§10.D；T017 composite 引擎批次過濾，整批快取 + 記憶體計算，§12.4）。條件：max_pe（低本益比）、max_pb（低股價淨值比）、min_yield（高殖利率）、min_growth（月營收 YoY）、min_profit_growth（淨利 YoY）、require_esg（具 ESG 揭露）。排序 sort（pe 預設|yield|pb|growth）；limit 即 top_n 回傳上限。
+
