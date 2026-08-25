@@ -1,8 +1,10 @@
 # 附錄：完整工具目錄（194 個）
 
-> 由真實服務 `tools/list` 輸出自動彙出（2026-08-26，v2.1.0）。
-> 各工具之 Envelope、`_lineage`、快取政策與真實呼叫快照見 `snapshots/raw/<tool>.json`。
-> 逐源覆蓋分析見 `docs/TOOL_COVERAGE_BY_SOURCE.md`；與遠端 TWSEMCPServer 的對照見 `docs/COMPARISON_TWSEMCPServer.md`。
+> 由真實服務 `tools/list` 輸出自動彙出（v2.1.0）；更新方式：`make catalog`。
+> 各工具之 Envelope、`_lineage`、快取政策與真實呼叫快照見
+> `snapshots/raw/<tool>.json`。
+> 逐源覆蓋分析見 `docs/TOOL_COVERAGE_BY_SOURCE.md`；與遠端 TWSEMCPServer
+> 的對照見 `docs/COMPARISON_TWSEMCPServer.md`。
 
 - `detect_volume_surge`：偵測指定股票近 N 分鐘爆量/急拉訊號（前 20 分鐘均量滑動窗口比對，§8.5 記憶體計算，零 HTTP）。
 - `get_abnormal_accumulated_notice_stocks`：查詢集中市場公布注意累計次數異常資訊（TWSE-API announcement/notetrans，T193）。與 get_attention_disposition_stocks（當日注意/處置清單）互補：本工具揭露近期符合注意處理標準之累計紀錄，適合風險掃描與短線避雷。清單含權證（kind 可過濾 stock/warrant）；name 關鍵字過濾；limit 預設 50、offset 分頁。
