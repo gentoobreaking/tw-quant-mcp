@@ -77,6 +77,10 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIIncINS):          cache.DatasetFinancials,
 	string(provider.TWSEAPIIncMIM):          cache.DatasetFinancials,
 	string(provider.TWSEAPIDisclosureVio):   cache.DatasetCalendar,   // 資訊揭露違法（T094）
+	string(provider.TWSEAPISupervisorComp):  cache.DatasetFinancials, // 監察人酬金（T111）
+	string(provider.TWSEAPIMeetingAnn):      cache.DatasetCalendar,   // 股東會公告（T107/T108）
+	string(provider.TWSEAPIMeetingDates):    cache.DatasetCalendar,   // 股東會日期地點（T109）
+	string(provider.TWSEAPIProposalExer):    cache.DatasetCalendar,   // 提案權行使（T110）
 	string(provider.TWSEAPIBrokerBasic):     cache.DatasetCalendar,   // 券商基本資料（T046）
 	string(provider.TWSEAPIBrokerBranch):    cache.DatasetCalendar,   // 券商分公司（T047）
 	string(provider.TWSEAPIBrokerElec):      cache.DatasetCalendar,   // 電子交易統計（T048）

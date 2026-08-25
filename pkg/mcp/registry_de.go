@@ -230,7 +230,7 @@ func registerDETools(r *Registry) {
 	r.Register(ToolDef{
 		Symbol:      "get_company_consolidated_supervisor_compensation",
 		Name:        "get_company_consolidated_supervisor_compensation",
-		Description: "根據股票代號查詢上市公司合併報表監察人酬金相關資訊（TWSE-API t187ap29_B_L，T077）。",
+		Description: "根據股票代號查詢上市公司合併報表監察人酬金相關資訊（TWSE-API t187ap29_D_L，T077）。",
 		Schema:      compSchema(),
 		ReadOnly:    true,
 		Handler:     apiCompanySpec{ds: provider.TWSEAPISupCompCon}.handler(),
@@ -336,6 +336,68 @@ func registerDETools(r *Registry) {
 		ReadOnly:    true,
 		Handler:     apiCompanySpec{ds: provider.TWSEAPIForecastAchv}.handler(),
 	}) // T104
+	r.Register(ToolDef{
+		Symbol:      "get_company_shareholder_meeting_announcements",
+		Name:        "get_company_shareholder_meeting_announcements",
+		Description: "查詢上市公司股東會公告-召集股東常(臨時)會公告資料彙總表(95年度起適用)（TWSE-API t187ap38_L，T107）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIMeetingAnn}.handler(),
+	}) // T107
+	r.Register(ToolDef{
+		Symbol:      "get_company_shareholder_meeting_dates",
+		Name:        "get_company_shareholder_meeting_dates",
+		Description: "查詢上市公司召開股東常(臨時)會日期、地點及採用電子投票情形等資料彙總表（TWSE-API t187ap41_L，T109）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIMeetingDates}.handler(),
+	}) // T109
+	r.Register(ToolDef{
+		Symbol:      "get_company_shareholder_proposal_exercise",
+		Name:        "get_company_shareholder_proposal_exercise",
+		Description: "查詢上市公司股東行使提案權情形彙總表（TWSE-API t187ap35_L，T110）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIProposalExer}.handler(),
+	}) // T110
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_supervisor_compensation",
+		Name:        "get_company_supervisor_compensation",
+		Description: "根據股票代號查詢上市公司監察人酬金相關資訊（TWSE-API t187ap29_B_L，T111）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPISupervisorComp}.handler(),
+	}) // T111
+	r.Register(ToolDef{
+		Symbol:      "get_company_shareholder_meeting_announcements_by_code",
+		Name:        "get_company_shareholder_meeting_announcements_by_code",
+		Description: "根據股票代號查詢上市公司股東會公告資料（TWSE-API t187ap38_L，T108）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIMeetingAnn}.handler(),
+	}) // T108
 
 	r.Register(ToolDef{
 		Symbol:      "get_company_dividend",

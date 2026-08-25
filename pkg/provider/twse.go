@@ -105,7 +105,11 @@ const (
 	TWSEAPICEODualRole    TWSEAPIDataset = "ceo_dual_role"    // 董事長兼任總經理（t187ap33_L，T073）
 	// 內部人／酬金／大股東報表（T076-T080，T094，T097）
 	TWSEAPIDirCompCon     TWSEAPIDataset = "dir_comp_con"     // 合併報表董事酬金（t187ap29_C_L，T076）
-	TWSEAPISupCompCon     TWSEAPIDataset = "sup_comp_con"     // 合併報表監察人酬金（t187ap29_B_L，T077）
+	TWSEAPISupCompCon     TWSEAPIDataset = "sup_comp_con"      // 合併報表監察人酬金（t187ap29_D_L，T077）
+	TWSEAPISupervisorComp TWSEAPIDataset = "supervisor_comp"   // 監察人酬金（t187ap29_B_L，T111）
+	TWSEAPIMeetingAnn     TWSEAPIDataset = "meeting_ann"       // 股東會公告彙總（t187ap38_L，T107/T108 共用）
+	TWSEAPIMeetingDates   TWSEAPIDataset = "meeting_dates"     // 股東會日期地點（t187ap41_L，T109）
+	TWSEAPIProposalExer   TWSEAPIDataset = "proposal_exercise" // 提案權行使彙總（t187ap35_L，T110）
 	TWSEAPIInsiderPreann  TWSEAPIDataset = "insider_preann"   // 內部人持股轉讓事前申報（t187ap12_L，T078）
 	TWSEAPIInsiderUntrans TWSEAPIDataset = "insider_untrans"  // 內部人持股未轉讓（t187ap13_L，T079）
 	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"         // 董事酬金（t187ap29_A_L，T080）
@@ -202,7 +206,11 @@ var (
 		TWSEAPIBoardHoldings:   "/opendata/t187ap11_L",
 		TWSEAPICEODualRole:     "/opendata/t187ap33_L",
 		TWSEAPIDirCompCon:      "/opendata/t187ap29_C_L",
-		TWSEAPISupCompCon:      "/opendata/t187ap29_B_L",
+		TWSEAPISupCompCon:      "/opendata/t187ap29_D_L",
+		TWSEAPISupervisorComp:  "/opendata/t187ap29_B_L",
+		TWSEAPIMeetingAnn:      "/opendata/t187ap38_L",
+		TWSEAPIMeetingDates:    "/opendata/t187ap41_L",
+		TWSEAPIProposalExer:    "/opendata/t187ap35_L",
 		TWSEAPIInsiderPreann:   "/opendata/t187ap12_L",
 		TWSEAPIInsiderUntrans:  "/opendata/t187ap13_L",
 		TWSEAPIDirComp:         "/opendata/t187ap29_A_L",
@@ -658,6 +666,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizePassthroughArray(raw)
 	case "dir_comp_con", "sup_comp_con", "insider_preann",
 		"insider_untrans", "dir_comp", "major_shareholders":
+		out, err = normalizePassthroughArray(raw)
+	case "supervisor_comp", "meeting_ann", "meeting_dates", "proposal_exercise":
 		out, err = normalizePassthroughArray(raw)
 	case "eps_stats", "income_ci", "income_basi", "income_bd",
 		"income_fh", "income_ins", "income_mim", "disclosure_vio":
