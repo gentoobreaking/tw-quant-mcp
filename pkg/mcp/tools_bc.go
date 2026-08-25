@@ -1569,3 +1569,92 @@ func handlerGetHighDividendIndex(a *App, args map[string]any) (HandlerResult, er
 	}
 	return HandlerResult{Data: rows, Lineage: lineage}, nil
 }
+
+// otcGovernanceKinds 為 T237 上櫃治理系列之語意 kind → 官方端點對照。
+var otcGovernanceKinds = []struct {
+	Kind     string // 語意化查詢類別（工具參數值）
+	Endpoint string // 官方端點後綴（/mopsfin_<endpoint>）
+	Desc     string // 說明（供 description 列舉）
+}{
+	{"major_shareholders", "t187ap02_O", "持股逾10%大股東名單"},
+	{"board_insufficient", "t187ap08_O", "董監持股不足法定成數"},
+	{"board_pledged", "t187ap09_O", "董監質押設定"},
+	{"board_insufficient_consecutive", "t187ap10_O", "董監持股連續不足3個月"},
+	{"board_holdings", "t187ap11_O", "董監事持股餘額明細"},
+	{"insider_trades_preannounced", "t187ap12_O", "內部人持股轉讓事前申報"},
+	{"insider_trades_untransferred", "t187ap13_O", "內部人持股未轉讓日報表"},
+	{"sec_penalties", "t187ap22_O", "金管會證期局裁罰案件"},
+	{"disclosure_violations", "t187ap23_O", "違反資訊申報及重大訊息規定"},
+	{"ownership_change", "t187ap24_O", "經營權異動公司"},
+	{"scope_change", "t187ap25_O", "營業範圍重大變更公司"},
+	{"ownership_halt", "t187ap26_O", "經營權異動且停止買賣公司"},
+	{"scope_trading_change", "t187ap27_O", "經營權異動列變更交易公司"},
+	{"director_compensation", "t187ap29_A_O", "董事酬金資訊"},
+	{"supervisor_compensation", "t187ap29_B_O", "監察人酬金資訊"},
+	{"director_comp_consol", "t187ap29_C_O", "合併報表董事酬金"},
+	{"supervisor_comp_consol", "t187ap29_D_O", "合併報表監察人酬金"},
+	{"independent_directors", "mopsfin_t187ap30_O", "獨立董監事兼任情形"},
+	{"supervisor_acknowledgment", "mopsfin_t187ap31_O", "財報監察人承認情形"},
+	{"governance_regulations", "mopsfin_t187ap32_O", "公司治理規程規則"},
+	{"ceo_dual_role", "mopsfin_t187ap33_O", "董事長兼任總經理"},
+	{"cumulative_voting", "mopsfin_t187ap34_O", "累積投票制董監選任"},
+	{"proposal_exercise", "mopsfin_t187ap35_O", "股東提案權行使"},
+	{"shareholder_meeting_dates", "t187ap41_O", "股東會日期地點與電子投票"},
+}
+
+func otcGovernancePath(kind string) string {
+	for _, k := range otcGovernanceKinds {
+		if k.Kind == kind {
+			return k.Endpoint
+		}
+	}
+	return ""
+}
+
+// handlerGetOtcGovernanceSeries：上櫃公司治理・監理・股務系列（T237）。
+// kind 對應官方端點 /mopsfin_<kind>；code/name 本地過濾；limit/offset 分頁。
+func handlerGetOtcGovernanceSeries(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	kind := strVal(args["kind"])
+	path := otcGovernancePath(kind)
+	if path == "" {
+		var valid []string
+		for _, k := range otcGovernanceKinds {
+			valid = append(valid, k.Kind)
+		}
+		return HandlerResult{}, fmt.Errorf(
+			"kind 無效 %q（可用：%s）", kind, strings.Join(valid, ", "))
+	}
+	limit, offset := listPaging(args)
+	nameFilter := strVal(args["name"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExOtcMopsfin), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcMopsfin), date,
+			kind+"|"+nameFilter, map[string]string{"kind": path}),
+		func() ([]byte, error) {
+			return a.fetchTPExRaw(ctx, provider.TPExOtcMopsfin,
+				url.Values{"kind": {path}})
+		})
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetCalendar)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if nameFilter != "" && !strings.Contains(rowName(r), nameFilter) {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}

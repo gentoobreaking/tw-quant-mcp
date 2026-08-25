@@ -153,6 +153,7 @@ var cacheDataset = map[string]string{
 	string(provider.TPExHDIndex):            cache.DatasetDailyKLine,     // 高殖利率指數歷史（T218）
 	string(provider.TPExHDLatest):           cache.DatasetDailyKLine,     // 高殖利率指數當日（T218）
 	string(provider.TPExHDConstituent):      cache.DatasetDailyKLine,     // 高殖利率指數成分股（T218）
+	string(provider.TPExOtcMopsfin):         cache.DatasetCalendar,       // 上櫃治理系列（T237）
 	string(model.TAOptionsDelta):            cache.DatasetCalendar,   // 選擇權 Delta（T151）
 	string(model.TAOIChange):                cache.DatasetCalendar,   // 台指選擇權 OI 增減（T154）
 	string(model.TAStockMargin):             cache.DatasetCalendar,   // 股票期貨保證金（T167）

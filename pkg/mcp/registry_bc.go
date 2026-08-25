@@ -1211,6 +1211,28 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetHighDividendIndex,
 	}) // T218
 	r.Register(ToolDef{
+		Symbol: "get_otc_governance",
+		Name:   "get_otc_governance",
+		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +
+			"kind：major_shareholders(大股東)/board_insufficient(持股不足)/board_pledged(質押)/" +
+			"board_insufficient_consecutive/board_holdings(董監持股餘額)/insider_trades_preannounced/" +
+			"insider_trades_untransferred/sec_penalties(證期局裁罰)/disclosure_violations/" +
+			"ownership_change/scope_change/ownership_halt/scope_trading_change(經營權異動四態)/" +
+			"director_compensation/supervisor_compensation/director_comp_consol/supervisor_comp_consol(酬金四表)/" +
+			"independent_directors/supervisor_acknowledgment/governance_regulations/ceo_dual_role/" +
+			"cumulative_voting/proposal_exercise/shareholder_meeting_dates。name 選填過濾公司名稱。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":  map[string]any{"type": "string", "required": []string{}, "description": "查詢類別（24 種，見描述）"},
+				"name":  map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit": map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcGovernanceSeries,
+	}) // T237
+	r.Register(ToolDef{
 		Symbol:      "get_otc_index",
 		Name:        "get_otc_index",
 		Description: "查詢櫃買市場（上櫃）指數歷史行情，包含開高低收、漲跌幅（TPEx-API tpex_index，T156）。",

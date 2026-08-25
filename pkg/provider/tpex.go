@@ -65,6 +65,7 @@ const (
 	TPExHDIndex       TPExDataset = "hd_index"              // 高殖利率指數歷史（T218）
 	TPExHDLatest      TPExDataset = "hd_latest"             // 高殖利率指數當日（T218）
 	TPExHDConstituent TPExDataset = "hd_constituents"       // 高殖利率指數成分股（T218）
+	TPExOtcMopsfin    TPExDataset = "otc_mopsfin"           // 上櫃治理/監理/股務（T237，kind 模板）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -92,6 +93,7 @@ var (
 		TPExHDIndex:       "/tphd_index",                        // 高殖利率指數歷史（T218）
 		TPExHDLatest:      "/tphd_change",                       // 高殖利率指數當日（T218）
 		TPExHDConstituent: "/tphd_constituents",                 // 高殖利率指數成分股（T218）
+		TPExOtcMopsfin:    "/mopsfin_%s",                        // 上櫃治理系列端點模板（T237）
 	}
 )
 
@@ -118,6 +120,15 @@ func (s *TPExSource) URL(ds TPExDataset, params url.Values) string {
 			topic = "1"
 		}
 		path = fmt.Sprintf(path, topic)
+		params = url.Values{}
+	}
+	if ds == TPExOtcMopsfin {
+		// 上櫃治理系列以 kind 參數展開路徑模板（T237；如 t187ap08_O）
+		kind := params.Get("kind")
+		if kind == "" {
+			return tpexBase + "/mopsfin_unknown"
+		}
+		path = fmt.Sprintf(path, kind)
 		params = url.Values{}
 	}
 	u := tpexBase + path
@@ -150,6 +161,9 @@ func tpexDatasetOf(raw *RawResponse) (string, error) {
 	p := u.Path
 	if strings.Contains(p, "/t187ap46_O_") {
 		return string(TPExOtcESG), nil // topic 模板路徑（T216）
+	}
+	if strings.Contains(p, "/mopsfin_") {
+		return string(TPExOtcMopsfin), nil // 上櫃治理系列模板路徑（T237）
 	}
 	for ds, path := range tpexPaths {
 		if !strings.Contains(path, "%") && strings.HasSuffix(p, path) {
@@ -277,6 +291,9 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExHDConstituent):
 		// 高殖利率指數成分股：passthrough（T218；Date/SecuritiesCompanyCode/
 		// CompanyName）。
+		out = ms
+	case string(TPExOtcMopsfin):
+		// 上櫃治理/監理/股務系列：passthrough（T237；官方中文欄位原樣保留）。
 		out = ms
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)

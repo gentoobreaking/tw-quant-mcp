@@ -64,8 +64,11 @@ func TestTPExURL(t *testing.T) {
 	for ds, path := range tpexPaths {
 		u := s.URL(ds, url.Values{})
 		want := tpexBase + path
-		if ds == TPExOtcESG {
+		switch ds {
+		case TPExOtcESG:
 			want = tpexBase + fmt.Sprintf(path, "1") // 預設 topic=1（T216）
+		case TPExOtcMopsfin:
+			want = tpexBase + "/mopsfin_unknown" // 空 kind 之防禦路徑（T237）
 		}
 		if u != want {
 			t.Errorf("%s URL = %q，期望 %q", ds, u, want)
@@ -74,6 +77,13 @@ func TestTPExURL(t *testing.T) {
 	// 上櫃 ESG topic 模板展開（T216）
 	if u := s.URL(TPExOtcESG, url.Values{"topic": {"6"}}); u != tpexBase+"/t187ap46_O_6" {
 		t.Errorf("otc_esg topic URL = %q", u)
+	}
+	// 上櫃治理系列 kind 模板（T237）：空 kind 回防禦路徑，正常 kind 展開
+	if u := s.URL(TPExOtcMopsfin, url.Values{}); u != tpexBase+"/mopsfin_unknown" {
+		t.Errorf("otc_mopsfin 空 kind URL = %q", u)
+	}
+	if u := s.URL(TPExOtcMopsfin, url.Values{"kind": {"t187ap08_O"}}); u != tpexBase+"/mopsfin_t187ap08_O" {
+		t.Errorf("otc_mopsfin kind URL = %q", u)
 	}
 	u := s.URL(TPExDailyClose, url.Values{"stockNo": {"6147"}})
 	if want := tpexBase + "/tpex_mainboard_quotes?stockNo=6147"; u != want {
