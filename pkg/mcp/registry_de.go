@@ -96,6 +96,28 @@ func registerDETools(r *Registry) {
 		Handler:  handlerGetESGReport,
 	})
 	r.Register(ToolDef{
+		Symbol: "get_otc_esg_report",
+		Name:   "get_otc_esg_report",
+		Description: "查詢上櫃公司 ESG 揭露完整報告（TPEx-API t187ap46_O_1~21，T216）。" +
+			"topics 可選（預設 1~8：溫室氣體排放/能源管理/水資源管理/廢棄物管理/" +
+			"人力發展/董事會/投資人溝通/氣候相關議題管理）；每主題取報告年度最新一列。" +
+			"對稱上市 get_esg_report。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"symbol": map[string]any{"type": "string", "description": "股票代號，例如 \"6147\""},
+				"topics": map[string]any{
+					"type":        "array",
+					"items":       map[string]any{"type": "integer", "minimum": 1, "maximum": 21},
+					"description": "揭露主題 1~21（省略回傳預設 8 大主題）",
+				},
+			},
+			"required": []string{"symbol"},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcEsgReport,
+	}) // T216
+	r.Register(ToolDef{
 		Symbol: "get_companies_with_refineries_in_populated_areas",
 		Name:   "get_companies_with_refineries_in_populated_areas",
 		Description: "查詢所有已申報在人口密集區設有煉油廠的上市公司（排除零值及 N/A；" +

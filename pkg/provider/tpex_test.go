@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"fmt"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -62,9 +63,17 @@ func TestTPExURL(t *testing.T) {
 	s := NewTPExSource(WithRateInterval(0))
 	for ds, path := range tpexPaths {
 		u := s.URL(ds, url.Values{})
-		if want := tpexBase + path; u != want {
+		want := tpexBase + path
+		if ds == TPExOtcESG {
+			want = tpexBase + fmt.Sprintf(path, "1") // 預設 topic=1（T216）
+		}
+		if u != want {
 			t.Errorf("%s URL = %q，期望 %q", ds, u, want)
 		}
+	}
+	// 上櫃 ESG topic 模板展開（T216）
+	if u := s.URL(TPExOtcESG, url.Values{"topic": {"6"}}); u != tpexBase+"/t187ap46_O_6" {
+		t.Errorf("otc_esg topic URL = %q", u)
 	}
 	u := s.URL(TPExDailyClose, url.Values{"stockNo": {"6147"}})
 	if want := tpexBase + "/tpex_mainboard_quotes?stockNo=6147"; u != want {

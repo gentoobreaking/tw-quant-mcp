@@ -76,6 +76,12 @@ func stubDE(f *fakeFetch) {
 		f.stub("esg", urlValuesTopic(topic), `[
 			{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"指標":"topic`+strconv.Itoa(topic)+`"}}]`)
 	}
+	// 上櫃 ESG 揭露（t187ap46_O_1~8，T216；6147 頎邦）
+	f.stub("otc_esg", urlValuesTopic(1), `[
+		{"出表日期":"2026-07-31","報告年度":"2025","公司代號":"6147","公司名稱":"頎邦","範疇一排放量(噸CO2e)":"888"}]`)
+	for topic := 2; topic <= 21; topic++ {
+		f.stub("otc_esg", urlValuesTopic(topic), `[]`)
+	}
 	// ESG topic 9：公司治理資訊（T087）
 	f.stub("esg", urlValuesTopic(9), `[
 		{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"公司治理評估結果":"第六級"}}]`)

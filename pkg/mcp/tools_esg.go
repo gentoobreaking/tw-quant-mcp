@@ -354,3 +354,121 @@ func handlerGetRefineriesPopulatedAreas(a *App, args map[string]any) (HandlerRes
 	}
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
+
+// otcEsgTopicNames 對應上櫃 ESG 揭露 topic → 中文名（swagger t187ap46_O_1~8，
+// 與上市 L 版前八主題語意相近但官方名稱略有差異）。
+var otcEsgTopicNames = map[int]string{
+	1: "溫室氣體排放",
+	2: "能源管理",
+	3: "水資源管理",
+	4: "廢棄物管理",
+	5: "人力發展",
+	6: "董事會",
+	7: "投資人溝通",
+	8: "氣候相關議題管理",
+}
+
+// handlerGetOtcEsgReport：上櫃公司 ESG 揭露報告（TPEx-API t187ap46_O_1~21，T216）。
+// topics 可選（預設全部 8 主題）；每主題取報告年度最新一列。
+func handlerGetOtcEsgReport(a *App, args map[string]any) (HandlerResult, error) {
+	sym, err := a.symbolOf(strVal(args["symbol"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	topicsRaw, _ := args["topics"].([]any)
+	selected := map[int]bool{} // 空集合＝全部主題（預設 1~8 由下方迴圈控制）
+	filterOn := len(topicsRaw) > 0
+	for _, v := range topicsRaw {
+		if n, err := asInt(v); err == nil && n >= 1 && n <= 21 {
+			selected[n] = true
+		}
+	}
+
+	ctx := context.Background()
+	dataDate := a.now().Format("2006-01-02")
+	defaultAll := !filterOn
+
+	type otcTopic struct {
+		Topic int
+		Rows  []map[string]any
+		Cached,
+		Stale bool
+	}
+	var topicsOut []map[string]any
+	cachedAny, staleAny := false, false
+	var lastErr error
+	failedTopics := 0
+	ttl, _ := a.ttlOf(string(provider.TPExOtcESG))
+
+	for topic := 1; topic <= 21; topic++ {
+		if defaultAll && topic > 8 {
+			break // 預設僅 8 大主題
+		}
+		if filterOn && !selected[topic] {
+			continue
+		}
+		rows, cached, stale, ferr := fetchNormalize[[]map[string]any](a, ctx,
+			string(provider.TPExOtcESG), dataDate,
+			cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcESG), dataDate, "",
+				map[string]string{"topic": strconv.Itoa(topic)}),
+			func() ([]byte, error) {
+				var lastErr error
+				for attempt := 0; attempt < 3; attempt++ {
+					if attempt > 0 {
+						time.Sleep(time.Duration(attempt) * 500 * time.Millisecond)
+					}
+					b, e := a.fetchTPExRaw(ctx, provider.TPExOtcESG,
+						url.Values{"topic": {strconv.Itoa(topic)}})
+					if e == nil {
+						return b, nil
+					}
+					lastErr = e
+				}
+				return nil, lastErr
+			})
+		if ferr != nil {
+			lastErr = ferr
+			failedTopics++
+			continue // 個別主題失敗不阻擋其他主題；全失敗時於最終錯誤回報
+		}
+		cachedAny, staleAny = cachedAny || cached, staleAny || stale
+		// 取該公司最新年度一列
+		var latest map[string]any
+		latestYear := ""
+		for _, r := range rows {
+			if rowField(r, "公司代號", "code") != sym.Code {
+				continue
+			}
+			y := rowField(r, "報告年度")
+			if y >= latestYear {
+				latest, latestYear = r, y
+			}
+		}
+		if latest == nil {
+			continue
+		}
+		name := otcEsgTopicNames[topic]
+		if name == "" {
+			name = fmt.Sprintf("揭露主題 %d", topic)
+		}
+		topicsOut = append(topicsOut, map[string]any{
+			"topic": name, "year": latestYear, "report_date": rowField(latest, "出表日期"),
+			"fields": latest,
+		})
+	}
+
+	if len(topicsOut) == 0 && failedTopics > 0 {
+		return HandlerResult{}, fmt.Errorf(
+			"上櫃 ESG 揭露查詢失敗（%d 主題皆失敗，上游可能暫時不可用）：%w",
+			failedTopics, lastErr)
+	}
+	lineage := postLineage(model.SourceTPExAPI, dataDate, cachedAny, staleAny, ttl)
+	out := map[string]any{
+		"symbol": sym.Code, "name": sym.Name, "market": sym.Market,
+		"topics": topicsOut,
+	}
+	if failedTopics > 0 {
+		out["note"] = fmt.Sprintf("%d 個主題查詢失敗已略過", failedTopics)
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}

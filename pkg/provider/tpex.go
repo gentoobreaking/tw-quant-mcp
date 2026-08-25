@@ -61,6 +61,7 @@ const (
 	TPExOtcExRightDay TPExDataset = "otc_exright_daily"     // 上櫃除權息計算結果（T200）
 	TPExOtcDTTargets  TPExDataset = "otc_daytrade_targets"  // 上櫃當沖標的（T201）
 	TPExOtcDTStats    TPExDataset = "otc_daytrade_stats"    // 上櫃當沖統計（T201）
+	TPExOtcESG        TPExDataset = "otc_esg"               // 上櫃 ESG 揭露（T216，topic 1~21）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -84,6 +85,7 @@ var (
 		TPExOtcExRightDay: "/tpex_exright_daily",                // 除權息計算結果（T200）
 		TPExOtcDTTargets:  "/tpex_securities",                   // 當沖標的（T201）
 		TPExOtcDTStats:    "/tpex_intraday_trading_statistics",  // 當沖統計（T201）
+		TPExOtcESG:        "/t187ap46_O_%s",                     // 上櫃 ESG 揭露 topic 模板（T216）
 	}
 )
 
@@ -102,7 +104,17 @@ func (s *TPExSource) ID() string { return model.SourceTPExAPI }
 // URL 建立資料集之官方請求 URL。官方端點不接受 query 參數（恆回最新交易日
 // 全市場），stockNo 僅由 Normalize 使用做過濾。
 func (s *TPExSource) URL(ds TPExDataset, params url.Values) string {
-	u := tpexBase + tpexPaths[ds]
+	path := tpexPaths[ds]
+	if ds == TPExOtcESG {
+		// 上櫃 ESG 揭露以 topic 參數展開路徑模板（對稱 TWSEAPIESG 慣例）
+		topic := params.Get("topic")
+		if topic == "" {
+			topic = "1"
+		}
+		path = fmt.Sprintf(path, topic)
+		params = url.Values{}
+	}
+	u := tpexBase + path
 	if params.Encode() != "" {
 		u += "?" + params.Encode()
 	}
@@ -130,8 +142,11 @@ func tpexDatasetOf(raw *RawResponse) (string, error) {
 		return "", fmt.Errorf("provider: 無法解析來源 URL %q: %w", raw.SourceURL, err)
 	}
 	p := u.Path
+	if strings.Contains(p, "/t187ap46_O_") {
+		return string(TPExOtcESG), nil // topic 模板路徑（T216）
+	}
 	for ds, path := range tpexPaths {
-		if strings.HasSuffix(p, path) {
+		if !strings.Contains(path, "%") && strings.HasSuffix(p, path) {
 			return string(ds), nil
 		}
 	}
@@ -240,6 +255,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		out = ms
 	case string(TPExOtcDTStats):
 		// passthrough（T201 實測：Date/DayTradingVolume/佔市場比/買賣值系列）。
+		out = ms
+	case string(TPExOtcESG):
+		// 上櫃 ESG 揭露：passthrough（T216；出表日期/報告年度/公司代號/
+		// 公司名稱 + 主題指標欄位）。
 		out = ms
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
