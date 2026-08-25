@@ -1191,3 +1191,32 @@ func listPaging(args map[string]any) (int, int) {
 	}
 	return limit, offset
 }
+
+// handlerGetTwseEvents：證交所活動訊息（news/eventList，T191）。
+// top 為回傳筆數上限（預設 10；0 表全部，對齊遠端同名工具語意）。
+func handlerGetTwseEvents(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	top := 10
+	if v, ok := args["top"]; ok {
+		if n, err := asInt(v); err == nil && n >= 0 {
+			top = n
+		}
+	}
+	dataDate := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TWSEAPITwseEvents), dataDate,
+		cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPITwseEvents), dataDate, "", nil),
+		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPITwseEvents, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(string(provider.TWSEAPITwseEvents))
+	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+	if rows == nil {
+		rows = []map[string]any{}
+	}
+	if top > 0 && len(rows) > top {
+		rows = rows[:top]
+	}
+	return HandlerResult{Data: rows, Lineage: lineage}, nil
+}

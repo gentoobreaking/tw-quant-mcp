@@ -1,0 +1,45 @@
+{
+  "arguments": {
+    "top": 3
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69fc76da0019ff9c1bba600fd\",\"No\":\"1\",\"Title\":\"115年「SEMICON Taiwan」主題式業績發表會及產業講座（9月3日）\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69ef76943019f88b16b3b0205\",\"No\":\"2\",\"Title\":\"2026年上市公司辦理法人說明會(8月1日至8月31日)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019ef38be77f02b6\",\"No\":\"3\",\"Title\":\"2026年上市公司辦理法人說明會(7月1日至7月31日)\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T02:18:44+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":122,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+      }
+    ],
+    "structuredContent": {
+      "data": [
+        {
+          "Details": "https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69fc76da0019ff9c1bba600fd",
+          "No": "1",
+          "Title": "115年「SEMICON Taiwan」主題式業績發表會及產業講座（9月3日）"
+        },
+        {
+          "Details": "https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69ef76943019f88b16b3b0205",
+          "No": "2",
+          "Title": "2026年上市公司辦理法人說明會(8月1日至8月31日)"
+        },
+        {
+          "Details": "https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019ef38be77f02b6",
+          "No": "3",
+          "Title": "2026年上市公司辦理法人說明會(7月1日至7月31日)"
+        }
+      ],
+      "_lineage": {
+        "source": "TWSE_API",
+        "source_role": "CANONICAL",
+        "fetched_at": "2026-08-26T02:18:44+08:00",
+        "data_date": "2026-08-26",
+        "freshness": "POST_MARKET",
+        "sampling_sec": 0,
+        "is_cached": false,
+        "latency_ms": 122,
+        "grade": "AVAILABLE"
+      },
+      "http_calls": 1,
+      "disclaimer": "僅供研究參考，不構成投資建議"
+    }
+  }
+}

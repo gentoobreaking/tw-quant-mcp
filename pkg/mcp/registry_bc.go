@@ -944,6 +944,20 @@ func registerBCTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  apiListSpec{ds: provider.TWSEAPIWarrantIssue}.handler(),
 	}) // T190
+	r.Register(ToolDef{
+		Symbol:      "get_twse_events",
+		Name:        "get_twse_events",
+		Description: "查詢證交所活動訊息（業績發表會、產業講座等活動公告；TWSE-API news/eventList，T191）。" +
+			"top 為回傳筆數上限（預設 10，填 0 回傳全部）。每筆含 No（序號）、Title（標題）、Details（詳情連結）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"top": map[string]any{"type": "integer", "minimum": 0, "default": 10, "description": "回傳筆數上限（預設 10；填 0 則回傳全部）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetTwseEvents,
+	}) // T191
 
 	r.Register(ToolDef{
 		Symbol:      "get_company_sec_regulatory_penalties",

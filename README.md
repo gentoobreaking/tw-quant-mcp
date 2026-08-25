@@ -394,7 +394,7 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 
 本專案僅供個人量化研究與教育用途。資料來源（FinMind、TWSE、TPEX）之使用請遵守各平台之服務條款。
 
-## 附錄：完整工具目錄（191 個，由 tools/list 自動產生 2026-08-26；T194 新增 get_realtime_quote）
+## 附錄：完整工具目錄（192 個，由 tools/list 自動產生 2026-08-26；T194 get_realtime_quote、T191 get_twse_events）
 
 > 本目錄由真實服務 `tools/list` 輸出自動彙出；上方「工具清單（40 個）」章節為
 > v2.1 發布時之手寫清單，已過時。各工具之 Envelope、`_lineage`、快取政策與
@@ -580,6 +580,7 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 - `get_top_foreign_holdings`：查詢外資持股前 20 名上市公司（TWSE-API MI_QFIIS_sort_20 passthrough，T185）。
 - `get_trading_calendar`：查詢交易日曆（§10.G；TWSE 官方開休市表，內嵌 2026 年資料）。year/month 省略時為今年/全年；回傳交易日清單與官方休市日（含名稱）。
 - `get_twse_index`：查詢 TWSE 指數盤後行情與歷史日 K（加權指數、寶島、臺灣50 等）。symbol 為指數名稱（省略預設「發行量加權股價指數」）；date 省略時為最近交易日。資料來源：TWSE-API MI_INDEX（單日收盤）+ TWSE-WEB MI_5MINS_HIST（歷史日 K）。
+- `get_twse_events`：查詢證交所活動訊息（TWSE-API news/eventList，T191）。top 為回傳筆數上限（預設 10，填 0 回傳全部）；每筆含 No/Title/Details。
 - `get_twse_news`：查詢證交所新聞清單（TWSE-API news/newsList passthrough，T186）。
 - `get_valuation_ratios`：查詢個股估值指標（PE/PB/殖利率/ROE/每股股利）。上市 TWSE-API BWIBBU_ALL + MOPS；上櫃 TPEx 本益比/殖利率/淨值比。ROE 為 MOPS 損益表摘要年化 ÷ 權益之年化估計（官方無直接端點）。
 - `get_warrant_activity`：查詢權證活躍度（TWSE-API 權證每日成交：成交金額/張數 Top N）。top_n 預設 10，最大 50。

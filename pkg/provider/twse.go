@@ -141,6 +141,7 @@ const (
 	TWSEWDStockYearTrade TWSEWebDataset = "stock_year_trade" // 年度成交資訊全市場（FMNPTK_ALL，T174）
 	TWSEAPITopForeign    TWSEAPIDataset = "top_foreign"      // 外資持股前20（MI_QFIIS_sort_20，T185）
 	TWSEAPITwseNews      TWSEAPIDataset = "twse_news"        // 證交所新聞（news/newsList，T186）
+	TWSEAPITwseEvents    TWSEAPIDataset = "twse_events"      // 證交所活動訊息（news/eventList，T191）
 	TWSEAPIWarrantBasic  TWSEAPIDataset = "warrant_basic"    // 權證基本資料（t187ap37_L，T187）
 	TWSEAPIWarrantTrader TWSEAPIDataset = "warrant_trader"   // 權證流動量提供者（t187ap43_L，T189）
 	TWSEAPIWarrantIssue  TWSEAPIDataset = "warrant_issue"    // 權證年度發行統計（t187ap36_L，T190）
@@ -242,6 +243,7 @@ var (
 		TWSEAPIDividend:        "/opendata/t187ap45_L",       // 上市公司股利分派情形
 		TWSEAPITopForeign:      "/fund/MI_QFIIS_sort_20",  // 外資持股Top20（T185）
 		TWSEAPITwseNews:        "/news/newsList",          // 證交所新聞（T186）
+		TWSEAPITwseEvents:      "/news/eventList",         // 證交所活動訊息（T191）
 		TWSEAPIWarrantBasic:    "/opendata/t187ap37_L",    // 權證基本資料（T187）
 		TWSEAPIWarrantTrader:   "/opendata/t187ap43_L",    // 權證流動量提供者（T189）
 		TWSEAPIWarrantIssue:    "/opendata/t187ap36_L",    // 權證年度發行統計（T190）
@@ -763,7 +765,7 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizePassthroughArray(raw)
 	case "supervisor_comp", "meeting_ann", "meeting_dates", "proposal_exercise":
 		out, err = normalizePassthroughArray(raw)
-	case "top_foreign", "twse_news", "warrant_basic",
+	case "top_foreign", "twse_news", "twse_events", "warrant_basic",
 		"warrant_trader", "warrant_issue":
 		out, err = normalizePassthroughArray(raw)
 	case "sec_penalty":
