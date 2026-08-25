@@ -258,6 +258,21 @@ func registerBCTools(r *Registry) {
 		Handler:  webListSpec{ds: provider.TWSEWDFinProgAbn}.handler(),
 	}) // T121
 	r.Register(ToolDef{
+		Symbol:      "get_foreign_companies_applying_for_listing",
+		Name:        "get_foreign_companies_applying_for_listing",
+		Description: "查詢外國公司向證交所申請第一上市之公司（TWSE-API company/applylistingForeign，T123）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIForeignApply}.handler(),
+	}) // T123
+	r.Register(ToolDef{
 		Symbol:      "get_daily_securities_lending_volume",
 		Name:        "get_daily_securities_lending_volume",
 		Description: "查詢集中市場借券賣出每日量（T119）。",

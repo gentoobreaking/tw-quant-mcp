@@ -139,6 +139,7 @@ const (
 	TWSEAPIWarrantTrader TWSEAPIDataset = "warrant_trader"   // 權證流動量提供者（t187ap43_L，T189）
 	TWSEAPIWarrantIssue  TWSEAPIDataset = "warrant_issue"    // 權證年度發行統計（t187ap36_L，T190）
 	TWSEAPISecPenalty    TWSEAPIDataset = "sec_penalty"      // 證期局違規裁罰（t187ap22_L，T106）
+	TWSEAPIForeignApply  TWSEAPIDataset = "foreign_apply"    // 外國公司申請第一上市（company/applylistingForeign，T123）
 	TWSEAPIInsiderPreann  TWSEAPIDataset = "insider_preann"   // 內部人持股轉讓事前申報（t187ap12_L，T078）
 	TWSEAPIInsiderUntrans TWSEAPIDataset = "insider_untrans"  // 內部人持股未轉讓（t187ap13_L，T079）
 	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"         // 董事酬金（t187ap29_A_L，T080）
@@ -236,6 +237,7 @@ var (
 		TWSEAPIWarrantTrader:   "/opendata/t187ap43_L",    // 權證流動量提供者（T189）
 		TWSEAPIWarrantIssue:    "/opendata/t187ap36_L",    // 權證年度發行統計（T190）
 		TWSEAPISecPenalty:      "/opendata/t187ap22_L",    // 證期局裁罰（T106）
+		TWSEAPIForeignApply:    "/company/applylistingForeign", // 外國公司申請第一上市（T123）
 		TWSEAPICumVoting:       "/opendata/t187ap34_L", // 累積投票制選任董監事彙總（T056）
 		TWSEAPIOwnScopeHalt:    "/opendata/t187ap26_L", // 經營權異動且營業範圍重大變更停止買賣（T057）
 		TWSEAPIOwnScopeTrade:   "/opendata/t187ap27_L", // 經營權異動且營業範圍重大變更列變更交易（T058）
@@ -733,6 +735,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		"warrant_trader", "warrant_issue":
 		out, err = normalizePassthroughArray(raw)
 	case "sec_penalty":
+		out, err = normalizePassthroughArray(raw)
+	case "foreign_apply":
 		out, err = normalizePassthroughArray(raw)
 	case "fund_basic", "pub_board_hold", "pub_income_ci", "pub_income_basi",
 		"pub_income_bd", "pub_income_fh", "pub_income_ins", "pub_income_mim":

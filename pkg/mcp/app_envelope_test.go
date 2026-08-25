@@ -141,6 +141,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.stub("daily_k", url.Values{"date": {"20260730"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "07", 0, 10)))
 	f.bodies["daily_close|"] = `[{"code":"2330","name":"台積電","close":"1150.00"},{"code":"2317","name":"鴻海","close":"180.00"}]`
 	f.bodies["sec_penalty|"] = `[{"出表日期":"1150824","股票代號":"2330","公司名稱":"台積電","違規事由":"示例"}]`
+	f.bodies["foreign_apply|"] = `[{"No":"1","Code":"7874","Company":"禾碩康-KY","ApplicationDate":"1150429","Chairman":"康潤生","AmountofCapital ":"270000","CommitteeDate":"1150731","ApprovedDate":"","AgreementDate":"","ListingDate":"","Underwriter":"凱基","UnderwritingPrice":"","Note":""}]`
 	f.bodies["eps_stats|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","季度":"4","EPS":"15.85"}]`
 	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
 	f.bodies["disclosure_vio|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","違法情形":"未依法令期限公告申報"}]`
@@ -257,6 +258,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_cross_market_trading_info", args: map[string]any{}},
 		{name: "get_daily_day_trading_targets", args: map[string]any{}},
 		{name: "get_financial_program_abnormal_recommendations", args: map[string]any{}},
+		{name: "get_foreign_companies_applying_for_listing", args: map[string]any{}},
 		{name: "get_daily_securities_lending_volume", args: map[string]any{}},
 		{name: "get_first_listed_foreign_stocks_daily", args: map[string]any{}},
 		{name: "get_margin_loan_restrictions_announcement", args: map[string]any{}},

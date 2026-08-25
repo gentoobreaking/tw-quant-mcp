@@ -142,7 +142,7 @@ func rowCode(r map[string]any) string {
 
 func rowName(r map[string]any) string {
 	return rowField(r, "name", "公司名稱", "證券名稱", "債券簡稱",
-		"券商名稱", "券商(證券IB)簡稱", "證券商名稱", "Name")
+		"券商名稱", "券商(證券IB)簡稱", "證券商名稱", "Name", "Company")
 }
 
 func paginateRows(rows []map[string]any, code, name string, offset, limit int) []any {
