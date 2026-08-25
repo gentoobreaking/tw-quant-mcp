@@ -151,6 +151,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["new_listing|"] = `[{"Code":"7855","Company":"和運租車","ApplicationDate":"1150414","Chairman":"劉源森","ApprovedListingDate":"1150811","Underwriter":"台新"}]`
 	f.bodies["local_apply|"] = `[{"Code":"7883","Company":"饗賓","ApplicationDate":"1150727","Chairman":"陳毅航","AmountofCapital ":"609760","CommitteeDate":"1150827","Underwriter":"元大","Note":""}]`
 	f.bodies["suspend_listing|"] = `[{"DelistingDate":"115/06/23","Company":"森崴能源","Code":"6806"}]`
+	f.bodies["otc_qfii_rank|"] = `[{"Date":"1150730","Rank":"1","SecuritiesCompanyCode":"8455","CompanyName":"大拓-KY","PercentageOfSharesOC/FMIHeld":"87.85%"}]`
 	f.bodies["otc_mopsfin|kind=t187ap08_O"] = `[{"出表日期":"1150730","公司代號":"6147","公司名稱":"頎邦","董監持股不足成數":"5%"}]`
 	f.bodies["hd_index|"] = `[{"Date":"1150730","TPExHighDividendYieldIndex":"400.78","TPExHighDividendYieldTotalReturnIndex":"712.54"}]`
 	f.bodies["otc_daytrade_targets|"] = `[{"資料日期":"1150730","證券代號":"8110","證券名稱":"華東","暫停現股賣出後現款買進當沖註記":""}]`
@@ -314,6 +315,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_otc_daytrade_statistics", args: map[string]any{}},
 		{name: "get_high_dividend_index", args: map[string]any{}},
 		{name: "get_otc_governance", args: map[string]any{"kind": "board_insufficient"}},
+		{name: "get_otc_foreign_holdings_rank", args: map[string]any{}},
 		{name: "get_otc_index", args: map[string]any{}},
 		{name: "get_otc_odd_lot", args: map[string]any{}},
 		{name: "get_daily_securities_lending_volume", args: map[string]any{}},

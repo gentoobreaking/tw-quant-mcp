@@ -1,0 +1,69 @@
+{
+  "arguments": {
+    "limit": 3
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"AvailableSharesForOC/FIToInvest\":\"3063750\",\"CompanyName\":\"大拓-KY\",\"CurrentlySharesOC/FIHeld\":\"22155306\",\"Date\":\"1150825\",\"Note\":\"\",\"NumberOfSharesIssued\":\"25219056\",\"PercentageOfAvailableInvestmentForOC/FI\":\"12.15%\",\"PercentageOfSharesOC/FMIHeld\":\"87.85%\",\"Rank\":\"1\",\"SecuritiesCompanyCode\":\"8455\",\"UpperLimitOfRegulatedInvestment\":\"100%\"},{\"AvailableSharesForOC/FIToInvest\":\"9083000\",\"CompanyName\":\"達輝-KY\",\"CurrentlySharesOC/FIHeld\":\"30417000\",\"Date\":\"1150825\",\"Note\":\"\",\"NumberOfSharesIssued\":\"39500000\",\"PercentageOfAvailableInvestmentForOC/FI\":\"22.99%\",\"PercentageOfSharesOC/FMIHeld\":\"77%\",\"Rank\":\"2\",\"SecuritiesCompanyCode\":\"5276\",\"UpperLimitOfRegulatedInvestment\":\"100%\"},{\"AvailableSharesForOC/FIToInvest\":\"8888535\",\"CompanyName\":\"泰金-KY\",\"CurrentlySharesOC/FIHeld\":\"29482683\",\"Date\":\"1150825\",\"Note\":\"\",\"NumberOfSharesIssued\":\"38371218\",\"PercentageOfAvailableInvestmentForOC/FI\":\"23.16%\",\"PercentageOfSharesOC/FMIHeld\":\"76.83%\",\"Rank\":\"3\",\"SecuritiesCompanyCode\":\"6629\",\"UpperLimitOfRegulatedInvestment\":\"100%\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T07:17:27+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":134,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+      }
+    ],
+    "structuredContent": {
+      "data": [
+        {
+          "AvailableSharesForOC/FIToInvest": "3063750",
+          "CompanyName": "大拓-KY",
+          "CurrentlySharesOC/FIHeld": "22155306",
+          "Date": "1150825",
+          "Note": "",
+          "NumberOfSharesIssued": "25219056",
+          "PercentageOfAvailableInvestmentForOC/FI": "12.15%",
+          "PercentageOfSharesOC/FMIHeld": "87.85%",
+          "Rank": "1",
+          "SecuritiesCompanyCode": "8455",
+          "UpperLimitOfRegulatedInvestment": "100%"
+        },
+        {
+          "AvailableSharesForOC/FIToInvest": "9083000",
+          "CompanyName": "達輝-KY",
+          "CurrentlySharesOC/FIHeld": "30417000",
+          "Date": "1150825",
+          "Note": "",
+          "NumberOfSharesIssued": "39500000",
+          "PercentageOfAvailableInvestmentForOC/FI": "22.99%",
+          "PercentageOfSharesOC/FMIHeld": "77%",
+          "Rank": "2",
+          "SecuritiesCompanyCode": "5276",
+          "UpperLimitOfRegulatedInvestment": "100%"
+        },
+        {
+          "AvailableSharesForOC/FIToInvest": "8888535",
+          "CompanyName": "泰金-KY",
+          "CurrentlySharesOC/FIHeld": "29482683",
+          "Date": "1150825",
+          "Note": "",
+          "NumberOfSharesIssued": "38371218",
+          "PercentageOfAvailableInvestmentForOC/FI": "23.16%",
+          "PercentageOfSharesOC/FMIHeld": "76.83%",
+          "Rank": "3",
+          "SecuritiesCompanyCode": "6629",
+          "UpperLimitOfRegulatedInvestment": "100%"
+        }
+      ],
+      "_lineage": {
+        "source": "TPEX_API",
+        "source_role": "CANONICAL",
+        "fetched_at": "2026-08-26T07:17:27+08:00",
+        "data_date": "2026-08-26",
+        "freshness": "POST_MARKET",
+        "sampling_sec": 0,
+        "is_cached": false,
+        "latency_ms": 134,
+        "grade": "AVAILABLE"
+      },
+      "http_calls": 1,
+      "disclaimer": "僅供研究參考，不構成投資建議"
+    }
+  }
+}

@@ -1658,3 +1658,40 @@ func handlerGetOtcGovernanceSeries(a *App, args map[string]any) (HandlerResult, 
 	}
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
+
+// handlerGetOtcForeignHoldingsRank：上櫃外資持股排行/類股彙總（T198）。
+// view 參數 rank（個股排行，預設）/industry（類股彙總）。
+func handlerGetOtcForeignHoldingsRank(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	view := strings.ToLower(strVal(args["view"]))
+	if view == "" {
+		view = "rank"
+	}
+	var ds provider.TPExDataset
+	switch view {
+	case "industry":
+		ds = provider.TPExOtcQfiiInd
+	default:
+		ds = provider.TPExOtcQfiiRank
+	}
+	limit, offset := listPaging(args)
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, "", nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetForeignHold)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	if offset < len(rows) {
+		rows = rows[offset:]
+	} else {
+		rows = rows[:0]
+	}
+	if len(rows) > limit {
+		rows = rows[:limit]
+	}
+	return HandlerResult{Data: rows, Lineage: lineage}, nil
+}

@@ -66,6 +66,8 @@ const (
 	TPExHDLatest      TPExDataset = "hd_latest"             // 高殖利率指數當日（T218）
 	TPExHDConstituent TPExDataset = "hd_constituents"       // 高殖利率指數成分股（T218）
 	TPExOtcMopsfin    TPExDataset = "otc_mopsfin"           // 上櫃治理/監理/股務（T237，kind 模板）
+	TPExOtcQfiiRank   TPExDataset = "otc_qfii_rank"         // 上櫃外資持股排行（T198）
+	TPExOtcQfiiInd    TPExDataset = "otc_qfii_industry"     // 上櫃外資類股持股（T198）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -94,6 +96,8 @@ var (
 		TPExHDLatest:      "/tphd_change",                       // 高殖利率指數當日（T218）
 		TPExHDConstituent: "/tphd_constituents",                 // 高殖利率指數成分股（T218）
 		TPExOtcMopsfin:    "/mopsfin_%s",                        // 上櫃治理系列端點模板（T237）
+		TPExOtcQfiiRank:   "/tpex_3insti_qfii",                  // 外資持股排行（T198）
+		TPExOtcQfiiInd:    "/tpex_3insti_qfii_industry",         // 類股外資持股（T198）
 	}
 )
 
@@ -294,6 +298,9 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		out = ms
 	case string(TPExOtcMopsfin):
 		// 上櫃治理/監理/股務系列：passthrough（T237；官方中文欄位原樣保留）。
+		out = ms
+	case string(TPExOtcQfiiRank), string(TPExOtcQfiiInd):
+		// 上櫃外資持股排行/類股彙總：passthrough（T198；官方英文欄位原樣保留）。
 		out = ms
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)

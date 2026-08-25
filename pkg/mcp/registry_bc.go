@@ -1233,6 +1233,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcGovernanceSeries,
 	}) // T237
 	r.Register(ToolDef{
+		Symbol: "get_otc_foreign_holdings_rank",
+		Name:   "get_otc_foreign_holdings_rank",
+		Description: "查詢上櫃僑外資及陸資持股（TPEx-API tpex_3insti_qfii* 系列，T198）。" +
+			"view 參數：rank（個股持股排行，預設）/industry（類股持股彙總）。" +
+			"對稱上市 get_top_foreign_holdings / get_foreign_industry_holdings。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"view":   map[string]any{"type": "string", "enum": []string{"rank", "industry"}, "default": "rank", "description": "資料檢視模式"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcForeignHoldingsRank,
+	}) // T198
+	r.Register(ToolDef{
 		Symbol:      "get_otc_index",
 		Name:        "get_otc_index",
 		Description: "查詢櫃買市場（上櫃）指數歷史行情，包含開高低收、漲跌幅（TPEx-API tpex_index，T156）。",
