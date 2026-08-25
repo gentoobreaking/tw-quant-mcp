@@ -400,6 +400,40 @@ func TestFGDailyOptionsMarketReportListContracts(t *testing.T) {
 	}
 }
 
+// T125：get_futures_daily_history 預設 TX、YYYYMMDD 相容、與 futures_history 同資料層
+func TestFGFuturesDailyHistory(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_futures_daily_history",
+		map[string]any{"start": "20260727", "end": "20260729"})
+	rows, ok := env.Data.([]model.FuturesDailyRow)
+	if !ok {
+		t.Fatalf("Data 應為 []FuturesDailyRow，實際 %T", env.Data)
+	}
+	if len(rows) != 2 || rows[0].Date != "2026-07-27" {
+		t.Errorf("歷史行情錯誤: %+v", rows)
+	}
+	if env.Lineage.Source != model.SourceTAIFEXDL {
+		t.Errorf("lineage 應為 DL: %+v", env.Lineage)
+	}
+
+	// YYYY-MM-DD 格式亦可用
+	env2 := callEnv(t, app, "get_futures_daily_history",
+		map[string]any{"contract": "TX", "start_date": "2026-07-27", "end_date": "2026-07-29"})
+	if len(env2.Data.([]model.FuturesDailyRow)) != 2 {
+		t.Errorf("YYYY-MM-DD 參數應同樣可用")
+	}
+
+	// 白名單外契約拒絕
+	if _, err := app.core.Call(context.Background(), "get_futures_daily_history",
+		map[string]any{"contract": "BAD", "start": "2026-07-27", "end": "2026-07-29"}); err == nil {
+		t.Fatal("白名單外契約應被拒絕")
+	}
+}
+
 func TestFGFuturesHistory(t *testing.T) {
 	f := newFake(t)
 	tq := newFakeTAIFEX(t, "2026-07-29")

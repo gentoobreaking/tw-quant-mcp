@@ -336,6 +336,42 @@ func handlerGetFuturesHistory(a *App, args map[string]any) (HandlerResult, error
 	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, end, a.taifexTTL())}, nil
 }
 
+// handlerGetFuturesDailyHistory：期貨每日 OHLC 歷史（T125，與
+// handlerGetFuturesHistory 同資料層；contract 省略預設 TX，日期相容 YYYYMMDD）。
+func handlerGetFuturesDailyHistory(a *App, args map[string]any) (HandlerResult, error) {
+	contract := strings.TrimSpace(strVal(args["contract"]))
+	if contract == "" {
+		contract = "TX" // 對齊遠端 inputSchema default
+	}
+	start := strVal(args["start"])
+	if start == "" {
+		start = strVal(args["start_date"])
+	}
+	end := strVal(args["end"])
+	if end == "" {
+		end = strVal(args["end_date"])
+	}
+	if start == "" || end == "" {
+		return HandlerResult{}, fmt.Errorf("參數 start（start_date）與 end（end_date）為必填")
+	}
+	return handlerGetFuturesHistory(a, map[string]any{
+		"contract": contract,
+		"start":    flexDateArg(start),
+		"end":      flexDateArg(end),
+	})
+}
+
+// flexDateArg 日期參數相容 YYYYMMDD（轉 YYYY-MM-DD）與 YYYY-MM-DD（原樣）。
+func flexDateArg(s string) string {
+	s = strings.TrimSpace(s)
+	if len(s) == 8 {
+		if t, err := time.ParseInLocation("20060102", s, model.Taipei()); err == nil {
+			return model.FormatDate(t)
+		}
+	}
+	return s
+}
+
 // handlerGetPutCallRatio：買賣權比（date 或 range，支援歷史，§10.F）。
 func handlerGetPutCallRatio(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()

@@ -241,6 +241,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_daily_futures_market_report", args: map[string]any{}},
 		{name: "get_daily_options_market_report", args: map[string]any{}},
 		{name: "get_futures_history", args: map[string]any{"contract": "TX", "start": "2026-07-27", "end": "2026-07-29"}},
+		{name: "get_futures_daily_history", args: map[string]any{"start": "2026-07-27", "end": "2026-07-29"}},
 		{name: "get_put_call_ratio", args: map[string]any{"date": "2026-07-29"}},
 		{name: "get_large_trader_positions", args: map[string]any{"date": "2026-07-29"}},
 		{name: "get_institutional_futures_positions", args: map[string]any{"date": "2026-07-29"}},

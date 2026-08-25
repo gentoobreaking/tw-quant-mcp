@@ -70,6 +70,22 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetFuturesHistory,
 	})
 	r.Register(ToolDef{
+		Symbol:      "get_futures_daily_history",
+		Name:        "get_futures_daily_history",
+		Description: "查詢期貨每日OHLC歷史行情（可回溯查詢，非僅最新一日；TAIFEX-DL 下載頁回溯，T125）。" +
+			"contract 省略時預設 TX（臺股期貨）；回傳區間內每個交易日、每個到期月份、一般與盤後時段行情。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract":   map[string]any{"type": "string", "default": "TX", "description": "期貨契約代碼，預設 TX。常用：MTX、E4F（電子）、GXF（金融）"},
+				"start":      map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
+				"end":        map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）；區間跨度上限 366 日"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetFuturesDailyHistory,
+	}) // T125
+	r.Register(ToolDef{
 		Symbol: "get_put_call_ratio",
 		Name:   "get_put_call_ratio",
 		Description: "查詢買賣權比（Put/Call Ratio，成交量/未平倉比；§10.F）。" +
