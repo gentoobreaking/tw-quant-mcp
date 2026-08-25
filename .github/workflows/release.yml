@@ -210,7 +210,13 @@ jobs:
           fi
           } 2>&1 | tee /tmp/tap.log
           RC=${PIPESTATUS[0]}
-          # 失敗時將完整 log 推到 tap repo 的 ci-debug 分支（log 端點不可靠時的診斷通道）
+          # 失敗時：1) 將最後幾行以 annotations 輸出（API 可讀）
+          #         2) 若 clone 已成功則推完整 log 至 tap repo 的 ci-debug 分支
+          if [ "$RC" -ne 0 ]; then
+            tail -5 /tmp/tap.log | while IFS= read -r line; do
+              echo "::error::${line:0:300}"
+            done
+          fi
           if [ "$RC" -ne 0 ] && [ -d tap ]; then
             (
               cd tap
