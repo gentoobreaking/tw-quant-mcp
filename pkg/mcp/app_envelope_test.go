@@ -235,6 +235,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "screen_high_yield", args: map[string]any{"min_yield": float64(1)}},
 		// ── F 組（期貨選擇權，7）──
 		{name: "get_futures_daily_ohlc", args: map[string]any{"contract": "TX"}},
+		{name: "get_daily_futures_market_report", args: map[string]any{}},
 		{name: "get_futures_history", args: map[string]any{"contract": "TX", "start": "2026-07-27", "end": "2026-07-29"}},
 		{name: "get_put_call_ratio", args: map[string]any{"date": "2026-07-29"}},
 		{name: "get_large_trader_positions", args: map[string]any{"date": "2026-07-29"}},

@@ -172,7 +172,59 @@ func handlerGetFuturesDailyOHLC(a *App, args map[string]any) (HandlerResult, err
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, date, fromCache, a.taifexTTL())}, nil
 }
 
-// handlerGetFuturesHistory：期貨 OHLC 歷史（TAIFEX-DL 回溯，§10.F）。
+// handlerGetDailyFuturesMarketReport：期貨每日交易行情（TAIFEX-API
+// DailyMarketReportFut，T117）。contract 省略時預設 TX；明確傳空字串
+// 則列出最新交易日所有可用契約代碼。
+func handlerGetDailyFuturesMarketReport(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	raw, hasArg := args["contract"]
+	contract := strings.TrimSpace(strVal(raw))
+	date, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	if hasArg && contract == "" {
+		// 列出所有可用契約代碼（全市場查詢，本地去重排序）
+		res, fromCache, err := q.Fetch(ctx, model.TAFuturesDaily, date, "")
+		if err != nil {
+			return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAFuturesDaily, err)
+		}
+		rows, err := taifexRows[model.FuturesDailyRow](model.TAFuturesDaily, date, res)
+		if err != nil {
+			return HandlerResult{}, err
+		}
+		seen := map[string]bool{}
+		out := make([]map[string]any, 0)
+		for _, r := range rows {
+			if seen[r.Contract] {
+				continue
+			}
+			seen[r.Contract] = true
+			out = append(out, map[string]any{"contract": r.Contract})
+		}
+		sort.Slice(out, func(i, j int) bool { return out[i]["contract"].(string) < out[j]["contract"].(string) })
+		return HandlerResult{Data: out, Lineage: taifexLineage(res, date, fromCache, a.taifexTTL())}, nil
+	}
+	if contract == "" {
+		contract = "TX" // 預設 TX（對齊遠端 inputSchema default）
+	}
+	if !futuresContractWhitelist[contract] {
+		return HandlerResult{}, fmt.Errorf("期貨契約代號 %q 不在白名單（TX/MTX/GTX/G2F/G1F/G9F/E4F/XIF/GXF/T5F）", contract)
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAFuturesDaily, date, contract)
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAFuturesDaily, err)
+	}
+	rows, err := taifexRows[model.FuturesDailyRow](model.TAFuturesDaily, date, res)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, date, fromCache, a.taifexTTL())}, nil
+}
 func handlerGetFuturesHistory(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	q, err := a.querier()

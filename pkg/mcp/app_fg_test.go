@@ -109,6 +109,12 @@ func stubFG(f *fakeTAIFEX) {
 		{Date: "2026-07-29", Contract: "TX", ContractMonth: "202608", Session: "一般", Open: 41915, High: 42070, Low: 39442, Close: 40392, Change: -1181, ChangePct: -2.84, Volume: 124405, Settlement: 40328, OpenInterest: 108507},
 		{Date: "2026-07-29", Contract: "TX", ContractMonth: "202608", Session: "盤後", Open: 41779, High: 42108, Low: 41178, Close: 41889, Change: 316, ChangePct: 0.76, Volume: 54682},
 	})
+	// 期貨每日行情（全市場，T117 契約代碼列舉）
+	f.single[tfKey(model.TAFuturesDaily, "2026-07-29", "")] = tfStub([]model.FuturesDailyRow{
+		{Date: "2026-07-29", Contract: "TX", ContractMonth: "202608", Session: "一般", Close: 40392, Volume: 124405, OpenInterest: 108507},
+		{Date: "2026-07-29", Contract: "MTX", ContractMonth: "202608", Session: "一般", Close: 40400, Volume: 98000, OpenInterest: 60000},
+		{Date: "2026-07-29", Contract: "GXF", ContractMonth: "202608", Session: "一般", Close: 17800, Volume: 12000, OpenInterest: 9000},
+	})
 	// 歷史（DL）：TX 2026-07-27 / 07-28
 	f.ranges[tfRangeKey(model.TAFuturesDaily, "2026-07-27", "2026-07-29", "TX")] = map[string]provider.TAIFEXQueryResult{
 		"2026-07-27": tfStubDL([]model.FuturesDailyRow{
@@ -260,6 +266,62 @@ func TestFGFuturesDailyOHLCGap(t *testing.T) {
 	if _, err := app.core.Call(context.Background(), "get_futures_daily_ohlc",
 		map[string]any{"contract": "TX", "date": "2026-07-28"}); err == nil {
 		t.Fatal("缺口日應回明確錯誤")
+	}
+}
+
+// T117：get_daily_futures_market_report 預設 TX
+func TestFGDailyFuturesMarketReportDefaultTX(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_daily_futures_market_report", map[string]any{})
+	rows, ok := env.Data.([]model.FuturesDailyRow)
+	if !ok {
+		t.Fatalf("Data 應為 []FuturesDailyRow，實際 %T", env.Data)
+	}
+	if len(rows) != 2 || rows[0].Contract != "TX" || rows[0].Close != 40392 {
+		t.Errorf("預設應回 TX 行情: %+v", rows)
+	}
+	if env.Lineage.Source != model.SourceTAIFEXAPI || env.Lineage.Freshness != model.FreshnessPostMarket {
+		t.Errorf("lineage 應為 API/POST_MARKET: %+v", env.Lineage)
+	}
+}
+
+// T117：contract 留空 → 列出所有可用契約代碼（去重排序）＋快取命中
+func TestFGDailyFuturesMarketReportListContracts(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_daily_futures_market_report", map[string]any{"contract": ""})
+	out, ok := env.Data.([]map[string]any)
+	if !ok {
+		t.Fatalf("Data 應為 []map[string]any，實際 %T", env.Data)
+	}
+	if len(out) != 3 || out[0]["contract"] != "GXF" || out[1]["contract"] != "MTX" || out[2]["contract"] != "TX" {
+		t.Errorf("契約代碼應去重排序（GXF/MTX/TX）: %+v", out)
+	}
+
+	// 第二次呼叫 → 快取命中（替身第二次起 IsCached=true）
+	env2 := callEnv(t, app, "get_daily_futures_market_report", map[string]any{"contract": ""})
+	if !env2.Lineage.IsCached {
+		t.Errorf("第二次呼叫應命中快取: %+v", env2.Lineage)
+	}
+}
+
+// T117：白名單外契約 → 拒絕
+func TestFGDailyFuturesMarketReportBadContract(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	if _, err := app.core.Call(context.Background(), "get_daily_futures_market_report",
+		map[string]any{"contract": "TX;DROP"}); err == nil {
+		t.Fatal("注入字串應被白名單拒絕")
 	}
 }
 

@@ -23,6 +23,20 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetFuturesDailyOHLC,
 	})
 	r.Register(ToolDef{
+		Symbol:      "get_daily_futures_market_report",
+		Name:        "get_daily_futures_market_report",
+		Description: "查詢期貨每日交易行情，包含開高低收、成交量、未平倉量等資訊（TAIFEX-API DailyMarketReportFut，T117）。" +
+			"常用契約代碼：TX（臺指期貨）、MTX（小型臺指）等白名單契約；contract 留空可列出所有可用契約代碼。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "default": "TX", "description": "期貨契約代碼，例如 TX、MTX。留空則列出所有可用契約代碼"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetDailyFuturesMarketReport,
+	}) // T117
+	r.Register(ToolDef{
 		Symbol: "get_futures_history",
 		Name:   "get_futures_history",
 		Description: "查詢期貨 OHLC 歷史（TAIFEX-DL 下載頁回溯，§9.3；L2 永久快取）。" +

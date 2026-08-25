@@ -128,7 +128,7 @@ get_market_turnover_history、get_top_20_volume_stocks、get_after_hours_trading
 
 | 功能 | 遠端 | 本機 |
 |---|---|---|
-| 期貨/選擇權每日報告 | ✅ get_daily_futures/options_market_report | ✅ get_futures_daily_ohlc（11 契約白名單） |
+| 期貨/選擇權每日報告 | ✅ get_daily_futures/options_market_report | ✅ get_futures_daily_ohlc（11 契約白名單）＋get_daily_futures_market_report（T117，同名對齊，留空列契約代碼） |
 | 三大法人期貨/選擇權部位 | ✅ institutional_traders_by_futures / by_options / calls_puts | ✅ get_institutional_futures_positions / options_positions |
 | 大額交易人 OI | ✅ large_traders_futures_oi / options_oi | ✅ get_large_trader_positions（期+選合併） |
 | 各類交易人月統計（商品類別 × 交易人別） | ✅ get_monthly_trading_statistics | ✅ get_monthly_trading_statistics（T148，MonthlyTradingStatisticsFutures） |
