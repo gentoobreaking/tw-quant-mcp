@@ -19,7 +19,7 @@ func ParseWebReport(raw *RawResponse) ([]string, [][]string, string, error) {
 	if err := json.Unmarshal(raw.Body, &envelope); err != nil {
 		return nil, nil, "", fmt.Errorf("provider: envelope JSON 解析失敗: %w", err)
 	}
-	if envelope.Stat != "OK" && envelope.Stat != "" {
+	if envelope.Stat != "" && !strings.EqualFold(envelope.Stat, "OK") {
 		return nil, nil, "", fmt.Errorf("provider: 官方回應異常 stat=%q", envelope.Stat)
 	}
 	var rows [][]string
@@ -77,4 +77,44 @@ func normalizePassthroughArray(raw *RawResponse) (json.RawMessage, error) {
 		return nil, fmt.Errorf("provider: passthrough 陣列解析失敗: %w", err)
 	}
 	return arr, nil
+}
+
+// normalizeWebTablesList：tables 型回應（tables[] 各含 title/fields/data）
+// 攤平為列陣列，附 _table 欄標示來源表（T140 起信用交易統計等）。
+func normalizeWebTablesList(raw *RawResponse) ([]map[string]any, error) {
+	var env struct {
+		Date   string `json:"date"`
+		Stat   string `json:"stat"`
+		Tables []struct {
+			Title  string     `json:"title"`
+			Fields []string   `json:"fields"`
+			Data   [][]string `json:"data"`
+		} `json:"tables"`
+	}
+	if err := json.Unmarshal(raw.Body, &env); err != nil {
+		return nil, fmt.Errorf("provider: tables JSON 解析失敗: %w", err)
+	}
+	if env.Stat != "" && env.Stat != "OK" && env.Stat != "ok" {
+		return nil, fmt.Errorf("provider: 官方回應異常 stat=%q", env.Stat)
+	}
+	var date string
+	if ts, err := time.Parse("20060102", env.Date); err == nil {
+		date = ts.Format("2006-01-02")
+	}
+	out := make([]map[string]any, 0)
+	for _, t := range env.Tables {
+		for _, row := range t.Data {
+			m := ZipRow(t.Fields, row)
+			rec := make(map[string]any, len(m)+2)
+			for k, v := range m {
+				rec[k] = strings.TrimSpace(v)
+			}
+			rec["_table"] = strings.TrimSpace(t.Title)
+			if date != "" {
+				rec["_date"] = date
+			}
+			out = append(out, rec)
+		}
+	}
+	return out, nil
 }

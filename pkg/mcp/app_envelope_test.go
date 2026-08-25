@@ -114,12 +114,20 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["audit_variance|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"115","季別":"2","差異說明":"無"}]`
 	f.bodies["forecast_achv|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"115","季別":"2","達成率(%)":"105.20"}]`
 	f.bodies["supervisor_comp|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","酬金總額":"3000000"}]`
+	f.bodies["punish|"] = `[{"number":"1","date":"1150722","code":"2317","name":"鴻海","notice_count":3,"reasons":"連續三次","disposition_period":"115/07/23～115/08/05","disposition_measure":"第一次處置","detail":"人工管制撮合"}]`
 	f.bodies["meeting_ann|"] = `[{"出表日期":"1150824","公司代號":"2330","公司名稱":"台積電","股東常(臨時)會日期-常或臨時":"常會"}]`
 	f.bodies["meeting_dates|"] = `[{"出表日期":"1150824","公司代號":"1101","公司名稱":"台泥","公司地址":"台北市"}]`
 	f.bodies["proposal_exercise|"] = `[{"出表日期":"1150824","公司代號":"1101","公司名稱":"台泥","召開股東會日期":"1150522"}]`
 	f.bodies["fund_basic|"] = `[{"出表日期":"1150824","基金代號":"00400A","基金簡稱":"主動國泰動能高息","基金類型":"主動式ETF"}]`
 	f.bodies["pub_board_hold|"] = `[{"出表日期":"1150820","資料年月":"11507","公司代號":"2330","公司名稱":"台積電"}]`
 	f.bodies["pub_income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"247728.00"}]`
+	f.bodies["margin_info|"] = `[{"項目":"融資(交易單位)","買進":"100","賣出":"90","今日餘額":"5000000","_table":"115年08月24日 信用交易統計","_date":"2026-07-30"}]`
+	f.bodies["holiday|"] = `[{"日期":"2026-01-01","名稱":"中華民國開國紀念日","說明":"休市"}]`
+	f.bodies["realtime_stats|"] = `[{"時間":"13:25:00","累計委託筆數":"3000000"}]`
+	f.bodies["taiwan50|"] = `[{"日期":"20260825","臺灣50指數":"55000.00"}]`
+	f.bodies["island_index|"] = `[{"日期":"20260825","寶島股價指數":"25000.00"}]`
+	f.bodies["total_return|"] = `[{"日　期":"20260825","發行量加權股價報酬指數":"26000.00"}]`
+	f.bodies["index_history|"] = `[{"date":"2026-07-30","open":23000.0,"high":23100.0,"low":22950.0,"close":23050.0},{"date":"2026-07-29","open":22900.0,"high":23050.0,"low":22880.0,"close":23000.0}]`
 	f.bodies["eps_stats|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","季度":"4","EPS":"15.85"}]`
 	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
 	f.bodies["disclosure_vio|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","違法情形":"未依法令期限公告申報"}]`
@@ -310,6 +318,16 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_fund_basic_info", args: map[string]any{}},
 		{name: "get_public_company_board_shareholdings", args: map[string]any{"code": "2330"}},
 		{name: "get_public_company_income_statement", args: map[string]any{"code": "2330"}},
+		{name: "get_margin_trading_info", args: map[string]any{}},
+		{name: "get_market_disposal_stocks", args: map[string]any{}},
+		{name: "get_market_historical_index", args: map[string]any{}},
+		{name: "get_taiex_index_history", args: map[string]any{}},
+		{name: "get_market_holiday_schedule", args: map[string]any{}},
+		{name: "get_market_index_info", args: map[string]any{}},
+		{name: "get_real_time_trading_stats", args: map[string]any{}},
+		{name: "get_taiwan_50_index_history", args: map[string]any{}},
+		{name: "get_taiwan_island_index_history", args: map[string]any{}},
+		{name: "get_taiwan_total_return_index", args: map[string]any{}},
 		{name: "get_company_shareholder_meeting_announcements", args: map[string]any{}},
 		{name: "get_company_shareholder_meeting_announcements_by_code", args: map[string]any{"code": "2330"}},
 		{name: "get_company_shareholder_meeting_dates", args: map[string]any{}},

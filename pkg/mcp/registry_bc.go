@@ -598,6 +598,108 @@ func registerBCTools(r *Registry) {
 			return handlerGetMajorAnnouncements(a, map[string]any{"symbol": strVal(args["code"])})
 		},
 	}) // T096
+
+	// ── 行情歷史與指數補齊（T140/T141/T143-T145/T161/T180-T183）──
+	listSchema := func() map[string]any {
+		return map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		}
+	}
+	r.Register(ToolDef{
+		Symbol:      "get_margin_trading_info",
+		Name:        "get_margin_trading_info",
+		Description: "查詢信用交易統計（融資融券餘額；TWSE-WEB MI_MARGN tables 型，T140）。",
+		Schema:      listSchema(),
+		ReadOnly:    true,
+		Handler:     webListSpec{ds: provider.TWSEWDMarginInfo}.handler(),
+	}) // T140
+	r.Register(ToolDef{
+		Symbol:      "get_market_disposal_stocks",
+		Name:        "get_market_disposal_stocks",
+		Description: "查詢集中市場公布處置股票（TWSE-API announcement/punish 正規化模型，T141）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIPunish}.handler(),
+	}) // T141
+	for _, e := range []struct{ symbol, desc string }{
+		{"get_market_historical_index", "查詢加權指數歷史資料（每 5 分鐘軌跡；TWSE-WEB MI_5MINS_HIST，T143）"},   // T143
+		{"get_taiex_index_history", "查詢發行量加權股價指數歷史資料（TWSE-WEB MI_5MINS_HIST，T180）"},                 // T180
+	} {
+		r.Register(ToolDef{
+			Symbol:      e.symbol,
+			Name:        e.symbol,
+			Description: e.desc + "。",
+			Schema:      listSchema(),
+			ReadOnly:    true,
+			Handler:     webListSpec{ds: provider.TWSEWDIndexHistory}.handler(),
+		})
+	}
+	r.Register(ToolDef{
+		Symbol:      "get_market_holiday_schedule",
+		Name:        "get_market_holiday_schedule",
+		Description: "查詢有價證券集中交易市場開（休）市日期（TWSE-WEB holidaySchedule，T144）。",
+		Schema:      listSchema(),
+		ReadOnly:    true,
+		Handler:     webListSpec{ds: provider.TWSEWDHoliday}.handler(),
+	}) // T144
+	r.Register(ToolDef{
+		Symbol:      "get_market_index_info",
+		Name:        "get_market_index_info",
+		Description: "查詢每日市場各類指數行情明細（TWSE-API MI_INDEX 正規化模型，T145）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "指數名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIIndices}.handler(),
+	}) // T145
+	r.Register(ToolDef{
+		Symbol:      "get_real_time_trading_stats",
+		Name:        "get_real_time_trading_stats",
+		Description: "查詢每 5 秒委託成交統計（盤中即時；TWSE-WEB MI_5MINS，T161）。",
+		Schema:      listSchema(),
+		ReadOnly:    true,
+		Handler:     webListSpec{ds: provider.TWSEWDRealTimeStats}.handler(),
+	}) // T161
+	r.Register(ToolDef{
+		Symbol:      "get_taiwan_50_index_history",
+		Name:        "get_taiwan_50_index_history",
+		Description: "查詢臺灣50指數歷史資料（TWSE-WEB TAI50I，T181）。",
+		Schema:      listSchema(),
+		ReadOnly:    true,
+		Handler:     webListSpec{ds: provider.TWSEWDTaiwan50}.handler(),
+	}) // T181
+	r.Register(ToolDef{
+		Symbol:      "get_taiwan_island_index_history",
+		Name:        "get_taiwan_island_index_history",
+		Description: "查詢寶島股價指數歷史資料（TWSE-WEB FRMSA，T182）。",
+		Schema:      listSchema(),
+		ReadOnly:    true,
+		Handler:     webListSpec{ds: provider.TWSEWDIslandIndex}.handler(),
+	}) // T182
+	r.Register(ToolDef{
+		Symbol:      "get_taiwan_total_return_index",
+		Name:        "get_taiwan_total_return_index",
+		Description: "查詢發行量加權股價報酬指數歷史資料（TWSE-WEB MFI94U，T183）。",
+		Schema:      listSchema(),
+		ReadOnly:    true,
+		Handler:     webListSpec{ds: provider.TWSEWDTotalReturn}.handler(),
+	}) // T183
 	r.Register(ToolDef{
 		Symbol: "get_twse_index",
 		Name:   "get_twse_index",

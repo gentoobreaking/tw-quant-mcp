@@ -119,6 +119,13 @@ const (
 	TWSEAPIPubIncFH       TWSEAPIDataset = "pub_income_fh"    // 金控業
 	TWSEAPIPubIncINS      TWSEAPIDataset = "pub_income_ins"   // 保險業
 	TWSEAPIPubIncMIM      TWSEAPIDataset = "pub_income_mim"   // 異業
+	// 行情歷史與指數補齊（T140，T143-T145，T161，T180-T183）
+	TWSEWDMarginInfo    TWSEWebDataset = "margin_info"    // 信用交易統計（MI_MARGN，T140）
+	TWSEWDHoliday       TWSEWebDataset = "holiday"        // 市場開休市日期（holidaySchedule，T144）
+	TWSEWDRealTimeStats TWSEWebDataset = "realtime_stats" // 每5秒委託成交統計（MI_5MINS，T161）
+	TWSEWDTaiwan50      TWSEWebDataset = "taiwan50"       // 臺灣50指數歷史（TAI50I，T181）
+	TWSEWDIslandIndex   TWSEWebDataset = "island_index"   // 寶島指數歷史（FRMSA，T182）
+	TWSEWDTotalReturn   TWSEWebDataset = "total_return"   // 加權報酬指數歷史（MFI94U，T183）
 	TWSEAPIInsiderPreann  TWSEAPIDataset = "insider_preann"   // 內部人持股轉讓事前申報（t187ap12_L，T078）
 	TWSEAPIInsiderUntrans TWSEAPIDataset = "insider_untrans"  // 內部人持股未轉讓（t187ap13_L，T079）
 	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"         // 董事酬金（t187ap29_A_L，T080）
@@ -185,6 +192,13 @@ var (
 		TWSEWDAbnormal:      "/rwd/announcement/notice",
 		TWSEWDForeignQFIIS:  "/rwd/fund/MI_QFIIS",
 		TWSEWDAfterHours:    "/exchangeReport/BFT41U",
+		// ── 行情歷史與指數補齊（T140-T183）──
+		TWSEWDMarginInfo:    "/exchangeReport/MI_MARGN",
+		TWSEWDHoliday:       "/holidaySchedule/holidaySchedule",
+		TWSEWDRealTimeStats: "/exchangeReport/MI_5MINS",
+		TWSEWDTaiwan50:      "/indicesReport/TAI50I",
+		TWSEWDIslandIndex:   "/indicesReport/FRMSA",
+		TWSEWDTotalReturn:   "/indicesReport/MFI94U",
 	}
 	twseAPIPaths = map[TWSEAPIDataset]string{
 		TWSEAPIDailyClose:      "/exchangeReport/STOCK_DAY_ALL",
@@ -393,7 +407,7 @@ func validateTWSE(raw *RawResponse, sourceID string) error {
 	if envelope.Stat != "OK" && strings.Contains(envelope.Stat, "沒有符合條件") {
 		return nil
 	}
-	if envelope.Stat != "OK" {
+	if !strings.EqualFold(envelope.Stat, "OK") {
 		return fmt.Errorf("provider: %s 官方回應異常 stat=%q", ds, envelope.Stat)
 	}
 	if isTablesDataset(ds) {
@@ -459,7 +473,7 @@ func rawRows(data json.RawMessage) ([][]string, error) {
 // isTablesDataset 判斷資料集是否為「tables」結構（margin/market_close/block_trades）。
 func isTablesDataset(ds string) bool {
 	switch ds {
-	case "margin", "market_close", "block_trades":
+	case "margin", "market_close", "block_trades", "margin_info":
 		return true
 	}
 	return false
@@ -689,6 +703,11 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "fund_basic", "pub_board_hold", "pub_income_ci", "pub_income_basi",
 		"pub_income_bd", "pub_income_fh", "pub_income_ins", "pub_income_mim":
 		out, err = normalizePassthroughArray(raw)
+	case "margin_info":
+		out, err = normalizeWebTablesList(raw)
+	case "holiday", "realtime_stats",
+		"taiwan50", "island_index", "total_return":
+		out, err = normalizeWebTable(raw)
 	case "eps_stats", "income_ci", "income_basi", "income_bd",
 		"income_fh", "income_ins", "income_mim", "disclosure_vio":
 		out, err = normalizePassthroughArray(raw)

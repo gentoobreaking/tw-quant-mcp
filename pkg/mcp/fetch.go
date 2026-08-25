@@ -86,6 +86,12 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIPubIncINS):       cache.DatasetFinancials,
 	string(provider.TWSEAPIPubIncMIM):       cache.DatasetFinancials,
 	string(provider.TWSEAPISupervisorComp):  cache.DatasetFinancials, // 監察人酬金（T111）
+	string(provider.TWSEWDMarginInfo):       cache.DatasetMargin,     // 信用交易統計（T140）
+	string(provider.TWSEWDHoliday):          cache.DatasetCalendar,   // 開休市日期（T144）
+	string(provider.TWSEWDRealTimeStats):    cache.DatasetMISSnapshot, // 5秒成交統計（盤中即時，T161）
+	string(provider.TWSEWDTaiwan50):         cache.DatasetDailyKLine, // 臺灣50指數歷史（T181）
+	string(provider.TWSEWDIslandIndex):      cache.DatasetDailyKLine, // 寶島指數歷史（T182）
+	string(provider.TWSEWDTotalReturn):      cache.DatasetDailyKLine, // 報酬指數歷史（T183）
 	string(provider.TWSEAPIMeetingAnn):      cache.DatasetCalendar,   // 股東會公告（T107/T108）
 	string(provider.TWSEAPIMeetingDates):    cache.DatasetCalendar,   // 股東會日期地點（T109）
 	string(provider.TWSEAPIProposalExer):    cache.DatasetCalendar,   // 提案權行使（T110）
