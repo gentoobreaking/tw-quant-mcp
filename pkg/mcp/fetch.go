@@ -25,6 +25,8 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEWDAbnormal):         cache.DatasetAlertStock,
 	string(provider.TWSEWDAfterHours):       cache.DatasetDailyKLine, // 盤後定價交易：日頻快照（T040）
 	string(provider.TWSEWDBlockTrades):      cache.DatasetDailyKLine, // 鉅額交易日統計（T042）
+	string(provider.TWSEWDBlockMonthly):     cache.DatasetDailyKLine, // 鉅額交易月統計（T044）
+	string(provider.TWSEWDBlockYearly):      cache.DatasetDailyKLine, // 鉅額交易年統計（T045）
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,

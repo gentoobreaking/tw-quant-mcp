@@ -54,6 +54,10 @@ func stubBCEnvelope(f *fakeFetch) {
 	// get_after_hours_trading（T040）
 	f.stub("after_hours", nil,
 		`[{"code":"2330","name":"台積電","volume":100,"transaction":5,"amount":482500,"price":4825,"bid_volume":10,"ask_volume":20,"date":"2026-07-30"}]`)
+	f.bodies["block_monthly|"] = `[{"month":"2026-08","volume":2000000,"amount":100000000}]`
+	f.bodies["block_yearly|"] = `[{"month":"2026","volume":30000000,"amount":1500000000}]`
+	f.bodies["block_trades|20260730"] = `[{"code":"2330","name":"台積電","trade_type":"配對交易","price":4825,"volume":50000,"amount":241250000}]`
+	f.bodies["block_trades|date=20260730"] = `[{"code":"2330","name":"台積電","trade_type":"配對交易","price":4825,"volume":50000,"amount":241250000}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
 	f.stub("daily_k", url.Values{"date": {"20260601"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "06", 20, 20)))
@@ -154,6 +158,9 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_after_hours_trading", args: map[string]any{}},
 		{name: "get_annual_trading_volume", args: map[string]any{}},
 		{name: "get_block_trades_daily", args: map[string]any{}},
+		{name: "get_block_trades_detail", args: map[string]any{"date": "2026-07-30"}},
+		{name: "get_block_trades_monthly", args: map[string]any{}},
+		{name: "get_block_trades_yearly", args: map[string]any{}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

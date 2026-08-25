@@ -166,6 +166,53 @@ func registerBCTools(r *Registry) {
 		Handler: webListSpec{ds: provider.TWSEWDBlockTrades}.handler(),
 	})
 	r.Register(ToolDef{
+		Symbol:      "get_block_trades_detail",
+		Name:        "get_block_trades_detail",
+		Description: "查詢集中市場鉅額交易逐筆明細（含配對交易、盤後鉅額等交易別；TWSE-WEB BFIAUU_d date 查詢，T043）。" +
+			"stock_no/name 為本地端過濾；limit 預設 50。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"date":     map[string]any{"type": "string", "description": "查詢日期 YYYY-MM-DD（需為交易日）"},
+				"stock_no": map[string]any{"type": "string", "description": "股票代號（選填）"},
+				"name":     map[string]any{"type": "string", "description": "股票名稱關鍵字（選填）"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+			"required": []string{"date"},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDBlockTrades, withDate: true}.handler(),
+	})
+	r.Register(ToolDef{
+		Symbol:      "get_block_trades_monthly",
+		Name:        "get_block_trades_monthly",
+		Description: "查詢集中市場鉅額交易月成交量值統計（TWSE-WEB BFIAUU_m，T044）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDBlockMonthly}.handler(),
+	})
+	r.Register(ToolDef{
+		Symbol:      "get_block_trades_yearly",
+		Name:        "get_block_trades_yearly",
+		Description: "查詢集中市場鉅額交易年成交量值統計（TWSE-WEB BFIAUU_y，T045）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0},
+			},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDBlockYearly}.handler(),
+	})
+	r.Register(ToolDef{
 		Symbol:      "get_after_hours_trading",
 		Name:        "get_after_hours_trading",
 		Description: "查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。" +

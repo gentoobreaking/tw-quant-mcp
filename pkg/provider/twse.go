@@ -45,6 +45,8 @@ const (
 	TWSEWDAbnormal      TWSEWebDataset = "abnormal_volume" // 異常成交量（當日公布注意股票）
 	TWSEWDForeignQFIIS  TWSEWebDataset = "qfiis"           // 外資及陸資投資持股統計（個股每日，T011）
 	TWSEWDAfterHours    TWSEWebDataset = "after_hours"     // 盤後定價交易（T040）
+	TWSEWDBlockMonthly  TWSEWebDataset = "block_monthly"   // 鉅額交易月統計（T044）
+	TWSEWDBlockYearly   TWSEWebDataset = "block_yearly"    // 鉅額交易年統計（T045）
 )
 
 // TWSEAPIDataset 為 TWSE-API（openapi.twse.com.tw）資料集 ID。
@@ -77,6 +79,8 @@ var (
 		TWSEWDMarketClose:   "/rwd/afterTrading/MI_INDEX",
 		TWSEWDIndexHistory:  "/indicesReport/MI_5MINS_HIST",
 		TWSEWDBlockTrades:   "/rwd/block/BFIAUU_d",
+		TWSEWDBlockMonthly:  "/rwd/block/BFIAUU_m",
+		TWSEWDBlockYearly:   "/rwd/block/BFIAUU_y",
 		TWSEWDAbnormal:      "/rwd/announcement/notice",
 		TWSEWDForeignQFIIS:  "/rwd/fund/MI_QFIIS",
 		TWSEWDAfterHours:    "/exchangeReport/BFT41U",
@@ -461,6 +465,10 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "index_history":
 		out, err = normalizeIndexHistory(raw)
 	case "block_trades":
+		out, err = normalizeBlockTrades(raw)
+	case "block_monthly":
+		out, err = normalizeBlockTrades(raw)
+	case "block_yearly":
 		out, err = normalizeBlockTrades(raw)
 	case "abnormal_volume":
 		out, err = normalizeAbnormalVolume(raw)
