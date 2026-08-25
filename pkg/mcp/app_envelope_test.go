@@ -100,6 +100,10 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["insider_untrans|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","未轉讓股數":"10000"}]`
 	f.bodies["dir_comp|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","酬金總額":"8000000"}]`
 	f.bodies["major_shareholders|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"行政院國家發展基金","持有股數":"1000000000"}]`
+	f.bodies["dividend_p|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","現金股利":"50.00000000"}]`
+	f.bodies["eps_stats|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","季度":"4","EPS":"15.85"}]`
+	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
+	f.bodies["disclosure_vio|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","違法情形":"未依法令期限公告申報"}]`
 	f.bodies["top_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
@@ -263,6 +267,10 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_company_supply_chain_management", args: map[string]any{"code": "2330"}},
 		{name: "get_company_waste_management", args: map[string]any{"code": "2330"}},
 		{name: "get_company_water_management", args: map[string]any{"code": "2330"}},
+		{name: "get_company_dividend", args: map[string]any{"code": "2330"}},
+		{name: "get_company_eps_statistics", args: map[string]any{"code": "2330"}},
+		{name: "get_company_income_statement", args: map[string]any{"code": "2330"}},
+		{name: "get_company_information_disclosure_violations", args: map[string]any{"code": "2330"}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

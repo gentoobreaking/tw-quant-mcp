@@ -237,6 +237,53 @@ func fetchFinancialRowsForCode(a *App, ctx context.Context, ds provider.TWSEAPID
 		func() ([]byte, error) { return a.fetchAPIRaw(ctx, ds, nil) })
 }
 
+// financialSuffixOrder 回傳以推導 suffix 優先、其餘依序嘗試之完整順序。
+func financialSuffixOrder(category string) []string {
+	primary := financialSuffix(category)
+	all := []string{"_ci", "_basi", "_bd", "_fh", "_ins", "_mim"}
+	out := []string{primary}
+	for _, s := range all {
+		if s != primary {
+			out = append(out, s)
+		}
+	}
+	return out
+}
+
+// fetchFinancialRowsFallback 依 suffix 順序逐一取得並過濾 code，
+// 任一格式命中即回傳；全部落空才回錯（cached/stale 取最後一次結果）。
+func fetchFinancialRowsFallback(a *App, ctx context.Context, datasets map[string]provider.TWSEAPIDataset,
+	category, dataDate, code string) ([]map[string]any, bool, bool, provider.TWSEAPIDataset, error) {
+	var lastErr error
+	cachedAny, staleAny := false, false
+	for _, suf := range financialSuffixOrder(category) {
+		ds, ok := datasets[suf]
+		if !ok {
+			continue
+		}
+		rows, cached, stale, err := fetchFinancialRowsForCode(a, ctx, ds, dataDate, code)
+		if err != nil {
+			lastErr = err
+			continue
+		}
+		cachedAny = cachedAny || cached
+		staleAny = staleAny || stale
+		out := make([]map[string]any, 0)
+		for _, r := range rows {
+			if rowField(r, "公司代號", "code") == code {
+				out = append(out, r)
+			}
+		}
+		if len(out) > 0 {
+			return out, cachedAny, staleAny, ds, nil
+		}
+	}
+	if lastErr != nil {
+		return nil, false, false, "", lastErr
+	}
+	return nil, false, false, "", fmt.Errorf("查無 %s 之資料（已嘗試全部財報格式）", code)
+}
+
 // handlerGetCompanyBalanceSheet：上市公司資產負債表（依產業別選端點，T067）。
 func handlerGetCompanyBalanceSheet(a *App, args map[string]any) (HandlerResult, error) {
 	code := strVal(args["code"])
@@ -247,29 +294,16 @@ func handlerGetCompanyBalanceSheet(a *App, args map[string]any) (HandlerResult, 
 	if err != nil {
 		return HandlerResult{}, err
 	}
-	ds, ok := balanceSheetDatasets[financialSuffix(sym.Category)]
-	if !ok {
-		return HandlerResult{}, fmt.Errorf("產業別 %q 無對應財報格式", sym.Category)
-	}
 	ctx := context.Background()
 	dataDate := a.now().Format("2006-01-02")
-	rows, cached, stale, err := fetchFinancialRowsForCode(a, ctx, ds, dataDate, code)
-	if err != nil {
-		return HandlerResult{}, err
+	rows, cached, stale, ds, err := fetchFinancialRowsFallback(a, ctx, balanceSheetDatasets,
+		financialSuffix(sym.Category), dataDate, code)
+	if len(rows) == 0 {
+		return HandlerResult{}, fmt.Errorf("查無 %s（%s）之資產負債表資料", code, sym.Name)
 	}
 	ttl, _ := a.ttlOf(string(ds))
 	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
-
-	out := make([]map[string]any, 0)
-	for _, r := range rows {
-		if rowField(r, "公司代號", "code") == code {
-			out = append(out, r)
-		}
-	}
-	if len(out) == 0 {
-		return HandlerResult{}, fmt.Errorf("查無 %s（%s）之資產負債表資料", code, sym.Name)
-	}
-	return HandlerResult{Data: out, Lineage: lineage}, nil
+	return HandlerResult{Data: rows, Lineage: lineage}, nil
 }
 
 var balanceSheetDatasets = map[string]provider.TWSEAPIDataset{
@@ -366,4 +400,36 @@ func (s esgCompanySpec) handler() func(*App, map[string]any) (HandlerResult, err
 			"report_date": latest.ReportDate, "fields": latest.Fields,
 		}, Lineage: lineage}, nil
 	}
+}
+
+// incomeStatementDatasets 對應綜合損益表六種產業格式（T092）。
+var incomeStatementDatasets = map[string]provider.TWSEAPIDataset{
+	"_ci":   provider.TWSEAPIIncCI,
+	"_basi": provider.TWSEAPIIncBASI,
+	"_bd":   provider.TWSEAPIIncBD,
+	"_fh":   provider.TWSEAPIIncFH,
+	"_ins":  provider.TWSEAPIIncINS,
+	"_mim":  provider.TWSEAPIIncMIM,
+}
+
+// handlerGetCompanyIncomeStatement：上市公司綜合損益表（依產業別選端點，T092）。
+func handlerGetCompanyIncomeStatement(a *App, args map[string]any) (HandlerResult, error) {
+	code := strVal(args["code"])
+	if code == "" {
+		return HandlerResult{}, fmt.Errorf("code 為必填參數")
+	}
+	sym, err := a.symbolOf(code)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ctx := context.Background()
+	dataDate := a.now().Format("2006-01-02")
+	rows, cached, stale, ds, err := fetchFinancialRowsFallback(a, ctx, incomeStatementDatasets,
+		financialSuffix(sym.Category), dataDate, code)
+	if len(rows) == 0 {
+		return HandlerResult{}, fmt.Errorf("查無 %s（%s）之綜合損益表資料", code, sym.Name)
+	}
+	ttl, _ := a.ttlOf(string(ds))
+	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+	return HandlerResult{Data: rows, Lineage: lineage}, nil
 }

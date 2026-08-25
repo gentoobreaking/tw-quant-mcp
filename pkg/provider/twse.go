@@ -110,6 +110,16 @@ const (
 	TWSEAPIInsiderUntrans TWSEAPIDataset = "insider_untrans"  // 內部人持股未轉讓（t187ap13_L，T079）
 	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"         // 董事酬金（t187ap29_A_L，T080）
 	TWSEAPIMajorSharehold TWSEAPIDataset = "major_shareholders" // 持股逾10%大股東（t187ap02_L，T097）
+	// 財務與監理報表（T081，T083，T092，T094）
+	TWSEAPIDividendP      TWSEAPIDataset = "dividend_p"       // 股利分派（t187ap45_L，T081）
+	TWSEAPIEPSStats       TWSEAPIDataset = "eps_stats"        // EPS 統計（t187ap14_L，T083）
+	TWSEAPIIncCI          TWSEAPIDataset = "income_ci"        // 綜合損益表-一般業（t187ap06_L_ci，T092）
+	TWSEAPIIncBASI        TWSEAPIDataset = "income_basi"      // 金融業
+	TWSEAPIIncBD          TWSEAPIDataset = "income_bd"        // 證券期貨業
+	TWSEAPIIncFH          TWSEAPIDataset = "income_fh"        // 金控業
+	TWSEAPIIncINS         TWSEAPIDataset = "income_ins"       // 保險業
+	TWSEAPIIncMIM         TWSEAPIDataset = "income_mim"       // 異業
+	TWSEAPIDisclosureVio  TWSEAPIDataset = "disclosure_vio"   // 資訊揭露違法（t187ap23_L，T094）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -184,6 +194,15 @@ var (
 		TWSEAPIInsiderUntrans:  "/opendata/t187ap13_L",
 		TWSEAPIDirComp:         "/opendata/t187ap29_A_L",
 		TWSEAPIMajorSharehold:  "/opendata/t187ap02_L",
+		TWSEAPIDividendP:       "/opendata/t187ap45_L",
+		TWSEAPIEPSStats:        "/opendata/t187ap14_L",
+		TWSEAPIIncCI:           "/opendata/t187ap06_L_ci",
+		TWSEAPIIncBASI:         "/opendata/t187ap06_L_basi",
+		TWSEAPIIncBD:           "/opendata/t187ap06_L_bd",
+		TWSEAPIIncFH:           "/opendata/t187ap06_L_fh",
+		TWSEAPIIncINS:          "/opendata/t187ap06_L_ins",
+		TWSEAPIIncMIM:          "/opendata/t187ap06_L_mim",
+		TWSEAPIDisclosureVio:   "/opendata/t187ap23_L",
 	}
 )
 
@@ -614,6 +633,9 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizePassthroughArray(raw)
 	case "dir_comp_con", "sup_comp_con", "insider_preann",
 		"insider_untrans", "dir_comp", "major_shareholders":
+		out, err = normalizePassthroughArray(raw)
+	case "dividend_p", "eps_stats", "income_ci", "income_basi", "income_bd",
+		"income_fh", "income_ins", "income_mim", "disclosure_vio":
 		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)

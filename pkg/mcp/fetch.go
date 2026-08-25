@@ -69,6 +69,15 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIInsiderUntrans):  cache.DatasetCalendar,   // 內部人未轉讓（T079）
 	string(provider.TWSEAPIDirComp):         cache.DatasetFinancials, // 董事酬金（T080）
 	string(provider.TWSEAPIMajorSharehold):  cache.DatasetCalendar,   // 大股東名單（T097）
+	string(provider.TWSEAPIDividendP):       cache.DatasetFinancials, // 股利分派（T081）
+	string(provider.TWSEAPIEPSStats):        cache.DatasetFinancials, // EPS 統計（T083）
+	string(provider.TWSEAPIIncCI):           cache.DatasetFinancials, // 損益表-一般業（T092）
+	string(provider.TWSEAPIIncBASI):         cache.DatasetFinancials,
+	string(provider.TWSEAPIIncBD):           cache.DatasetFinancials,
+	string(provider.TWSEAPIIncFH):           cache.DatasetFinancials,
+	string(provider.TWSEAPIIncINS):          cache.DatasetFinancials,
+	string(provider.TWSEAPIIncMIM):          cache.DatasetFinancials,
+	string(provider.TWSEAPIDisclosureVio):   cache.DatasetCalendar,   // 資訊揭露違法（T094）
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,

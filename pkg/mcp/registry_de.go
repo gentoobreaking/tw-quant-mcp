@@ -276,6 +276,40 @@ func registerDETools(r *Registry) {
 		Handler:     apiCompanySpec{ds: provider.TWSEAPIMajorSharehold}.handler(),
 	}) // T097
 
+	r.Register(ToolDef{
+		Symbol:      "get_company_dividend",
+		Name:        "get_company_dividend",
+		Description: "根據股票代號查詢上市公司股利分派情形（TWSE-API t187ap45_L，T081）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIDividendP}.handler(),
+	}) // T081
+	r.Register(ToolDef{
+		Symbol:      "get_company_eps_statistics",
+		Name:        "get_company_eps_statistics",
+		Description: "根據股票代號查詢上市公司各產業EPS統計資訊（TWSE-API t187ap14_L，T083）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIEPSStats}.handler(),
+	}) // T083
+	r.Register(ToolDef{
+		Symbol:      "get_company_income_statement",
+		Name:        "get_company_income_statement",
+		Description: "根據股票代號查詢上市公司綜合損益表（TWSE-API t187ap06_L，T092）。" +
+			"自動偵測公司所屬產業並使用對應的財務報表格式（一般業、金融業、證券期貨業、金控業、保險業、異業）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     handlerGetCompanyIncomeStatement,
+	}) // T092
+	r.Register(ToolDef{
+		Symbol:      "get_company_information_disclosure_violations",
+		Name:        "get_company_information_disclosure_violations",
+		Description: "根據股票代號查詢上市公司資訊揭露違法情形（金管會證期局裁罰/揭露違法，TWSE-API t187ap23_L，T094）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIDisclosureVio}.handler(),
+	}) // T094
+
 	// ── ESG 揭露細項（t187ap46_L_<topic>，esgCompanySpec 泛用框架）──
 	esgCompanySchema := func() map[string]any {
 		return map[string]any{
