@@ -111,7 +111,6 @@ const (
 	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"         // 董事酬金（t187ap29_A_L，T080）
 	TWSEAPIMajorSharehold TWSEAPIDataset = "major_shareholders" // 持股逾10%大股東（t187ap02_L，T097）
 	// 財務與監理報表（T081，T083，T092，T094）
-	TWSEAPIDividendP      TWSEAPIDataset = "dividend_p"       // 股利分派（t187ap45_L，T081）
 	TWSEAPIEPSStats       TWSEAPIDataset = "eps_stats"        // EPS 統計（t187ap14_L，T083）
 	TWSEAPIIncCI          TWSEAPIDataset = "income_ci"        // 綜合損益表-一般業（t187ap06_L_ci，T092）
 	TWSEAPIIncBASI        TWSEAPIDataset = "income_basi"      // 金融業
@@ -194,7 +193,6 @@ var (
 		TWSEAPIInsiderUntrans:  "/opendata/t187ap13_L",
 		TWSEAPIDirComp:         "/opendata/t187ap29_A_L",
 		TWSEAPIMajorSharehold:  "/opendata/t187ap02_L",
-		TWSEAPIDividendP:       "/opendata/t187ap45_L",
 		TWSEAPIEPSStats:        "/opendata/t187ap14_L",
 		TWSEAPIIncCI:           "/opendata/t187ap06_L_ci",
 		TWSEAPIIncBASI:         "/opendata/t187ap06_L_basi",
@@ -634,7 +632,7 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "dir_comp_con", "sup_comp_con", "insider_preann",
 		"insider_untrans", "dir_comp", "major_shareholders":
 		out, err = normalizePassthroughArray(raw)
-	case "dividend_p", "eps_stats", "income_ci", "income_basi", "income_bd",
+	case "eps_stats", "income_ci", "income_basi", "income_bd",
 		"income_fh", "income_ins", "income_mim", "disclosure_vio":
 		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":

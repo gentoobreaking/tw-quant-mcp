@@ -279,10 +279,10 @@ func registerDETools(r *Registry) {
 	r.Register(ToolDef{
 		Symbol:      "get_company_dividend",
 		Name:        "get_company_dividend",
-		Description: "根據股票代號查詢上市公司股利分派情形（TWSE-API t187ap45_L，T081）。",
+		Description: "根據股票代號查詢上市公司股利分派情形（TWSE-API t187ap45_L 正規化模型，T081）。",
 		Schema:      compSchema(),
 		ReadOnly:    true,
-		Handler:     apiCompanySpec{ds: provider.TWSEAPIDividendP}.handler(),
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIDividend}.handler(),
 	}) // T081
 	r.Register(ToolDef{
 		Symbol:      "get_company_eps_statistics",
