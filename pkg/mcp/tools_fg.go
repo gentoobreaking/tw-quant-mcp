@@ -635,6 +635,110 @@ func handlerGetOptionsDailyHistory(a *App, args map[string]any) (HandlerResult, 
 	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
 }
 
+// handlerGetOptionsDelta：選擇權每日 Delta（TAIFEX-API DailyOptionsDelta，T151）。
+// contract 留空列所有契約；contract_month 留空列該契約可用月份；兩者皆給則過濾。
+func handlerGetOptionsDelta(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	contract := strings.ToUpper(strings.TrimSpace(strVal(args["contract"])))
+	month := strings.TrimSpace(strVal(args["contract_month"]))
+	callPut := strings.TrimSpace(strVal(args["call_put"]))
+	d, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAOptionsDelta, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAOptionsDelta, err)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", model.TAOptionsDelta, err)
+	}
+	// 過濾函式：Contract 精確、月份精確、買賣權精確
+	keep := func(r map[string]any) bool {
+		c, _ := r["Contract"].(string)
+		m, _ := r["ContractMonth(Week)"].(string)
+		cp, _ := r["CallPut"].(string)
+		return (contract == "" || c == contract) &&
+			(month == "" || m == month) &&
+			(callPut == "" || cp == callPut)
+	}
+	if contract == "" {
+		return HandlerResult{Data: distinctField(rows, "Contract", keep), Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+	}
+	if month == "" {
+		return HandlerResult{Data: distinctField(rows, "ContractMonth(Week)", keep), Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+	}
+	out := make([]map[string]any, 0, len(rows))
+	for _, r := range rows {
+		if keep(r) {
+			out = append(out, r)
+		}
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
+// distinctField 取 rows 中指定欄位之去重排序清單（僅保留符合 filter 之列）。
+func distinctField(rows []map[string]any, field string, filter func(map[string]any) bool) []map[string]any {
+	seen := map[string]bool{}
+	vals := make([]string, 0)
+	for _, r := range rows {
+		if !filter(r) {
+			continue
+		}
+		v, _ := r[field].(string)
+		if v != "" && !seen[v] {
+			seen[v] = true
+			vals = append(vals, v)
+		}
+	}
+	sort.Strings(vals)
+	out := make([]map[string]any, 0, len(vals))
+	for _, v := range vals {
+		out = append(out, map[string]any{fieldToKey(field): v})
+	}
+	return out
+}
+
+// fieldToKey 將官方欄名轉為輸出鍵名。
+func fieldToKey(field string) string {
+	switch field {
+	case "Contract":
+		return "contract"
+	case "ContractMonth(Week)":
+		return "contract_month"
+	default:
+		return field
+	}
+}
+
+// handlerGetOptionsOIChange：台指選擇權每日未平倉量增減（TAIFEX-API va01，T154；
+// 今日與前一日未平倉及變化量）。
+func handlerGetOptionsOIChange(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAOIChange, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAOIChange, err)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", model.TAOIChange, err)
+	}
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // handlerGetInstitutionalTradersByFuturesHistory：三大法人期貨部位歷史
 // （TAIFEX-DL futContractsDateDown，T132；contract 為 TXF 型代碼，預設 TXF，
 // 伺服器端以 commodityId 過濾；區間 ≤ 92 日）。

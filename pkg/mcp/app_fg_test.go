@@ -159,7 +159,14 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAInstiCallsPuts, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Date": "20260729", "ContractCode": "臺指選擇權", "CallPut": "CALL", "Item": "自營商", "TradingVolume(Long)": "31412"},
 	})
-	// 買賣權比：單日 + 範圍
+	// 選擇權 Delta（T151）與 OI 增減（T154）
+	f.single[tfKey(model.TAOptionsDelta, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Contract": "TXO", "CallPut": "買權", "ContractMonth(Week)": "202608", "StrikePrice": "21000.0", "Delta": "0.5123", "ContractSettlementDay": "20260819"},
+	})
+	f.single[tfKey(model.TAOIChange, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260729", "OpenInterest": "104587", "PreviousDay": "20260728", "PreviousDayOpenInterest": "70519", "Change": "34068"},
+	})
+	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},
 	})

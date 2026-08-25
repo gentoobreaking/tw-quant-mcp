@@ -343,6 +343,34 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetOptionsDailyHistory,
 	}) // T150
 	r.Register(ToolDef{
+		Symbol:      "get_options_delta",
+		Name:        "get_options_delta",
+		Description: "查詢選擇權每日 Delta 值，了解各履約價的風險敏感度與隱含方向性（TAIFEX-API DailyOptionsDelta，T151）。" +
+			"contract 預設 TXO；contract_month 留空則列出可用月份；call_put 可篩選買賣權。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract":       map[string]any{"type": "string", "default": "TXO", "description": "選擇權契約代碼，預設 TXO。留空則列出所有可用契約代碼"},
+				"contract_month": map[string]any{"type": "string", "description": "到期月份/週次，如 202605 或 202605W1。留空則列出可用月份"},
+				"call_put":       map[string]any{"type": "string", "enum": []string{"買權", "賣權"}, "description": "篩選買賣權，留空顯示全部"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOptionsDelta,
+	}) // T151
+	r.Register(ToolDef{
+		Symbol:      "get_options_oi_change",
+		Name:        "get_options_oi_change",
+		Description: "查詢台指選擇權每日未平倉量增減，顯示今日與前一交易日的未平倉量及變化量（" +
+			"TAIFEX-API va01，T154）。未平倉大幅增加代表新部位建立，大幅減少代表部位了結或到期。",
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOptionsOIChange,
+	}) // T154
+	r.Register(ToolDef{
 		Symbol:      "get_institutional_traders_by_options",
 		Name:        "get_institutional_traders_by_options",
 		Description: "查詢三大法人依各選擇權契約分類的交易資料，可觀察各選擇權商品的法人買賣情況（" +

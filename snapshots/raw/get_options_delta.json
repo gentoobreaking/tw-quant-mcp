@@ -1,0 +1,2252 @@
+{
+  "arguments": {
+    "contract": "TXO",
+    "contract_month": "202609",
+    "call_put": "買權"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 10,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9981\",\"StrikePrice\":\"21800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9981\",\"StrikePrice\":\"22000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9980\",\"StrikePrice\":\"22200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9980\",\"StrikePrice\":\"22400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9980\",\"StrikePrice\":\"22600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9979\",\"StrikePrice\":\"22800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9979\",\"StrikePrice\":\"23000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9979\",\"StrikePrice\":\"23200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9978\",\"StrikePrice\":\"23400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9978\",\"StrikePrice\":\"23600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9978\",\"StrikePrice\":\"23800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9978\",\"StrikePrice\":\"24000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9978\",\"StrikePrice\":\"24200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9975\",\"StrikePrice\":\"24400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9974\",\"StrikePrice\":\"24600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9973\",\"StrikePrice\":\"24800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9972\",\"StrikePrice\":\"25000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9972\",\"StrikePrice\":\"25200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9971\",\"StrikePrice\":\"25400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9970\",\"StrikePrice\":\"25600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9969\",\"StrikePrice\":\"25800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9968\",\"StrikePrice\":\"26000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9967\",\"StrikePrice\":\"26200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9966\",\"StrikePrice\":\"26400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9965\",\"StrikePrice\":\"26600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9964\",\"StrikePrice\":\"26800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9964\",\"StrikePrice\":\"27000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9963\",\"StrikePrice\":\"27200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9961\",\"StrikePrice\":\"27400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9960\",\"StrikePrice\":\"27600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9959\",\"StrikePrice\":\"27800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9958\",\"StrikePrice\":\"28000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9957\",\"StrikePrice\":\"28200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9953\",\"StrikePrice\":\"28400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9953\",\"StrikePrice\":\"28600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9951\",\"StrikePrice\":\"28800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9948\",\"StrikePrice\":\"29000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9948\",\"StrikePrice\":\"29200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9946\",\"StrikePrice\":\"29400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9943\",\"StrikePrice\":\"29600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9941\",\"StrikePrice\":\"29800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9939\",\"StrikePrice\":\"30000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9938\",\"StrikePrice\":\"30200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9935\",\"StrikePrice\":\"30400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9933\",\"StrikePrice\":\"30600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9930\",\"StrikePrice\":\"30800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9929\",\"StrikePrice\":\"31000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9925\",\"StrikePrice\":\"31200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9922\",\"StrikePrice\":\"31400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9919\",\"StrikePrice\":\"31600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9916\",\"StrikePrice\":\"31800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9911\",\"StrikePrice\":\"32000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9908\",\"StrikePrice\":\"32200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9905\",\"StrikePrice\":\"32400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9899\",\"StrikePrice\":\"32600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9896\",\"StrikePrice\":\"32800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9892\",\"StrikePrice\":\"33000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9890\",\"StrikePrice\":\"33200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9879\",\"StrikePrice\":\"33400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9875\",\"StrikePrice\":\"33600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9869\",\"StrikePrice\":\"33800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9866\",\"StrikePrice\":\"33900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9863\",\"StrikePrice\":\"34000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9860\",\"StrikePrice\":\"34100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9856\",\"StrikePrice\":\"34200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9853\",\"StrikePrice\":\"34300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9850\",\"StrikePrice\":\"34400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9846\",\"StrikePrice\":\"34500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9841\",\"StrikePrice\":\"34600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9836\",\"StrikePrice\":\"34700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9830\",\"StrikePrice\":\"34800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9828\",\"StrikePrice\":\"34900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9821\",\"StrikePrice\":\"35000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9813\",\"StrikePrice\":\"35100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9811\",\"StrikePrice\":\"35200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9807\",\"StrikePrice\":\"35300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9801\",\"StrikePrice\":\"35400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9793\",\"StrikePrice\":\"35500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9789\",\"StrikePrice\":\"35600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9785\",\"StrikePrice\":\"35700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9778\",\"StrikePrice\":\"35800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9776\",\"StrikePrice\":\"35900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9762\",\"StrikePrice\":\"36000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9755\",\"StrikePrice\":\"36100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9750\",\"StrikePrice\":\"36200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9741\",\"StrikePrice\":\"36300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9734\",\"StrikePrice\":\"36400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9723\",\"StrikePrice\":\"36500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9712\",\"StrikePrice\":\"36600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9709\",\"StrikePrice\":\"36700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9697\",\"StrikePrice\":\"36800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9686\",\"StrikePrice\":\"36900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9671\",\"StrikePrice\":\"37000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9666\",\"StrikePrice\":\"37100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9650\",\"StrikePrice\":\"37200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9642\",\"StrikePrice\":\"37300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9630\",\"StrikePrice\":\"37400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9621\",\"StrikePrice\":\"37500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9608\",\"StrikePrice\":\"37600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9599\",\"StrikePrice\":\"37700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9575\",\"StrikePrice\":\"37800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9561\",\"StrikePrice\":\"37900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9555\",\"StrikePrice\":\"38000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9523\",\"StrikePrice\":\"38100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9512\",\"StrikePrice\":\"38200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9498\",\"StrikePrice\":\"38300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9465\",\"StrikePrice\":\"38400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9450\",\"StrikePrice\":\"38500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9424\",\"StrikePrice\":\"38600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9395\",\"StrikePrice\":\"38700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9382\",\"StrikePrice\":\"38800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9349\",\"StrikePrice\":\"38900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9336\",\"StrikePrice\":\"39000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9295\",\"StrikePrice\":\"39100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9277\",\"StrikePrice\":\"39200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9239\",\"StrikePrice\":\"39300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9217\",\"StrikePrice\":\"39400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9185\",\"StrikePrice\":\"39500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9153\",\"StrikePrice\":\"39600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9122\",\"StrikePrice\":\"39700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9080\",\"StrikePrice\":\"39800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.9023\",\"StrikePrice\":\"39900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8995\",\"StrikePrice\":\"40000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8954\",\"StrikePrice\":\"40100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8926\",\"StrikePrice\":\"40200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8856\",\"StrikePrice\":\"40300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8831\",\"StrikePrice\":\"40400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8788\",\"StrikePrice\":\"40500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8714\",\"StrikePrice\":\"40600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8667\",\"StrikePrice\":\"40700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8636\",\"StrikePrice\":\"40800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8584\",\"StrikePrice\":\"40900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8551\",\"StrikePrice\":\"41000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8498\",\"StrikePrice\":\"41100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8420\",\"StrikePrice\":\"41200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8345\",\"StrikePrice\":\"41300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8293\",\"StrikePrice\":\"41400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8209\",\"StrikePrice\":\"41500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8164\",\"StrikePrice\":\"41600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8101\",\"StrikePrice\":\"41700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.8017\",\"StrikePrice\":\"41800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7971\",\"StrikePrice\":\"41900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7870\",\"StrikePrice\":\"42000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7793\",\"StrikePrice\":\"42100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7710\",\"StrikePrice\":\"42200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7627\",\"StrikePrice\":\"42300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7542\",\"StrikePrice\":\"42400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7468\",\"StrikePrice\":\"42500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7385\",\"StrikePrice\":\"42600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7307\",\"StrikePrice\":\"42700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7216\",\"StrikePrice\":\"42800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7122\",\"StrikePrice\":\"42900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.7011\",\"StrikePrice\":\"43000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.6933\",\"StrikePrice\":\"43100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.6853\",\"StrikePrice\":\"43200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.6735\",\"StrikePrice\":\"43300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.6640\",\"StrikePrice\":\"43400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.6544\",\"StrikePrice\":\"43500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.6422\",\"StrikePrice\":\"43600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.6312\",\"StrikePrice\":\"43700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.6217\",\"StrikePrice\":\"43800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.6093\",\"StrikePrice\":\"43900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.5989\",\"StrikePrice\":\"44000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.5866\",\"StrikePrice\":\"44100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.5751\",\"StrikePrice\":\"44200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.5631\",\"StrikePrice\":\"44300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.5512\",\"StrikePrice\":\"44400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.5393\",\"StrikePrice\":\"44500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.5272\",\"StrikePrice\":\"44600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.5152\",\"StrikePrice\":\"44700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.5022\",\"StrikePrice\":\"44800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.4900\",\"StrikePrice\":\"44900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.4778\",\"StrikePrice\":\"45000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.4645\",\"StrikePrice\":\"45100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.4511\",\"StrikePrice\":\"45200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.4368\",\"StrikePrice\":\"45300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.4264\",\"StrikePrice\":\"45400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.4137\",\"StrikePrice\":\"45500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.4003\",\"StrikePrice\":\"45600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.3888\",\"StrikePrice\":\"45700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.3757\",\"StrikePrice\":\"45800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.3636\",\"StrikePrice\":\"45900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.3516\",\"StrikePrice\":\"46000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.3395\",\"StrikePrice\":\"46100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.3258\",\"StrikePrice\":\"46200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.3150\",\"StrikePrice\":\"46300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.3008\",\"StrikePrice\":\"46400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.2881\",\"StrikePrice\":\"46500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.2812\",\"StrikePrice\":\"46600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.2668\",\"StrikePrice\":\"46700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.2599\",\"StrikePrice\":\"46800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.2463\",\"StrikePrice\":\"46900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.2320\",\"StrikePrice\":\"47000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.2272\",\"StrikePrice\":\"47100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.2184\",\"StrikePrice\":\"47200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.2077\",\"StrikePrice\":\"47300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1985\",\"StrikePrice\":\"47400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1893\",\"StrikePrice\":\"47500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1804\",\"StrikePrice\":\"47600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1726\",\"StrikePrice\":\"47700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1645\",\"StrikePrice\":\"47800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1519\",\"StrikePrice\":\"47900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1471\",\"StrikePrice\":\"48000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1432\",\"StrikePrice\":\"48100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1378\",\"StrikePrice\":\"48200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1306\",\"StrikePrice\":\"48300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1220\",\"StrikePrice\":\"48400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1127\",\"StrikePrice\":\"48500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1082\",\"StrikePrice\":\"48600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.1031\",\"StrikePrice\":\"48700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0988\",\"StrikePrice\":\"48800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0937\",\"StrikePrice\":\"48900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0893\",\"StrikePrice\":\"49000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0855\",\"StrikePrice\":\"49100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0781\",\"StrikePrice\":\"49200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0746\",\"StrikePrice\":\"49300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0727\",\"StrikePrice\":\"49400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0667\",\"StrikePrice\":\"49500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0653\",\"StrikePrice\":\"49600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0614\",\"StrikePrice\":\"49700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0587\",\"StrikePrice\":\"49800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0559\",\"StrikePrice\":\"49900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0526\",\"StrikePrice\":\"50000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0505\",\"StrikePrice\":\"50100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0481\",\"StrikePrice\":\"50200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0454\",\"StrikePrice\":\"50300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0434\",\"StrikePrice\":\"50400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0412\",\"StrikePrice\":\"50500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0401\",\"StrikePrice\":\"50600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0370\",\"StrikePrice\":\"50700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0353\",\"StrikePrice\":\"50800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0334\",\"StrikePrice\":\"50900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0312\",\"StrikePrice\":\"51000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0304\",\"StrikePrice\":\"51100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0291\",\"StrikePrice\":\"51200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0276\",\"StrikePrice\":\"51300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0265\",\"StrikePrice\":\"51400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0253\",\"StrikePrice\":\"51500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0242\",\"StrikePrice\":\"51600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0232\",\"StrikePrice\":\"51700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0221\",\"StrikePrice\":\"51800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0214\",\"StrikePrice\":\"51900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0200\",\"StrikePrice\":\"52000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0197\",\"StrikePrice\":\"52100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0194\",\"StrikePrice\":\"52200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0187\",\"StrikePrice\":\"52300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0181\",\"StrikePrice\":\"52400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0178\",\"StrikePrice\":\"52500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0165\",\"StrikePrice\":\"52600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0163\",\"StrikePrice\":\"52700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0157\",\"StrikePrice\":\"52800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0151\",\"StrikePrice\":\"52900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0149\",\"StrikePrice\":\"53000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0140\",\"StrikePrice\":\"53100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0138\",\"StrikePrice\":\"53200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0132\",\"StrikePrice\":\"53300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0131\",\"StrikePrice\":\"53400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0126\",\"StrikePrice\":\"53500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0117\",\"StrikePrice\":\"53600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0115\",\"StrikePrice\":\"53700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0114\",\"StrikePrice\":\"53800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0109\",\"StrikePrice\":\"53900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0107\",\"StrikePrice\":\"54000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0102\",\"StrikePrice\":\"54100\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0100\",\"StrikePrice\":\"54200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0098\",\"StrikePrice\":\"54300\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0094\",\"StrikePrice\":\"54400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0093\",\"StrikePrice\":\"54500\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0091\",\"StrikePrice\":\"54600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0088\",\"StrikePrice\":\"54700\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0086\",\"StrikePrice\":\"54800\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0084\",\"StrikePrice\":\"54900\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0083\",\"StrikePrice\":\"55000\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0079\",\"StrikePrice\":\"55200\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0075\",\"StrikePrice\":\"55400\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0072\",\"StrikePrice\":\"55600\"},{\"CallPut\":\"買權\",\"Contract\":\"TXO\",\"ContractMonth(Week)\":\"202609\",\"ContractSettlementDay\":\"20260916\",\"Delta\":\"0.0065\",\"StrikePrice\":\"55800\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T18:15:49+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":165,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9981",
+            "StrikePrice": "21800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9981",
+            "StrikePrice": "22000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9980",
+            "StrikePrice": "22200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9980",
+            "StrikePrice": "22400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9980",
+            "StrikePrice": "22600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9979",
+            "StrikePrice": "22800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9979",
+            "StrikePrice": "23000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9979",
+            "StrikePrice": "23200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9978",
+            "StrikePrice": "23400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9978",
+            "StrikePrice": "23600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9978",
+            "StrikePrice": "23800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9978",
+            "StrikePrice": "24000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9978",
+            "StrikePrice": "24200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9975",
+            "StrikePrice": "24400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9974",
+            "StrikePrice": "24600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9973",
+            "StrikePrice": "24800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9972",
+            "StrikePrice": "25000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9972",
+            "StrikePrice": "25200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9971",
+            "StrikePrice": "25400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9970",
+            "StrikePrice": "25600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9969",
+            "StrikePrice": "25800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9968",
+            "StrikePrice": "26000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9967",
+            "StrikePrice": "26200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9966",
+            "StrikePrice": "26400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9965",
+            "StrikePrice": "26600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9964",
+            "StrikePrice": "26800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9964",
+            "StrikePrice": "27000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9963",
+            "StrikePrice": "27200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9961",
+            "StrikePrice": "27400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9960",
+            "StrikePrice": "27600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9959",
+            "StrikePrice": "27800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9958",
+            "StrikePrice": "28000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9957",
+            "StrikePrice": "28200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9953",
+            "StrikePrice": "28400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9953",
+            "StrikePrice": "28600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9951",
+            "StrikePrice": "28800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9948",
+            "StrikePrice": "29000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9948",
+            "StrikePrice": "29200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9946",
+            "StrikePrice": "29400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9943",
+            "StrikePrice": "29600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9941",
+            "StrikePrice": "29800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9939",
+            "StrikePrice": "30000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9938",
+            "StrikePrice": "30200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9935",
+            "StrikePrice": "30400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9933",
+            "StrikePrice": "30600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9930",
+            "StrikePrice": "30800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9929",
+            "StrikePrice": "31000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9925",
+            "StrikePrice": "31200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9922",
+            "StrikePrice": "31400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9919",
+            "StrikePrice": "31600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9916",
+            "StrikePrice": "31800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9911",
+            "StrikePrice": "32000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9908",
+            "StrikePrice": "32200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9905",
+            "StrikePrice": "32400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9899",
+            "StrikePrice": "32600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9896",
+            "StrikePrice": "32800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9892",
+            "StrikePrice": "33000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9890",
+            "StrikePrice": "33200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9879",
+            "StrikePrice": "33400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9875",
+            "StrikePrice": "33600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9869",
+            "StrikePrice": "33800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9866",
+            "StrikePrice": "33900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9863",
+            "StrikePrice": "34000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9860",
+            "StrikePrice": "34100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9856",
+            "StrikePrice": "34200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9853",
+            "StrikePrice": "34300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9850",
+            "StrikePrice": "34400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9846",
+            "StrikePrice": "34500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9841",
+            "StrikePrice": "34600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9836",
+            "StrikePrice": "34700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9830",
+            "StrikePrice": "34800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9828",
+            "StrikePrice": "34900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9821",
+            "StrikePrice": "35000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9813",
+            "StrikePrice": "35100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9811",
+            "StrikePrice": "35200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9807",
+            "StrikePrice": "35300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9801",
+            "StrikePrice": "35400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9793",
+            "StrikePrice": "35500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9789",
+            "StrikePrice": "35600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9785",
+            "StrikePrice": "35700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9778",
+            "StrikePrice": "35800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9776",
+            "StrikePrice": "35900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9762",
+            "StrikePrice": "36000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9755",
+            "StrikePrice": "36100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9750",
+            "StrikePrice": "36200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9741",
+            "StrikePrice": "36300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9734",
+            "StrikePrice": "36400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9723",
+            "StrikePrice": "36500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9712",
+            "StrikePrice": "36600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9709",
+            "StrikePrice": "36700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9697",
+            "StrikePrice": "36800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9686",
+            "StrikePrice": "36900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9671",
+            "StrikePrice": "37000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9666",
+            "StrikePrice": "37100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9650",
+            "StrikePrice": "37200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9642",
+            "StrikePrice": "37300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9630",
+            "StrikePrice": "37400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9621",
+            "StrikePrice": "37500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9608",
+            "StrikePrice": "37600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9599",
+            "StrikePrice": "37700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9575",
+            "StrikePrice": "37800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9561",
+            "StrikePrice": "37900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9555",
+            "StrikePrice": "38000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9523",
+            "StrikePrice": "38100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9512",
+            "StrikePrice": "38200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9498",
+            "StrikePrice": "38300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9465",
+            "StrikePrice": "38400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9450",
+            "StrikePrice": "38500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9424",
+            "StrikePrice": "38600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9395",
+            "StrikePrice": "38700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9382",
+            "StrikePrice": "38800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9349",
+            "StrikePrice": "38900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9336",
+            "StrikePrice": "39000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9295",
+            "StrikePrice": "39100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9277",
+            "StrikePrice": "39200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9239",
+            "StrikePrice": "39300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9217",
+            "StrikePrice": "39400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9185",
+            "StrikePrice": "39500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9153",
+            "StrikePrice": "39600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9122",
+            "StrikePrice": "39700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9080",
+            "StrikePrice": "39800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.9023",
+            "StrikePrice": "39900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8995",
+            "StrikePrice": "40000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8954",
+            "StrikePrice": "40100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8926",
+            "StrikePrice": "40200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8856",
+            "StrikePrice": "40300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8831",
+            "StrikePrice": "40400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8788",
+            "StrikePrice": "40500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8714",
+            "StrikePrice": "40600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8667",
+            "StrikePrice": "40700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8636",
+            "StrikePrice": "40800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8584",
+            "StrikePrice": "40900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8551",
+            "StrikePrice": "41000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8498",
+            "StrikePrice": "41100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8420",
+            "StrikePrice": "41200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8345",
+            "StrikePrice": "41300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8293",
+            "StrikePrice": "41400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8209",
+            "StrikePrice": "41500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8164",
+            "StrikePrice": "41600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8101",
+            "StrikePrice": "41700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.8017",
+            "StrikePrice": "41800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7971",
+            "StrikePrice": "41900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7870",
+            "StrikePrice": "42000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7793",
+            "StrikePrice": "42100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7710",
+            "StrikePrice": "42200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7627",
+            "StrikePrice": "42300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7542",
+            "StrikePrice": "42400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7468",
+            "StrikePrice": "42500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7385",
+            "StrikePrice": "42600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7307",
+            "StrikePrice": "42700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7216",
+            "StrikePrice": "42800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7122",
+            "StrikePrice": "42900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.7011",
+            "StrikePrice": "43000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.6933",
+            "StrikePrice": "43100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.6853",
+            "StrikePrice": "43200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.6735",
+            "StrikePrice": "43300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.6640",
+            "StrikePrice": "43400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.6544",
+            "StrikePrice": "43500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.6422",
+            "StrikePrice": "43600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.6312",
+            "StrikePrice": "43700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.6217",
+            "StrikePrice": "43800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.6093",
+            "StrikePrice": "43900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.5989",
+            "StrikePrice": "44000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.5866",
+            "StrikePrice": "44100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.5751",
+            "StrikePrice": "44200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.5631",
+            "StrikePrice": "44300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.5512",
+            "StrikePrice": "44400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.5393",
+            "StrikePrice": "44500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.5272",
+            "StrikePrice": "44600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.5152",
+            "StrikePrice": "44700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.5022",
+            "StrikePrice": "44800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.4900",
+            "StrikePrice": "44900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.4778",
+            "StrikePrice": "45000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.4645",
+            "StrikePrice": "45100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.4511",
+            "StrikePrice": "45200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.4368",
+            "StrikePrice": "45300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.4264",
+            "StrikePrice": "45400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.4137",
+            "StrikePrice": "45500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.4003",
+            "StrikePrice": "45600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.3888",
+            "StrikePrice": "45700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.3757",
+            "StrikePrice": "45800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.3636",
+            "StrikePrice": "45900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.3516",
+            "StrikePrice": "46000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.3395",
+            "StrikePrice": "46100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.3258",
+            "StrikePrice": "46200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.3150",
+            "StrikePrice": "46300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.3008",
+            "StrikePrice": "46400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.2881",
+            "StrikePrice": "46500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.2812",
+            "StrikePrice": "46600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.2668",
+            "StrikePrice": "46700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.2599",
+            "StrikePrice": "46800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.2463",
+            "StrikePrice": "46900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.2320",
+            "StrikePrice": "47000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.2272",
+            "StrikePrice": "47100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.2184",
+            "StrikePrice": "47200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.2077",
+            "StrikePrice": "47300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1985",
+            "StrikePrice": "47400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1893",
+            "StrikePrice": "47500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1804",
+            "StrikePrice": "47600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1726",
+            "StrikePrice": "47700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1645",
+            "StrikePrice": "47800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1519",
+            "StrikePrice": "47900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1471",
+            "StrikePrice": "48000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1432",
+            "StrikePrice": "48100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1378",
+            "StrikePrice": "48200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1306",
+            "StrikePrice": "48300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1220",
+            "StrikePrice": "48400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1127",
+            "StrikePrice": "48500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1082",
+            "StrikePrice": "48600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.1031",
+            "StrikePrice": "48700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0988",
+            "StrikePrice": "48800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0937",
+            "StrikePrice": "48900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0893",
+            "StrikePrice": "49000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0855",
+            "StrikePrice": "49100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0781",
+            "StrikePrice": "49200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0746",
+            "StrikePrice": "49300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0727",
+            "StrikePrice": "49400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0667",
+            "StrikePrice": "49500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0653",
+            "StrikePrice": "49600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0614",
+            "StrikePrice": "49700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0587",
+            "StrikePrice": "49800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0559",
+            "StrikePrice": "49900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0526",
+            "StrikePrice": "50000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0505",
+            "StrikePrice": "50100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0481",
+            "StrikePrice": "50200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0454",
+            "StrikePrice": "50300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0434",
+            "StrikePrice": "50400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0412",
+            "StrikePrice": "50500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0401",
+            "StrikePrice": "50600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0370",
+            "StrikePrice": "50700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0353",
+            "StrikePrice": "50800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0334",
+            "StrikePrice": "50900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0312",
+            "StrikePrice": "51000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0304",
+            "StrikePrice": "51100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0291",
+            "StrikePrice": "51200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0276",
+            "StrikePrice": "51300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0265",
+            "StrikePrice": "51400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0253",
+            "StrikePrice": "51500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0242",
+            "StrikePrice": "51600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0232",
+            "StrikePrice": "51700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0221",
+            "StrikePrice": "51800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0214",
+            "StrikePrice": "51900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0200",
+            "StrikePrice": "52000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0197",
+            "StrikePrice": "52100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0194",
+            "StrikePrice": "52200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0187",
+            "StrikePrice": "52300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0181",
+            "StrikePrice": "52400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0178",
+            "StrikePrice": "52500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0165",
+            "StrikePrice": "52600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0163",
+            "StrikePrice": "52700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0157",
+            "StrikePrice": "52800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0151",
+            "StrikePrice": "52900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0149",
+            "StrikePrice": "53000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0140",
+            "StrikePrice": "53100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0138",
+            "StrikePrice": "53200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0132",
+            "StrikePrice": "53300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0131",
+            "StrikePrice": "53400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0126",
+            "StrikePrice": "53500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0117",
+            "StrikePrice": "53600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0115",
+            "StrikePrice": "53700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0114",
+            "StrikePrice": "53800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0109",
+            "StrikePrice": "53900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0107",
+            "StrikePrice": "54000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0102",
+            "StrikePrice": "54100"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0100",
+            "StrikePrice": "54200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0098",
+            "StrikePrice": "54300"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0094",
+            "StrikePrice": "54400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0093",
+            "StrikePrice": "54500"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0091",
+            "StrikePrice": "54600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0088",
+            "StrikePrice": "54700"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0086",
+            "StrikePrice": "54800"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0084",
+            "StrikePrice": "54900"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0083",
+            "StrikePrice": "55000"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0079",
+            "StrikePrice": "55200"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0075",
+            "StrikePrice": "55400"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0072",
+            "StrikePrice": "55600"
+          },
+          {
+            "CallPut": "買權",
+            "Contract": "TXO",
+            "ContractMonth(Week)": "202609",
+            "ContractSettlementDay": "20260916",
+            "Delta": "0.0065",
+            "StrikePrice": "55800"
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T18:15:49+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 165,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

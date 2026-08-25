@@ -1,0 +1,39 @@
+{
+  "arguments": {},
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 11,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"Change\":\"34068\",\"Date\":\"20260824\",\"OpenInterest\":\"104587\",\"PreviousDay\":\"20260821\",\"PreviousDayOpenInterest\":\"70519\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T18:15:24+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":529,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "Change": "34068",
+            "Date": "20260824",
+            "OpenInterest": "104587",
+            "PreviousDay": "20260821",
+            "PreviousDayOpenInterest": "70519"
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T18:15:24+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 529,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

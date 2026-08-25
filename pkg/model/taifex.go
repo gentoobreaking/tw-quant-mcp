@@ -19,6 +19,8 @@ const (
 	TAInstiCallsPuts TAIFEXDataset = "insti_calls_puts" // 三大法人選擇權買賣權分計明細（T134）
 	TAInstiFutOptSplit TAIFEXDataset = "insti_fut_opt_split" // 三大法人期貨/選擇權分計歷史（僅 DL，T128）
 	TAInstiTotal       TAIFEXDataset = "insti_total"        // 三大法人期貨+選擇權合計總表歷史（僅 DL，T130）
+	TAOptionsDelta     TAIFEXDataset = "options_delta"     // 選擇權每日 Delta（僅 API，T151）
+	TAOIChange         TAIFEXDataset = "oi_change"         // 台指選擇權未平倉量增減（僅 API，T154）
 	TALargeTraderFut TAIFEXDataset = "large_trader_fut" // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt TAIFEXDataset = "large_trader_opt" // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio   TAIFEXDataset = "put_call_ratio"   // 買賣權比（PCR）
