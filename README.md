@@ -199,39 +199,39 @@ pi mcp add tw-quant-mcp -- /absolute/path/to/bin/tw-quant-mcp
 
 ```text
 ┌───────────────────────────────────────────────────────────────────┐
-│                    MCP Clients / External Program                  │
-│        (Claude Desktop, OpenClaw, Hermes, 排程程式, 回測系統)       │
+│                    MCP Clients / External Program                 │
+│        (Claude Desktop, OpenClaw, Hermes, 排程程式, 回測系統)     │
 └──────────────────────────────────┬────────────────────────────────┘
                                    │ JSON-RPC（Stdio / Streamable HTTP）
 ┌──────────────────────────────────▼────────────────────────────────┐
-│                     MCP Engine Layer（194 Tool Router）             │
-│              Handler Routers + Schema Validation（§9/§10）         │
+│                     MCP Engine Layer（194 Tool Router）           │
+│              Handler Routers + Schema Validation（§9/§10）        │
 └──────────────────────────────────┬────────────────────────────────┘
                                    │ Normalized Query
-┌──────────────────────────────────▼────────────────────────────────┐
-│            Domain Analysis Layer（pkg/domain/，§7 六大模組）        │
+┌──────────────────────────────────▼────────────────────────────────────┐
+│            Domain Analysis Layer（pkg/domain/，§7 六大模組）          │
 │     趨勢綜合 │ 外資解讀 │ 熱點捕捉 │ 股利規劃 │ 標的篩選 │ 期貨選擇權 │
-│     ETF NAV/折溢價（§30.1 L1，get_etf_nav）                      │
-│     ETF 分配收益（get_etf_dividend，T038）                       │
-└──────────────────────────────────┬────────────────────────────────┘
+│     ETF NAV/折溢價（§30.1 L1，get_etf_nav）                           │
+│     ETF 分配收益（get_etf_dividend，T038）                            │
+└──────────────────────────────────┬────────────────────────────────────┘
                                    │ Normalized Read
-┌──────────────────────────────────▼────────────────────────────────┐
-│     Core Infra Services（Rate Limit / Cache / Lineage / 盤中引擎） │
-│  • Per-Source Token Bucket ×7 + Jitter（§5.3，MIS 8s±1s）          │
-│  • Ristretto L1 + SQLite L2 + Single-flight（TTL 矩陣 §5.2）       │
-│  • Intraday 1分K 引擎（8s 採樣 RingBuffer，≤15 檔，§8）            │
-│  • Prewarm Scheduler（08:00 / 08:45 / 15:00 Index / 16:45，§12.9） │
-└──────────────────────────────────┬────────────────────────────────┘
+┌──────────────────────────────────▼──────────────────────────────────┐
+│     Core Infra Services（Rate Limit / Cache / Lineage / 盤中引擎）  │
+│  • Per-Source Token Bucket ×7 + Jitter（§5.3，MIS 8s±1s）           │
+│  • Ristretto L1 + SQLite L2 + Single-flight（TTL 矩陣 §5.2）        │
+│  • Intraday 1分K 引擎（8s 採樣 RingBuffer，≤15 檔，§8）             │
+│  • Prewarm Scheduler（08:00 / 08:45 / 15:00 Index / 16:45，§12.9）  │
+└──────────────────────────────────┬──────────────────────────────────┘
                                    │ Fetch（Resilient HTTP，整批 §12.4）
-┌──────────────────────────────────▼────────────────────────────────┐
-│          Normalization Layer（pkg/model/normalize，§6）            │
-│       7 種上游格式 → §6 正規化 Schema，並附加 Lineage（§4）        │
-└──────────────────────────────────┬────────────────────────────────┘
+┌──────────────────────────────────▼──────────────────────────────────┐
+│          Normalization Layer（pkg/model/normalize，§6）             │
+│       7 種上游格式 → §6 正規化 Schema，並附加 Lineage（§4）         │
+└──────────────────────────────────┬──────────────────────────────────┘
                                    │ Source-Specific Parsing
-┌──────────────────────────────────▼────────────────────────────────┐
+┌──────────────────────────────────▼──────────────────────────────────┐
 │              Official Provider Adapters（官方來源唯一）             │
-│ TWSE OpenAPI │ TWSE Web │ MIS Worker │ TPEx │ MOPS │ TAIFEX ×2     │
-└───────────────────────────────────────────────────────────────────┘
+│ TWSE OpenAPI │ TWSE Web │ MIS Worker │ TPEx │ MOPS │ TAIFEX ×2      │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ## 工具清單（v2.1 發布時 40 個，§10；⚠️ 已過時——完整目錄見 docs/TOOL_CATALOG.md）
