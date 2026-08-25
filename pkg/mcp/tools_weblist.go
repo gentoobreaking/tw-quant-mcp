@@ -197,3 +197,86 @@ func rocToDate(s string) string {
 	}
 	return fmt.Sprintf("%04d-%02d-%s", y+1911, mm, p[2])
 }
+
+// ---------------------------------------------------------------------------
+// 財報類（t187ap07_L{suffix}，T067；後續 t187ap06_L{suffix} 等共用）
+
+// financialSuffixDatasets 將遠端產業別 suffix 對應至本機 API 資料集。
+type financialSuffixSpec struct {
+	datasets   map[string]provider.TWSEAPIDataset
+	pathPrefix string // 供錯誤訊息標示
+}
+
+// financialSuffix 由產業別關鍵字推導遠端 API 之 suffix（順序：保險 → 金控 →
+// 證券期貨 → 金融 → 異業，預設一般業 _ci）。
+func financialSuffix(category string) string {
+	c := strings.TrimSpace(category)
+	switch {
+	case strings.Contains(c, "保險"):
+		return "_ins"
+	case strings.Contains(c, "金控") || strings.Contains(c, "金融控股"):
+		return "_fh"
+	case strings.Contains(c, "證券"), strings.Contains(c, "期貨"):
+		return "_bd"
+	case strings.Contains(c, "金融"):
+		return "_basi"
+	case strings.Contains(c, "異業"):
+		return "_mim"
+	default:
+		return "_ci"
+	}
+}
+
+// fetchFinancialRowsForCode 取得指定資料集全量並過濾出公司代號相符之列
+//（官方端點恆回全量最新，code 過濾於本地端進行）。
+func fetchFinancialRowsForCode(a *App, ctx context.Context, ds provider.TWSEAPIDataset,
+	dataDate, code string) ([]map[string]any, bool, bool, error) {
+	return fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), dataDate,
+		cache.KeyString(model.SourceTWSEAPI, string(ds), dataDate, code, nil),
+		func() ([]byte, error) { return a.fetchAPIRaw(ctx, ds, nil) })
+}
+
+// handlerGetCompanyBalanceSheet：上市公司資產負債表（依產業別選端點，T067）。
+func handlerGetCompanyBalanceSheet(a *App, args map[string]any) (HandlerResult, error) {
+	code := strVal(args["code"])
+	if code == "" {
+		return HandlerResult{}, fmt.Errorf("code 為必填參數")
+	}
+	sym, err := a.symbolOf(code)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ds, ok := balanceSheetDatasets[financialSuffix(sym.Category)]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("產業別 %q 無對應財報格式", sym.Category)
+	}
+	ctx := context.Background()
+	dataDate := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchFinancialRowsForCode(a, ctx, ds, dataDate, code)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(string(ds))
+	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+
+	out := make([]map[string]any, 0)
+	for _, r := range rows {
+		if rowField(r, "公司代號", "code") == code {
+			out = append(out, r)
+		}
+	}
+	if len(out) == 0 {
+		return HandlerResult{}, fmt.Errorf("查無 %s（%s）之資產負債表資料", code, sym.Name)
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
+var balanceSheetDatasets = map[string]provider.TWSEAPIDataset{
+	"_ci":   provider.TWSEAPIBalCI,
+	"_basi": provider.TWSEAPIBalBASI,
+	"_bd":   provider.TWSEAPIBalBD,
+	"_fh":   provider.TWSEAPIBalFH,
+	"_ins":  provider.TWSEAPIBalINS,
+	"_mim":  provider.TWSEAPIBalMIM,
+}

@@ -52,6 +52,12 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIScopeChanges):    cache.DatasetCalendar,   // 營業範圍重大變更公司（T060）
 	string(provider.TWSEAPIIndepDirectors):  cache.DatasetCalendar,   // 獨立董監事兼任彙總（T063）
 	string(provider.TWSEAPIOwnershipChange): cache.DatasetCalendar,   // 經營權異動公司（T064）
+	string(provider.TWSEAPIBalCI):           cache.DatasetFinancials, // 資產負債表（季頻，§5.2 財報 90d，T067）
+	string(provider.TWSEAPIBalBASI):         cache.DatasetFinancials, // 金融業
+	string(provider.TWSEAPIBalBD):           cache.DatasetFinancials, // 證券期貨業
+	string(provider.TWSEAPIBalFH):           cache.DatasetFinancials, // 金控業
+	string(provider.TWSEAPIBalINS):          cache.DatasetFinancials, // 保險業
+	string(provider.TWSEAPIBalMIM):          cache.DatasetFinancials, // 異業
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,

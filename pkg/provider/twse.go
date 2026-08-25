@@ -90,6 +90,13 @@ const (
 	TWSEAPIScopeChanges    TWSEAPIDataset = "scope_changes"      // 營業範圍重大變更公司（t187ap25_L，T060）
 	TWSEAPIIndepDirectors  TWSEAPIDataset = "indep_directors"    // 獨立董監事兼任情形彙總（t187ap30_L，T063）
 	TWSEAPIOwnershipChange TWSEAPIDataset = "ownership_change"   // 經營權異動公司（t187ap24_L，T064）
+	// 資產負債表 t187ap07_L{suffix}（T067；一般/金融/證券期貨/金控/保險/異業）
+	TWSEAPIBalCI   TWSEAPIDataset = "balance_sheet_ci"   // 一般業 _ci
+	TWSEAPIBalBASI TWSEAPIDataset = "balance_sheet_basi" // 金融業 _basi
+	TWSEAPIBalBD   TWSEAPIDataset = "balance_sheet_bd"   // 證券期貨業 _bd
+	TWSEAPIBalFH   TWSEAPIDataset = "balance_sheet_fh"   // 金控業 _fh
+	TWSEAPIBalINS  TWSEAPIDataset = "balance_sheet_ins"  // 保險業 _ins
+	TWSEAPIBalMIM  TWSEAPIDataset = "balance_sheet_mim"  // 異業 _mim
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -147,6 +154,12 @@ var (
 		TWSEAPIScopeChanges:    "/opendata/t187ap25_L", // 營業範圍重大變更公司（T060）
 		TWSEAPIIndepDirectors:  "/opendata/t187ap30_L", // 獨立董監事兼任情形彙總（T063）
 		TWSEAPIOwnershipChange: "/opendata/t187ap24_L", // 經營權異動公司（T064）
+		TWSEAPIBalCI:           "/opendata/t187ap07_L_ci",
+		TWSEAPIBalBASI:         "/opendata/t187ap07_L_basi",
+		TWSEAPIBalBD:           "/opendata/t187ap07_L_bd",
+		TWSEAPIBalFH:           "/opendata/t187ap07_L_fh",
+		TWSEAPIBalINS:          "/opendata/t187ap07_L_ins",
+		TWSEAPIBalMIM:          "/opendata/t187ap07_L_mim",
 	}
 )
 
@@ -568,6 +581,9 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "indep_directors":
 		out, err = normalizePassthroughArray(raw)
 	case "ownership_change":
+		out, err = normalizePassthroughArray(raw)
+	case "balance_sheet_ci", "balance_sheet_basi", "balance_sheet_bd",
+		"balance_sheet_fh", "balance_sheet_ins", "balance_sheet_mim":
 		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)

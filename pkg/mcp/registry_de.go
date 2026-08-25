@@ -105,6 +105,22 @@ func registerDETools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetRefineriesPopulatedAreas,
 	}) // T065
+
+	r.Register(ToolDef{
+		Symbol:      "get_company_balance_sheet",
+		Name:        "get_company_balance_sheet",
+		Description: "根據股票代號查詢上市公司資產負債表（TWSE-API t187ap07_L，T067）。" +
+			"自動偵測公司所屬產業並使用對應的財務報表格式（一般業、金融業、證券期貨業、金控業、保險業、異業）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code": map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+			},
+			"required": []string{"code"},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetCompanyBalanceSheet,
+	}) // T067
 	r.Register(ToolDef{
 		Symbol: "get_company_profile",
 		Name:   "get_company_profile",
