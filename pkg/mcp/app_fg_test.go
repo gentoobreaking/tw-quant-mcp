@@ -638,6 +638,55 @@ func TestFGInstitutionalPositions(t *testing.T) {
 	}
 }
 
+// T136/T137：大額交易人 OI（契約精確過濾、留空列代碼）
+func TestFGLargeTradersOI(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_large_traders_futures_oi", map[string]any{"contract": "tx"})
+	rows := env.Data.([]model.LargeTraderRow)
+	if len(rows) != 1 || rows[0].Contract != "TX" {
+		t.Errorf("TX 過濾錯誤: %+v", rows)
+	}
+
+	env2 := callEnv(t, app, "get_large_traders_options_oi", map[string]any{})
+	codes := env2.Data.([]map[string]any)
+	if len(codes) != 1 || codes[0]["contract"] != "TXO" {
+		t.Errorf("留空應列契約代碼: %+v", codes)
+	}
+}
+
+// T135：期貨大額交易人歷史（本地端契約篩選）
+func TestFGLargeTradersFuturesHistory(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_large_traders_futures_history",
+		map[string]any{"contract": "TX", "start": "20260728", "end": "20260729"})
+	rows := env.Data.([]model.LargeTraderRow)
+	if len(rows) != 2 {
+		t.Fatalf("應有 2 列，實際 %d", len(rows))
+	}
+	for _, r := range rows {
+		if r.Contract != "TX" {
+			t.Errorf("應只含 TX: %+v", r)
+		}
+	}
+	if env.Lineage.Source != model.SourceTAIFEXDL {
+		t.Errorf("lineage 應為 DL: %+v", env.Lineage)
+	}
+
+	// contract 缺漏拒絕
+	if _, err := app.core.Call(context.Background(), "get_large_traders_futures_history",
+		map[string]any{"start": "2026-07-28", "end": "2026-07-29"}); err == nil {
+		t.Fatal("contract 必填")
+	}
+}
+
 func TestFGInstitutionalFuturesHistory(t *testing.T) {
 	f := newFake(t)
 	tq := newFakeTAIFEX(t, "2026-07-29")

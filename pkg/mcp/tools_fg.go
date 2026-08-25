@@ -417,6 +417,135 @@ func handlerGetInstitutionalTotalHistory(a *App, args map[string]any) (HandlerRe
 	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
 }
 
+// handlerGetLargeTradersFuturesOI：期貨大額交易人未沖銷部位（最新日，T136）。
+// contract 精確比對契約代碼（如 TX），留空列出所有可用契約代碼。
+func handlerGetLargeTradersFuturesOI(a *App, args map[string]any) (HandlerResult, error) {
+	return largeTradersOI(a, args, model.TALargeTraderFut)
+}
+
+// handlerGetLargeTradersOptionsOI：選擇權大額交易人未沖銷部位（最新日，T137）。
+// contract 精確比對契約代碼（如 TXO），留空列出所有可用契約代碼；call_put 過濾。
+func handlerGetLargeTradersOptionsOI(a *App, args map[string]any) (HandlerResult, error) {
+	return largeTradersOI(a, args, model.TALargeTraderOpt)
+}
+
+func largeTradersOI(a *App, args map[string]any, ds model.TAIFEXDataset) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	contract := strings.ToUpper(strings.TrimSpace(strVal(args["contract"])))
+	callPut := strings.TrimSpace(strVal(args["call_put"]))
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	rows, err := taifexRows[model.LargeTraderRow](ds, d, res)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	if contract == "" {
+		seen := map[string]bool{}
+		out := make([]map[string]any, 0)
+		for _, r := range rows {
+			if seen[r.Contract] {
+				continue
+			}
+			seen[r.Contract] = true
+			out = append(out, map[string]any{"contract": r.Contract})
+		}
+		sort.Slice(out, func(i, j int) bool { return out[i]["contract"].(string) < out[j]["contract"].(string) })
+		return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+	}
+	filtered := make([]model.LargeTraderRow, 0, len(rows))
+	for _, r := range rows {
+		if r.Contract != contract {
+			continue
+		}
+		if callPut != "" && r.CallPut != callPut {
+			continue
+		}
+		filtered = append(filtered, r)
+	}
+	if len(filtered) == 0 {
+		seen := map[string]bool{}
+		names := make([]string, 0)
+		for _, r := range rows {
+			if !seen[r.Contract] {
+				seen[r.Contract] = true
+				names = append(names, r.Contract)
+			}
+		}
+		sort.Strings(names)
+		return HandlerResult{}, fmt.Errorf("查無契約 %s 的資料。可用代碼：%s", contract, strings.Join(names, ", "))
+	}
+	return HandlerResult{Data: filtered, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
+// largeTraderFutHistoryCap 為 T135 期貨大額交易人歷史之跨度上限（遠端對齊 31 日）。
+const largeTraderFutHistoryCap = 31
+
+// handlerGetLargeTradersFuturesHistory：期貨大額交易人未沖銷部位歷史
+// （TAIFEX-DL largeTraderFutDown，T135；端點不支援契約過濾，本地端篩選；
+// contract 必填，區間 ≤ 31 日）。
+func handlerGetLargeTradersFuturesHistory(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	contract := strings.ToUpper(strings.TrimSpace(strVal(args["contract"])))
+	if contract == "" {
+		return HandlerResult{}, fmt.Errorf("參數 contract 為必填（例如 TX、MTX、TE、TF）")
+	}
+	start := flexDateArg(strVal(args["start"]))
+	if start == "" {
+		start = flexDateArg(strVal(args["start_date"]))
+	}
+	end := flexDateArg(strVal(args["end"]))
+	if end == "" {
+		end = flexDateArg(strVal(args["end_date"]))
+	}
+	if start == "" || end == "" {
+		return HandlerResult{}, fmt.Errorf("參數 start（start_date）與 end（end_date）為必填")
+	}
+	sd, ed, err := validateRange(start, end)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	sT, errT := model.ParseDate(sd)
+	eT, _ := model.ParseDate(ed)
+	if errT == nil && int(eT.Sub(sT).Hours()/24) > largeTraderFutHistoryCap {
+		return HandlerResult{}, fmt.Errorf("查詢區間不可超過 %d 天，請縮小範圍", largeTraderFutHistoryCap)
+	}
+	byDay, err := q.FetchRange(ctx, model.TALargeTraderFut, sd, ed, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 範圍查詢失敗: %w", model.TALargeTraderFut, err)
+	}
+	all, err := collectRangeRows[model.LargeTraderRow](model.TALargeTraderFut, byDay)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	rows := make([]model.LargeTraderRow, 0, len(all))
+	for _, r := range all {
+		if r.Contract == contract {
+			rows = append(rows, r)
+		}
+	}
+	sort.Slice(rows, func(i, j int) bool {
+		if rows[i].Date != rows[j].Date {
+			return rows[i].Date < rows[j].Date
+		}
+		return rows[i].ContractMonth < rows[j].ContractMonth
+	})
+	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
+}
+
 // handlerGetInstitutionalTradersByFuturesHistory：三大法人期貨部位歷史
 // （TAIFEX-DL futContractsDateDown，T132；contract 為 TXF 型代碼，預設 TXF，
 // 伺服器端以 commodityId 過濾；區間 ≤ 92 日）。

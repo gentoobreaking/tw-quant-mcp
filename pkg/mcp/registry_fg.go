@@ -279,6 +279,51 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalTradersByFuturesHistory,
 	}) // T132
 	r.Register(ToolDef{
+		Symbol:      "get_large_traders_futures_history",
+		Name:        "get_large_traders_futures_history",
+		Description: "查詢期貨大額交易人未沖銷部位歷史資料（可回溯查詢；TAIFEX-DL largeTraderFutDown，T135）。" +
+			"contract 為必填契約代碼（如 TX、MTX、TE、TF），由本工具取得資料後本地端篩選。區間不可超過 31 日。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "description": "期貨契約代碼（必填），例如 TX、MTX、TE、TF"},
+				"start":    map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
+				"end":      map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetLargeTradersFuturesHistory,
+	}) // T135
+	r.Register(ToolDef{
+		Symbol:      "get_large_traders_futures_oi",
+		Name:        "get_large_traders_futures_oi",
+		Description: "查詢期貨大額交易人（前五大、前十大）未沖銷部位資料，可觀察大戶持倉方向（" +
+			"TAIFEX-API OpenInterestOfLargeTradersFutures，T136）。contract 精確比對契約代碼，預設 TX；留空列出所有可用契約代碼。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "default": "TX", "description": "期貨契約代碼，預設 TX。留空則列出所有可用契約代碼"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetLargeTradersFuturesOI,
+	}) // T136
+	r.Register(ToolDef{
+		Symbol:      "get_large_traders_options_oi",
+		Name:        "get_large_traders_options_oi",
+		Description: "查詢選擇權大額交易人（前五大、前十大）未沖銷部位資料，可觀察大戶選擇權布局（" +
+			"TAIFEX-API OpenInterestOfLargeTradersOptions，T137）。contract 精確比對契約代碼，預設 TXO；留空列出所有可用契約代碼。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "default": "TXO", "description": "選擇權契約代碼，預設 TXO。留空則列出所有可用契約代碼"},
+				"call_put": map[string]any{"type": "string", "enum": []string{"買權", "賣權"}, "description": "篩選買賣權（選填）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetLargeTradersOptionsOI,
+	}) // T137
+	r.Register(ToolDef{
 		Symbol:      "get_institutional_traders_by_options",
 		Name:        "get_institutional_traders_by_options",
 		Description: "查詢三大法人依各選擇權契約分類的交易資料，可觀察各選擇權商品的法人買賣情況（" +

@@ -1,0 +1,106 @@
+{
+  "arguments": {
+    "contract": "TX"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 10,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-08-24\",\"contract\":\"TX\",\"contract_name\":\"臺股期貨(TX+MTX/4+TMF/20)\",\"contract_month\":\"666666\",\"trader_type\":\"0\",\"top5_long\":57,\"top5_short\":61,\"top10_long\":60,\"top10_short\":63,\"market_oi\":64},{\"date\":\"2026-08-24\",\"contract\":\"TX\",\"contract_name\":\"臺股期貨(TX+MTX/4+TMF/20)\",\"contract_month\":\"666666\",\"trader_type\":\"1\",\"top5_long\":22,\"top5_short\":0,\"top10_long\":22,\"top10_short\":0,\"market_oi\":64},{\"date\":\"2026-08-24\",\"contract\":\"TX\",\"contract_name\":\"臺股期貨(TX+MTX/4+TMF/20)\",\"contract_month\":\"202609\",\"trader_type\":\"0\",\"top5_long\":74077,\"top5_short\":53785,\"top10_long\":80668,\"top10_short\":73773,\"market_oi\":110430},{\"date\":\"2026-08-24\",\"contract\":\"TX\",\"contract_name\":\"臺股期貨(TX+MTX/4+TMF/20)\",\"contract_month\":\"202609\",\"trader_type\":\"1\",\"top5_long\":74077,\"top5_short\":53785,\"top10_long\":78036,\"top10_short\":73773,\"market_oi\":110430},{\"date\":\"2026-08-24\",\"contract\":\"TX\",\"contract_name\":\"臺股期貨(TX+MTX/4+TMF/20)\",\"contract_month\":\"999999\",\"trader_type\":\"0\",\"top5_long\":74082,\"top5_short\":54136,\"top10_long\":81495,\"top10_short\":74141,\"market_oi\":113408},{\"date\":\"2026-08-24\",\"contract\":\"TX\",\"contract_name\":\"臺股期貨(TX+MTX/4+TMF/20)\",\"contract_month\":\"999999\",\"trader_type\":\"1\",\"top5_long\":74082,\"top5_short\":54136,\"top10_long\":78116,\"top10_short\":74141,\"market_oi\":113408}],\"_lineage\":{\"source\":\"TAIFEX_DL\",\"source_role\":\"FALLBACK\",\"fetched_at\":\"2026-08-25T18:01:14+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":7082,\"grade\":\"AVAILABLE\"},\"http_calls\":3,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-08-24",
+            "contract": "TX",
+            "contract_name": "臺股期貨(TX+MTX/4+TMF/20)",
+            "contract_month": "666666",
+            "trader_type": "0",
+            "top5_long": 57,
+            "top5_short": 61,
+            "top10_long": 60,
+            "top10_short": 63,
+            "market_oi": 64
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TX",
+            "contract_name": "臺股期貨(TX+MTX/4+TMF/20)",
+            "contract_month": "666666",
+            "trader_type": "1",
+            "top5_long": 22,
+            "top5_short": 0,
+            "top10_long": 22,
+            "top10_short": 0,
+            "market_oi": 64
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TX",
+            "contract_name": "臺股期貨(TX+MTX/4+TMF/20)",
+            "contract_month": "202609",
+            "trader_type": "0",
+            "top5_long": 74077,
+            "top5_short": 53785,
+            "top10_long": 80668,
+            "top10_short": 73773,
+            "market_oi": 110430
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TX",
+            "contract_name": "臺股期貨(TX+MTX/4+TMF/20)",
+            "contract_month": "202609",
+            "trader_type": "1",
+            "top5_long": 74077,
+            "top5_short": 53785,
+            "top10_long": 78036,
+            "top10_short": 73773,
+            "market_oi": 110430
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TX",
+            "contract_name": "臺股期貨(TX+MTX/4+TMF/20)",
+            "contract_month": "999999",
+            "trader_type": "0",
+            "top5_long": 74082,
+            "top5_short": 54136,
+            "top10_long": 81495,
+            "top10_short": 74141,
+            "market_oi": 113408
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TX",
+            "contract_name": "臺股期貨(TX+MTX/4+TMF/20)",
+            "contract_month": "999999",
+            "trader_type": "1",
+            "top5_long": 74082,
+            "top5_short": 54136,
+            "top10_long": 78116,
+            "top10_short": 74141,
+            "market_oi": 113408
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_DL",
+          "source_role": "FALLBACK",
+          "fetched_at": "2026-08-25T18:01:14+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 7082,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 3,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

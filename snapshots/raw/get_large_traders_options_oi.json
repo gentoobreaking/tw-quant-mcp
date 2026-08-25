@@ -1,0 +1,190 @@
+{
+  "arguments": {
+    "contract": "TXO"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 11,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"202609\",\"call_put\":\"買權\",\"trader_type\":\"0\",\"top5_long\":9269,\"top5_short\":9434,\"top10_long\":11469,\"top10_short\":11867,\"market_oi\":19167},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"666666\",\"call_put\":\"買權\",\"trader_type\":\"0\",\"top5_long\":9726,\"top5_short\":10592,\"top10_long\":11745,\"top10_short\":13209,\"market_oi\":31058},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"666666\",\"call_put\":\"買權\",\"trader_type\":\"1\",\"top5_long\":588,\"top5_short\":3030,\"top10_long\":961,\"top10_short\":3030,\"market_oi\":31058},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"202609\",\"call_put\":\"買權\",\"trader_type\":\"1\",\"top5_long\":0,\"top5_short\":1862,\"top10_long\":676,\"top10_short\":4295,\"market_oi\":19167},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"999912\",\"call_put\":\"買權\",\"trader_type\":\"0\",\"top5_long\":19119,\"top5_short\":18368,\"top10_long\":22620,\"top10_short\":23140,\"market_oi\":53212},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"999912\",\"call_put\":\"買權\",\"trader_type\":\"1\",\"top5_long\":1094,\"top5_short\":4135,\"top10_long\":1882,\"top10_short\":7041,\"market_oi\":53212},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"202609\",\"call_put\":\"賣權\",\"trader_type\":\"0\",\"top5_long\":6689,\"top5_short\":6862,\"top10_long\":8779,\"top10_short\":8567,\"market_oi\":17544},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"666666\",\"call_put\":\"賣權\",\"trader_type\":\"0\",\"top5_long\":8698,\"top5_short\":7894,\"top10_long\":10752,\"top10_short\":9455,\"market_oi\":28811},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"666666\",\"call_put\":\"賣權\",\"trader_type\":\"1\",\"top5_long\":0,\"top5_short\":1645,\"top10_long\":0,\"top10_short\":2256,\"market_oi\":28811},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"202609\",\"call_put\":\"賣權\",\"trader_type\":\"1\",\"top5_long\":1744,\"top5_short\":1335,\"top10_long\":3037,\"top10_short\":2412,\"market_oi\":17544},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"999912\",\"call_put\":\"賣權\",\"trader_type\":\"0\",\"top5_long\":15310,\"top5_short\":16955,\"top10_long\":19259,\"top10_short\":19672,\"market_oi\":50982},{\"date\":\"2026-08-24\",\"contract\":\"TXO\",\"contract_name\":\"臺指\",\"contract_month\":\"999912\",\"call_put\":\"賣權\",\"trader_type\":\"1\",\"top5_long\":1292,\"top5_short\":3385,\"top10_long\":2916,\"top10_short\":5371,\"market_oi\":50982}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T18:01:21+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":430,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "202609",
+            "call_put": "買權",
+            "trader_type": "0",
+            "top5_long": 9269,
+            "top5_short": 9434,
+            "top10_long": 11469,
+            "top10_short": 11867,
+            "market_oi": 19167
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "666666",
+            "call_put": "買權",
+            "trader_type": "0",
+            "top5_long": 9726,
+            "top5_short": 10592,
+            "top10_long": 11745,
+            "top10_short": 13209,
+            "market_oi": 31058
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "666666",
+            "call_put": "買權",
+            "trader_type": "1",
+            "top5_long": 588,
+            "top5_short": 3030,
+            "top10_long": 961,
+            "top10_short": 3030,
+            "market_oi": 31058
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "202609",
+            "call_put": "買權",
+            "trader_type": "1",
+            "top5_long": 0,
+            "top5_short": 1862,
+            "top10_long": 676,
+            "top10_short": 4295,
+            "market_oi": 19167
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "999912",
+            "call_put": "買權",
+            "trader_type": "0",
+            "top5_long": 19119,
+            "top5_short": 18368,
+            "top10_long": 22620,
+            "top10_short": 23140,
+            "market_oi": 53212
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "999912",
+            "call_put": "買權",
+            "trader_type": "1",
+            "top5_long": 1094,
+            "top5_short": 4135,
+            "top10_long": 1882,
+            "top10_short": 7041,
+            "market_oi": 53212
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "202609",
+            "call_put": "賣權",
+            "trader_type": "0",
+            "top5_long": 6689,
+            "top5_short": 6862,
+            "top10_long": 8779,
+            "top10_short": 8567,
+            "market_oi": 17544
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "666666",
+            "call_put": "賣權",
+            "trader_type": "0",
+            "top5_long": 8698,
+            "top5_short": 7894,
+            "top10_long": 10752,
+            "top10_short": 9455,
+            "market_oi": 28811
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "666666",
+            "call_put": "賣權",
+            "trader_type": "1",
+            "top5_long": 0,
+            "top5_short": 1645,
+            "top10_long": 0,
+            "top10_short": 2256,
+            "market_oi": 28811
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "202609",
+            "call_put": "賣權",
+            "trader_type": "1",
+            "top5_long": 1744,
+            "top5_short": 1335,
+            "top10_long": 3037,
+            "top10_short": 2412,
+            "market_oi": 17544
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "999912",
+            "call_put": "賣權",
+            "trader_type": "0",
+            "top5_long": 15310,
+            "top5_short": 16955,
+            "top10_long": 19259,
+            "top10_short": 19672,
+            "market_oi": 50982
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "TXO",
+            "contract_name": "臺指",
+            "contract_month": "999912",
+            "call_put": "賣權",
+            "trader_type": "1",
+            "top5_long": 1292,
+            "top5_short": 3385,
+            "top10_long": 2916,
+            "top10_short": 5371,
+            "market_oi": 50982
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T18:01:21+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 430,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}
