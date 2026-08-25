@@ -1,11 +1,16 @@
 package mcp
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"sort"
+	"strings"
 	"time"
 
+	"tw-quant-mcp/pkg/cache"
 	"tw-quant-mcp/pkg/model"
+	"tw-quant-mcp/pkg/provider"
 )
 
 // 盤中時段（§8.2 與 engine 內部時段常數一致）：09:00–13:30。
@@ -172,6 +177,71 @@ func handlerDetectVolumeSurge(a *App, args map[string]any) (HandlerResult, error
 		return HandlerResult{}, err
 	}
 	return HandlerResult{Data: surge}, nil
+}
+
+// handlerGetRealtimeQuote：任意多檔單發即時報價（T194，MIS 直查模式）。
+// 與 get_intraday_quote（watchlist 引擎記憶體讀取）互補：本工具即查即走、
+// 不佔 watchlist 名額；無盤中 gate（盤後回最後成交價或昨收 fallback）。
+func handlerGetRealtimeQuote(a *App, args map[string]any) (HandlerResult, error) {
+	raw, _ := args["stock_nos"].([]any)
+	codes := make([]string, 0, len(raw))
+	seen := map[string]bool{}
+	for _, v := range raw {
+		s, ok := v.(string)
+		if !ok {
+			return HandlerResult{}, fmt.Errorf("參數 stock_nos 每個元素必須為字串")
+		}
+		s = strings.TrimSpace(s)
+		if s == "" || seen[s] {
+			continue
+		}
+		seen[s] = true
+		codes = append(codes, s)
+	}
+	if len(codes) == 0 {
+		return HandlerResult{}, fmt.Errorf("stock_nos 不得為空（1~20 檔）")
+	}
+	ctx := context.Background()
+	const ds = cache.DatasetMISSnapshot
+	dataDate := model.FormatDate(a.now())
+	key := cache.KeyString(model.SourceTWSEMIS, ds, dataDate, strings.Join(codes, ","), nil)
+	quotes, cached, stale, err := fetchNormalize[[]provider.RealtimeQuote](a, ctx,
+		ds, dataDate, key,
+		func() ([]byte, error) {
+			qs, _, ferr := a.fetchMISQuotes(ctx, codes)
+			if ferr != nil {
+				return nil, ferr
+			}
+			return json.Marshal(qs)
+		})
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(ds)
+	if ttl < 0 {
+		ttl = 0 // PostNotCached 等特殊標記值不外洩
+	}
+	lineage := &model.Lineage{
+		Source:     model.SourceTWSEMIS,
+		SourceRole: model.SourceRoleRealtime,
+		Freshness:  model.FreshnessRealtimeIntraday,
+		Grade:      model.GradeAvailable,
+		IsCached:   cached || stale,
+		CacheTTL:   int(ttl.Seconds()),
+	}
+	return HandlerResult{Data: quotes, Lineage: lineage}, nil
+}
+
+// fetchMISQuotes 單發直查之正式路徑（測試可經 WithAppMISQuoteFetch 替換）。
+func (a *App) fetchMISQuotes(ctx context.Context, codes []string) ([]provider.RealtimeQuote, int, error) {
+	if a.misQuoteFetch != nil {
+		return a.misQuoteFetch(ctx, codes)
+	}
+	market := func(code string) string {
+		m, _ := a.symbols.Market(code)
+		return m
+	}
+	return provider.FetchRealtimeQuotes(ctx, a.misClient, market, codes)
 }
 
 // handlerScanDaytradeEligibility：買前風險掃描（注意/處置/停資停券）。

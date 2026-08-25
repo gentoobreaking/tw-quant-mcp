@@ -1,0 +1,155 @@
+{
+  "arguments": {
+    "stock_nos": [
+      "2330",
+      "6547"
+    ]
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"symbol\":\"2330\",\"date\":\"2026-08-25\",\"time\":\"14:30:00\",\"trade_time\":\"13:30:00\",\"last\":2400,\"change\":25,\"change_pct\":1.05,\"open\":2355,\"high\":2400,\"low\":2350,\"prev_close\":2375,\"volume\":12789000,\"minute_vol\":0,\"bids\":[{\"price\":2395,\"volume\":54000},{\"price\":2390,\"volume\":25000},{\"price\":2385,\"volume\":19000},{\"price\":2380,\"volume\":253000},{\"price\":2375,\"volume\":512000}],\"asks\":[{\"price\":2400,\"volume\":400000},{\"price\":2405,\"volume\":549000},{\"price\":2410,\"volume\":814000},{\"price\":2415,\"volume\":460000},{\"price\":2420,\"volume\":497000}],\"name\":\"台積電\",\"price_source\":\"trade\"},{\"symbol\":\"6547\",\"date\":\"2026-08-25\",\"time\":\"14:30:00\",\"trade_time\":\"13:30:00\",\"last\":56.3,\"change\":0.8,\"change_pct\":1.44,\"open\":55.5,\"high\":56.7,\"low\":54.9,\"prev_close\":55.5,\"volume\":4032000,\"minute_vol\":0,\"bids\":[{\"price\":56.2,\"volume\":6000},{\"price\":56.1,\"volume\":15000},{\"price\":56,\"volume\":34000},{\"price\":55.9,\"volume\":9000},{\"price\":55.8,\"volume\":42000}],\"asks\":[{\"price\":56.3,\"volume\":30000},{\"price\":56.4,\"volume\":21000},{\"price\":56.5,\"volume\":51000},{\"price\":56.6,\"volume\":112000},{\"price\":56.7,\"volume\":102000}],\"name\":\"高端疫苗\",\"price_source\":\"trade\"}],\"_lineage\":{\"source\":\"TWSE_MIS\",\"source_role\":\"SEMI_OFFICIAL_REALTIME\",\"fetched_at\":\"2026-08-26T02:04:05+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"REALTIME_INTRADAY\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":7922,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+      }
+    ],
+    "structuredContent": {
+      "data": [
+        {
+          "symbol": "2330",
+          "date": "2026-08-25",
+          "time": "14:30:00",
+          "trade_time": "13:30:00",
+          "last": 2400,
+          "change": 25,
+          "change_pct": 1.05,
+          "open": 2355,
+          "high": 2400,
+          "low": 2350,
+          "prev_close": 2375,
+          "volume": 12789000,
+          "minute_vol": 0,
+          "bids": [
+            {
+              "price": 2395,
+              "volume": 54000
+            },
+            {
+              "price": 2390,
+              "volume": 25000
+            },
+            {
+              "price": 2385,
+              "volume": 19000
+            },
+            {
+              "price": 2380,
+              "volume": 253000
+            },
+            {
+              "price": 2375,
+              "volume": 512000
+            }
+          ],
+          "asks": [
+            {
+              "price": 2400,
+              "volume": 400000
+            },
+            {
+              "price": 2405,
+              "volume": 549000
+            },
+            {
+              "price": 2410,
+              "volume": 814000
+            },
+            {
+              "price": 2415,
+              "volume": 460000
+            },
+            {
+              "price": 2420,
+              "volume": 497000
+            }
+          ],
+          "name": "台積電",
+          "price_source": "trade"
+        },
+        {
+          "symbol": "6547",
+          "date": "2026-08-25",
+          "time": "14:30:00",
+          "trade_time": "13:30:00",
+          "last": 56.3,
+          "change": 0.8,
+          "change_pct": 1.44,
+          "open": 55.5,
+          "high": 56.7,
+          "low": 54.9,
+          "prev_close": 55.5,
+          "volume": 4032000,
+          "minute_vol": 0,
+          "bids": [
+            {
+              "price": 56.2,
+              "volume": 6000
+            },
+            {
+              "price": 56.1,
+              "volume": 15000
+            },
+            {
+              "price": 56,
+              "volume": 34000
+            },
+            {
+              "price": 55.9,
+              "volume": 9000
+            },
+            {
+              "price": 55.8,
+              "volume": 42000
+            }
+          ],
+          "asks": [
+            {
+              "price": 56.3,
+              "volume": 30000
+            },
+            {
+              "price": 56.4,
+              "volume": 21000
+            },
+            {
+              "price": 56.5,
+              "volume": 51000
+            },
+            {
+              "price": 56.6,
+              "volume": 112000
+            },
+            {
+              "price": 56.7,
+              "volume": 102000
+            }
+          ],
+          "name": "高端疫苗",
+          "price_source": "trade"
+        }
+      ],
+      "_lineage": {
+        "source": "TWSE_MIS",
+        "source_role": "SEMI_OFFICIAL_REALTIME",
+        "fetched_at": "2026-08-26T02:04:05+08:00",
+        "data_date": "2026-08-26",
+        "freshness": "REALTIME_INTRADAY",
+        "sampling_sec": 0,
+        "is_cached": false,
+        "latency_ms": 7922,
+        "grade": "AVAILABLE"
+      },
+      "http_calls": 1,
+      "disclaimer": "僅供研究參考，不構成投資建議"
+    }
+  }
+}

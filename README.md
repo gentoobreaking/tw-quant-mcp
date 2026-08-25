@@ -394,7 +394,7 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 
 本專案僅供個人量化研究與教育用途。資料來源（FinMind、TWSE、TPEX）之使用請遵守各平台之服務條款。
 
-## 附錄：完整工具目錄（190 個，由 tools/list 自動產生 2026-08-25）
+## 附錄：完整工具目錄（191 個，由 tools/list 自動產生 2026-08-26；T194 新增 get_realtime_quote）
 
 > 本目錄由真實服務 `tools/list` 輸出自動彙出；上方「工具清單（40 個）」章節為
 > v2.1 發布時之手寫清單，已過時。各工具之 Envelope、`_lineage`、快取政策與
@@ -549,6 +549,7 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 - `get_public_company_income_statement`：根據股票代號查詢公開發行公司綜合損益表（TWSE-API t187ap06_X，T160）。自動偵測公司所屬產業並使用對應的財務報表格式。
 - `get_put_call_ratio`：查詢買賣權比（Put/Call Ratio，成交量/未平倉比；§10.F）。單日（date，省略為最新交易日）或範圍（start/end，支援歷史回溯）；多空分界線 1.0 由 _chart_meta 標示。
 - `get_real_time_trading_stats`：查詢每 5 秒委託成交統計（盤中即時；TWSE-WEB MI_5MINS，T161）。
+- `get_realtime_quote`：查詢任意多檔台股盤中即時報價＋五檔（T194；MIS 單發直查模式，上市/上櫃自動判別，1~20 檔）。與 get_intraday_quote 互補：即查即走、無需 watchlist；盤後回最後成交價或昨收（price_source 標註）。
 - `get_recently_listed_companies`：查詢最近上市公司（TWSE-API company/newlisting，T162）。可選 name 過濾。
 - `get_securities_trading_changes`：查詢集中市場證券變更交易（T163）。可選 name 過濾。
 - `get_short_sale_lending_balance_history`：查詢信用交易融資融券餘額歷史（TWSE-WEB TWT93U，T164）。可選 code/name 過濾。

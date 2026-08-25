@@ -39,6 +39,7 @@ var intradayTools = map[string]bool{
 	"set_active_watchlist":      true,
 	"get_intraday_kline":        true,
 	"get_intraday_quote":        true,
+	"get_realtime_quote":        true, // T194：MIS 單發直查（非記憶體；測試以替身注入）
 	"get_intraday_vwap":         true,
 	"detect_volume_surge":       true,
 	"scan_daytrade_eligibility": true,
@@ -203,10 +204,11 @@ func stubBCEnvelope(f *fakeFetch) {
 // allToolProbes 為全部 40 個註冊工具之呼叫探針。
 func allToolProbes() []envelopeProbe {
 	return []envelopeProbe{
-		// ── A 組（盤中，6；以 newTestApp 交易時段執行）──
+		// ── A 組（盤中，7；以 newTestApp 交易時段執行）──
 		{name: "set_active_watchlist", args: map[string]any{"symbols": []any{"2330"}}},
 		{name: "get_intraday_kline", args: map[string]any{"symbol": "2330", "timeframe": "1m", "limit": float64(5)}},
 		{name: "get_intraday_quote", args: map[string]any{"symbol": "2330"}},
+		{name: "get_realtime_quote", args: map[string]any{"stock_nos": []any{"2330", "6547"}}},
 		{name: "get_intraday_vwap", args: map[string]any{"symbol": "2330"}},
 		{name: "detect_volume_surge", args: map[string]any{"symbol": "2330", "minutes": float64(5)}},
 		{name: "scan_daytrade_eligibility", args: map[string]any{"symbol": "2330"}},

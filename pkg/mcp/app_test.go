@@ -10,11 +10,45 @@ import (
 
 	"tw-quant-mcp/pkg/engine"
 	"tw-quant-mcp/pkg/model"
+	"tw-quant-mcp/pkg/provider"
 )
 
 // testClock 為交易時段固定時鐘（2026-07-31 週五 09:30:00）。
 func testClock() time.Time {
 	return time.Date(2026, 7, 31, 9, 30, 0, 0, model.Taipei())
+}
+
+// stubMISQuoteFetch 為 get_realtime_quote（T194）之離線替身：
+// 對任意代碼回傳確定性報價（上市 tse / 上櫃 otc 依 seedSymbols 判定）。
+func stubMISQuoteFetch(_ context.Context, codes []string) ([]provider.RealtimeQuote, int, error) {
+	out := make([]provider.RealtimeQuote, 0, len(codes))
+	for i, c := range codes {
+		m := "tse"
+		if s, ok := seededMarket[c]; ok && s == "otc" {
+			m = "otc"
+		}
+		last := 100.0 + float64(i)*5
+		out = append(out, provider.RealtimeQuote{
+			IntradayQuote: model.IntradayQuote{
+				Symbol: c,
+				Date: "2026-07-31", Time: "09:30:00", TradeTime: "09:30:00",
+				Last: last, Change: 1.0, ChangePct: 1.0,
+				Open: last - 2, High: last + 1, Low: last - 3, PrevClose: last - 1,
+				Volume: 500000, MinuteVol: 10000,
+				Bids: []model.PriceLevel{{Price: last - 0.5, Volume: 1000}},
+				Asks: []model.PriceLevel{{Price: last + 0.5, Volume: 2000}},
+			},
+			PriceSource: "trade",
+		})
+		_ = m
+	}
+	return out, 1, nil
+}
+
+// seededMarket 記錄 seedSymbols 之市場別（stub 判定用）。
+var seededMarket = map[string]string{
+	"2330": "tse", "2317": "tse", "6147": "otc", "6547": "otc",
+	"0050": "tse", "0056": "tse",
 }
 
 // seedSymbols 註冊測試用上市/上櫃代碼。
@@ -76,6 +110,7 @@ func newTestApp(t *testing.T) *App {
 		WithAppClock(testClock),
 		WithAppSymbols(symbols),
 		WithAppEngine(watchlist, rings, agg, intraday),
+		WithAppMISQuoteFetch(stubMISQuoteFetch),
 	)
 	if err != nil {
 		t.Fatalf("NewApp 失敗: %v", err)

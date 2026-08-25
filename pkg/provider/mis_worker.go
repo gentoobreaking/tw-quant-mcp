@@ -195,6 +195,9 @@ func (w *MISWorker) Run(ctx context.Context) error {
 // MISIndexURL 回傳 MIS Session 預熱端點（§8.3；供預熱排程 T018 使用）。
 func MISIndexURL() string { return misIndexURL }
 
+// SetMISQuoteURL 覆寫 MIS 報價端點（僅測試用：httptest 注入，T194）。
+func SetMISQuoteURL(u string) { misQuoteURL = u }
+
 // SetMISIndexURL 覆寫 MIS index.jsp URL（僅測試用：httptest 注入，
 // T018 預熱排程測試）。
 func SetMISIndexURL(u string) { misIndexURL = u }
@@ -287,6 +290,7 @@ type misEntry struct {
 	Tv    string `json:"tv"` // 當分鐘內累積成交量（張，每分鐘重置）
 	Tlong string `json:"tlong"`
 	T     string `json:"t"` // 最近成交時刻 "HH:MM:SS"
+	N     string `json:"n"` // 證券名稱（T194）
 
 	// T010：五檔買賣價量（MIS 原生為 "_" 分隔字串，缺檔或無報價為 "-"）
 	B string `json:"b"` // 五檔買價（由高至低）

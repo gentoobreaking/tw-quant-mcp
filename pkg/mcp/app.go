@@ -90,6 +90,9 @@ type App struct {
 	calClient *provider.BaseClient
 	regLoader *registry.Loader
 	misClient *provider.BaseClient
+	// misQuoteFetch 為 T194 單發直查（get_realtime_quote）之可注入實作；
+	// nil 時使用 a.misClient 直連 MIS（正式路徑）。測試可注入替身離線回放。
+	misQuoteFetch func(ctx context.Context, codes []string) ([]provider.RealtimeQuote, int, error)
 	// httpCalls 為本次查詢之實際上游 HTTP 請求計數（§12.9 instrumentation）。
 	// Core.Call 於每次查詢前歸零、fetch 路徑於 miss 時累加、結束後注入
 	// Envelope.HTTPCalls。盤中 K 線等純記憶體路徑應恆為 0（§12.4）。
@@ -198,6 +201,11 @@ func WithAppRegistryLoader(l *registry.Loader) AppOption {
 // WithAppMISClient 注入 MIS Session 預熱 client（測試用；預設 mis.twse.com.tw）。
 func WithAppMISClient(c *provider.BaseClient) AppOption {
 	return func(a *App) { a.misClient = c }
+}
+
+// WithAppMISQuoteFetch 注入 MIS 單發直查替身（T194 測試用；預設直連 a.misClient）。
+func WithAppMISQuoteFetch(fn func(ctx context.Context, codes []string) ([]provider.RealtimeQuote, int, error)) AppOption {
+	return func(a *App) { a.misQuoteFetch = fn }
 }
 
 // NewApp 建立 MCP Engine Layer 組裝根。cfg 可為 nil（預設零值設定）。
@@ -413,7 +421,8 @@ func buildRegistry() *Registry {
 		Symbol: "get_intraday_quote",
 		Name:   "get_intraday_quote",
 		Description: "查詢指定股票最新即時報價 + 五檔買賣價量（純記憶體讀取，零 HTTP）。" +
-			"回傳報價欄位與 bids/asks（price/volume）。",
+			"回傳報價欄位與 bids/asks（price/volume）。僅限 watchlist 內標的；" +
+			"任意多檔隨手查請用 get_realtime_quote（MIS 單發直查），固定標的高頻監控仍應使用本工具。",
 		Schema: map[string]any{
 			"type": "object",
 			"properties": map[string]any{
@@ -423,6 +432,29 @@ func buildRegistry() *Registry {
 		},
 		ReadOnly: true,
 		Handler:  handlerGetIntradayQuote,
+	})
+	r.Register(ToolDef{
+		Symbol: "get_realtime_quote",
+		Name:   "get_realtime_quote",
+		Description: "查詢任意多檔台股盤中即時報價（T194；MIS 單發直查模式，上市/上櫃皆可、系統自動判別市場別）。" +
+			"與 get_intraday_quote 之差異：本工具即查即走、無需 set_active_watchlist、不佔 15 檔名額；" +
+			"但每次呼叫為一次上游 HTTP（受 MIS 限流節流），固定標的高頻輪詢請改用 " +
+			"set_active_watchlist + get_intraday_quote。盤後回最後成交價或昨收（price_source 標註）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"stock_nos": map[string]any{
+					"type":        "array",
+					"items":       map[string]any{"type": "string"},
+					"minItems":    1,
+					"maxItems":    20,
+					"description": "股票代號陣列（1~20 檔），例如 [\"2330\", \"0050\", \"6547\"]",
+				},
+			},
+			"required": []string{"stock_nos"},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetRealtimeQuote,
 	})
 	r.Register(ToolDef{
 		Symbol: "get_intraday_vwap",
