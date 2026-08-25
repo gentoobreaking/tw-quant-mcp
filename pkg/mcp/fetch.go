@@ -146,6 +146,7 @@ var cacheDataset = map[string]string{
 	string(provider.TPExOtcMonthlyRev):      cache.DatasetMonthlyRevenue, // 上櫃月營收（T195）
 	string(provider.TPExBrokerVolume):       cache.DatasetInstitutional,  // 券商進出排行（T196）
 	string(provider.TPExOtcForeignTrd):      cache.DatasetInstitutional,  // 外資買賣超彙總（T197）
+	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(model.TAOptionsDelta):            cache.DatasetCalendar,   // 選擇權 Delta（T151）
 	string(model.TAOIChange):                cache.DatasetCalendar,   // 台指選擇權 OI 增減（T154）
 	string(model.TAStockMargin):             cache.DatasetCalendar,   // 股票期貨保證金（T167）

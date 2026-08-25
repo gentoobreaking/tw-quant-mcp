@@ -58,6 +58,7 @@ const (
 	TPExOtcMonthlyRev TPExDataset = "otc_monthly_revenue"   // 上櫃月營收彙總（T195）
 	TPExBrokerVolume  TPExDataset = "otc_broker_volume"     // 上櫃熱門股券商進出排行（T196）
 	TPExOtcForeignTrd TPExDataset = "otc_foreign_trading"   // 上櫃外資及陸資買賣超彙總（T197）
+	TPExOtcExRightDay TPExDataset = "otc_exright_daily"     // 上櫃除權息計算結果（T200）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -78,6 +79,7 @@ var (
 		TPExOtcMonthlyRev: "/mopsfin_t187ap05_O",                // 上櫃月營收彙總（T195）
 		TPExBrokerVolume:  "/tpex_active_broker_volume",         // 熱門股券商進出排行（T196）
 		TPExOtcForeignTrd: "/tpex_3insti_qfii_trading",          // 外資及陸資買賣超彙總（T197）
+		TPExOtcExRightDay: "/tpex_exright_daily",                // 除權息計算結果（T200）
 	}
 )
 
@@ -223,6 +225,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		out = ms
 	case string(TPExOtcForeignTrd):
 		// passthrough（T197 實測；官方欄位 key 含不規則空白，原樣保留）。
+		out = ms
+	case string(TPExOtcExRightDay):
+		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/
+		// ExRightsDiviend/CashDividend/LimitUp/LimitDown/OpeningReferencePrice 等）。
 		out = ms
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)

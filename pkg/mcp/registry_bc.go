@@ -1145,6 +1145,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcForeignTrading,
 	}) // T197
 	r.Register(ToolDef{
+		Symbol: "get_otc_exdividend_result",
+		Name:   "get_otc_exdividend_result",
+		Description: "查詢上櫃股票除權息「計算結果」表（TPEx-API tpex_exright_daily，T200）。" +
+			"含除權息參考價、現金/股票股利、漲跌停與開盤參考價。code 選填過濾；limit 預設 50、offset 分頁。" +
+			"與 get_exdividend_calendar（預告）互補：本工具為事後實際計算數據。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填），過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcExdividendResult,
+	}) // T200
+	r.Register(ToolDef{
 		Symbol:      "get_otc_index",
 		Name:        "get_otc_index",
 		Description: "查詢櫃買市場（上櫃）指數歷史行情，包含開高低收、漲跌幅（TPEx-API tpex_index，T156）。",

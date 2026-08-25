@@ -1,0 +1,99 @@
+{
+  "arguments": {
+    "limit": 3
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"AllocatedForPublicUnderwriting\":\"0\",\"CashCapitalIncreaseShares\":\"0\",\"CashDivdend\":\"0.04100000\",\"CashDividend\":\"0.041000\",\"ClosePriceBeforeExRightsDiviend\":\"9.09\",\"CompanyName\":\"永豐ESG銀行債15+\",\"Date\":\"1150825\",\"DividendDeductedQuote\":\"9.05\",\"ExRightsDiviend\":\"除息\",\"ExRightsDiviendQuote\":\"9.05\",\"LimitDown\":\"0.01\",\"LimitUp\":\"9999.95\",\"OpeningReferencePrice\":\"9.05\",\"SecuritiesCompanyCode\":\"00958B\",\"StockDivdendThousandShares\":\"0.00000000\",\"StockDividend\":\"0.000000\",\"StockDividendPlusCashDividend\":\"0.041000\",\"SubscribedByEmployees\":\"0\",\"SubscribedByExistingShareholders\":\"0\",\"SubscribedProRataThousandShares\":\"0.00000000\",\"SubscriptionPricePerShare\":\"0.00\"},{\"AllocatedForPublicUnderwriting\":\"0\",\"CashCapitalIncreaseShares\":\"0\",\"CashDivdend\":\"6.93003843\",\"CashDividend\":\"6.930038\",\"ClosePriceBeforeExRightsDiviend\":\"162.50\",\"CompanyName\":\"瓦城\",\"Date\":\"1150825\",\"DividendDeductedQuote\":\"155.57\",\"ExRightsDiviend\":\"除息\",\"ExRightsDiviendQuote\":\"155.57\",\"LimitDown\":\"140.50\",\"LimitUp\":\"171.00\",\"OpeningReferencePrice\":\"155.50\",\"SecuritiesCompanyCode\":\"2729\",\"StockDivdendThousandShares\":\"0.00000000\",\"StockDividend\":\"0.000000\",\"StockDividendPlusCashDividend\":\"6.930038\",\"SubscribedByEmployees\":\"0\",\"SubscribedByExistingShareholders\":\"0\",\"SubscribedProRataThousandShares\":\"0.00000000\",\"SubscriptionPricePerShare\":\"0.00\"},{\"AllocatedForPublicUnderwriting\":\"0\",\"CashCapitalIncreaseShares\":\"0\",\"CashDivdend\":\"0.50000000\",\"CashDividend\":\"0.500000\",\"ClosePriceBeforeExRightsDiviend\":\"65.00\",\"CompanyName\":\"尼克森\",\"Date\":\"1150825\",\"DividendDeductedQuote\":\"64.50\",\"ExRightsDiviend\":\"除息\",\"ExRightsDiviendQuote\":\"64.50\",\"LimitDown\":\"58.10\",\"LimitUp\":\"70.90\",\"OpeningReferencePrice\":\"64.50\",\"SecuritiesCompanyCode\":\"3317\",\"StockDivdendThousandShares\":\"0.00000000\",\"StockDividend\":\"0.000000\",\"StockDividendPlusCashDividend\":\"0.500000\",\"SubscribedByEmployees\":\"0\",\"SubscribedByExistingShareholders\":\"0\",\"SubscribedProRataThousandShares\":\"0.00000000\",\"SubscriptionPricePerShare\":\"0.00\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T06:17:45+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":117,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+      }
+    ],
+    "structuredContent": {
+      "data": [
+        {
+          "AllocatedForPublicUnderwriting": "0",
+          "CashCapitalIncreaseShares": "0",
+          "CashDivdend": "0.04100000",
+          "CashDividend": "0.041000",
+          "ClosePriceBeforeExRightsDiviend": "9.09",
+          "CompanyName": "永豐ESG銀行債15+",
+          "Date": "1150825",
+          "DividendDeductedQuote": "9.05",
+          "ExRightsDiviend": "除息",
+          "ExRightsDiviendQuote": "9.05",
+          "LimitDown": "0.01",
+          "LimitUp": "9999.95",
+          "OpeningReferencePrice": "9.05",
+          "SecuritiesCompanyCode": "00958B",
+          "StockDivdendThousandShares": "0.00000000",
+          "StockDividend": "0.000000",
+          "StockDividendPlusCashDividend": "0.041000",
+          "SubscribedByEmployees": "0",
+          "SubscribedByExistingShareholders": "0",
+          "SubscribedProRataThousandShares": "0.00000000",
+          "SubscriptionPricePerShare": "0.00"
+        },
+        {
+          "AllocatedForPublicUnderwriting": "0",
+          "CashCapitalIncreaseShares": "0",
+          "CashDivdend": "6.93003843",
+          "CashDividend": "6.930038",
+          "ClosePriceBeforeExRightsDiviend": "162.50",
+          "CompanyName": "瓦城",
+          "Date": "1150825",
+          "DividendDeductedQuote": "155.57",
+          "ExRightsDiviend": "除息",
+          "ExRightsDiviendQuote": "155.57",
+          "LimitDown": "140.50",
+          "LimitUp": "171.00",
+          "OpeningReferencePrice": "155.50",
+          "SecuritiesCompanyCode": "2729",
+          "StockDivdendThousandShares": "0.00000000",
+          "StockDividend": "0.000000",
+          "StockDividendPlusCashDividend": "6.930038",
+          "SubscribedByEmployees": "0",
+          "SubscribedByExistingShareholders": "0",
+          "SubscribedProRataThousandShares": "0.00000000",
+          "SubscriptionPricePerShare": "0.00"
+        },
+        {
+          "AllocatedForPublicUnderwriting": "0",
+          "CashCapitalIncreaseShares": "0",
+          "CashDivdend": "0.50000000",
+          "CashDividend": "0.500000",
+          "ClosePriceBeforeExRightsDiviend": "65.00",
+          "CompanyName": "尼克森",
+          "Date": "1150825",
+          "DividendDeductedQuote": "64.50",
+          "ExRightsDiviend": "除息",
+          "ExRightsDiviendQuote": "64.50",
+          "LimitDown": "58.10",
+          "LimitUp": "70.90",
+          "OpeningReferencePrice": "64.50",
+          "SecuritiesCompanyCode": "3317",
+          "StockDivdendThousandShares": "0.00000000",
+          "StockDividend": "0.000000",
+          "StockDividendPlusCashDividend": "0.500000",
+          "SubscribedByEmployees": "0",
+          "SubscribedByExistingShareholders": "0",
+          "SubscribedProRataThousandShares": "0.00000000",
+          "SubscriptionPricePerShare": "0.00"
+        }
+      ],
+      "_lineage": {
+        "source": "TPEX_API",
+        "source_role": "CANONICAL",
+        "fetched_at": "2026-08-26T06:17:45+08:00",
+        "data_date": "2026-08-26",
+        "freshness": "POST_MARKET",
+        "sampling_sec": 0,
+        "is_cached": false,
+        "latency_ms": 117,
+        "grade": "AVAILABLE"
+      },
+      "http_calls": 1,
+      "disclaimer": "僅供研究參考，不構成投資建議"
+    }
+  }
+}
