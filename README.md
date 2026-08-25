@@ -394,7 +394,7 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 
 本專案僅供個人量化研究與教育用途。資料來源（FinMind、TWSE、TPEX）之使用請遵守各平台之服務條款。
 
-## 附錄：完整工具目錄（193 個，由 tools/list 自動產生 2026-08-26；T194/T191/T192 遠端獨有對齊）
+## 附錄：完整工具目錄（194 個，由 tools/list 自動產生 2026-08-26；T191–T194 遠端獨有全數對齊）
 
 > 本目錄由真實服務 `tools/list` 輸出自動彙出；上方「工具清單（40 個）」章節為
 > v2.1 發布時之手寫清單，已過時。各工具之 Envelope、`_lineage`、快取政策與
@@ -405,6 +405,7 @@ scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 40 工�
 - `get_after_hours_trading`：查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。code 選填（單檔查詢）；limit 預設 50；offset 分頁。
 - `get_all_stocks_daily_close`：查詢指定日期全部上市股票收盤行情（開高低收/成交量/本益比；TWSE-WEB MI_INDEX type=ALLBUT0999，T192）。「單一日期 × 全市場」快照；stock_no/name 本地過濾，limit/offset 分頁。
 - `get_annual_trading_volume`：查詢各期貨商品年成交量統計（年度總成交量、交易日數、平均日成交量；TAIFEX-API，T041）。contract 省略則回傳全部商品。
+- `get_abnormal_accumulated_notice_stocks`：查詢集中市場公布注意累計次數異常資訊（TWSE-API announcement/notetrans，T193）。與當日注意/處置清單互補之累計紀錄；kind 可過濾 stock/warrant（清單含權證）；name/limit/offset。
 - `get_attention_disposition_stocks`：查詢注意股/處置股清單（買前風險掃描）。上市：TWSE-WEB notice + TWSE-API punish；上櫃：TPEx 注意/處置。結果同步注入 scan_daytrade_eligibility 名單。
 - `get_block_trades_daily`：查詢集中市場鉅額交易日成交量值統計（TWSE-WEB BFIAUU_d，T042）。
 - `get_block_trades_detail`：查詢集中市場鉅額交易逐筆明細（含配對交易、盤後鉅額等交易別；TWSE-WEB BFIAUU_d date 查詢，T043）。stock_no/name 為本地端過濾；limit 預設 50。

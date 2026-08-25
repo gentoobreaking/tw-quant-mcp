@@ -139,6 +139,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.stub("market_close", url.Values{"date": {"20260825"}, "type": {"ALLBUT0999"}},
 		`[{"code":"2330","name":"台積電","volume":1000,"amount":100000,"open":100,"high":110,"low":99,"close":110,"change_dir":"+","change":10,"pe":20},{"code":"2317","name":"鴻海","volume":2000,"amount":200000,"open":170,"high":180,"low":169,"close":175,"change_dir":"-","change":-5,"pe":10}]`)
 	f.bodies["twse_events|"] = `[{"No":"1","Title":"115年SEMICON Taiwan主題式業績發表會","Details":"https://www.twse.com.tw/zh/about/news/event/content.html?x"},{"No":"2","Title":"法人說明會（8月）","Details":"https://www.twse.com.tw/zh/about/news/event/content.html?y"}]`
+	f.bodies["note_trans|"] = `[{"Code":"2615","Name":"萬海","RecentlyMetAttentionSecuritiesCriteria":"115年8月21日至115年8月24日連續二次"},{"Code":"052176","Name":"聯電統一61購01","RecentlyMetAttentionSecuritiesCriteria":"115年8月21日"}]`
 	f.bodies["warrant_basic|"] = `[{"權證代號":"030012","權證簡稱":"AES凱基57購02"}]`
 	f.bodies["warrant_issue|"] = `[{"出表日期":"1150106","發行人代號":"5380","發行人名稱":"第一金證券股份有限公司","權證代號":"074888"}]`
 	f.bodies["warrant_trader|"] = `[{"出表日期":"1150812","日期":"1150808","人數":"12345"}]`
@@ -395,6 +396,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_top_foreign_holdings", args: map[string]any{}},
 		{name: "get_twse_news", args: map[string]any{}},
 		{name: "get_twse_events", args: map[string]any{"top": float64(10)}},
+		{name: "get_abnormal_accumulated_notice_stocks", args: map[string]any{"limit": float64(10)}},
 		{name: "get_all_stocks_daily_close", args: map[string]any{"date": "2026-08-25", "limit": float64(5)}},
 		{name: "get_warrant_yearly_issuance_statistics", args: map[string]any{}},
 		{name: "get_warrant_trader_count", args: map[string]any{}},

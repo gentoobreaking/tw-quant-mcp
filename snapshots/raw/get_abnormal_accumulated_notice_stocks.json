@@ -1,0 +1,36 @@
+{
+  "arguments": {
+    "kind": "stock",
+    "limit": 5
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"Code\":\"2615\",\"Name\":\"萬海\",\"RecentlyMetAttentionSecuritiesCriteria\":\"115年8月21日至115年8月24日連續二次\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T02:37:38+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":306,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+      }
+    ],
+    "structuredContent": {
+      "data": [
+        {
+          "Code": "2615",
+          "Name": "萬海",
+          "RecentlyMetAttentionSecuritiesCriteria": "115年8月21日至115年8月24日連續二次"
+        }
+      ],
+      "_lineage": {
+        "source": "TWSE_API",
+        "source_role": "CANONICAL",
+        "fetched_at": "2026-08-26T02:37:38+08:00",
+        "data_date": "2026-08-26",
+        "freshness": "POST_MARKET",
+        "sampling_sec": 0,
+        "is_cached": false,
+        "latency_ms": 306,
+        "grade": "AVAILABLE"
+      },
+      "http_calls": 1,
+      "disclaimer": "僅供研究參考，不構成投資建議"
+    }
+  }
+}

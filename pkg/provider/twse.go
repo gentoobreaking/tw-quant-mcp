@@ -83,6 +83,7 @@ const (
 	TWSEAPIESG             TWSEAPIDataset = "esg"                // ESG 資訊揭露（topic 1..21）
 	TWSEAPIGovernance      TWSEAPIDataset = "company_governance" // 公司治理
 	TWSEAPIPunish          TWSEAPIDataset = "punish"             // 集中市場公布處置股票（T011）
+	TWSEAPINoteTrans       TWSEAPIDataset = "note_trans"         // 公布注意累計次數異常資訊（announcement/notetrans，T193）
 	TWSEAPIValuation       TWSEAPIDataset = "valuation"          // 本益比/殖利率/股價淨值比（T014）
 	TWSEAPIExDiv           TWSEAPIDataset = "ex_div"             // 除權除息預告表（T014）
 	TWSEAPIDividend        TWSEAPIDataset = "dividend"           // 股利分派情形（T014）
@@ -238,6 +239,7 @@ var (
 		TWSEAPIESG:             "/opendata/t187ap46_L_%s", // topic 1..21
 		TWSEAPIGovernance:      "/opendata/t187ap32_L",
 		TWSEAPIPunish:          "/announcement/punish",
+		TWSEAPINoteTrans:       "/announcement/notetrans", // 注意累計次數異常（T193）
 		TWSEAPIValuation:       "/exchangeReport/BWIBBU_ALL", // 上市個股日本益比、殖利率及股價淨值比
 		TWSEAPIExDiv:           "/exchangeReport/TWT48U_ALL", // 除權除息預告表
 		TWSEAPIDividend:        "/opendata/t187ap45_L",       // 上市公司股利分派情形
@@ -765,7 +767,7 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizePassthroughArray(raw)
 	case "supervisor_comp", "meeting_ann", "meeting_dates", "proposal_exercise":
 		out, err = normalizePassthroughArray(raw)
-	case "top_foreign", "twse_news", "twse_events", "warrant_basic",
+	case "top_foreign", "twse_news", "twse_events", "note_trans", "warrant_basic",
 		"warrant_trader", "warrant_issue":
 		out, err = normalizePassthroughArray(raw)
 	case "sec_penalty":

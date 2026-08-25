@@ -1270,3 +1270,57 @@ func handlerGetAllStocksDailyClose(a *App, args map[string]any) (HandlerResult, 
 	}
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
+
+// handlerGetAbnormalAccumulatedNoticeStocks：集中市場公布注意累計次數異常
+// 資訊（announcement/notetrans，T193）。與 get_attention_disposition_stocks
+// （當日注意/處置清單）互補：本工具揭露「近期符合注意處理標準」之累計紀錄。
+// 清單含權證（Code 為 6 碼），原樣回傳不靜默丟棄；kind 選填可供過濾
+//（"stock"=4 碼普通股、"warrant"=6 碼權證）。
+func handlerGetAbnormalAccumulatedNoticeStocks(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	nameArg, kind := strVal(args["name"]), strVal(args["kind"])
+
+	dataDate := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TWSEAPINoteTrans), dataDate,
+		cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPINoteTrans), dataDate, nameArg+kind, nil),
+		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPINoteTrans, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+
+	ttl, _ := a.ttlOf(string(provider.TWSEAPINoteTrans))
+	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		code := rowCode(r)
+		if code == "" {
+			continue // 官方偶有無代號之空列
+		}
+		switch kind {
+		case "stock":
+			if len(code) > 4 {
+				continue
+			}
+		case "warrant":
+			if len(code) <= 4 {
+				continue
+			}
+		}
+		if nameArg != "" && !strings.Contains(rowName(r), nameArg) {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}

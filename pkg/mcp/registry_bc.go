@@ -978,6 +978,24 @@ func registerBCTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetAllStocksDailyClose,
 	}) // T192
+	r.Register(ToolDef{
+		Symbol:      "get_abnormal_accumulated_notice_stocks",
+		Name:        "get_abnormal_accumulated_notice_stocks",
+		Description: "查詢集中市場公布注意累計次數異常資訊（TWSE-API announcement/notetrans，T193）。" +
+			"與 get_attention_disposition_stocks（當日注意/處置清單）互補：本工具揭露近期符合注意處理標準之累計紀錄，適合風險掃描與短線避雷。" +
+			"清單含權證（kind 可過濾 stock/warrant）；name 關鍵字過濾；limit 預設 50、offset 分頁。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "股票名稱關鍵字（選填）"},
+				"kind":   map[string]any{"type": "string", "enum": []string{"stock", "warrant"}, "description": "標的類型過濾（選填）：stock=普通股、warrant=權證；省略回傳全部"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限（預設 50）"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetAbnormalAccumulatedNoticeStocks,
+	}) // T193
 
 	r.Register(ToolDef{
 		Symbol:      "get_company_sec_regulatory_penalties",
