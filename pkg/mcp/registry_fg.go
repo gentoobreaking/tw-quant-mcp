@@ -37,6 +37,22 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetDailyFuturesMarketReport,
 	}) // T117
 	r.Register(ToolDef{
+		Symbol:      "get_daily_options_market_report",
+		Name:        "get_daily_options_market_report",
+		Description: "查詢選擇權每日交易行情，篩選有成交量的履約價資料，按成交量由大到小排序（TAIFEX-API DailyMarketReportOpt，T118）。" +
+			"常用契約代碼：TXO（臺指選擇權）、TEO（電子選擇權）、TFO（金融選擇權）；contract 留空可列出所有可用契約代碼。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "default": "TXO", "description": "選擇權契約代碼，例如 TXO。留空則列出所有可用契約代碼"},
+				"call_put": map[string]any{"type": "string", "enum": []string{"買權", "賣權"}, "description": "篩選買賣權，留空顯示全部"},
+				"limit":    map[string]any{"type": "integer", "default": 30, "minimum": 1, "description": "顯示筆數上限（按成交量由大到小）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetDailyOptionsMarketReport,
+	}) // T118
+	r.Register(ToolDef{
 		Symbol: "get_futures_history",
 		Name:   "get_futures_history",
 		Description: "查詢期貨 OHLC 歷史（TAIFEX-DL 下載頁回溯，§9.3；L2 永久快取）。" +

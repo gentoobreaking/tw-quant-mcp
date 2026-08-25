@@ -135,7 +135,19 @@ func stubFG(f *fakeTAIFEX) {
 		{Month: "202607", Category: "股價指數期貨", TotalVolume: 23656674, IndivBuy: 11620813, IndivSell: 11650825, PropBuy: 1134894, PropSell: 1138726, ForeignBuy: 10679002, ForeignSell: 10660793, MonthEndOI: 231222},
 		{Month: "202607", Category: "股票期貨", TotalVolume: 15667872, IndivBuy: 5224890, IndivSell: 5367331, MonthEndOI: 98000},
 	})
-	// 買買賣權比：單日 + 範圍
+	// 選擇權每日行情（TXO，最新日；含無成交量與賣權序列，T118）
+	f.single[tfKey(model.TAOptionsDaily, "2026-07-29", "TXO")] = tfStub([]model.OptionsDailyRow{
+		{Date: "2026-07-29", Contract: "TXO", ContractMonth: "202608", Strike: 21000, CallPut: "買權", Close: 1850, Volume: 12034, OpenInterest: 52100},
+		{Date: "2026-07-29", Contract: "TXO", ContractMonth: "202608", Strike: 20000, CallPut: "買權", Close: 3200, Volume: 8021, OpenInterest: 41000},
+		{Date: "2026-07-29", Contract: "TXO", ContractMonth: "202608", Strike: 20500, CallPut: "賣權", Close: 990, Volume: 15000, OpenInterest: 60000},
+		{Date: "2026-07-29", Contract: "TXO", ContractMonth: "202608", Strike: 22000, CallPut: "買權", Close: 300, Volume: 0, OpenInterest: 800},
+	})
+	// 選擇權每日行情（全市場，T118 契約代碼列舉）
+	f.single[tfKey(model.TAOptionsDaily, "2026-07-29", "")] = tfStub([]model.OptionsDailyRow{
+		{Date: "2026-07-29", Contract: "TXO", ContractMonth: "202608", Strike: 21000, CallPut: "買權", Volume: 12034},
+		{Date: "2026-07-29", Contract: "TFO", ContractMonth: "202608", Strike: 1700, CallPut: "買權", Volume: 900},
+	})
+	// 買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},
 	})
@@ -322,6 +334,69 @@ func TestFGDailyFuturesMarketReportBadContract(t *testing.T) {
 	if _, err := app.core.Call(context.Background(), "get_daily_futures_market_report",
 		map[string]any{"contract": "TX;DROP"}); err == nil {
 		t.Fatal("注入字串應被白名單拒絕")
+	}
+}
+
+// T118：get_daily_options_market_report 預設 TXO、過濾零成交量、按成交量排序、limit 生效
+func TestFGDailyOptionsMarketReportDefaultTXO(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_daily_options_market_report", map[string]any{})
+	rows, ok := env.Data.([]model.OptionsDailyRow)
+	if !ok {
+		t.Fatalf("Data 應為 []OptionsDailyRow，實際 %T", env.Data)
+	}
+	if len(rows) != 3 || rows[0].Volume != 15000 || rows[2].Volume != 8021 {
+		t.Errorf("應過濾零成交量並依成交量降序: %+v", rows)
+	}
+	if env.Lineage.Source != model.SourceTAIFEXAPI || env.Lineage.Freshness != model.FreshnessPostMarket {
+		t.Errorf("lineage 應為 API/POST_MARKET: %+v", env.Lineage)
+	}
+
+	// limit=1 只回一筆
+	env2 := callEnv(t, app, "get_daily_options_market_report", map[string]any{"limit": float64(1)})
+	rows2 := env2.Data.([]model.OptionsDailyRow)
+	if len(rows2) != 1 || rows2[0].Volume != 15000 {
+		t.Errorf("limit=1 應只回成交量最大一筆: %+v", rows2)
+	}
+
+	// call_put=買權 過濾
+	env3 := callEnv(t, app, "get_daily_options_market_report", map[string]any{"call_put": "買權"})
+	rows3 := env3.Data.([]model.OptionsDailyRow)
+	for _, r := range rows3 {
+		if r.CallPut != "買權" {
+			t.Errorf("call_put=買權 不應含賣權列: %+v", r)
+		}
+	}
+}
+
+// T118：留空 contract 列契約代碼 + 快取命中 + 格式驗證
+func TestFGDailyOptionsMarketReportListContracts(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_daily_options_market_report", map[string]any{"contract": ""})
+	out, ok := env.Data.([]map[string]any)
+	if !ok {
+		t.Fatalf("Data 應為 []map[string]any，實際 %T", env.Data)
+	}
+	if len(out) != 2 || out[0]["contract"] != "TFO" || out[1]["contract"] != "TXO" {
+		t.Errorf("契約代碼應去重排序（TFO/TXO）: %+v", out)
+	}
+
+	env2 := callEnv(t, app, "get_daily_options_market_report", map[string]any{"contract": ""})
+	if !env2.Lineage.IsCached {
+		t.Errorf("第二次呼叫應命中快取: %+v", env2.Lineage)
+	}
+
+	if _, err := app.core.Call(context.Background(), "get_daily_options_market_report",
+		map[string]any{"contract": "tx;drop"}); err == nil {
+		t.Fatal("非法格式契約代碼應被拒絕")
 	}
 }
 

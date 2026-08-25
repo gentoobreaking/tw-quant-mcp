@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -225,6 +226,85 @@ func handlerGetDailyFuturesMarketReport(a *App, args map[string]any) (HandlerRes
 	}
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, date, fromCache, a.taifexTTL())}, nil
 }
+
+// optionsContractRe 驗證選擇權契約代碼格式（全大寫英數字 2-6 碼，防注入）。
+var optionsContractRe = regexp.MustCompile(`^[A-Z0-9]{2,6}$`)
+
+// handlerGetDailyOptionsMarketReport：選擇權每日交易行情（TAIFEX-API
+// DailyMarketReportOpt，T118）。篩選有成交量之序列，按成交量由大到小排序；
+// contract 省略時預設 TXO；明確傳空字串則列出所有可用契約代碼。
+func handlerGetDailyOptionsMarketReport(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	raw, hasArg := args["contract"]
+	contract := strings.TrimSpace(strVal(raw))
+	date, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	callPut := strings.TrimSpace(strVal(args["call_put"]))
+	if callPut != "" && callPut != "買權" && callPut != "賣權" {
+		return HandlerResult{}, fmt.Errorf("參數 call_put 僅接受「買權」或「賣權」，實際 %q", callPut)
+	}
+	limit := 30
+	if v, ok := args["limit"]; ok {
+		if n, err := asInt(v); err == nil && n > 0 {
+			limit = n
+		}
+	}
+	listMode := hasArg && contract == ""
+	fetchContract := contract
+	if !listMode {
+		if fetchContract == "" {
+			fetchContract = "TXO" // 預設 TXO（對齊遠端 inputSchema default）
+		} else if !optionsContractRe.MatchString(fetchContract) {
+			return HandlerResult{}, fmt.Errorf("選擇權契約代碼 %q 格式不合法（應為 2-6 碼大寫英數字，如 TXO）", contract)
+		}
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAOptionsDaily, date, fetchContract)
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAOptionsDaily, err)
+	}
+	rows, err := taifexRows[model.OptionsDailyRow](model.TAOptionsDaily, date, res)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	if listMode {
+		// 列出所有可用契約代碼（本地去重排序）
+		seen := map[string]bool{}
+		out := make([]map[string]any, 0)
+		for _, r := range rows {
+			if seen[r.Contract] {
+				continue
+			}
+			seen[r.Contract] = true
+			out = append(out, map[string]any{"contract": r.Contract})
+		}
+		sort.Slice(out, func(i, j int) bool { return out[i]["contract"].(string) < out[j]["contract"].(string) })
+		return HandlerResult{Data: out, Lineage: taifexLineage(res, date, fromCache, a.taifexTTL())}, nil
+	}
+	// 有成交量之序列，按成交量由大到小；call_put / limit 過濾
+	filtered := make([]model.OptionsDailyRow, 0, len(rows))
+	for _, r := range rows {
+		if r.Volume <= 0 {
+			continue
+		}
+		if callPut != "" && r.CallPut != callPut {
+			continue
+		}
+		filtered = append(filtered, r)
+	}
+	sort.SliceStable(filtered, func(i, j int) bool { return filtered[i].Volume > filtered[j].Volume })
+	if len(filtered) > limit {
+		filtered = filtered[:limit]
+	}
+	return HandlerResult{Data: filtered, Lineage: taifexLineage(res, date, fromCache, a.taifexTTL())}, nil
+}
+
+// handlerGetFuturesHistory：期貨 OHLC 歷史（TAIFEX-DL 回溯，§10.F）。
 func handlerGetFuturesHistory(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()
 	q, err := a.querier()
