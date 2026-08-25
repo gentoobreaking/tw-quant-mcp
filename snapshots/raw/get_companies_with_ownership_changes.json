@@ -1,0 +1,16 @@
+{
+  "arguments": {
+    "name": "川飛"
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"公司代號\":\"1516\",\"公司名稱\":\"川飛\",\"出表日期\":\"1150824\",\"經營權異動日期\":\"1150629\",\"經營權異動說明\":\"該公司115年6月8日法人董事庭楊股份有限公司改派代表人致董事席次累積變動過半，且該法人董事100%股權業於115年6月29日異動，核有經營權異動情事。\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T13:46:04+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":97,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

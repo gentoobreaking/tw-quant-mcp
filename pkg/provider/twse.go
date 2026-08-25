@@ -89,6 +89,7 @@ const (
 	TWSEAPIOwnScopeTrade   TWSEAPIDataset = "own_scope_trade"    // 經營權異動且營業範圍重大變更列變更交易（t187ap27_L，T058）
 	TWSEAPIScopeChanges    TWSEAPIDataset = "scope_changes"      // 營業範圍重大變更公司（t187ap25_L，T060）
 	TWSEAPIIndepDirectors  TWSEAPIDataset = "indep_directors"    // 獨立董監事兼任情形彙總（t187ap30_L，T063）
+	TWSEAPIOwnershipChange TWSEAPIDataset = "ownership_change"   // 經營權異動公司（t187ap24_L，T064）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -145,6 +146,7 @@ var (
 		TWSEAPIOwnScopeTrade:   "/opendata/t187ap27_L", // 經營權異動且營業範圍重大變更列變更交易（T058）
 		TWSEAPIScopeChanges:    "/opendata/t187ap25_L", // 營業範圍重大變更公司（T060）
 		TWSEAPIIndepDirectors:  "/opendata/t187ap30_L", // 獨立董監事兼任情形彙總（T063）
+		TWSEAPIOwnershipChange: "/opendata/t187ap24_L", // 經營權異動公司（T064）
 	}
 )
 
@@ -564,6 +566,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "scope_changes":
 		out, err = normalizePassthroughArray(raw)
 	case "indep_directors":
+		out, err = normalizePassthroughArray(raw)
+	case "ownership_change":
 		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)

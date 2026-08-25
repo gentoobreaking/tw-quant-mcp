@@ -86,6 +86,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["scope_changes|"] = `[{"出表日期":"1150824","公司代號":"1101","公司名稱":"台泥","年度":"115","季別":"2","營業範圍重大變更說明":"新增水泥製品買賣業務"}]`
 	// get_companies_with_independent_directors（T063）
 	f.bodies["indep_directors|"] = `[{"出表日期":"1150824","序號":"1","公司代號":"1101","公司名稱":"台泥","職稱":"法人董事代表人","姓名":"示例","就任日期":"1130521","目前兼任其他公司名稱":""}]`
+	// get_companies_with_ownership_changes（T064）
+	f.bodies["ownership_change|"] = `[{"出表日期":"1150824","公司代號":"1516","公司名稱":"川飛","經營權異動日期":"1150629","經營權異動說明":"董事席次累積變動過半"}]`
 	f.bodies["top_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
@@ -215,6 +217,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_companies_ownership_changes_business_scope_trading", args: map[string]any{}},
 		{name: "get_companies_with_business_scope_changes", args: map[string]any{}},
 		{name: "get_companies_with_independent_directors", args: map[string]any{}},
+		{name: "get_companies_with_ownership_changes", args: map[string]any{}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},
