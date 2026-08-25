@@ -26,7 +26,7 @@
 
 ```bash
 make build          # 產出 bin/tw-quant-mcp（CGO-free 單一執行檔）
-make build-release  # 產出 bin/tw-quant-mcp-v$(VERSION)（帶版本號；VERSION 預設 0.1.0，可 make build-release VERSION=x.y.z 覆寫）
+make build-release  # 產出 bin/tw-quant-mcp-v$(VERSION)（帶版本號；VERSION 預設 2.1.0，可 make build-release VERSION=x.y.z 覆寫）
 ```
 
 ### 執行
