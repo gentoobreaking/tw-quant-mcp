@@ -1,0 +1,43 @@
+{
+  "arguments": {
+    "code": "2330"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 503,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"使用率(再生能源/總能源)\":\"20.1000%\",\"取得驗證\":\"ISO 50001\",\"資料範圍\":\"已完成合併財務報表之母子公司\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T20:14:18+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":45,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": {
+          "code": "2330",
+          "fields": {
+            "使用率(再生能源/總能源)": "20.1000%",
+            "取得驗證": "ISO 50001",
+            "資料範圍": "已完成合併財務報表之母子公司"
+          },
+          "name": "台積電",
+          "report_date": "2026-08-25",
+          "year": "114"
+        },
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T20:14:18+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 45,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}
