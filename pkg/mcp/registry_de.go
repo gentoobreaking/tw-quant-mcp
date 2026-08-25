@@ -275,6 +275,49 @@ func registerDETools(r *Registry) {
 		ReadOnly:    true,
 		Handler:     apiCompanySpec{ds: provider.TWSEAPIMajorSharehold}.handler(),
 	}) // T097
+
+	// ── ESG 揭露細項（t187ap46_L_<topic>，esgCompanySpec 泛用框架）──
+	esgCompanySchema := func() map[string]any {
+		return map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code": map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+			},
+			"required": []string{"code"},
+		}
+	}
+	for _, e := range []struct {
+		symbol, name string
+		topic        int
+	}{
+		{"get_company_anticompetitive_litigation", "根據股票代號查詢上市公司訴訟、非訟與行政爭訟事項資訊（反競爭爭議）", 20},        // T066
+		{"get_company_climate_management", "根據股票代號查詢上市公司氣候相關財務揭露（TCFD）管理資訊", 8},                          // T074
+		{"get_company_community_relations", "根據股票代號查詢上市公司社區關懷與社會服務資訊", 15},                                      // T075
+		{"get_company_energy_management", "根據股票代號查詢上市公司能源管理資訊", 2},                                                        // T082
+		{"get_company_food_safety", "根據股票代號查詢上市公司食品安全資訊", 12},                                                              // T085
+		{"get_company_fuel_management", "根據股票代號查詢上市公司燃料管理資訊", 10},                                                          // T086
+		{"get_company_greenhouse_gas_emissions", "根據股票代號查詢上市公司溫室氣體排放資訊", 1},                                              // T089
+		{"get_company_human_development", "根據股票代號查詢上市公司人力發展資訊", 5},                                                          // T090
+		{"get_company_inclusive_finance", "根據股票代號查詢上市公司普惠金融資訊", 17},                                                          // T091
+		{"get_company_info_security", "根據股票代號查詢上市公司資通安全管理制度資訊", 16},                                                    // T093
+		{"get_company_investor_communications", "根據股票代號查詢上市公司投資人溝通資訊", 7},                                                  // T095
+		{"get_company_ownership_and_control", "根據股票代號查詢上市公司所有權及控制權資訊", 18},                                              // T098
+		{"get_company_product_lifecycle", "根據股票代號查詢上市公司產品生命週期資訊", 11},                                                      // T099
+		{"get_company_product_quality_safety", "根據股票代號查詢上市公司產品品質與安全資訊", 14},                                            // T100
+		{"get_company_risk_management", "根據股票代號查詢上市公司風險管理資訊", 19},                                                            // T105
+		{"get_company_supply_chain_management", "根據股票代號查詢上市公司供應鏈管理資訊", 13},                                              // T112
+		{"get_company_waste_management", "根據股票代號查詢上市公司廢棄物管理資訊", 4},                                                          // T113
+		{"get_company_water_management", "根據股票代號查詢上市公司水資源管理資訊", 3},                                                          // T114
+	} {
+		r.Register(ToolDef{
+			Symbol:      e.symbol,
+			Name:        e.symbol,
+			Description: e.name + "。",
+			Schema:      esgCompanySchema(),
+			ReadOnly:    true,
+			Handler:     esgCompanySpec{topic: e.topic}.handler(),
+		})
+	}
 	r.Register(ToolDef{
 		Symbol: "get_company_profile",
 		Name:   "get_company_profile",

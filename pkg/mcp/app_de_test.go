@@ -72,7 +72,7 @@ func stubDE(f *fakeFetch) {
 	f.stub("esg", urlValuesTopic(1), `[
 		{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"範疇一排放量(噸CO2e)":"1234"}},
 		{"report_date":"2026-07-31","year":"2025","code":"2317","name":"鴻海","fields":{"範疇一排放量(噸CO2e)":"5678"}}]`)
-	for topic := 2; topic <= 8; topic++ {
+	for topic := 2; topic <= 21; topic++ {
 		f.stub("esg", urlValuesTopic(topic), `[
 			{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"指標":"topic`+strconv.Itoa(topic)+`"}}]`)
 	}
@@ -82,7 +82,8 @@ func stubDE(f *fakeFetch) {
 	// ESG topic 15：煉油廠（T065）
 	f.stub("esg", urlValuesTopic(15), `[
 		{"report_date":"2026-07-31","year":"2025","code":"6505","name":"台塑石化","fields":{"在人口密集地區的煉油廠數量(座)":"3"}},
-		{"report_date":"2026-07-31","year":"2025","code":"1102","name":"亞泥","fields":{"在人口密集地區的煉油廠數量(座)":"0"}}]`)
+		{"report_date":"2026-07-31","year":"2025","code":"1102","name":"亞泥","fields":{"在人口密集地區的煉油廠數量(座)":"0"}},
+		{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"指標":"topic15"}}]`)
 	for _, ds := range mopsESGDatasets {
 		f.stub(string(ds), nil, `[
 			{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"指標":"MOPS"}}]`)
