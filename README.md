@@ -403,6 +403,8 @@ make fixtures     # 錄製官方 raw response fixtures（-host all -date YYYYMMD
 make e2e          # 端到端驗證（MCP client 依序呼叫 A→G 代表工具）
 make soak         # 4.5h 連續運行測試（需實際交易日開盤時段）
 scripts/release_check.sh   # 發布檢查：CGO-free 建置 + tools/list 工具數
+make catalog-snapshot  # 建立三官方目錄 baseline（首次/確認變更後）
+make catalog-check     # 檢查官方目錄是否新增/刪減端點
 ```
 
 ### GitHub Release 流程

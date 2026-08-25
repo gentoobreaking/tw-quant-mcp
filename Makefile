@@ -82,3 +82,11 @@ snapshots-report:
 # 重新彙出 docs/TOOL_CATALOG.md（真實 tools/list；工具數變動後執行）
 catalog:
 	./scripts/update_catalog.sh
+
+# 建立三官方目錄 baseline（首次或確認變更後執行）
+catalog-snapshot:
+	python3 ./scripts/catalog_snapshot.py update
+
+# 檢查三官方目錄是否新增/刪減端點（有變更 exit 1）
+catalog-check:
+	python3 ./scripts/catalog_snapshot.py check

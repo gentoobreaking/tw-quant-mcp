@@ -1,0 +1,47 @@
+# Catalog Watch：每週檢查 TWSE / TPEx / TAIFEX 三官方 OpenAPI 目錄
+# 是否新增或刪減端點；有變更時自動開 issue 通知（含差異清單）。
+---
+name: Catalog Watch
+
+on:
+  schedule:
+    - cron: "0 3 * * 1" # 每週一 03:00 UTC（台北 11:00）
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: 檢查官方目錄變更
+        id: diff
+        run: |
+          set +e
+          python3 scripts/catalog_snapshot.py check > /tmp/catalog_diff.txt 2>&1
+          echo "exitcode=$?" >> "$GITHUB_OUTPUT"
+          cat /tmp/catalog_diff.txt
+          {
+            echo "DIFF<<EOF_DIFF"
+            cat /tmp/catalog_diff.txt
+            echo "EOF_DIFF"
+          } >> "$GITHUB_ENV"
+
+      - name: 有變更時開 issue 通知
+        if: env.exitcode == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "官方 OpenAPI 目錄偵測到端點異動" \
+            --body "$(printf '%s\n' '三個官方 OpenAPI 目錄與 baseline 不一致，請評估：' '' \
+              '1. 新增端點 → 評估是否立擴充任務書' \
+              '2. 刪減端點 → 於對應工具標註來源失效/下架' '' \
+              '```' "$DIFF" '```')"
