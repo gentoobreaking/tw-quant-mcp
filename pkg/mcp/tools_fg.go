@@ -1024,6 +1024,74 @@ func handlerGetFuturesInstitutional(a *App, args map[string]any) (HandlerResult,
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// instiWeeklyTypes 為 T204 週別 type → 資料集對應。
+var instiWeeklyTypes = map[string]model.TAIFEXDataset{
+	"general":       model.TAInstiGenWeek,
+	"fut_opt":       model.TAInstiDivWeek,
+	"fut_contracts": model.TAInstiFutContWeek,
+	"opt_contracts": model.TAInstiOptContWeek,
+	"calls_puts":    model.TAInstiCPWeek,
+}
+
+// handlerGetInstiWeekly：三大法人依週別系列（TAIFEX-API *BytheWeek，T204）。
+// type 切換五型：general 總表／fut_opt 區分期貨與選擇權／fut_contracts 各期貨
+// 契約／opt_contracts 各選擇權契約／calls_puts 買賣權分計；passthrough。
+// 官方端點不接受日期過濾（恆回近期各週），limit/offset 分頁由本地端處理。
+func handlerGetInstiWeekly(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	typeArg := strVal(args["type"])
+	if typeArg == "" {
+		typeArg = "general"
+	}
+	ds, ok := instiWeeklyTypes[typeArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("type 僅接受 general/fut_opt/fut_contracts/opt_contracts/calls_puts，得到 %q", typeArg)
+	}
+	// 週別端點不接受日期過濾（恆回近期各週），但仍需解析最新交易日作為
+	// 快取鍵（空日期會走 DL 歷史查詢路徑，週別無 DL 支援）。
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	if len(res.Data) == 0 {
+		note := res.Note
+		if note == "" {
+			note = "無資料"
+		}
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料（%s）", ds, note)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	contract := strings.TrimSpace(strVal(args["contract"]))
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if contract != "" && !strings.Contains(rowField(r, "ContractCode"), contract) {
+			continue
+		}
+		out = append(out, r)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // handlerGetInstitutionalGeneral：三大法人整體交易總表（期貨+選擇權合計，
 // TAIFEX-API GeneralBytheDate，T129；端點回 CSV，date 省略為最新交易日）。
 func handlerGetInstitutionalGeneral(a *App, args map[string]any) (HandlerResult, error) {

@@ -26,6 +26,11 @@ const (
 	TAStockMargin      TAIFEXDataset = "stock_margin"          // 股票期貨保證金一覽表（僅 API，T167）
 	TATickFutures      TAIFEXDataset = "tick_futures"          // 期貨逐筆成交（僅 API，T207）
 	TATickOptions      TAIFEXDataset = "tick_options"          // 選擇權逐筆成交（僅 API，T207）
+	TAInstiGenWeek     TAIFEXDataset = "insti_general_week"    // 三大法人總表-依週別（僅 API，T204）
+	TAInstiDivWeek     TAIFEXDataset = "insti_divided_week"    // 三大法人區分期貨與選擇權-依週別（僅 API，T204）
+	TAInstiFutContWeek TAIFEXDataset = "insti_fut_cont_week"   // 三大法人區分各期貨契約-依週別（僅 API，T204）
+	TAInstiOptContWeek TAIFEXDataset = "insti_opt_cont_week"   // 三大法人區分各選擇權契約-依週別（僅 API，T204）
+	TAInstiCPWeek      TAIFEXDataset = "insti_cp_week"         // 三大法人買賣權分計-依週別（僅 API，T204）
 	TALargeTraderFut   TAIFEXDataset = "large_trader_fut"      // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt   TAIFEXDataset = "large_trader_opt"      // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio     TAIFEXDataset = "put_call_ratio"        // 買賣權比（PCR）

@@ -207,6 +207,24 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetFuturesInstitutional,
 	}) // T126
 	r.Register(ToolDef{
+		Symbol: "get_insti_weekly",
+		Name:   "get_insti_weekly",
+		Description: "查詢 TAIFEX 三大法人依週別部位資料（*BytheWeek 系列，T204）。" +
+			"type 切換五型：general 總表／fut_opt 區分期貨與選擇權／fut_contracts 各期貨契約／opt_contracts 各選擇權契約／calls_puts 買賣權分計。" +
+			"contract 選填中文契約名過濾（契約型）；官方端點不接受日期過濾（恆回近期各週）；limit 預設 50、offset 分頁。週別適合波段判斷，與日頻法人工具互補。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"type":     map[string]any{"type": "string", "enum": []string{"general", "fut_opt", "fut_contracts", "opt_contracts", "calls_puts"}, "default": "general", "description": "資料類型：總表/期選區分/各期貨契約/各選擇權契約/買賣權分計"},
+				"contract": map[string]any{"type": "string", "description": "中文契約名子字串（選填，契約型 type 適用），如「臺股期貨」"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetInstiWeekly,
+	}) // T204
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +

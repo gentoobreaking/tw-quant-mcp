@@ -47,24 +47,29 @@ const taifexAPIBase = "https://openapi.taifex.com.tw/v1"
 
 // taifexAPIPaths 為資料集 → API 端點路徑對應。
 var taifexAPIPaths = map[model.TAIFEXDataset]string{
-	model.TAFuturesDaily:   "/DailyMarketReportFut",
-	model.TAOptionsDaily:   "/DailyMarketReportOpt",
-	model.TAInstiFutures:   "/MarketDataOfMajorInstitutionalTradersDetailsOfFuturesContractsBytheDate",
-	model.TAInstiOptions:   "/MarketDataOfMajorInstitutionalTradersDetailsOfOptionsContractsBytheDate",
-	model.TALargeTraderFut: "/OpenInterestOfLargeTradersFutures",
-	model.TALargeTraderOpt: "/OpenInterestOfLargeTradersOptions",
-	model.TAPutCallRatio:   "/PutCallRatio",
-	model.TAMargin:         "/IndexFuturesAndOptionsMargining",
-	model.TAFAnnualVolume:  "/AnnualTradingVolume",
-	model.TAFMonthlyStats:  "/MonthlyTradingStatisticsFutures",                                          // T148
-	model.TAInstiDivided:   "/MarketDataOfMajorInstitutionalTradersDividedByFuturesAndOptionsBytheDate", // T126
-	model.TAInstiGeneral:   "/MarketDataOfMajorInstitutionalTradersGeneralBytheDate",                    // T129
-	model.TAInstiCallsPuts: "/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheDate",      // T134
-	model.TAOptionsDelta:   "/DailyOptionsDelta",                                                        // 選擇權每日 Delta（T151）
-	model.TAOIChange:       "/va01",                                                                     // 台指選擇權未平倉量增減（T154）
-	model.TAStockMargin:    "/SingleStockFuturesMargining",                                              // 股票期貨保證金（T167）
-	model.TATickFutures:    "/TimeAndSalesData",                                                         // 期貨逐筆成交（T207）
-	model.TATickOptions:    "/OptionsTimeAndSalesData",                                                  // 選擇權逐筆成交（T207）
+	model.TAFuturesDaily:     "/DailyMarketReportFut",
+	model.TAOptionsDaily:     "/DailyMarketReportOpt",
+	model.TAInstiFutures:     "/MarketDataOfMajorInstitutionalTradersDetailsOfFuturesContractsBytheDate",
+	model.TAInstiOptions:     "/MarketDataOfMajorInstitutionalTradersDetailsOfOptionsContractsBytheDate",
+	model.TALargeTraderFut:   "/OpenInterestOfLargeTradersFutures",
+	model.TALargeTraderOpt:   "/OpenInterestOfLargeTradersOptions",
+	model.TAPutCallRatio:     "/PutCallRatio",
+	model.TAMargin:           "/IndexFuturesAndOptionsMargining",
+	model.TAFAnnualVolume:    "/AnnualTradingVolume",
+	model.TAFMonthlyStats:    "/MonthlyTradingStatisticsFutures",                                          // T148
+	model.TAInstiDivided:     "/MarketDataOfMajorInstitutionalTradersDividedByFuturesAndOptionsBytheDate", // T126
+	model.TAInstiGeneral:     "/MarketDataOfMajorInstitutionalTradersGeneralBytheDate",                    // T129
+	model.TAInstiCallsPuts:   "/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheDate",      // T134
+	model.TAOptionsDelta:     "/DailyOptionsDelta",                                                        // 選擇權每日 Delta（T151）
+	model.TAOIChange:         "/va01",                                                                     // 台指選擇權未平倉量增減（T154）
+	model.TAStockMargin:      "/SingleStockFuturesMargining",                                              // 股票期貨保證金（T167）
+	model.TATickFutures:      "/TimeAndSalesData",                                                         // 期貨逐筆成交（T207）
+	model.TATickOptions:      "/OptionsTimeAndSalesData",                                                  // 選擇權逐筆成交（T207）
+	model.TAInstiGenWeek:     "/MarketDataOfMajorInstitutionalTradersGeneralBytheWeek",                    // 總表-依週別（T204）
+	model.TAInstiDivWeek:     "/MarketDataOfMajorInstitutionalTradersDividedByFuturesAndOptionsBytheWeek", // 區分期貨與選擇權-依週別（T204）
+	model.TAInstiFutContWeek: "/MarketDataOfMajorInstitutionalTradersDetailsOfFuturesContractsBytheWeek",  // 各期貨契約-依週別（T204）
+	model.TAInstiOptContWeek: "/MarketDataOfMajorInstitutionalTradersDetailsOfOptionsContractsBytheWeek",  // 各選擇權契約-依週別（T204）
+	model.TAInstiCPWeek:      "/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheWeek",      // 買賣權分計-依週別（T204）
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -223,6 +228,12 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 	case model.TATickFutures, model.TATickOptions:
 		// 期貨/選擇權逐筆成交：直通保留官方欄位（T207；Date/ProductCode/
 		// TimeOfTrades/TradePrice/Volume 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TAInstiGenWeek, model.TAInstiDivWeek, model.TAInstiFutContWeek,
+		model.TAInstiOptContWeek, model.TAInstiCPWeek:
+		// 三大法人依週別系列：直通保留官方欄位（T204；FromDate/ToDate/
+		// Item/ContractCode/CallPut/TradingVolume(Long) 等）。週別資料官方
+		// 不接受日期過濾（恆回近期各週），date 僅供工具層參考。
 		out = json.RawMessage(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)

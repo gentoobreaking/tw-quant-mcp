@@ -105,7 +105,7 @@ var (
 		TPExOtcInstiTrd:   "/tpex_3insti_trading",               // 投信買賣超彙總（T199）
 		TPExOtcDealerTrd:  "/tpex_3insti_dealer_trading",        // 自營商買賣超彙總（T199）
 		TPExOtcAfterHours: "/tpex_off_market",                   // 盤後定價行情（T202）
-		TPExOtcWarnNote:   "/tpex_trading_warning_note",          // 注意累計次數異常（T203）
+		TPExOtcWarnNote:   "/tpex_trading_warning_note",         // 注意累計次數異常（T203）
 	}
 )
 

@@ -282,6 +282,8 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_institutional_traders_by_futures", args: map[string]any{}},
 		{name: "get_institutional_traders_by_options", args: map[string]any{}},
 		{name: "get_institutional_traders_calls_puts", args: map[string]any{}},
+		{name: "get_insti_weekly", args: map[string]any{"type": "general"}},
+		{name: "get_insti_weekly", args: map[string]any{"type": "fut_contracts", "contract": "臺股期貨", "limit": 3, "offset": 1}},
 		{name: "get_institutional_traders_by_futures_history", args: map[string]any{"start": "2026-07-27", "end": "2026-07-29"}},
 		{name: "get_large_traders_futures_history", args: map[string]any{"contract": "TX", "start": "2026-07-28", "end": "2026-07-29"}},
 		{name: "get_large_traders_futures_oi", args: map[string]any{}},

@@ -164,6 +164,22 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAInstiCallsPuts, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Date": "20260729", "ContractCode": "臺指選擇權", "CallPut": "CALL", "Item": "自營商", "TradingVolume(Long)": "31412"},
 	})
+	// 三大法人依週別系列（T204，直通官方欄位）
+	f.single[tfKey(model.TAInstiGenWeek, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"FromDate": "20260817", "ToDate": "20260821", "Item": "自營商", "TradingVolume(Long)": "1143244", "TradingVolume(Net)": "-2422"},
+	})
+	f.single[tfKey(model.TAInstiDivWeek, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"FromDate": "20260817", "ToDate": "20260821", "Item": "投信", "FuturesTradingVolume(Net)": "500", "OptionsTradingVolume(Net)": "-300"},
+	})
+	f.single[tfKey(model.TAInstiFutContWeek, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"FromDate": "20260817", "ToDate": "20260821", "ContractCode": "臺股期貨", "Item": "外資及陸資", "TradingVolume(Net)": "487"},
+	})
+	f.single[tfKey(model.TAInstiOptContWeek, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"FromDate": "20260817", "ToDate": "20260821", "ContractCode": "臺指選擇權", "Item": "外資及陸資", "TradingVolume(Net)": "9633"},
+	})
+	f.single[tfKey(model.TAInstiCPWeek, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"FromDate": "20260817", "ToDate": "20260821", "ContractCode": "臺指選擇權", "CallPut": "CALL", "Item": "自營商", "TradingVolume(Net)": "-14764"},
+	})
 	// 選擇權 Delta（T151）與 OI 增減（T154）
 	f.single[tfKey(model.TAOptionsDelta, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Contract": "TXO", "CallPut": "買權", "ContractMonth(Week)": "202608", "StrikePrice": "21000.0", "Delta": "0.5123", "ContractSettlementDay": "20260819"},
