@@ -150,6 +150,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_institutional_futures_history", args: map[string]any{"start": "2026-07-27", "end": "2026-07-29"}},
 		// ── T040 parity ──
 		{name: "get_after_hours_trading", args: map[string]any{}},
+		{name: "get_annual_trading_volume", args: map[string]any{}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

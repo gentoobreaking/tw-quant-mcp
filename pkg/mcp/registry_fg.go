@@ -57,6 +57,20 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetPutCallRatio,
 	})
 	r.Register(ToolDef{
+		Symbol:      "get_annual_trading_volume",
+		Name:        "get_annual_trading_volume",
+		Description: "查詢各期貨商品年成交量統計（年度總成交量、交易日數、平均日成交量；TAIFEX-API，T041）。" +
+			"contract 省略則回傳全部商品。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "description": "期貨契約代碼（如 TX、MTX），留空顯示全部"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetAnnualTradingVolume,
+	})
+	r.Register(ToolDef{
 		Symbol: "get_large_trader_positions",
 		Name:   "get_large_trader_positions",
 		Description: "查詢大額交易人未沖銷部位（期貨 + 選擇權合併；§10.F）。" +

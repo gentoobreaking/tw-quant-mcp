@@ -120,7 +120,11 @@ func stubFG(f *fakeTAIFEX) {
 		// 07-29 缺口 → 補檔自 07-28
 		"2026-07-29": tfStubDL(nil, "2026-07-28"),
 	}
-	// 買賣權比：單日 + 範圍
+	// 年成交量統計（T041）
+	f.single[tfKey(model.TAFAnnualVolume, "2026-07-29", "")] = tfStub([]provider.AnnualVolumeRow{
+		{Year: "2026", Contract: "TX", Name: "臺股期貨", Volume: 10000000, TradingDays: 140, AvgDailyVolume: 71428},
+	})
+	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},
 	})

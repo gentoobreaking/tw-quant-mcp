@@ -18,6 +18,7 @@ const (
 	TALargeTraderOpt TAIFEXDataset = "large_trader_opt" // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio   TAIFEXDataset = "put_call_ratio"   // 買賣權比（PCR）
 	TAMargin         TAIFEXDataset = "margin"           // 保證金（僅 API）
+	TAFAnnualVolume  TAIFEXDataset = "annual_volume"    // 年成交量統計（僅 API，T041）
 )
 
 // FuturesDailyRow 為單一期貨契約之日交易行情。

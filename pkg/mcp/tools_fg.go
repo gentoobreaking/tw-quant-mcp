@@ -489,3 +489,26 @@ func handlerGetTradingCalendar(a *App, args map[string]any) (HandlerResult, erro
 func sameMonth(date string, month int) bool {
 	return len(date) >= 7 && date[5:7] == fmt.Sprintf("%02d", month)
 }
+
+// handlerGetAnnualTradingVolume：期貨年成交量統計（AnnualTradingVolume，T041）。
+func handlerGetAnnualTradingVolume(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	contract := strings.ToUpper(strVal(args["contract"]))
+	latest, err := q.LatestTradingDay(ctx)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAFAnnualVolume, latest, contract)
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAFAnnualVolume, err)
+	}
+	rows, err := taifexRows[provider.AnnualVolumeRow](model.TAFAnnualVolume, latest, res)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, latest, fromCache, a.taifexTTL())}, nil
+}

@@ -31,6 +31,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -54,6 +55,7 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TALargeTraderOpt: "/OpenInterestOfLargeTradersOptions",
 	model.TAPutCallRatio:   "/PutCallRatio",
 	model.TAMargin:         "/IndexFuturesAndOptionsMargining",
+	model.TAFAnnualVolume:  "/AnnualTradingVolume",
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -184,6 +186,8 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		out, err = normalizeTAIPCRatio(raw.Body, date)
 	case model.TAMargin:
 		out, err = normalizeTAIMargin(raw.Body, date, contract)
+	case model.TAFAnnualVolume:
+		out, err = normalizeTAIAnnualVolume(raw.Body, contract)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
 	}
@@ -532,4 +536,68 @@ func decodeUTF8OrBig5(body []byte) ([]byte, error) {
 		return nil, fmt.Errorf("provider: Big5 解碼失敗: %w", err)
 	}
 	return text, nil
+}
+
+// AnnualVolumeRow 為單一期貨商品之年成交量統計（T041）。
+type AnnualVolumeRow struct {
+	Year    string `json:"year"`
+	Contract string `json:"contract"`
+	Name    string `json:"name"`
+	Volume  int64  `json:"volume"`
+	TradingDays int64 `json:"trading_days"`
+	AvgDailyVolume int64 `json:"avg_daily_volume"`
+}
+
+// normalizeTAIAnnualVolume：年成交量統計（AnnualTradingVolume，T041）。
+func normalizeTAIAnnualVolume(body []byte, contract string) ([]AnnualVolumeRow, error) {
+	var rows []map[string]any
+	if err := json.Unmarshal(body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: annual_volume JSON 解析失敗: %w", err)
+	}
+	out := make([]AnnualVolumeRow, 0, len(rows))
+	for _, m := range rows {
+		r := AnnualVolumeRow{
+			Year:    strAny(m["YYYY"]),
+			Contract: strings.ToUpper(strAny(m["Contract"])),
+			Name:    strAny(m["ContractName"]),
+			Volume:  intAny(m["Volume"]),
+			TradingDays: intAny(m["NumberOfTradingDays"]),
+			AvgDailyVolume: intAny(m["AvgDailyTradingVolume"]),
+		}
+		if r.Contract == "" {
+			continue
+		}
+		if contract != "" && r.Contract != strings.ToUpper(contract) {
+			continue
+		}
+		out = append(out, r)
+	}
+	if len(out) == 0 {
+		return nil, fmt.Errorf("provider: annual_volume 無有效資料列")
+	}
+	return out, nil
+}
+
+// strAny / intAny：寬鬆轉換 TAIFEX API 欄位。
+func strAny(v any) string {
+	switch x := v.(type) {
+	case string:
+		return strings.TrimSpace(x)
+	case float64:
+		return strconv.FormatFloat(x, 'f', -1, 64)
+	default:
+		return ""
+	}
+}
+
+func intAny(v any) int64 {
+	switch x := v.(type) {
+	case float64:
+		return int64(x)
+	case string:
+		n, _ := strconv.ParseInt(strings.ReplaceAll(x, ",", ""), 10, 64)
+		return n
+	default:
+		return 0
+	}
 }
