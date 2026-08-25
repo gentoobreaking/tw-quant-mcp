@@ -63,6 +63,12 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIBoardPledged):    cache.DatasetCalendar,   // 董監質權設定（T071）
 	string(provider.TWSEAPIBoardHoldings):   cache.DatasetCalendar,   // 董監持股餘額明細（T072）
 	string(provider.TWSEAPICEODualRole):     cache.DatasetCalendar,   // 董事長兼任總經理（T073）
+	string(provider.TWSEAPIDirCompCon):      cache.DatasetFinancials, // 合併董事酬金（T076）
+	string(provider.TWSEAPISupCompCon):      cache.DatasetFinancials, // 合併監察人酬金（T077）
+	string(provider.TWSEAPIInsiderPreann):   cache.DatasetCalendar,   // 內部人轉讓申報（T078）
+	string(provider.TWSEAPIInsiderUntrans):  cache.DatasetCalendar,   // 內部人未轉讓（T079）
+	string(provider.TWSEAPIDirComp):         cache.DatasetFinancials, // 董事酬金（T080）
+	string(provider.TWSEAPIMajorSharehold):  cache.DatasetCalendar,   // 大股東名單（T097）
 	string(provider.TWSEWDForeignQFIIS):     cache.DatasetForeignHold,
 	string(provider.TWSEWDIndexHistory):     cache.DatasetDailyKLine, // 指數歷史同 daily_kline 政策
 	string(provider.TWSEAPIForeignHoldings): cache.DatasetForeignHold,

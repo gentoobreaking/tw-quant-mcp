@@ -94,6 +94,12 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["board_pledged|"] = `[{"出表日期":"1150819","公司代號":"1101","公司名稱":"台泥","質權設定股數":"100000"}]`
 	f.bodies["board_holdings|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","職稱":"董事","姓名":"示例","持有股數":"1000000"}]`
 	f.bodies["ceo_dual_role|"] = `[{"出表日期":"1150825","公司代號":"1101","公司名稱":"台泥","董事長是否兼任總經理":"否"}]`
+	f.bodies["dir_comp_con|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","酬金總額":"10000000"}]`
+	f.bodies["sup_comp_con|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","酬金總額":"5000000"}]`
+	f.bodies["insider_preann|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","申報轉讓股數":"10000"}]`
+	f.bodies["insider_untrans|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","未轉讓股數":"10000"}]`
+	f.bodies["dir_comp|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"示例","酬金總額":"8000000"}]`
+	f.bodies["major_shareholders|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","姓名":"行政院國家發展基金","持有股數":"1000000000"}]`
 	f.bodies["top_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
@@ -232,6 +238,13 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_company_board_pledged_shares", args: map[string]any{}},
 		{name: "get_company_board_shareholdings", args: map[string]any{"code": "2330"}},
 		{name: "get_company_ceo_dual_role", args: map[string]any{}},
+		{name: "get_company_consolidated_director_compensation", args: map[string]any{"code": "2330"}},
+		{name: "get_company_consolidated_supervisor_compensation", args: map[string]any{"code": "2330"}},
+		{name: "get_company_daily_insider_trades_preannounced", args: map[string]any{"code": "2330"}},
+		{name: "get_company_daily_insider_trades_untransferred", args: map[string]any{"code": "2330"}},
+		{name: "get_company_director_compensation", args: map[string]any{"code": "2330"}},
+		{name: "get_company_governance_info", args: map[string]any{"code": "2330"}},
+		{name: "get_company_major_shareholders", args: map[string]any{"code": "2330"}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

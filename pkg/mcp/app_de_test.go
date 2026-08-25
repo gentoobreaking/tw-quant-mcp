@@ -76,6 +76,9 @@ func stubDE(f *fakeFetch) {
 		f.stub("esg", urlValuesTopic(topic), `[
 			{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"指標":"topic`+strconv.Itoa(topic)+`"}}]`)
 	}
+	// ESG topic 9：公司治理資訊（T087）
+	f.stub("esg", urlValuesTopic(9), `[
+		{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"公司治理評估結果":"第六級"}}]`)
 	// ESG topic 15：煉油廠（T065）
 	f.stub("esg", urlValuesTopic(15), `[
 		{"report_date":"2026-07-31","year":"2025","code":"6505","name":"台塑石化","fields":{"在人口密集地區的煉油廠數量(座)":"3"}},

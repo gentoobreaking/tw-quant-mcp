@@ -103,6 +103,13 @@ const (
 	TWSEAPIBoardPledged   TWSEAPIDataset = "board_pledged"    // 董監質權設定彙總（t187ap09_L，T071）
 	TWSEAPIBoardHoldings  TWSEAPIDataset = "board_holdings"   // 董監持股餘額明細（t187ap11_L，T072）
 	TWSEAPICEODualRole    TWSEAPIDataset = "ceo_dual_role"    // 董事長兼任總經理（t187ap33_L，T073）
+	// 內部人／酬金／大股東報表（T076-T080，T094，T097）
+	TWSEAPIDirCompCon     TWSEAPIDataset = "dir_comp_con"     // 合併報表董事酬金（t187ap29_C_L，T076）
+	TWSEAPISupCompCon     TWSEAPIDataset = "sup_comp_con"     // 合併報表監察人酬金（t187ap29_B_L，T077）
+	TWSEAPIInsiderPreann  TWSEAPIDataset = "insider_preann"   // 內部人持股轉讓事前申報（t187ap12_L，T078）
+	TWSEAPIInsiderUntrans TWSEAPIDataset = "insider_untrans"  // 內部人持股未轉讓（t187ap13_L，T079）
+	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"         // 董事酬金（t187ap29_A_L，T080）
+	TWSEAPIMajorSharehold TWSEAPIDataset = "major_shareholders" // 持股逾10%大股東（t187ap02_L，T097）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -171,6 +178,12 @@ var (
 		TWSEAPIBoardPledged:    "/opendata/t187ap09_L",
 		TWSEAPIBoardHoldings:   "/opendata/t187ap11_L",
 		TWSEAPICEODualRole:     "/opendata/t187ap33_L",
+		TWSEAPIDirCompCon:      "/opendata/t187ap29_C_L",
+		TWSEAPISupCompCon:      "/opendata/t187ap29_B_L",
+		TWSEAPIInsiderPreann:   "/opendata/t187ap12_L",
+		TWSEAPIInsiderUntrans:  "/opendata/t187ap13_L",
+		TWSEAPIDirComp:         "/opendata/t187ap29_A_L",
+		TWSEAPIMajorSharehold:  "/opendata/t187ap02_L",
 	}
 )
 
@@ -598,6 +611,9 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizePassthroughArray(raw)
 	case "board_insuff", "board_insuff_con", "board_pledged",
 		"board_holdings", "ceo_dual_role":
+		out, err = normalizePassthroughArray(raw)
+	case "dir_comp_con", "sup_comp_con", "insider_preann",
+		"insider_untrans", "dir_comp", "major_shareholders":
 		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)

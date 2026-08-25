@@ -209,6 +209,72 @@ func registerDETools(r *Registry) {
 		ReadOnly: true,
 		Handler:  apiListSpec{ds: provider.TWSEAPICEODualRole}.handler(),
 	}) // T073
+
+	compSchema := func() map[string]any {
+		return map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code": map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+			},
+			"required": []string{"code"},
+		}
+	}
+	r.Register(ToolDef{
+		Symbol:      "get_company_consolidated_director_compensation",
+		Name:        "get_company_consolidated_director_compensation",
+		Description: "根據股票代號查詢上市公司合併報表董事酬金相關資訊（TWSE-API t187ap29_C_L，T076）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIDirCompCon}.handler(),
+	}) // T076
+	r.Register(ToolDef{
+		Symbol:      "get_company_consolidated_supervisor_compensation",
+		Name:        "get_company_consolidated_supervisor_compensation",
+		Description: "根據股票代號查詢上市公司合併報表監察人酬金相關資訊（TWSE-API t187ap29_B_L，T077）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPISupCompCon}.handler(),
+	}) // T077
+	r.Register(ToolDef{
+		Symbol:      "get_company_daily_insider_trades_preannounced",
+		Name:        "get_company_daily_insider_trades_preannounced",
+		Description: "根據股票代號查詢上市公司每日內部人持股轉讓事前申報表-持股轉讓日報表（TWSE-API t187ap12_L，T078）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIInsiderPreann}.handler(),
+	}) // T078
+	r.Register(ToolDef{
+		Symbol:      "get_company_daily_insider_trades_untransferred",
+		Name:        "get_company_daily_insider_trades_untransferred",
+		Description: "根據股票代號查詢上市公司每日內部人持股轉讓事前申報表-持股未轉讓日報表（TWSE-API t187ap13_L，T079）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIInsiderUntrans}.handler(),
+	}) // T079
+	r.Register(ToolDef{
+		Symbol:      "get_company_director_compensation",
+		Name:        "get_company_director_compensation",
+		Description: "根據股票代號查詢上市公司董事酬金相關資訊（TWSE-API t187ap29_A_L，T080）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIDirComp}.handler(),
+	}) // T080
+	r.Register(ToolDef{
+		Symbol:      "get_company_governance_info",
+		Name:        "get_company_governance_info",
+		Description: "根據股票代號查詢上市公司公司治理資訊（ESG 揭露 t187ap46_L_9，T087）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     esgCompanySpec{topic: 9}.handler(),
+	}) // T087
+	r.Register(ToolDef{
+		Symbol:      "get_company_major_shareholders",
+		Name:        "get_company_major_shareholders",
+		Description: "根據股票代號查詢上市公司持股逾10%大股東名單（TWSE-API t187ap02_L，T097）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIMajorSharehold}.handler(),
+	}) // T097
 	r.Register(ToolDef{
 		Symbol: "get_company_profile",
 		Name:   "get_company_profile",
