@@ -78,6 +78,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["bond_redemption|"] = `[{"債券代號":"A00101","債券簡稱":"100央債甲01","發行日期":"2011/01/05","起息日":"2011/01/05","票面利率":"1.0000","每日補息金額(以面額十萬元計算)":"2.7397","_date":"2026-07-30"}]`
 	// get_companies_cumulative_voting（T056，TWSE-API passthrough）
 	f.bodies["cum_voting|"] = `[{"出表日期":"1150824","公司代號":"1101","公司名稱":"台泥","股東常(臨時)會日期-常或臨時":"常會","股東常(臨時)會日期-日期":"1150522","是否選任董監事":"否","董監事選任方式":"累積投票制"}]`
+	// get_companies_ownership_changes_business_scope（T057）
+	f.bodies["own_scope_halt|"] = `[{"出表日期":"1150824","公司代號":"1234","公司名稱":"示例公司","停止買賣開始日":"1150901"}]`
 	f.bodies["top_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
@@ -203,6 +205,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_short_sale_lending_trades_history", args: map[string]any{"date": "2026-07-30"}},
 		{name: "get_central_depository_bond_redemption", args: map[string]any{}},
 		{name: "get_companies_cumulative_voting", args: map[string]any{}},
+		{name: "get_companies_ownership_changes_business_scope", args: map[string]any{}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},

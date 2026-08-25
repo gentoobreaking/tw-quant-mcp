@@ -85,6 +85,7 @@ const (
 	TWSEAPIExDiv           TWSEAPIDataset = "ex_div"             // 除權除息預告表（T014）
 	TWSEAPIDividend        TWSEAPIDataset = "dividend"           // 股利分派情形（T014）
 	TWSEAPICumVoting       TWSEAPIDataset = "cum_voting"         // 累積投票制選任董監事彙總（t187ap34_L，T056）
+	TWSEAPIOwnScopeHalt    TWSEAPIDataset = "own_scope_halt"     // 經營權異動且營業範圍重大變更停止買賣（t187ap26_L，T057）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -137,6 +138,7 @@ var (
 		TWSEAPIExDiv:           "/exchangeReport/TWT48U_ALL", // 除權除息預告表
 		TWSEAPIDividend:        "/opendata/t187ap45_L",       // 上市公司股利分派情形
 		TWSEAPICumVoting:       "/opendata/t187ap34_L", // 累積投票制選任董監事彙總（T056）
+		TWSEAPIOwnScopeHalt:    "/opendata/t187ap26_L", // 經營權異動且營業範圍重大變更停止買賣（T057）
 	}
 )
 
@@ -548,6 +550,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "bond_redemption":
 		out, err = normalizeWebTable(raw)
 	case "cum_voting":
+		out, err = normalizePassthroughArray(raw)
+	case "own_scope_halt":
 		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)
