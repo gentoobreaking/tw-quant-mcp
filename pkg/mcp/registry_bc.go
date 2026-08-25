@@ -487,6 +487,22 @@ func registerBCTools(r *Registry) {
 	}) // T057
 
 	r.Register(ToolDef{
+		Symbol:      "get_companies_ownership_changes_business_scope_trading",
+		Name:        "get_companies_ownership_changes_business_scope_trading",
+		Description: "查詢上市公司經營權及營業範圍異(變)動專區-經營權異動且營業範圍重大變更列為變更交易公司" +
+			"（TWSE-API t187ap27_L，T058）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIOwnScopeTrade}.handler(),
+	}) // T058
+
+	r.Register(ToolDef{
 		Symbol:      "get_after_hours_trading",
 		Name:        "get_after_hours_trading",
 		Description: "查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。" +
