@@ -48,10 +48,11 @@ const taifexDLBase = "https://www.taifex.com.tw/cht/3/"
 
 // taifexDLSpec 描述單一 DL 資料集之下載端點與表單欄位。
 type taifexDLSpec struct {
-	view   string            // view 頁 path（Referer/二步式用）
-	down   string            // 下載 POST path
-	fields []string          // POST 欄位順序（表單定義）
-	def    map[string]string // 固定預設值（down_type 等）
+	view        string            // view 頁 path（Referer/二步式用）
+	down        string            // 下載 POST path
+	fields      []string          // POST 欄位順序（表單定義）
+	def         map[string]string // 固定預設值（down_type 等）
+	contractKey string            // 契約過濾表單欄名（預設 commodity_id；futContractsDateDown 為 commodityId）
 }
 
 // taifexDLSpecs 為 DL 資料集 → 端點規格（2026-07-31 實測）。
@@ -68,7 +69,8 @@ var taifexDLSpecs = map[model.TAIFEXDataset]taifexDLSpec{
 	},
 	model.TAInstiFutures: {
 		view: "futContractsDateView", down: "futContractsDateDown",
-		fields: []string{"queryStartDate", "queryEndDate"},
+		fields:      []string{"queryStartDate", "queryEndDate"},
+		contractKey: "commodityId", // T132 實測：此端點契約過濾欄名為 commodityId
 	},
 	model.TALargeTraderFut: {
 		view: "largeTraderFutView", down: "largeTraderFutDown",
@@ -203,8 +205,13 @@ func (s *TAIFEXDLSource) buildForm(spec taifexDLSpec, start, end, contract strin
 	if end != "" {
 		v.Set("queryEndDate", dlDateParam(end))
 	}
-	if contract != "" && containsStr(spec.fields, "commodity_id") {
-		v.Set("commodity_id", contract)
+	if contract != "" {
+		switch {
+		case spec.contractKey != "":
+			v.Set(spec.contractKey, contract)
+		case containsStr(spec.fields, "commodity_id"):
+			v.Set("commodity_id", contract)
+		}
 	}
 	return v
 }

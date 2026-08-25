@@ -263,6 +263,22 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalTradersByFutures,
 	}) // T131
 	r.Register(ToolDef{
+		Symbol:      "get_institutional_traders_by_futures_history",
+		Name:        "get_institutional_traders_by_futures_history",
+		Description: "查詢三大法人期貨部位歷史資料（可回溯查詢；TAIFEX-DL futContractsDateDown，T132）。" +
+			"contract 為期貨契約代碼（TXF/MXF/EXF/FXF/TMF 等，預設 TXF），與日行情之 TX/MTX 為不同代碼系統。區間不可超過 92 日。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "default": "TXF", "description": "期貨契約代碼，預設 TXF。留空查詢全部契約（資料量較大）"},
+				"start":    map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
+				"end":      map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetInstitutionalTradersByFuturesHistory,
+	}) // T132
+	r.Register(ToolDef{
 		Symbol:      "get_institutional_traders_by_options",
 		Name:        "get_institutional_traders_by_options",
 		Description: "查詢三大法人依各選擇權契約分類的交易資料，可觀察各選擇權商品的法人買賣情況（" +

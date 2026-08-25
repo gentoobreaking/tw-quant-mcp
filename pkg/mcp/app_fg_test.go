@@ -174,6 +174,12 @@ func stubFG(f *fakeTAIFEX) {
 		"2026-07-28": tfStubDL([]model.InstiSplitRow{{Date: "2026-07-28", Investor: "外資及陸資", FutLongVol: 605000, FutNetVol: -9000}}, ""),
 		"2026-07-29": tfStubDL([]model.InstiSplitRow{{Date: "2026-07-29", Investor: "外資及陸資", FutLongVol: 610000, FutNetVol: -8000, OptNetVol: 500}}, ""),
 	}
+	// 三大法人期貨部位歷史（T132，DL，伺服器端契約過濾）
+	f.ranges[tfRangeKey(model.TAInstiFutures, "2026-07-27", "2026-07-29", "TXF")] = map[string]provider.TAIFEXQueryResult{
+		"2026-07-27": tfStubDL([]model.InstitutionalRow{{Date: "2026-07-27", Contract: "臺股期貨", Investor: "外資及陸資", NetVolume: 8000}}, ""),
+		"2026-07-28": tfStubDL([]model.InstitutionalRow{{Date: "2026-07-28", Contract: "臺股期貨", Investor: "外資及陸資", NetVolume: 9000}}, ""),
+		"2026-07-29": tfStubDL([]model.InstitutionalRow{{Date: "2026-07-29", Contract: "臺股期貨", Investor: "外資及陸資", NetVolume: 12000}}, ""),
+	}
 	// 三大法人合計總表歷史（T130，DL）
 	f.ranges[tfRangeKey(model.TAInstiTotal, "2026-07-27", "2026-07-29", "")] = map[string]provider.TAIFEXQueryResult{
 		"2026-07-27": tfStubDL([]model.InstiGeneralRow{{Date: "2026-07-27", Investor: "外資及陸資", LongVolume: 700000, NetVolume: -20000}}, ""),

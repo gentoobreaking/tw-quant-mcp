@@ -253,6 +253,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_institutional_traders_by_futures", args: map[string]any{}},
 		{name: "get_institutional_traders_by_options", args: map[string]any{}},
 		{name: "get_institutional_traders_calls_puts", args: map[string]any{}},
+		{name: "get_institutional_traders_by_futures_history", args: map[string]any{"start": "2026-07-27", "end": "2026-07-29"}},
 		{name: "get_institutional_options_positions", args: map[string]any{"date": "2026-07-29"}},
 		{name: "get_institutional_futures_history", args: map[string]any{"start": "2026-07-27", "end": "2026-07-29"}},
 		// ── T040 parity ──
