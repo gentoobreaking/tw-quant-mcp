@@ -72,13 +72,77 @@ func (s webListSpec) handler() func(*App, map[string]any) (HandlerResult, error)
 	}
 }
 
+// apiListSpec 描述 TWSE-API（openapi）報表清單型工具（無 date 參數，
+// 官方恆回全量最新資料；T056 起）。
+type apiListSpec struct {
+	ds provider.TWSEAPIDataset
+}
+
+// handler 產生共用 handler：同 webListSpec 之過濾/分頁語意。
+func (s apiListSpec) handler() func(*App, map[string]any) (HandlerResult, error) {
+	return func(a *App, args map[string]any) (HandlerResult, error) {
+		ctx := context.Background()
+		limit, offset := 50, 0
+		if v, ok := args["limit"]; ok {
+			if n, err := asInt(v); err == nil && n > 0 {
+				limit = n
+			}
+		}
+		if v, ok := args["offset"]; ok {
+			if n, err := asInt(v); err == nil && n >= 0 {
+				offset = n
+			}
+		}
+		codeArg, nameArg := strVal(args["code"]), strVal(args["name"])
+
+		dataDate := a.now().Format("2006-01-02")
+		rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+			string(s.ds), dataDate,
+			cache.KeyString(model.SourceTWSEAPI, string(s.ds), dataDate, codeArg+nameArg, nil),
+			func() ([]byte, error) { return a.fetchAPIRaw(ctx, s.ds, nil) })
+		if err != nil {
+			return HandlerResult{}, err
+		}
+
+		ttl, _ := a.ttlOf(string(s.ds))
+		lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+
+		if rows == nil {
+			return HandlerResult{Data: []any{}, Lineage: lineage}, nil
+		}
+		return HandlerResult{Data: paginateRows(rows, codeArg, nameArg, offset, limit), Lineage: lineage}, nil
+	}
+}
+
+// rowField 取列中多個候選鍵之第一個非空值（中文/英文欄名相容）。
+func rowField(r map[string]any, keys ...string) string {
+	for _, k := range keys {
+		if v, ok := r[k]; ok {
+			s := fmt.Sprint(v)
+			if s != "" {
+				return s
+			}
+		}
+	}
+	return ""
+}
+
+// rowCode / rowName：過濾用之代碼/名稱欄位（相容官方中文欄名）。
+func rowCode(r map[string]any) string {
+	return rowField(r, "code", "公司代號", "證券代號", "債券代號")
+}
+
+func rowName(r map[string]any) string {
+	return rowField(r, "name", "公司名稱", "證券名稱", "債券簡稱")
+}
+
 func paginateRows(rows []map[string]any, code, name string, offset, limit int) []any {
 	out := make([]any, 0, len(rows))
 	for _, r := range rows {
-		if code != "" && fmt.Sprint(r["code"]) != code {
+		if code != "" && rowCode(r) != code {
 			continue
 		}
-		if name != "" && !strings.Contains(fmt.Sprint(r["name"]), name) {
+		if name != "" && !strings.Contains(rowName(r), name) {
 			continue
 		}
 		out = append(out, r)

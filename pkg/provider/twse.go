@@ -84,6 +84,7 @@ const (
 	TWSEAPIValuation       TWSEAPIDataset = "valuation"          // 本益比/殖利率/股價淨值比（T014）
 	TWSEAPIExDiv           TWSEAPIDataset = "ex_div"             // 除權除息預告表（T014）
 	TWSEAPIDividend        TWSEAPIDataset = "dividend"           // 股利分派情形（T014）
+	TWSEAPICumVoting       TWSEAPIDataset = "cum_voting"         // 累積投票制選任董監事彙總（t187ap34_L，T056）
 )
 
 // 端點路徑（2026-07 實測可用）。www.twse.com.tw 新版主機將 API 掛在 /rwd/ 下；
@@ -135,6 +136,7 @@ var (
 		TWSEAPIValuation:       "/exchangeReport/BWIBBU_ALL", // 上市個股日本益比、殖利率及股價淨值比
 		TWSEAPIExDiv:           "/exchangeReport/TWT48U_ALL", // 除權除息預告表
 		TWSEAPIDividend:        "/opendata/t187ap45_L",       // 上市公司股利分派情形
+		TWSEAPICumVoting:       "/opendata/t187ap34_L", // 累積投票制選任董監事彙總（T056）
 	}
 )
 
@@ -545,6 +547,8 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizeWebTable(raw)
 	case "bond_redemption":
 		out, err = normalizeWebTable(raw)
+	case "cum_voting":
+		out, err = normalizePassthroughArray(raw)
 	case "sbl_trades_his":
 		out, err = normalizeWebTable(raw)
 	case "abnormal_volume":
