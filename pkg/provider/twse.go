@@ -126,6 +126,16 @@ const (
 	TWSEWDTaiwan50      TWSEWebDataset = "taiwan50"       // 臺灣50指數歷史（TAI50I，T181）
 	TWSEWDIslandIndex   TWSEWebDataset = "island_index"   // 寶島指數歷史（FRMSA，T182）
 	TWSEWDTotalReturn   TWSEWebDataset = "total_return"   // 加權報酬指數歷史（MFI94U，T183）
+	// 個股交易統計與權證（T166-T190）
+	TWSEWDMonthlyAvgAll  TWSEWebDataset = "monthly_avg_all"  // 月平均價全市場（STOCK_DAY_AVG_ALL，T168）
+	TWSEWDStockMonTrade  TWSEWebDataset = "stock_mon_trade"  // 個股月成交資訊（FMSRFK，T171）
+	TWSEWDStockYearHis   TWSEWebDataset = "stock_year_his"   // 個股歷年成交（FMNPTK，T173）
+	TWSEWDStockYearTrade TWSEWebDataset = "stock_year_trade" // 年度成交資訊全市場（FMNPTK_ALL，T174）
+	TWSEAPITopForeign    TWSEAPIDataset = "top_foreign"      // 外資持股前20（MI_QFIIS_sort_20，T185）
+	TWSEAPITwseNews      TWSEAPIDataset = "twse_news"        // 證交所新聞（news/newsList，T186）
+	TWSEAPIWarrantBasic  TWSEAPIDataset = "warrant_basic"    // 權證基本資料（t187ap37_L，T187）
+	TWSEAPIWarrantTrader TWSEAPIDataset = "warrant_trader"   // 權證流動量提供者（t187ap43_L，T189）
+	TWSEAPIWarrantIssue  TWSEAPIDataset = "warrant_issue"    // 權證年度發行統計（t187ap36_L，T190）
 	TWSEAPIInsiderPreann  TWSEAPIDataset = "insider_preann"   // 內部人持股轉讓事前申報（t187ap12_L，T078）
 	TWSEAPIInsiderUntrans TWSEAPIDataset = "insider_untrans"  // 內部人持股未轉讓（t187ap13_L，T079）
 	TWSEAPIDirComp        TWSEAPIDataset = "dir_comp"         // 董事酬金（t187ap29_A_L，T080）
@@ -199,6 +209,10 @@ var (
 		TWSEWDTaiwan50:      "/indicesReport/TAI50I",
 		TWSEWDIslandIndex:   "/indicesReport/FRMSA",
 		TWSEWDTotalReturn:   "/indicesReport/MFI94U",
+		TWSEWDMonthlyAvgAll: "/exchangeReport/STOCK_DAY_AVG_ALL",
+		TWSEWDStockMonTrade: "/rwd/zh/afterTrading/FMSRFK",
+		TWSEWDStockYearHis:  "/rwd/zh/afterTrading/FMNPTK",
+		TWSEWDStockYearTrade:"/exchangeReport/FMNPTK_ALL",
 	}
 	twseAPIPaths = map[TWSEAPIDataset]string{
 		TWSEAPIDailyClose:      "/exchangeReport/STOCK_DAY_ALL",
@@ -211,6 +225,11 @@ var (
 		TWSEAPIValuation:       "/exchangeReport/BWIBBU_ALL", // 上市個股日本益比、殖利率及股價淨值比
 		TWSEAPIExDiv:           "/exchangeReport/TWT48U_ALL", // 除權除息預告表
 		TWSEAPIDividend:        "/opendata/t187ap45_L",       // 上市公司股利分派情形
+		TWSEAPITopForeign:      "/fund/MI_QFIIS_sort_20",  // 外資持股Top20（T185）
+		TWSEAPITwseNews:        "/news/newsList",          // 證交所新聞（T186）
+		TWSEAPIWarrantBasic:    "/opendata/t187ap37_L",    // 權證基本資料（T187）
+		TWSEAPIWarrantTrader:   "/opendata/t187ap43_L",    // 權證流動量提供者（T189）
+		TWSEAPIWarrantIssue:    "/opendata/t187ap36_L",    // 權證年度發行統計（T190）
 		TWSEAPICumVoting:       "/opendata/t187ap34_L", // 累積投票制選任董監事彙總（T056）
 		TWSEAPIOwnScopeHalt:    "/opendata/t187ap26_L", // 經營權異動且營業範圍重大變更停止買賣（T057）
 		TWSEAPIOwnScopeTrade:   "/opendata/t187ap27_L", // 經營權異動且營業範圍重大變更列變更交易（T058）
@@ -473,7 +492,7 @@ func rawRows(data json.RawMessage) ([][]string, error) {
 // isTablesDataset 判斷資料集是否為「tables」結構（margin/market_close/block_trades）。
 func isTablesDataset(ds string) bool {
 	switch ds {
-	case "margin", "market_close", "block_trades", "margin_info":
+	case "margin", "market_close", "block_trades", "margin_info", "stock_mon_trade", "stock_year_his":
 		return true
 	}
 	return false
@@ -700,6 +719,9 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizePassthroughArray(raw)
 	case "supervisor_comp", "meeting_ann", "meeting_dates", "proposal_exercise":
 		out, err = normalizePassthroughArray(raw)
+	case "top_foreign", "twse_news", "warrant_basic",
+		"warrant_trader", "warrant_issue":
+		out, err = normalizePassthroughArray(raw)
 	case "fund_basic", "pub_board_hold", "pub_income_ci", "pub_income_basi",
 		"pub_income_bd", "pub_income_fh", "pub_income_ins", "pub_income_mim":
 		out, err = normalizePassthroughArray(raw)
@@ -708,6 +730,10 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 	case "holiday", "realtime_stats",
 		"taiwan50", "island_index", "total_return":
 		out, err = normalizeWebTable(raw)
+	case "monthly_avg_all", "stock_year_trade":
+		out, err = normalizeWebTable(raw)
+	case "stock_mon_trade", "stock_year_his":
+		out, err = normalizeWebTablesList(raw)
 	case "eps_stats", "income_ci", "income_basi", "income_bd",
 		"income_fh", "income_ins", "income_mim", "disclosure_vio":
 		out, err = normalizePassthroughArray(raw)

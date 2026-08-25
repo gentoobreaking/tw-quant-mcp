@@ -668,6 +668,174 @@ func registerBCTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  apiListSpec{ds: provider.TWSEAPIIndices}.handler(),
 	}) // T145
+
+	codeSchema := func() map[string]any {
+		return map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code": map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+			},
+			"required": []string{"code"},
+		}
+	}
+	r.Register(ToolDef{
+		Symbol:      "get_stock_daily_trading",
+		Name:        "get_stock_daily_trading",
+		Description: "根據股票代號查詢個股日成交資訊（TWSE-API STOCK_DAY_ALL 正規化模型，T166）。",
+		Schema:      codeSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIDailyClose}.handler(),
+	}) // T166
+	webCodeSchema := func(withDate bool) map[string]any {
+		props := map[string]any{
+			"code":   map[string]any{"type": "string", "description": "股票代號，例如 \"2330\""},
+			"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1},
+			"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0},
+		}
+		if withDate {
+			props["date"] = map[string]any{"type": "string", "description": "查詢日期 YYYY-MM-DD（預設今日）"}
+		}
+		return map[string]any{"type": "object", "properties": props}
+	}
+	r.Register(ToolDef{
+		Symbol:      "get_stock_monthly_average",
+		Name:        "get_stock_monthly_average",
+		Description: "根據股票代號過濾個股日收盤價及月平均價全市場報表（TWSE-WEB STOCK_DAY_AVG_ALL，T168）。",
+		Schema:      webCodeSchema(false),
+		ReadOnly:    true,
+		Handler:     webListSpec{ds: provider.TWSEWDMonthlyAvgAll}.handler(),
+	}) // T168
+	r.Register(ToolDef{
+		Symbol:      "get_stock_monthly_avg_history",
+		Name:        "get_stock_monthly_avg_history",
+		Description: "查詢個股月平均價歷史（指定年度逐月；TWSE-WEB STOCK_DAY_AVG，T169）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"stock_no": map[string]any{"type": "string", "description": "股票代號"},
+				"date":     map[string]any{"type": "string", "description": "任意日期 YYYYMMDD（僅年份有效）"},
+			},
+			"required": []string{"stock_no"},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDMonthlyAvg, withDate: true}.handler(),
+	}) // T169
+	r.Register(ToolDef{
+		Symbol:      "get_stock_monthly_history",
+		Name:        "get_stock_monthly_history",
+		Description: "查詢個股月 K 歷史（指定年度逐月行情；TWSE-WEB STOCK_DAY，T170）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"stock_no": map[string]any{"type": "string", "description": "股票代號"},
+				"date":     map[string]any{"type": "string", "description": "任意日期 YYYYMMDD（僅年份有效）"},
+			},
+			"required": []string{"stock_no"},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDDailyK, withDate: true}.handler(),
+	}) // T170
+	r.Register(ToolDef{
+		Symbol:      "get_stock_monthly_trading",
+		Name:        "get_stock_monthly_trading",
+		Description: "根據股票代號查詢個股月成交資訊（TWSE-WEB FMSRFK，T171）。",
+		Schema:      webCodeSchema(true),
+		ReadOnly:    true,
+		Handler:     webListSpec{ds: provider.TWSEWDStockMonTrade, withDate: true}.handler(),
+	}) // T171
+	r.Register(ToolDef{
+		Symbol:      "get_stock_yearly_history",
+		Name:        "get_stock_yearly_history",
+		Description: "查詢個股歷年成交資訊彙總（每年一筆長期彙總；TWSE-WEB FMNPTK，T173）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"stock_no": map[string]any{"type": "string", "description": "股票代號"},
+			},
+			"required": []string{"stock_no"},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDStockYearHis, withDate: true}.handler(),
+	}) // T173
+	r.Register(ToolDef{
+		Symbol:      "get_stock_yearly_trading",
+		Name:        "get_stock_yearly_trading",
+		Description: "根據股票代號過濾年度成交資訊全市場報表（TWSE-WEB FMNPTK_ALL，T174）。",
+		Schema:      webCodeSchema(false),
+		ReadOnly:    true,
+		Handler:     webListSpec{ds: provider.TWSEWDStockYearTrade}.handler(),
+	}) // T174
+	r.Register(ToolDef{
+		Symbol:      "get_top_foreign_holdings",
+		Name:        "get_top_foreign_holdings",
+		Description: "查詢外資持股前 20 名上市公司（TWSE-API MI_QFIIS_sort_20 passthrough，T185）。",
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPITopForeign}.handler(),
+	}) // T185
+	r.Register(ToolDef{
+		Symbol:      "get_twse_news",
+		Name:        "get_twse_news",
+		Description: "查詢證交所新聞清單（TWSE-API news/newsList passthrough，T186）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"start_date": map[string]any{"type": "string", "description": "起始日期 YYYYMMDD（選填）"},
+				"end_date":   map[string]any{"type": "string", "description": "結束日期 YYYYMMDD（選填）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPITwseNews}.handler(),
+	}) // T186
+	warrantCodeSchema := func() map[string]any {
+		return map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code": map[string]any{"type": "string", "description": "權證或標的代號（選填）"},
+			},
+		}
+	}
+	r.Register(ToolDef{
+		Symbol:      "get_warrant_basic_info",
+		Name:        "get_warrant_basic_info",
+		Description: "查詢權證基本資料（TWSE-API t187ap37_L passthrough，T187）。code 選填過濾。",
+		Schema:      warrantCodeSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIWarrantBasic, skipRegistryCheck: true}.handler(),
+	}) // T187
+	r.Register(ToolDef{
+		Symbol:      "get_warrant_daily_trading",
+		Name:        "get_warrant_daily_trading",
+		Description: "根據股票代號查詢權證每日成交資訊（TWSE-API t187ap42_L 正規化模型，T188）。code 選填過濾。",
+		Schema:      warrantCodeSchema(),
+		ReadOnly:    true,
+		Handler:     handlerGetWarrantActivity,
+	}) // T188
+	r.Register(ToolDef{
+		Symbol:      "get_warrant_trader_count",
+		Name:        "get_warrant_trader_count",
+		Description: "查詢權證流動量提供者報價方式統計（TWSE-API t187ap43_L passthrough，T189）。",
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIWarrantTrader}.handler(),
+	}) // T189
+	r.Register(ToolDef{
+		Symbol:      "get_warrant_yearly_issuance_statistics",
+		Name:        "get_warrant_yearly_issuance_statistics",
+		Description: "查詢權證年度發行統計（TWSE-API t187ap36_L passthrough，T190）。",
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIWarrantIssue}.handler(),
+	}) // T190
 	r.Register(ToolDef{
 		Symbol:      "get_real_time_trading_stats",
 		Name:        "get_real_time_trading_stats",

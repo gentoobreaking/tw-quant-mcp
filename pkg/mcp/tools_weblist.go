@@ -53,6 +53,12 @@ func (s webListSpec) handler() func(*App, map[string]any) (HandlerResult, error)
 			dataDate = d
 			params = url.Values{"date": {dateYMD(d)}}
 		}
+		if sn := strVal(args["stock_no"]); sn != "" {
+			if params == nil {
+				params = url.Values{}
+			}
+			params.Set("stockNo", sn)
+		}
 
 		rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
 			string(s.ds), dataDate,
@@ -321,17 +327,18 @@ var balanceSheetDatasets = map[string]provider.TWSEAPIDataset{
 // apiCompanySpec 為「依公司代號查詢」之 TWSE-API 報表工具（fetch t187apXX_L
 // 全量 → 本地過濾 公司代號/code == code；T072 起）。
 type apiCompanySpec struct {
-	ds            provider.TWSEAPIDataset
+	ds                provider.TWSEAPIDataset
 	skipRegistryCheck bool // 公發公司等非上市代號免 Symbol Registry 校驗（T159）
+	optionalCode      bool // code 選填；省略時回傳全量（T187）
 }
 
 func (s apiCompanySpec) handler() func(*App, map[string]any) (HandlerResult, error) {
 	return func(a *App, args map[string]any) (HandlerResult, error) {
 		code := strVal(args["code"])
-		if code == "" {
+		if code == "" && !s.optionalCode {
 			return HandlerResult{}, fmt.Errorf("code 為必填參數")
 		}
-		if !s.skipRegistryCheck {
+		if !s.skipRegistryCheck && code != "" {
 			if _, err := a.symbolOf(code); err != nil {
 				return HandlerResult{}, err
 			}
@@ -346,7 +353,7 @@ func (s apiCompanySpec) handler() func(*App, map[string]any) (HandlerResult, err
 		lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
 		out := make([]map[string]any, 0)
 		for _, r := range rows {
-			if rowField(r, "公司代號", "code") == code {
+			if code == "" || rowField(r, "公司代號", "code", "權證代號") == code {
 				out = append(out, r)
 			}
 		}

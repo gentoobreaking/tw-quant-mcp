@@ -128,6 +128,18 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["island_index|"] = `[{"日期":"20260825","寶島股價指數":"25000.00"}]`
 	f.bodies["total_return|"] = `[{"日　期":"20260825","發行量加權股價報酬指數":"26000.00"}]`
 	f.bodies["index_history|"] = `[{"date":"2026-07-30","open":23000.0,"high":23100.0,"low":22950.0,"close":23050.0},{"date":"2026-07-29","open":22900.0,"high":23050.0,"low":22880.0,"close":23000.0}]`
+	f.bodies["monthly_avg_all|"] = `[{"股票代號":"2330","股票名稱":"台積電","收盤價":"1150.00","月平均價":"1130.00"}]`
+	f.bodies["stock_mon_trade|date=20260730"] = `[{"年度月份":"115/07","最高價":"1180","最低價":"1100"}]`
+	f.bodies["stock_year_his|date=20260730&stockNo=2330"] = `[{"年度":"114","最高價":"1180","最低價":"650"}]`
+	f.bodies["stock_year_trade|"] = `[{"股票代號":"2330","股票名稱":"台積電","成交股數":"50000000"}]`
+	f.bodies["top_foreign|"] = `[{"Rank":"1","Code":"2923","Name":"鼎固-KY"}]`
+	f.bodies["twse_news|"] = `[{"SeqNumber":"1","Title":"示例新聞","PublishDate":"2026-08-25"}]`
+	f.bodies["warrant_basic|"] = `[{"權證代號":"030012","權證簡稱":"AES凱基57購02"}]`
+	f.bodies["warrant_issue|"] = `[{"出表日期":"1150106","發行人代號":"5380","發行人名稱":"第一金證券股份有限公司","權證代號":"074888"}]`
+	f.bodies["warrant_trader|"] = `[{"出表日期":"1150812","日期":"1150808","人數":"12345"}]`
+	f.stub("monthly_avg", url.Values{"date": {"20260730"}, "stockNo": {"2330"}}, `[{"date":"2026-07-30","close":"1150.00","monthly_avg":"1130.00"}]`)
+	f.stub("daily_k", url.Values{"date": {"20260730"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "07", 0, 10)))
+	f.bodies["daily_close|"] = `[{"code":"2330","name":"台積電","close":"1150.00"},{"code":"2317","name":"鴻海","close":"180.00"}]`
 	f.bodies["eps_stats|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","季度":"4","EPS":"15.85"}]`
 	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
 	f.bodies["disclosure_vio|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","違法情形":"未依法令期限公告申報"}]`
@@ -328,6 +340,19 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_taiwan_50_index_history", args: map[string]any{}},
 		{name: "get_taiwan_island_index_history", args: map[string]any{}},
 		{name: "get_taiwan_total_return_index", args: map[string]any{}},
+		{name: "get_stock_daily_trading", args: map[string]any{"code": "2330"}},
+		{name: "get_stock_monthly_average", args: map[string]any{}},
+		{name: "get_stock_monthly_trading", args: map[string]any{}},
+		{name: "get_stock_yearly_trading", args: map[string]any{}},
+		{name: "get_top_foreign_holdings", args: map[string]any{}},
+		{name: "get_twse_news", args: map[string]any{}},
+		{name: "get_warrant_yearly_issuance_statistics", args: map[string]any{}},
+		{name: "get_warrant_trader_count", args: map[string]any{}},
+		{name: "get_stock_monthly_avg_history", args: map[string]any{"stock_no": "2330"}},
+		{name: "get_stock_monthly_history", args: map[string]any{"stock_no": "2330"}},
+		{name: "get_stock_yearly_history", args: map[string]any{"stock_no": "2330"}},
+		{name: "get_warrant_basic_info", args: map[string]any{"code": "030012"}},
+		{name: "get_warrant_daily_trading", args: map[string]any{"code": "2330"}},
 		{name: "get_company_shareholder_meeting_announcements", args: map[string]any{}},
 		{name: "get_company_shareholder_meeting_announcements_by_code", args: map[string]any{"code": "2330"}},
 		{name: "get_company_shareholder_meeting_dates", args: map[string]any{}},

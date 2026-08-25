@@ -3,6 +3,7 @@ package provider
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -86,9 +87,9 @@ func normalizeWebTablesList(raw *RawResponse) ([]map[string]any, error) {
 		Date   string `json:"date"`
 		Stat   string `json:"stat"`
 		Tables []struct {
-			Title  string     `json:"title"`
-			Fields []string   `json:"fields"`
-			Data   [][]string `json:"data"`
+			Title  string    `json:"title"`
+			Fields []string  `json:"fields"`
+			Data   [][]any   `json:"data"` // 官方可能回數字或字串
 		} `json:"tables"`
 	}
 	if err := json.Unmarshal(raw.Body, &env); err != nil {
@@ -101,9 +102,25 @@ func normalizeWebTablesList(raw *RawResponse) ([]map[string]any, error) {
 	if ts, err := time.Parse("20060102", env.Date); err == nil {
 		date = ts.Format("2006-01-02")
 	}
+	cellStr := func(v any) string {
+		switch x := v.(type) {
+		case string:
+			return strings.TrimSpace(x)
+		case float64:
+			return strconv.FormatFloat(x, 'f', -1, 64)
+		case nil:
+			return ""
+		default:
+			return strings.TrimSpace(fmt.Sprint(x))
+		}
+	}
 	out := make([]map[string]any, 0)
 	for _, t := range env.Tables {
-		for _, row := range t.Data {
+		for _, rowAny := range t.Data {
+			row := make([]string, len(rowAny))
+			for i, v := range rowAny {
+				row[i] = cellStr(v)
+			}
 			m := ZipRow(t.Fields, row)
 			rec := make(map[string]any, len(m)+2)
 			for k, v := range m {

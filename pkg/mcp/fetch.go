@@ -19,6 +19,7 @@ import (
 // （新增資料集於此登錄；未登錄資料類別視為不納管快取）。
 var cacheDataset = map[string]string{
 	string(provider.TWSEWDDailyK):           cache.DatasetDailyKLine,
+	string(provider.TWSEWDMonthlyAvg):       cache.DatasetDailyKLine, // 月平均價（T169 補登錄）
 	string(provider.TWSEWDMarketClose):      cache.DatasetDailyKLine,
 	string(provider.TWSEWDInstitutional):    cache.DatasetInstitutional, // 與 TPEx institutional 同名
 	string(provider.TWSEWDMargin):           cache.DatasetMargin,        // 與 TPEx margin 同名
@@ -86,6 +87,15 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPIPubIncINS):       cache.DatasetFinancials,
 	string(provider.TWSEAPIPubIncMIM):       cache.DatasetFinancials,
 	string(provider.TWSEAPISupervisorComp):  cache.DatasetFinancials, // 監察人酬金（T111）
+	string(provider.TWSEWDMonthlyAvgAll):    cache.DatasetDailyKLine, // 月平均價（T168）
+	string(provider.TWSEWDStockMonTrade):    cache.DatasetDailyKLine, // 個股月成交（T171）
+	string(provider.TWSEWDStockYearHis):     cache.DatasetDailyKLine, // 個股歷年成交（T173）
+	string(provider.TWSEWDStockYearTrade):   cache.DatasetDailyKLine, // 年度成交全市場（T174）
+	string(provider.TWSEAPITopForeign):      cache.DatasetForeignHold, // 外資持股Top20（T185）
+	string(provider.TWSEAPITwseNews):        cache.DatasetMaterialNews, // 證交所新聞（T186）
+	string(provider.TWSEAPIWarrantBasic):    cache.DatasetCalendar,   // 權證基本資料（T187）
+	string(provider.TWSEAPIWarrantTrader):   cache.DatasetCalendar,   // 權證流動量提供者（T189）
+	string(provider.TWSEAPIWarrantIssue):    cache.DatasetCalendar,   // 權證發行統計（T190）
 	string(provider.TWSEWDMarginInfo):       cache.DatasetMargin,     // 信用交易統計（T140）
 	string(provider.TWSEWDHoliday):          cache.DatasetCalendar,   // 開休市日期（T144）
 	string(provider.TWSEWDRealTimeStats):    cache.DatasetMISSnapshot, // 5秒成交統計（盤中即時，T161）
