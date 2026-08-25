@@ -920,3 +920,98 @@ func handlerGetAfterHoursTrading(a *App, args map[string]any) (HandlerResult, er
 	ttl, _ := a.ttlOf(string(provider.TWSEWDAfterHours))
 	return HandlerResult{Data: rows, Lineage: postLineage(model.SourceTWSEWeb, date, cached || stale, stale, ttl)}, nil
 }
+
+// ── 上櫃市場（T155/T156/T157）──
+
+// otcPaginate 通用分頁（offset 越界回空陣列）。
+func otcPaginate[T any](rows []T, offset, limit int) []T {
+	if offset < len(rows) {
+		rows = rows[offset:]
+	} else {
+		return []T{}
+	}
+	if len(rows) > limit {
+		rows = rows[:limit]
+	}
+	return rows
+}
+
+// handlerGetOtcDaily：上櫃市場當日收盤行情（T155）。
+func handlerGetOtcDaily(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	stockNo := strVal(args["stock_no"])
+	date := a.now().Format("2006-01-02")
+	params := url.Values{}
+	if stockNo != "" {
+		params.Set("stockNo", stockNo)
+		offset = 0
+	}
+	rows, cached, stale, err := fetchNormalize[[]provider.TPExDailyCloseRow](a, ctx,
+		string(provider.TPExOtcDaily), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcDaily), date, stockNo, vals(params)),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExOtcDaily, params) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(string(provider.TPExOtcDaily))
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	return HandlerResult{Data: otcPaginate(rows, offset, limit), Lineage: lineage}, nil
+}
+
+// handlerGetOtcIndex：櫃買指數歷史行情（T156；官方恆回歷史序列，依日期新→舊排序）。
+func handlerGetOtcIndex(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]provider.TPExIndexRow](a, ctx,
+		string(provider.TPExIndices), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExIndices), date, "", nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExIndices, url.Values{}) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	sort.Slice(rows, func(i, j int) bool { return rows[i].Date > rows[j].Date })
+	ttl, _ := a.ttlOf(string(provider.TPExIndices))
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	return HandlerResult{Data: otcPaginate(rows, offset, limit), Lineage: lineage}, nil
+}
+
+// handlerGetOtcOddLot：上櫃零股交易行情（T157）。
+func handlerGetOtcOddLot(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	stockNo := strVal(args["stock_no"])
+	date := a.now().Format("2006-01-02")
+	params := url.Values{}
+	if stockNo != "" {
+		params.Set("stockNo", stockNo)
+		offset = 0
+	}
+	rows, cached, stale, err := fetchNormalize[[]provider.TPExOddLotRow](a, ctx,
+		string(provider.TPExOddLot), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOddLot), date, stockNo, vals(params)),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExOddLot, params) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(string(provider.TPExOddLot))
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	return HandlerResult{Data: otcPaginate(rows, offset, limit), Lineage: lineage}, nil
+}
+
+// listPaging 解析 limit/offset 分頁參數（預設 50/0）。
+func listPaging(args map[string]any) (int, int) {
+	limit, offset := 50, 0
+	if v, ok := args["limit"]; ok {
+		if n, err := asInt(v); err == nil && n > 0 {
+			limit = n
+		}
+	}
+	if v, ok := args["offset"]; ok {
+		if n, err := asInt(v); err == nil && n >= 0 {
+			offset = n
+		}
+	}
+	return limit, offset
+}

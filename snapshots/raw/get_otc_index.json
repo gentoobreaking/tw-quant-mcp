@@ -1,0 +1,74 @@
+{
+  "arguments": {
+    "limit": 5
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 12,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-08-25\",\"open\":384.87,\"high\":389.41,\"low\":377.51,\"close\":389.41,\"change\":3.31},{\"date\":\"2026-08-24\",\"open\":388,\"high\":394.35,\"low\":386.1,\"close\":386.1,\"change\":-1.17},{\"date\":\"2026-08-21\",\"open\":390.13,\"high\":390.99,\"low\":384.93,\"close\":387.27,\"change\":-2.69},{\"date\":\"2026-08-20\",\"open\":386.94,\"high\":392.69,\"low\":383.94,\"close\":389.96,\"change\":5.17},{\"date\":\"2026-08-19\",\"open\":387.57,\"high\":389.78,\"low\":379.93,\"close\":384.79,\"change\":-6.04}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T18:41:30+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":342,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-08-25",
+            "open": 384.87,
+            "high": 389.41,
+            "low": 377.51,
+            "close": 389.41,
+            "change": 3.31
+          },
+          {
+            "date": "2026-08-24",
+            "open": 388,
+            "high": 394.35,
+            "low": 386.1,
+            "close": 386.1,
+            "change": -1.17
+          },
+          {
+            "date": "2026-08-21",
+            "open": 390.13,
+            "high": 390.99,
+            "low": 384.93,
+            "close": 387.27,
+            "change": -2.69
+          },
+          {
+            "date": "2026-08-20",
+            "open": 386.94,
+            "high": 392.69,
+            "low": 383.94,
+            "close": 389.96,
+            "change": 5.17
+          },
+          {
+            "date": "2026-08-19",
+            "open": 387.57,
+            "high": 389.78,
+            "low": 379.93,
+            "close": 384.79,
+            "change": -6.04
+          }
+        ],
+        "_lineage": {
+          "source": "TPEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T18:41:30+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 342,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

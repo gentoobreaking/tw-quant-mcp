@@ -54,6 +54,7 @@ const (
 	TPExDisposition   TPExDataset = "disposition"           // 處置股票
 	TPExExRights      TPExDataset = "ex_rights"             // 除權息預告表
 	TPExOddLot        TPExDataset = "odd_lot"               // 零股交易
+	TPExOtcDaily      TPExDataset = "otc_daily"             // 上櫃每日收盤行情（T155）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -70,6 +71,7 @@ var (
 		TPExDisposition:   "/tpex_disposal_information",
 		TPExExRights:      "/tpex_exright_prepost",
 		TPExOddLot:        "/tpex_odd_stock",
+		TPExOtcDaily:      "/tpex_mainboard_daily_close_quotes", // T155
 	}
 )
 
@@ -201,6 +203,9 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		out = normalizeExRights(ms)
 	case string(TPExOddLot):
 		out = normalizeOddLot(ms)
+	case string(TPExOtcDaily):
+		// 欄位序同 tpex_mainboard_quotes（T155 實測），共用收盤行情正規化。
+		out = normalizeTPExDailyClose(ms)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
 	}
@@ -222,6 +227,7 @@ var emptyRows = map[string]interface{}{
 	string(TPExDisposition):   []TPExDispositionRow{},
 	string(TPExExRights):      []TPExExRightRow{},
 	string(TPExOddLot):        []TPExOddLotRow{},
+	string(TPExOtcDaily):      []TPExDailyCloseRow{},
 }
 
 // queryStockNo 取 URL query 之 stockNo（TPEx 過濾參數）。

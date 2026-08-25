@@ -1009,4 +1009,52 @@ func registerBCTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetAttentionDispositionStocks,
 	})
+
+	// ── 上櫃市場（T155/T156/T157）──
+	r.Register(ToolDef{
+		Symbol:      "get_otc_daily",
+		Name:        "get_otc_daily",
+		Description: "查詢上櫃（OTC）市場當日所有股票收盤行情（TPEx-API tpex_mainboard_daily_close_quotes，T155）。" +
+			"stock_no 選填，指定則只回傳該股票。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"stock_no": map[string]any{"type": "string", "description": "股票代號（選填），若指定則只回傳該股票的收盤行情"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcDaily,
+	}) // T155
+	r.Register(ToolDef{
+		Symbol:      "get_otc_index",
+		Name:        "get_otc_index",
+		Description: "查詢櫃買市場（上櫃）指數歷史行情，包含開高低收、漲跌幅（TPEx-API tpex_index，T156）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcIndex,
+	}) // T156
+	r.Register(ToolDef{
+		Symbol:      "get_otc_odd_lot",
+		Name:        "get_otc_odd_lot",
+		Description: "查詢上櫃零股（不足一張）交易行情，包含零股成交價、成交量、成交金額（" +
+			"TPEx-API tpex_odd_stock，T157）。stock_no 選填，指定則只回傳該股票。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"stock_no": map[string]any{"type": "string", "description": "股票代號（選填），若指定則只回傳該股票的零股資料"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcOddLot,
+	}) // T157
 }

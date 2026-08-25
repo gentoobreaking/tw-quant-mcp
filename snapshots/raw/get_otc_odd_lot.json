@@ -1,0 +1,73 @@
+{
+  "arguments": {
+    "limit": 3
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 13,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-08-25\",\"code\":\"006201\",\"name\":\"元大富櫃50\",\"volume\":204,\"transactions\":9,\"amount\":8707,\"price\":42.7,\"last_best_bid_price\":42.69,\"last_best_bid_volume\":201947,\"last_best_ask_price\":42.7,\"last_best_ask_volume\":1179},{\"date\":\"2026-08-25\",\"code\":\"00679B\",\"name\":\"元大美債20年\",\"volume\":1517,\"transactions\":17,\"amount\":39266,\"price\":25.89,\"last_best_bid_price\":25.89,\"last_best_bid_volume\":8138,\"last_best_ask_price\":25.9,\"last_best_ask_volume\":10795},{\"date\":\"2026-08-25\",\"code\":\"00687B\",\"name\":\"國泰20年美債\",\"volume\":610,\"transactions\":8,\"amount\":16620,\"price\":27.25,\"last_best_bid_price\":27.24,\"last_best_bid_volume\":5513,\"last_best_ask_price\":27.25,\"last_best_ask_volume\":7508}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T18:41:30+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1149,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-08-25",
+            "code": "006201",
+            "name": "元大富櫃50",
+            "volume": 204,
+            "transactions": 9,
+            "amount": 8707,
+            "price": 42.7,
+            "last_best_bid_price": 42.69,
+            "last_best_bid_volume": 201947,
+            "last_best_ask_price": 42.7,
+            "last_best_ask_volume": 1179
+          },
+          {
+            "date": "2026-08-25",
+            "code": "00679B",
+            "name": "元大美債20年",
+            "volume": 1517,
+            "transactions": 17,
+            "amount": 39266,
+            "price": 25.89,
+            "last_best_bid_price": 25.89,
+            "last_best_bid_volume": 8138,
+            "last_best_ask_price": 25.9,
+            "last_best_ask_volume": 10795
+          },
+          {
+            "date": "2026-08-25",
+            "code": "00687B",
+            "name": "國泰20年美債",
+            "volume": 610,
+            "transactions": 8,
+            "amount": 16620,
+            "price": 27.25,
+            "last_best_bid_price": 27.24,
+            "last_best_bid_volume": 5513,
+            "last_best_ask_price": 27.25,
+            "last_best_ask_volume": 7508
+          }
+        ],
+        "_lineage": {
+          "source": "TPEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T18:41:30+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 1149,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 2,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}
