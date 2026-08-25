@@ -176,21 +176,22 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           TAG: ${{ github.ref_name }}
         run: |
-          if [ -z "$TAP_TOKEN" ]; then
-            echo "::notice::TAP_TOKEN 未設定，跳過 Homebrew tap 更新"
-            exit 0
-          fi
-          # 手動觸發時 ref 為分支名，改取最新 GitHub Release 的 tag
-          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
-            TAG=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" \
-              --jq .tag_name)
-            echo "dispatch 模式：使用最新 release tag $TAG"
-          fi
-          VERSION="${TAG#v}"
-          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" \
-            -p checksums.txt -O checksums.txt
-          bash scripts/gen_formula.sh "$VERSION" checksums.txt \
-            formula_out/Formula/tw-quant-mcp.rb
+          {
+            if [ -z "$TAP_TOKEN" ]; then
+              echo "::notice::TAP_TOKEN 未設定，跳過 Homebrew tap 更新"
+              exit 0
+            fi
+            # 手動觸發時 ref 為分支名，改取最新 GitHub Release 的 tag
+            if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+              TAG=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" \
+                --jq .tag_name)
+              echo "dispatch 模式：使用最新 release tag $TAG"
+            fi
+            VERSION="${TAG#v}"
+            gh release download "$TAG" --repo "$GITHUB_REPOSITORY" \
+              -p checksums.txt -O checksums.txt
+            bash scripts/gen_formula.sh "$VERSION" checksums.txt \
+              formula_out/Formula/tw-quant-mcp.rb
           TAP_URL="https://x-access-token:${TAP_TOKEN}"
           TAP_URL="${TAP_URL}@github.com/${OWNER}/homebrew-tap.git"
           git clone --depth 1 "$TAP_URL" tap
@@ -207,3 +208,12 @@ jobs:
             git push origin HEAD
             echo "::notice::homebrew-tap 已更新至 ${VERSION}"
           fi
+          } 2>&1 | tee /tmp/tap.log
+          exit ${PIPESTATUS[0]}
+
+      - name: Upload tap failure diagnostics
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: tap-diagnostics
+          path: /tmp/tap.log
