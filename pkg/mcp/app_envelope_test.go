@@ -143,7 +143,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["sec_penalty|"] = `[{"出表日期":"1150824","股票代號":"2330","公司名稱":"台積電","違規事由":"示例"}]`
 	f.bodies["foreign_apply|"] = `[{"No":"1","Code":"7874","Company":"禾碩康-KY","ApplicationDate":"1150429","Chairman":"康潤生","AmountofCapital ":"270000","CommitteeDate":"1150731","ApprovedDate":"","AgreementDate":"","ListingDate":"","Underwriter":"凱基","UnderwritingPrice":"","Note":""}]`
 	f.bodies["new_listing|"] = `[{"Code":"7855","Company":"和運租車","ApplicationDate":"1150414","Chairman":"劉源森","ApprovedListingDate":"1150811","Underwriter":"台新"}]`
-	f.bodies["local_apply|"] = `[{"Code":"7883","Company":"饗賓","ApplicationDate":"1150727","Chairman":"陳毅航","AmountofCapital ":"609760","CommitteeDate":"1150827","Underwriter":"元大","Note":""}]
+	f.bodies["local_apply|"] = `[{"Code":"7883","Company":"饗賓","ApplicationDate":"1150727","Chairman":"陳毅航","AmountofCapital ":"609760","CommitteeDate":"1150827","Underwriter":"元大","Note":""}]`
 	f.bodies["suspend_listing|"] = `[{"DelistingDate":"115/06/23","Company":"森崴能源","Code":"6806"}]`
 	f.bodies["eps_stats|"] = `[{"出表日期":"1150825","公司代號":"2330","公司名稱":"台積電","年度":"114","季度":"4","EPS":"15.85"}]`
 	f.bodies["income_ci|"] = `[{"出表日期":"1150825","年度":"115","季別":"2","公司代號":"2330","公司名稱":"台積電","營業收入":"933786855000.00"}]`
