@@ -396,6 +396,50 @@ func registerBCTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  webListSpec{ds: provider.TWSEWDTopVolume}.handler(),
 	}) // T184
+	r.Register(ToolDef{
+		Symbol:      "get_market_institutional_amounts_history",
+		Name:        "get_market_institutional_amounts_history",
+		Description: "查詢外資及陸資/投信/自營商買賣超金額彙總歷史（TWSE-WEB BFI82U，T146）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{"date": map[string]any{"type": "string", "description": "查詢日 YYYY-MM-DD（預設最近交易日）"}, "code": map[string]any{"type": "string", "description": "股票代號（選填）"}, "limit": map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"}, "offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"}},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDInstiAmounts, withDate: true}.handler(),
+	}) // T146
+	r.Register(ToolDef{
+		Symbol:      "get_market_turnover_history",
+		Name:        "get_market_turnover_history",
+		Description: "查詢集中市場每日成交資訊（含週轉率）歷史（TWSE-WEB FMTQIK，T147）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{"date": map[string]any{"type": "string", "description": "查詢日 YYYY-MM-DD（預設最近交易日）"}, "code": map[string]any{"type": "string", "description": "股票代號（選填）"}, "limit": map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"}, "offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"}},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDTurnoverHistory, withDate: true}.handler(),
+	}) // T147
+	r.Register(ToolDef{
+		Symbol:      "get_short_sale_lending_balance_history",
+		Name:        "get_short_sale_lending_balance_history",
+		Description: "查詢信用交易融資融券餘額歷史（TWSE-WEB TWT93U，T164）。可選 code/name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{"date": map[string]any{"type": "string", "description": "查詢日 YYYY-MM-DD（預設最近交易日）"}, "code": map[string]any{"type": "string", "description": "股票代號（選填）"}, "limit": map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"}, "offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"}},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDSLSBalanceHis, withDate: true}.handler(),
+	}) // T164
+	r.Register(ToolDef{
+		Symbol:      "get_short_sale_lending_trades_history",
+		Name:        "get_short_sale_lending_trades_history",
+		Description: "查詢借券賣出及借券賣出價量歷史（TWSE-WEB TWTASU，T165）。可選 code/name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{"date": map[string]any{"type": "string", "description": "查詢日 YYYY-MM-DD（預設最近交易日）"}, "code": map[string]any{"type": "string", "description": "股票代號（選填）"}, "limit": map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"}, "offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"}},
+		},
+		ReadOnly: true,
+		Handler:  webListSpec{ds: provider.TWSEWDSBLTradesHis, withDate: true}.handler(),
+	}) // T165
 
 	r.Register(ToolDef{
 		Symbol:      "get_after_hours_trading",

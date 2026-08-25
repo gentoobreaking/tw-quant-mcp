@@ -62,6 +62,10 @@ const (
 	TWSEWDSuspDayTradeHis TWSEWebDataset = "suspend_daytrade_his" // 暫停當沖歷史
 	TWSEWDSuspended       TWSEWebDataset = "suspended"         // 暫停交易證券
 	TWSEWDTopVolume       TWSEWebDataset = "top_volume"        // 成交量 Top20
+	TWSEWDInstiAmounts    TWSEWebDataset = "insti_amounts"     // 三大法人買賣超金額歷史（T146）
+	TWSEWDTurnoverHistory TWSEWebDataset = "turnover_history"  // 市場成交資訊/週轉率歷史（T147）
+	TWSEWDSLSBalanceHis   TWSEWebDataset = "sbl_balance_his"   // 融券借券餘額歷史（T164）
+	TWSEWDSBLTradesHis    TWSEWebDataset = "sbl_trades_his"    // 借券賣出成交歷史（T165）
 )
 
 // TWSEAPIDataset 為 TWSE-API（openapi.twse.com.tw）資料集 ID。
@@ -110,6 +114,10 @@ var (
 		TWSEWDSuspDayTradeHis: "/exchangeReport/TWTBAU2",
 		TWSEWDSuspended:       "/exchangeReport/TWTAWU",
 		TWSEWDTopVolume:       "/exchangeReport/MI_INDEX20",
+		TWSEWDInstiAmounts:    "/rwd/zh/fund/BFI82U",
+		TWSEWDTurnoverHistory: "/rwd/zh/afterTrading/FMTQIK",
+		TWSEWDSLSBalanceHis:   "/rwd/zh/marginTrading/TWT93U",
+		TWSEWDSBLTradesHis:    "/rwd/zh/afterTrading/TWTASU",
 		TWSEWDAbnormal:      "/rwd/announcement/notice",
 		TWSEWDForeignQFIIS:  "/rwd/fund/MI_QFIIS",
 		TWSEWDAfterHours:    "/exchangeReport/BFT41U",
@@ -527,6 +535,14 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		out, err = normalizeWebTable(raw)
 	case "gain_loss":
 		out, err = normalizePassthroughArray(raw)
+	case "insti_amounts":
+		out, err = normalizeWebTable(raw)
+	case "turnover_history":
+		out, err = normalizeWebTable(raw)
+	case "sbl_balance_his":
+		out, err = normalizeWebTable(raw)
+	case "sbl_trades_his":
+		out, err = normalizeWebTable(raw)
 	case "abnormal_volume":
 		out, err = normalizeAbnormalVolume(raw)
 	case "after_hours":

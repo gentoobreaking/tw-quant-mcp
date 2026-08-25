@@ -70,6 +70,10 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["suspend_daytrade_ann|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	f.bodies["suspend_daytrade_his|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	f.bodies["suspended|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
+	f.bodies["insti_amounts|date=20260730"] = `[{"日期":"115/07/30","value":"樣本"}]`
+	f.bodies["turnover_history|date=20260730"] = `[{"日期":"115/07/30","value":"樣本"}]`
+	f.bodies["sbl_balance_his|date=20260730"] = `[{"日期":"115/07/30","value":"樣本"}]`
+	f.bodies["sbl_trades_his|date=20260730"] = `[{"日期":"115/07/30","value":"樣本"}]`
 	f.bodies["top_volume|"] = `[{"證券代號":"2330","證券名稱":"台積電","成交股數":"1000","成交金額":"4825000","成交價":"4825"}]`
 	// get_stock_daily_quote（TSE：3 個月日 K，2026-07-30 在最後月份）
 	f.stub("daily_k", url.Values{"date": {"20260501"}, "stockNo": {"2330"}}, string(mkDailyMonth("2026", "05", 0, 20)))
@@ -188,6 +192,10 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_suspended_day_trading_history", args: map[string]any{}},
 		{name: "get_suspended_trading_stocks", args: map[string]any{}},
 		{name: "get_top_20_volume_stocks", args: map[string]any{"name": ""}},
+		{name: "get_market_institutional_amounts_history", args: map[string]any{"date": "2026-07-30"}},
+		{name: "get_market_turnover_history", args: map[string]any{"date": "2026-07-30"}},
+		{name: "get_short_sale_lending_balance_history", args: map[string]any{"date": "2026-07-30"}},
+		{name: "get_short_sale_lending_trades_history", args: map[string]any{"date": "2026-07-30"}},
 		// ── G 組（基礎設施，3）──
 		{name: "get_symbol_list", args: map[string]any{}},
 		{name: "get_trading_calendar", args: map[string]any{"year": float64(2026), "month": float64(2)}},
