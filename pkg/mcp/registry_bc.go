@@ -1112,6 +1112,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcMonthlyRevenue,
 	}) // T195
 	r.Register(ToolDef{
+		Symbol: "get_otc_active_broker_volume",
+		Name:   "get_otc_active_broker_volume",
+		Description: "查詢上櫃熱門股票之各券商分公司買賣進出排行（TPEx-API tpex_active_broker_volume，T196）。" +
+			"stock_no 選填（以名稱(代號)過濾特定標的，如 6182）；limit 預設 50、offset 分頁。" +
+			"每列含日期、標的排名、券商排名、券商名稱與買進/賣出張數。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"stock_no": map[string]any{"type": "string", "description": "股票代號（選填），過濾特定標的"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcBrokerVolumeRank,
+	}) // T196
+	r.Register(ToolDef{
 		Symbol:      "get_otc_index",
 		Name:        "get_otc_index",
 		Description: "查詢櫃買市場（上櫃）指數歷史行情，包含開高低收、漲跌幅（TPEx-API tpex_index，T156）。",

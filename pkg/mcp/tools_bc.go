@@ -1358,3 +1358,37 @@ func handlerGetOtcMonthlyRevenue(a *App, args map[string]any) (HandlerResult, er
 	}
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
+
+// handlerGetOtcBrokerVolumeRank：上櫃熱門股券商進出排行（T196）。
+// stock_no 選填——以「名稱(代號)」欄之子字串比對過濾特定標的。
+func handlerGetOtcBrokerVolumeRank(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	stockNo := strVal(args["stock_no"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExBrokerVolume), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExBrokerVolume), date, stockNo, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExBrokerVolume, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetInstitutional)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if stockNo != "" && !strings.Contains(rowField(r, "SecuritiesCompanyCodeAndCompanyName"), "("+stockNo+")") {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}

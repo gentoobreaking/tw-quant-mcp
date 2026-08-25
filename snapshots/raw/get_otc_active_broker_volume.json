@@ -1,0 +1,76 @@
+{
+  "arguments": {
+    "stock_no": "6182",
+    "limit": 5
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"data\":[{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"元大\",\"SecuritiesFirmsRanking\":\"1\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"12977\",\"TotalSellShares\":\"13075\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"凱基\",\"SecuritiesFirmsRanking\":\"2\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"10078\",\"TotalSellShares\":\"10173\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"富邦\",\"SecuritiesFirmsRanking\":\"3\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"5549\",\"TotalSellShares\":\"5801\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"國泰綜合\",\"SecuritiesFirmsRanking\":\"4\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"4098\",\"TotalSellShares\":\"3478\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"永豐金\",\"SecuritiesFirmsRanking\":\"5\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"2616\",\"TotalSellShares\":\"3459\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T06:09:19+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":212,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+      }
+    ],
+    "structuredContent": {
+      "data": [
+        {
+          "Date": "20260825",
+          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+          "SecuritiesFirmsCode": "元大",
+          "SecuritiesFirmsRanking": "1",
+          "StockRanking": "1",
+          "TotalPurchaseShares": "12977",
+          "TotalSellShares": "13075"
+        },
+        {
+          "Date": "20260825",
+          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+          "SecuritiesFirmsCode": "凱基",
+          "SecuritiesFirmsRanking": "2",
+          "StockRanking": "1",
+          "TotalPurchaseShares": "10078",
+          "TotalSellShares": "10173"
+        },
+        {
+          "Date": "20260825",
+          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+          "SecuritiesFirmsCode": "富邦",
+          "SecuritiesFirmsRanking": "3",
+          "StockRanking": "1",
+          "TotalPurchaseShares": "5549",
+          "TotalSellShares": "5801"
+        },
+        {
+          "Date": "20260825",
+          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+          "SecuritiesFirmsCode": "國泰綜合",
+          "SecuritiesFirmsRanking": "4",
+          "StockRanking": "1",
+          "TotalPurchaseShares": "4098",
+          "TotalSellShares": "3478"
+        },
+        {
+          "Date": "20260825",
+          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+          "SecuritiesFirmsCode": "永豐金",
+          "SecuritiesFirmsRanking": "5",
+          "StockRanking": "1",
+          "TotalPurchaseShares": "2616",
+          "TotalSellShares": "3459"
+        }
+      ],
+      "_lineage": {
+        "source": "TPEX_API",
+        "source_role": "CANONICAL",
+        "fetched_at": "2026-08-26T06:09:19+08:00",
+        "data_date": "2026-08-26",
+        "freshness": "POST_MARKET",
+        "sampling_sec": 0,
+        "is_cached": false,
+        "latency_ms": 212,
+        "grade": "AVAILABLE"
+      },
+      "http_calls": 1,
+      "disclaimer": "僅供研究參考，不構成投資建議"
+    }
+  }
+}
