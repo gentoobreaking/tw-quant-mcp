@@ -71,6 +71,7 @@ const (
 	TPExOtcInstiTrd   TPExDataset = "otc_insti_trading"     // 上櫃投信買賣超彙總（T199）
 	TPExOtcDealerTrd  TPExDataset = "otc_dealer_trading"    // 上櫃自營商買賣超彙總（T199）
 	TPExOtcAfterHours TPExDataset = "otc_after_hours"       // 上櫃盤後定價行情（T202）
+	TPExOtcWarnNote   TPExDataset = "otc_warn_note"         // 上櫃注意累計次數異常（T203）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -104,6 +105,7 @@ var (
 		TPExOtcInstiTrd:   "/tpex_3insti_trading",               // 投信買賣超彙總（T199）
 		TPExOtcDealerTrd:  "/tpex_3insti_dealer_trading",        // 自營商買賣超彙總（T199）
 		TPExOtcAfterHours: "/tpex_off_market",                   // 盤後定價行情（T202）
+		TPExOtcWarnNote:   "/tpex_trading_warning_note",          // 注意累計次數異常（T203）
 	}
 )
 
@@ -282,6 +284,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExOtcAfterHours):
 		// passthrough（T202 實測；欄位 Date/SecuritiesCompanyCode/CompanyName/
 		// Close/Transactions/TradeVolume/TradeAmount 等，原樣保留）。
+		out = ms
+	case string(TPExOtcWarnNote):
+		// passthrough（T203 實測；欄位 Date/SecuritiesCompanyCode/CompanyName/
+		// AccumulationSituation，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

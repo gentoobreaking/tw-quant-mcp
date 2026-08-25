@@ -1503,6 +1503,55 @@ func handlerGetOtcAfterHours(a *App, args map[string]any) (HandlerResult, error)
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// handlerGetOtcWarningNoteAccumulated：上櫃公布注意累計次數異常（T203，
+// tpex_trading_warning_note）。對稱上市 T193：清單含權證（6 碼），原樣回傳
+// 不靜默丟棄；kind 選填過濾（"stock"=≤4 碼普通股、"warrant"=6 碼權證）。
+func handlerGetOtcWarningNoteAccumulated(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	nameArg, kind := strVal(args["name"]), strVal(args["kind"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExOtcWarnNote), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcWarnNote), date, nameArg+kind, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExOtcWarnNote, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetAlertStock)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		code := rowField(r, "SecuritiesCompanyCode")
+		if code == "" {
+			continue // 官方偶有無代號之空列
+		}
+		switch kind {
+		case "stock":
+			if len(code) > 4 {
+				continue
+			}
+		case "warrant":
+			if len(code) <= 4 {
+				continue
+			}
+		}
+		if nameArg != "" && !strings.Contains(rowField(r, "CompanyName"), nameArg) {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // handlerGetOtcExdividendResult：上櫃除權息計算結果表（T200）。
 // 對稱上市預告表 get_exdividend_calendar；本工具為事後實際計算數據。
 func handlerGetOtcExdividendResult(a *App, args map[string]any) (HandlerResult, error) {

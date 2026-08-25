@@ -1180,6 +1180,24 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcAfterHours,
 	}) // T202
 	r.Register(ToolDef{
+		Symbol: "get_otc_warning_note_accumulated",
+		Name:   "get_otc_warning_note_accumulated",
+		Description: "查詢上櫃公布注意累計次數異常資訊（TPEx-API tpex_trading_warning_note，T203）。" +
+			"與 get_attention_disposition_stocks（market=otc，當日注意/處置清單）互補：本工具揭露近期符合注意處理標準之累計紀錄。" +
+			"清單含權證（kind 可過濾 stock/warrant）；name 關鍵字過濾；limit 預設 50、offset 分頁。對稱上市工具 get_abnormal_accumulated_notice_stocks。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "股票名稱關鍵字（選填）"},
+				"kind":   map[string]any{"type": "string", "enum": []string{"stock", "warrant"}, "description": "標的類型過濾（選填）：stock=普通股（≤4 碼）、warrant=權證（6 碼）；省略回傳全部"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限（預設 50）"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcWarningNoteAccumulated,
+	}) // T203
+	r.Register(ToolDef{
 		Symbol: "get_otc_exdividend_result",
 		Name:   "get_otc_exdividend_result",
 		Description: "查詢上櫃股票除權息「計算結果」表（TPEx-API tpex_exright_daily，T200）。" +

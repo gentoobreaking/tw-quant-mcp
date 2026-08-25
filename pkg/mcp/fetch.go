@@ -149,6 +149,7 @@ var cacheDataset = map[string]string{
 	string(provider.TPExOtcInstiTrd):        cache.DatasetInstitutional,  // 投信買賣超彙總（T199）
 	string(provider.TPExOtcDealerTrd):       cache.DatasetInstitutional,  // 自營商買賣超彙總（T199）
 	string(provider.TPExOtcAfterHours):      cache.DatasetDailyKLine,     // 盤後定價行情：日頻快照（T202）
+	string(provider.TPExOtcWarnNote):        cache.DatasetAlertStock,     // 注意累計次數異常（T203）
 	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）
