@@ -5,6 +5,7 @@
 （version 僅供頁首標註；tools_json 為 tools/list result.tools 的 JSON 字串）
 輸出寫到 stdout。
 """
+
 import json
 import sys
 

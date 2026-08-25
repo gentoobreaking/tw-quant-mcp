@@ -16,10 +16,13 @@ if [ ! -x "$BIN" ]; then
 fi
 
 echo "==> 抓取 tools/list（stdio）"
-OUT="$( (printf '%s\n' \
-  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"catalog","version":"1"}}}' \
-  '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'; sleep 3) \
-  | "$BIN" 2>/dev/null | python3 -c '
+OUT="$( (
+  printf '%s\n' \
+    '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"catalog","version":"1"}}}' \
+    '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
+  sleep 3
+) |
+  "$BIN" 2>/dev/null | python3 -c '
 import sys, json
 for line in sys.stdin:
     line = line.strip()
@@ -40,5 +43,5 @@ fi
 
 echo "==> 彙出 docs/TOOL_CATALOG.md"
 cd "$ROOT"
-python3 scripts/gen_catalog.py "$VERSION" "$OUT" > docs/TOOL_CATALOG.md
+python3 scripts/gen_catalog.py "$VERSION" "$OUT" >docs/TOOL_CATALOG.md
 echo "完成：docs/TOOL_CATALOG.md"
