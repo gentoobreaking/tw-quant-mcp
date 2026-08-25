@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -434,4 +435,73 @@ func handlerGetCompanyIncomeStatement(a *App, args map[string]any) (HandlerResul
 	ttl, _ := a.ttlOf(string(ds))
 	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
 	return HandlerResult{Data: rows, Lineage: lineage}, nil
+}
+
+// profitabilityNumericFields 為營益分析之數值排序欄位（官方中文欄名）。
+var profitabilityNumericFields = map[string]bool{
+	"營業收入(百萬元)":                true,
+	"毛利率(%)(營業毛利)/(營業收入)":     true,
+	"營業利益率(%)(營業利益)/(營業收入)": true,
+	"稅前純益率(%)(稅前純益)/(營業收入)":   true,
+	"稅後純益率(%)(稅後純益)/(營業收入)":   true,
+	"年度":                             true,
+	"季別":                             true,
+}
+
+// handlerGetProfitabilitySummary：營益分析彙總表（排序＋分頁，T102）。
+func handlerGetProfitabilitySummary(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	pageSize, pageNumber := 20, 1
+	if v, ok := args["page_size"]; ok {
+		if n, err := asInt(v); err == nil && n > 0 {
+			pageSize = n
+			if pageSize > 100 {
+				pageSize = 100
+			}
+		}
+	}
+	if v, ok := args["page_number"]; ok {
+		if n, err := asInt(v); err == nil && n > 0 {
+			pageNumber = n
+		}
+	}
+	orderDir := strings.ToLower(strVal(args["order_direction"]))
+	if orderDir != "asc" && orderDir != "desc" {
+		orderDir = "desc"
+	}
+	orderBy := strVal(args["order_by"])
+	dataDate := a.now().Format("2006-01-02")
+
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TWSEAPIProfitability), dataDate,
+		cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIProfitability), dataDate, orderBy+orderDir, nil),
+		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIProfitability, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+
+	sort.SliceStable(rows, func(i, j int) bool {
+		a_, b_ := rowField(rows[i], orderBy), rowField(rows[j], orderBy)
+		if profitabilityNumericFields[orderBy] {
+			fa, fb := commaFloat(a_), commaFloat(b_)
+			if orderDir == "asc" {
+				return fa < fb
+			}
+			return fa > fb
+		}
+		if orderDir == "asc" {
+			return a_ < b_
+		}
+		return a_ > b_
+	})
+
+	start := (pageNumber - 1) * pageSize
+	out := make([]map[string]any, 0, pageSize)
+	for i := start; i < len(rows) && i < start+pageSize; i++ {
+		out = append(out, rows[i])
+	}
+
+	ttl, _ := a.ttlOf(string(provider.TWSEAPIProfitability))
+	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+	return HandlerResult{Data: out, Lineage: lineage}, nil
 }

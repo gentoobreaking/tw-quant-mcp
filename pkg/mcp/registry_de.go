@@ -295,6 +295,32 @@ func registerDETools(r *Registry) {
 	}) // T088
 
 	r.Register(ToolDef{
+		Symbol:      "get_company_profitability_analysis",
+		Name:        "get_company_profitability_analysis",
+		Description: "根據股票代號查詢上市公司營益分析（毛利率/營業利益率/純益率，TWSE-API t187ap17_L，T101）。",
+		Schema:      compSchema(),
+		ReadOnly:    true,
+		Handler:     apiCompanySpec{ds: provider.TWSEAPIProfitability}.handler(),
+	}) // T101
+	r.Register(ToolDef{
+		Symbol:      "get_company_profitability_analysis_summary",
+		Name:        "get_company_profitability_analysis_summary",
+		Description: "查詢上市公司營益分析彙總表（全體公司，支援排序與分頁；TWSE-API t187ap17_L，T102）。" +
+			"order_by 可用欄位：公司代號、公司名稱、年度、季別、營業收入(百萬元)、毛利率(%)(營業毛利)/(營業收入)等比率欄。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"page_size":       map[string]any{"type": "integer", "default": 20, "minimum": 1, "maximum": 100, "description": "每頁筆數"},
+				"page_number":     map[string]any{"type": "integer", "default": 1, "minimum": 1, "description": "頁碼"},
+				"order_by":        map[string]any{"type": "string", "description": "排序欄位（預設稅後純益率）"},
+				"order_direction": map[string]any{"type": "string", "enum": []string{"asc", "desc"}, "description": "排序方向（預設 desc）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetProfitabilitySummary,
+	}) // T102
+
+	r.Register(ToolDef{
 		Symbol:      "get_company_dividend",
 		Name:        "get_company_dividend",
 		Description: "根據股票代號查詢上市公司股利分派情形（TWSE-API t187ap45_L 正規化模型，T081）。",
