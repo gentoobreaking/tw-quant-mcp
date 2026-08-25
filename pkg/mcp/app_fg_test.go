@@ -160,6 +160,12 @@ func stubFG(f *fakeTAIFEX) {
 		"2026-07-28": tfStubDL([]model.PCRow{{Date: "2026-07-28", CallVolume: 95000, PutVolume: 114000, VolumeRatio: 120.0}}, ""),
 		"2026-07-29": tfStubDL([]model.PCRow{{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5}}, ""),
 	}
+	// 三大法人期貨/選擇權分計歷史（T128，DL）
+	f.ranges[tfRangeKey(model.TAInstiFutOptSplit, "2026-07-27", "2026-07-29", "")] = map[string]provider.TAIFEXQueryResult{
+		"2026-07-27": tfStubDL([]model.InstiSplitRow{{Date: "2026-07-27", Investor: "外資及陸資", FutLongVol: 600000, FutShortVol: 610000, FutNetVol: -10000}}, ""),
+		"2026-07-28": tfStubDL([]model.InstiSplitRow{{Date: "2026-07-28", Investor: "外資及陸資", FutLongVol: 605000, FutNetVol: -9000}}, ""),
+		"2026-07-29": tfStubDL([]model.InstiSplitRow{{Date: "2026-07-29", Investor: "外資及陸資", FutLongVol: 610000, FutNetVol: -8000, OptNetVol: 500}}, ""),
+	}
 	// 保證金一覽（T127）
 	f.single[tfKey(model.TAMargin, "2026-07-29", "")] = tfStub([]model.MarginRow{
 		{Date: "2026-07-29", Contract: "臺股期貨", ClearingMargin: 214000, MaintenanceMargin: 165000, InitialMargin: 278000},
@@ -466,6 +472,33 @@ func TestFGFuturesInstitutional(t *testing.T) {
 	env2 := callEnv(t, app, "get_futures_institutional", map[string]any{})
 	if !env2.Lineage.IsCached {
 		t.Errorf("第二次呼叫應命中快取: %+v", env2.Lineage)
+	}
+}
+
+// T128：get_institutional_fut_opt_split_history 分計歷史（DL）
+func TestFGInstiFutOptSplitHistory(t *testing.T) {
+	f := newFake(t)
+	tq := newFakeTAIFEX(t, "2026-07-29")
+	stubFG(tq)
+	app := fgApp(t, f, tq)
+
+	env := callEnv(t, app, "get_institutional_fut_opt_split_history",
+		map[string]any{"start": "20260727", "end": "20260729"})
+	rows, ok := env.Data.([]model.InstiSplitRow)
+	if !ok {
+		t.Fatalf("Data 應為 []InstiSplitRow，實際 %T", env.Data)
+	}
+	if len(rows) != 3 || rows[0].Date != "2026-07-27" || rows[2].OptNetVol != 500 {
+		t.Errorf("分計資料錯誤: %+v", rows)
+	}
+	if env.Lineage.Source != model.SourceTAIFEXDL {
+		t.Errorf("lineage 應為 DL: %+v", env.Lineage)
+	}
+
+	// 跨度超過 92 日拒絕
+	if _, err := app.core.Call(context.Background(), "get_institutional_fut_opt_split_history",
+		map[string]any{"start": "2026-01-01", "end": "2026-07-29"}); err == nil {
+		t.Fatal("跨度超過 92 日應被拒絕")
 	}
 }
 

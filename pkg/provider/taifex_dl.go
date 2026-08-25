@@ -83,6 +83,10 @@ var taifexDLSpecs = map[model.TAIFEXDataset]taifexDLSpec{
 		fields: []string{"down_type", "queryStartDate", "queryEndDate"},
 		def:    map[string]string{"down_type": "1"},
 	},
+	model.TAInstiFutOptSplit: {
+		view: "futAndOptDate", down: "futAndOptDateDown",
+		fields: []string{"queryStartDate", "queryEndDate"},
+	},
 }
 
 // dlSupported 判定資料集是否由 DL 提供（§9.2；保證金僅 API）。
@@ -287,6 +291,20 @@ var dlHeaders = map[model.TAIFEXDataset][]string{
 		"日期", "賣權成交量", "買權成交量", "買賣權成交量比率%", "賣權未平倉量",
 		"買權未平倉量", "買賣權未平倉量比率%",
 	},
+	model.TAInstiFutOptSplit: {
+		"日期", "身份別", "期貨多方交易口數", "選擇權多方交易口數",
+		"期貨多方交易契約金額(千元)", "選擇權多方交易契約金額(千元)",
+		"期貨空方交易口數", "選擇權空方交易口數",
+		"期貨空方交易契約金額(千元)", "選擇權空方交易契約金額(千元)",
+		"期貨多空交易口數淨額", "選擇權多空交易口數淨額",
+		"期貨多空交易契約金額淨額(千元)", "選擇權多空交易契約金額淨額(千元)",
+		"期貨多方未平倉口數", "選擇權多方未平倉口數",
+		"期貨多方未平倉契約金額(千元)", "選擇權多方未平倉契約金額(千元)",
+		"期貨空方未平倉口數", "選擇權空方未平倉口數",
+		"期貨空方未平倉契約金額(千元)", "選擇權空方未平倉契約金額(千元)",
+		"期貨多空未平倉口數淨額", "選擇權多空未平倉口數淨額",
+		"期貨多空未平倉契約金額淨額(千元)", "選擇權多空未平倉契約金額淨額(千元)",
+	},
 }
 
 func validateTAIFEXDL(raw *RawResponse) error {
@@ -386,6 +404,8 @@ func normalizeTAIFEXDL(raw *RawResponse) ([]byte, error) {
 		out = normalizeDLOptionsDaily(records[1:], col)
 	case model.TAInstiFutures:
 		out = normalizeDLInstitutional(records[1:], col)
+	case model.TAInstiFutOptSplit:
+		out = normalizeDLInstiSplit(records[1:], col)
 	case model.TALargeTraderFut, model.TALargeTraderOpt:
 		out = normalizeDLLargeTrader(records[1:], col)
 	case model.TAPutCallRatio:
@@ -517,6 +537,46 @@ func normalizeDLInstitutional(recs [][]string, col func([]string, string) string
 			OIShortValue: model.ThousandToYuan(dlInt(col(rec, "空方未平倉契約金額(千元)"))),
 			OINet:        dlInt(col(rec, "多空未平倉口數淨額")),
 			OINetValue:   model.ThousandToYuan(dlInt(col(rec, "多空未平倉契約金額淨額(千元)"))),
+		})
+	}
+	return out
+}
+
+// normalizeDLInstiSplit：三大法人期貨/選擇權分計 CSV（T128）。
+func normalizeDLInstiSplit(recs [][]string, col func([]string, string) string) []model.InstiSplitRow {
+	out := make([]model.InstiSplitRow, 0, len(recs))
+	for _, rec := range recs {
+		d, ok := dlDate(col(rec, "日期"))
+		if !ok {
+			continue
+		}
+		out = append(out, model.InstiSplitRow{
+			Date:          d,
+			Investor:      col(rec, "身份別"),
+			FutLongVol:    dlInt(col(rec, "期貨多方交易口數")),
+			OptLongVol:    dlInt(col(rec, "選擇權多方交易口數")),
+			FutLongValue:  dlFloat(col(rec, "期貨多方交易契約金額(千元)")),
+			OptLongValue:  dlFloat(col(rec, "選擇權多方交易契約金額(千元)")),
+			FutShortVol:   dlInt(col(rec, "期貨空方交易口數")),
+			OptShortVol:   dlInt(col(rec, "選擇權空方交易口數")),
+			FutShortValue: dlFloat(col(rec, "期貨空方交易契約金額(千元)")),
+			OptShortValue: dlFloat(col(rec, "選擇權空方交易契約金額(千元)")),
+			FutNetVol:     dlInt(col(rec, "期貨多空交易口數淨額")),
+			OptNetVol:     dlInt(col(rec, "選擇權多空交易口數淨額")),
+			FutNetValue:   dlFloat(col(rec, "期貨多空交易契約金額淨額(千元)")),
+			OptNetValue:   dlFloat(col(rec, "選擇權多空交易契約金額淨額(千元)")),
+			FutOILong:     dlInt(col(rec, "期貨多方未平倉口數")),
+			OptOILong:     dlInt(col(rec, "選擇權多方未平倉口數")),
+			FutOILongVal:  dlFloat(col(rec, "期貨多方未平倉契約金額(千元)")),
+			OptOILongVal:  dlFloat(col(rec, "選擇權多方未平倉契約金額(千元)")),
+			FutOIShort:    dlInt(col(rec, "期貨空方未平倉口數")),
+			OptOIShort:    dlInt(col(rec, "選擇權空方未平倉口數")),
+			FutOIShortVal: dlFloat(col(rec, "期貨空方未平倉契約金額(千元)")),
+			OptOIShortVal: dlFloat(col(rec, "選擇權空方未平倉契約金額(千元)")),
+			FutOINet:      dlInt(col(rec, "期貨多空未平倉口數淨額")),
+			OptOINet:      dlInt(col(rec, "選擇權多空未平倉口數淨額")),
+			FutOINetVal:   dlFloat(col(rec, "期貨多空未平倉契約金額淨額(千元)")),
+			OptOINetVal:   dlFloat(col(rec, "選擇權多空未平倉契約金額淨額(千元)")),
 		})
 	}
 	return out

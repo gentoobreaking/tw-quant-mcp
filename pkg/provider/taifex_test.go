@@ -7,6 +7,7 @@ package provider
 
 import (
 	"context"
+	"encoding/csv"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -554,5 +555,40 @@ func TestTAIFEXDLFormContract(t *testing.T) {
 	}
 	if !strings.Contains(gotReferer, "futDailyMarketView") {
 		t.Errorf("Referer 異常: %q", gotReferer)
+	}
+}
+
+// T128：三大法人期貨/選擇權分計 CSV 正規化
+func TestNormalizeDLInstiSplit(t *testing.T) {
+	text := "日期,身份別,期貨多方交易口數,選擇權多方交易口數,期貨多方交易契約金額(千元),選擇權多方交易契約金額(千元),期貨空方交易口數,選擇權空方交易口數,期貨空方交易契約金額(千元),選擇權空方交易契約金額(千元),期貨多空交易口數淨額,選擇權多空交易口數淨額,期貨多空交易契約金額淨額(千元),選擇權多空交易契約金額淨額(千元),期貨多方未平倉口數,選擇權多方未平倉口數,期貨多方未平倉契約金額(千元),選擇權多方未平倉契約金額(千元),期貨空方未平倉口數,選擇權空方未平倉口數,期貨空方未平倉契約金額(千元),選擇權空方未平倉契約金額(千元),期貨多空未平倉口數淨額,選擇權多空未平倉口數淨額,期貨多空未平倉契約金額淨額(千元),選擇權多空未平倉契約金額淨額(千元)\n" +
+		"2026/08/24,自營商,51590,65052,58747920,630871,59037,65384,55143043,631617,-7447,-332,3604877.0,-746.0,98096,37241,86052925,1237487,327589,34876,253680555,1071166,-229493,2365,-167627630.0,166321\n"
+	r := csv.NewReader(strings.NewReader(text))
+	records, err := r.ReadAll()
+	if err != nil {
+		t.Fatalf("CSV 解析失敗: %v", err)
+	}
+	idx := map[string]int{}
+	for i, h := range records[0] {
+		idx[h] = i
+	}
+	col := func(rec []string, name string) string {
+		if i, ok := idx[name]; ok && i < len(rec) {
+			return strings.TrimSpace(rec[i])
+		}
+		return ""
+	}
+	rows := normalizeDLInstiSplit(records[1:], col)
+	if len(rows) != 1 {
+		t.Fatalf("期望 1 列，得到 %d", len(rows))
+	}
+	got := rows[0]
+	if got.Date != "2026-08-24" || got.Investor != "自營商" {
+		t.Errorf("Date/Investor = %q/%q", got.Date, got.Investor)
+	}
+	if got.FutLongVol != 51590 || got.OptShortVol != 65384 {
+		t.Errorf("口數錯誤: %+v", got)
+	}
+	if got.FutNetValue != 3604877.0 || got.OptNetValue != -746.0 {
+		t.Errorf("淨額金額錯誤: %v/%v", got.FutNetValue, got.OptNetValue)
 	}
 }

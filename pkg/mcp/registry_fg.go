@@ -203,6 +203,22 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetIndexFuturesMargin,
 	}) // T127
 	r.Register(ToolDef{
+		Symbol:      "get_institutional_fut_opt_split_history",
+		Name:        "get_institutional_fut_opt_split_history",
+		Description: "查詢三大法人期貨與選擇權分計交易歷史（期貨、選擇權並列顯示，可回溯查詢；" +
+			"TAIFEX-DL futAndOptDateDown，T128）。與 get_institutional_total_history（合計）不同，" +
+			"本工具將期貨與選擇權之多空交易口數、契約金額（千元）、未平倉分開列出。區間不可超過 92 日。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"start": map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
+				"end":   map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetInstitutionalFutOptSplitHistory,
+	}) // T128
+	r.Register(ToolDef{
 		Symbol: "get_institutional_futures_history",
 		Name:   "get_institutional_futures_history",
 		Description: "查詢三大法人期貨部位歷史（TAIFEX-DL 回溯，§9.3；L2 永久快取）。" +

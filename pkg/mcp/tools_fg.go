@@ -509,6 +509,54 @@ func handlerGetFuturesInstitutional(a *App, args map[string]any) (HandlerResult,
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// instiSplitRangeCap 為 T128 分計歷史之最長跨度（遠端對齊 92 日）。
+const instiSplitRangeCap = 92
+
+// handlerGetInstitutionalFutOptSplitHistory：三大法人期貨/選擇權分計歷史
+// （TAIFEX-DL futAndOptDateDown，T128；僅 DL 提供，區間 ≤ 92 日）。
+func handlerGetInstitutionalFutOptSplitHistory(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	start := flexDateArg(strVal(args["start"]))
+	if start == "" {
+		start = flexDateArg(strVal(args["start_date"]))
+	}
+	end := flexDateArg(strVal(args["end"]))
+	if end == "" {
+		end = flexDateArg(strVal(args["end_date"]))
+	}
+	if start == "" || end == "" {
+		return HandlerResult{}, fmt.Errorf("參數 start（start_date）與 end（end_date）為必填")
+	}
+	sd, ed, err := validateRange(start, end)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	sT, errT := model.ParseDate(sd)
+	eT, _ := model.ParseDate(ed)
+	if errT == nil && int(eT.Sub(sT).Hours()/24) > instiSplitRangeCap {
+		return HandlerResult{}, fmt.Errorf("查詢區間不可超過 %d 天，請縮小範圍", instiSplitRangeCap)
+	}
+	byDay, err := q.FetchRange(ctx, model.TAInstiFutOptSplit, sd, ed, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 範圍查詢失敗: %w", model.TAInstiFutOptSplit, err)
+	}
+	rows, err := collectRangeRows[model.InstiSplitRow](model.TAInstiFutOptSplit, byDay)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	sort.Slice(rows, func(i, j int) bool {
+		if rows[i].Date != rows[j].Date {
+			return rows[i].Date < rows[j].Date
+		}
+		return rows[i].Investor < rows[j].Investor
+	})
+	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
+}
+
 // handlerGetIndexFuturesMargin：股價指數類期貨與選擇權保證金一覽表
 // （TAIFEX-API IndexFuturesAndOptionsMargining，T127）。contract 為中文商品名
 // 子字串過濾（如「臺股期貨」），留空回全部；查無時列出可用商品。
