@@ -1,0 +1,35 @@
+# CI：push / PR 時執行 vet + 全套件測試（離線，fixtures 回放）+ CGO-free 建置確認。
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Vet & Test & Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version-file: go.mod
+
+      - name: go vet
+        run: go vet ./...
+
+      - name: go test（離線全套件；live/soak 測試非開盤時段自動 Skip）
+        run: go test ./...
+
+      - name: Build（CGO-free 單一執行檔）
+        env:
+          VERSION: ci-${{ github.sha }}
+        run: |
+          CGO_ENABLED=0 go build \
+            -ldflags "-X main.version=${VERSION}" \
+            -o bin/tw-quant-mcp ./cmd/mcp-server
