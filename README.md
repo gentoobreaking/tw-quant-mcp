@@ -73,6 +73,17 @@ curl http://localhost:8787/health
 
 ## MCP 客戶端設定
 
+### Homebrew 安裝（推薦，macOS / Linux）
+
+透過自建 tap 安裝（首次需先建立 tap repo，見下方「Homebrew tap 自動發佈」）：
+
+```bash
+brew install gentoobreaking/tap/tw-quant-mcp
+# 升級：brew upgrade tw-quant-mcp
+```
+
+安裝後將 `$(brew --prefix)/bin/tw-quant-mcp` 填入下方任一 MCP client 的 command 欄位。
+
 ### Claude Desktop
 
 `claude_desktop_config.json`（macOS：`~/Library/Application Support/Claude/claude_desktop_config.json`）：
@@ -396,6 +407,17 @@ git tag v2.1.0 && git push origin v2.1.0
 ```
 
 CI（`.github/workflows/ci.yml`）於每次 push / PR 執行 vet＋test＋建置確認。
+
+#### Homebrew tap 自動發佈（可選）
+
+Release 流程尾端會自動把 Formula 推送到 `<owner>/homebrew-tap` repo。啟用步驟：
+
+1. GitHub 上建立**公開空 repo**：`gentoobreaking/homebrew-tap`
+2. 建立 fine-grained PAT（僅授權 `homebrew-tap` 的 Contents: Read/Write），
+   加到本 repo 的 **Settings → Secrets and variables → Actions → New secret**，
+   名稱 `TAP_TOKEN`
+3. 之後每次打 tag，Formula 自動帶入新版版本號與 SHA256；未設定 `TAP_TOKEN`
+   則此步驟自動跳過、不影響 Release
 
 ---
 
