@@ -407,6 +407,10 @@ make catalog-snapshot  # 建立三官方目錄 baseline（首次/確認變更後
 make catalog-check     # 檢查官方目錄是否新增/刪減端點
 ```
 
+> 官方目錄異動監控機制的完整說明（baseline 快照、每週排程、處置流程）見
+> [docs/CATALOG_WATCH.md](docs/CATALOG_WATCH.md)。
+```
+
 ### GitHub Release 流程
 
 推送 `v*` tag 即自動觸發（`.github/workflows/release.yml`）：
