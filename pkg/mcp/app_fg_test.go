@@ -155,7 +155,11 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAInstiGeneral, "2026-07-29", "")] = tfStub([]model.InstiGeneralRow{
 		{Date: "2026-07-29", Investor: "自營商", LongVolume: 51590, ShortVolume: 59037, NetVolume: -7447, LongValue: 587.4792},
 	})
-	// 買買賣權比：單日 + 範圍
+	// 三大法人選擇權買賣權分計（T134，直通官方欄位）
+	f.single[tfKey(model.TAInstiCallsPuts, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260729", "ContractCode": "臺指選擇權", "CallPut": "CALL", "Item": "自營商", "TradingVolume(Long)": "31412"},
+	})
+	// 買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},
 	})

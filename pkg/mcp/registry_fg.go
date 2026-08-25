@@ -249,6 +249,48 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalTotalHistory,
 	}) // T130
 	r.Register(ToolDef{
+		Symbol:      "get_institutional_traders_by_futures",
+		Name:        "get_institutional_traders_by_futures",
+		Description: "查詢三大法人依各期貨契約分類的交易資料，可觀察各期貨商品的法人買賣情況（" +
+			"TAIFEX-API DetailsOfFuturesContracts，T131）。contract_code 為中文契約名子字串（如「臺股期貨」），留空顯示全部。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract_code": map[string]any{"type": "string", "description": "期貨契約名稱（中文），例如「臺股期貨」。留空則顯示全部"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetInstitutionalTradersByFutures,
+	}) // T131
+	r.Register(ToolDef{
+		Symbol:      "get_institutional_traders_by_options",
+		Name:        "get_institutional_traders_by_options",
+		Description: "查詢三大法人依各選擇權契約分類的交易資料，可觀察各選擇權商品的法人買賣情況（" +
+			"TAIFEX-API DetailsOfOptionsContracts，T133）。contract_code 為中文契約名子字串（如「臺指選擇權」），留空顯示全部。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract_code": map[string]any{"type": "string", "description": "選擇權契約名稱（中文），例如「臺指選擇權」。留空則顯示全部"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetInstitutionalTradersByOptions,
+	}) // T133
+	r.Register(ToolDef{
+		Symbol:      "get_institutional_traders_calls_puts",
+		Name:        "get_institutional_traders_calls_puts",
+		Description: "查詢三大法人選擇權買賣權分計交易資料，分別顯示 CALL 與 PUT 的法人持倉情況（" +
+			"TAIFEX-API DetailsOfCallsAndPuts，T134）。外資偏多時 CALL 淨多單會大幅增加。contract_code 留空顯示全部。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract_code": map[string]any{"type": "string", "description": "選擇權契約名稱（中文），例如「臺指選擇權」。留空則顯示全部"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetInstitutionalTradersCallsPuts,
+	}) // T134
+	r.Register(ToolDef{
 		Symbol: "get_institutional_futures_history",
 		Name:   "get_institutional_futures_history",
 		Description: "查詢三大法人期貨部位歷史（TAIFEX-DL 回溯，§9.3；L2 永久快取）。" +

@@ -59,6 +59,7 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAFMonthlyStats:  "/MonthlyTradingStatisticsFutures", // T148
 	model.TAInstiDivided:   "/MarketDataOfMajorInstitutionalTradersDividedByFuturesAndOptionsBytheDate", // T126
 	model.TAInstiGeneral:   "/MarketDataOfMajorInstitutionalTradersGeneralBytheDate",                     // T129
+	model.TAInstiCallsPuts: "/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheDate",          // T134
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -208,6 +209,9 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		out = json.RawMessage(raw.Body)
 	case model.TAInstiGeneral:
 		out, err = normalizeTAIInstiGeneral(raw.Body, date)
+	case model.TAInstiCallsPuts:
+		// 買賣權分計明細：直通保留官方欄位（含 CallPut，T134）。
+		out = json.RawMessage(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
 	}

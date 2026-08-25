@@ -1,0 +1,85 @@
+{
+  "arguments": {
+    "contract_code": "臺指選擇權"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 11,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-08-24\",\"contract\":\"臺指選擇權\",\"investor\":\"自營商\",\"long_volume\":64739,\"long_value\":626455000,\"short_volume\":65005,\"short_value\":626587000,\"net_volume\":-266,\"net_value\":-132000,\"oi_long\":35319,\"oi_long_value\":1204116000,\"oi_short\":32682,\"oi_short_value\":1031759000,\"oi_net\":2637,\"oi_net_value\":172357000},{\"date\":\"2026-08-24\",\"contract\":\"臺指選擇權\",\"investor\":\"投信\",\"long_volume\":0,\"long_value\":0,\"short_volume\":620,\"short_value\":30468000,\"net_volume\":-620,\"net_value\":-30468000,\"oi_long\":6,\"oi_long_value\":330000,\"oi_short\":3911,\"oi_short_value\":193742000,\"oi_net\":-3905,\"oi_net_value\":-193412000},{\"date\":\"2026-08-24\",\"contract\":\"臺指選擇權\",\"investor\":\"外資及陸資\",\"long_volume\":67780,\"long_value\":786794000,\"short_volume\":68569,\"short_value\":790107000,\"net_volume\":-789,\"net_value\":-3313000,\"oi_long\":9296,\"oi_long_value\":385441000,\"oi_short\":13100,\"oi_short_value\":606658000,\"oi_net\":-3804,\"oi_net_value\":-221217000}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T17:53:10+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":734,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-08-24",
+            "contract": "臺指選擇權",
+            "investor": "自營商",
+            "long_volume": 64739,
+            "long_value": 626455000,
+            "short_volume": 65005,
+            "short_value": 626587000,
+            "net_volume": -266,
+            "net_value": -132000,
+            "oi_long": 35319,
+            "oi_long_value": 1204116000,
+            "oi_short": 32682,
+            "oi_short_value": 1031759000,
+            "oi_net": 2637,
+            "oi_net_value": 172357000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "臺指選擇權",
+            "investor": "投信",
+            "long_volume": 0,
+            "long_value": 0,
+            "short_volume": 620,
+            "short_value": 30468000,
+            "net_volume": -620,
+            "net_value": -30468000,
+            "oi_long": 6,
+            "oi_long_value": 330000,
+            "oi_short": 3911,
+            "oi_short_value": 193742000,
+            "oi_net": -3905,
+            "oi_net_value": -193412000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "臺指選擇權",
+            "investor": "外資及陸資",
+            "long_volume": 67780,
+            "long_value": 786794000,
+            "short_volume": 68569,
+            "short_value": 790107000,
+            "net_volume": -789,
+            "net_value": -3313000,
+            "oi_long": 9296,
+            "oi_long_value": 385441000,
+            "oi_short": 13100,
+            "oi_short_value": 606658000,
+            "oi_net": -3804,
+            "oi_net_value": -221217000
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T17:53:10+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 734,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}

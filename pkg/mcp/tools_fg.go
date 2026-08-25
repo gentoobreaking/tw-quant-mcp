@@ -625,6 +625,101 @@ func handlerGetInstitutionalFutOptSplitHistory(a *App, args map[string]any) (Han
 	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
 }
 
+// instiTradersByContract：三大法人依契約分類明細共用路徑（T131 期貨 / T133 選擇權）。
+// contract_code 為中文契約名子字串過濾；留空回全部，查無時列出可用契約。
+func instiTradersByContract(a *App, args map[string]any, ds model.TAIFEXDataset) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	code := strings.TrimSpace(strVal(args["contract_code"]))
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	rows, err := taifexRows[model.InstitutionalRow](ds, d, res)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	if code == "" {
+		return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+	}
+	filtered := make([]model.InstitutionalRow, 0, len(rows))
+	for _, r := range rows {
+		if strings.Contains(r.Contract, code) {
+			filtered = append(filtered, r)
+		}
+	}
+	if len(filtered) == 0 {
+		seen := map[string]bool{}
+		names := make([]string, 0, len(rows))
+		for _, r := range rows {
+			if !seen[r.Contract] {
+				seen[r.Contract] = true
+				names = append(names, r.Contract)
+			}
+		}
+		sort.Strings(names)
+		return HandlerResult{}, fmt.Errorf("查無契約「%s」。可用契約：%s", code, strings.Join(names, "、"))
+	}
+	return HandlerResult{Data: filtered, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
+// handlerGetInstitutionalTradersByFutures：三大法人依各期貨契約分類（T131）。
+func handlerGetInstitutionalTradersByFutures(a *App, args map[string]any) (HandlerResult, error) {
+	return instiTradersByContract(a, args, model.TAInstiFutures)
+}
+
+// handlerGetInstitutionalTradersByOptions：三大法人依各選擇權契約分類（T133）。
+func handlerGetInstitutionalTradersByOptions(a *App, args map[string]any) (HandlerResult, error) {
+	return instiTradersByContract(a, args, model.TAInstiOptions)
+}
+
+// handlerGetInstitutionalTradersCallsPuts：三大法人選擇權買賣權分計明細
+// （TAIFEX-API DetailsOfCallsAndPuts，T134；直通官方欄位，含 CallPut CALL/PUT）。
+func handlerGetInstitutionalTradersCallsPuts(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	code := strings.TrimSpace(strVal(args["contract_code"]))
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAInstiCallsPuts, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAInstiCallsPuts, err)
+	}
+	if len(res.Data) == 0 {
+		note := res.Note
+		if note == "" {
+			note = "無資料"
+		}
+		return HandlerResult{}, fmt.Errorf("官方無 %s 於 %s 之資料（%s）", model.TAInstiCallsPuts, d, note)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", model.TAInstiCallsPuts, err)
+	}
+	if code != "" {
+		filtered := make([]map[string]any, 0, len(rows))
+		for _, r := range rows {
+			if s, _ := r["ContractCode"].(string); strings.Contains(s, code) {
+				filtered = append(filtered, r)
+			}
+		}
+		rows = filtered
+	}
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // handlerGetIndexFuturesMargin：股價指數類期貨與選擇權保證金一覽表
 // （TAIFEX-API IndexFuturesAndOptionsMargining，T127）。contract 為中文商品名
 // 子字串過濾（如「臺股期貨」），留空回全部；查無時列出可用商品。

@@ -1,0 +1,85 @@
+{
+  "arguments": {
+    "contract_code": "臺股期貨"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 10,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"date\":\"2026-08-24\",\"contract\":\"臺股期貨\",\"investor\":\"自營商\",\"long_volume\":2899,\"long_value\":26111179000,\"short_volume\":2275,\"short_value\":20478651000,\"net_volume\":624,\"net_value\":5632527000,\"oi_long\":5559,\"oi_long_value\":49771511000,\"oi_short\":3244,\"oi_short_value\":29069862000,\"oi_net\":2315,\"oi_net_value\":20701649000},{\"date\":\"2026-08-24\",\"contract\":\"臺股期貨\",\"investor\":\"投信\",\"long_volume\":124,\"long_value\":1111804000,\"short_volume\":632,\"short_value\":5650987000,\"net_volume\":-508,\"net_value\":-4539183000,\"oi_long\":79244,\"oi_long_value\":709075312000,\"oi_short\":3436,\"oi_short_value\":30745328000,\"oi_net\":75808,\"oi_net_value\":678329984000},{\"date\":\"2026-08-24\",\"contract\":\"臺股期貨\",\"investor\":\"外資及陸資\",\"long_volume\":41988,\"long_value\":378549737000,\"short_volume\":41880,\"short_value\":377616915000,\"net_volume\":108,\"net_value\":932823000,\"oi_long\":6842,\"oi_long_value\":61227091000,\"oi_short\":89371,\"oi_short_value\":799717724000,\"oi_net\":-82529,\"oi_net_value\":-738490633000}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T17:53:09+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1499,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2026-08-24",
+            "contract": "臺股期貨",
+            "investor": "自營商",
+            "long_volume": 2899,
+            "long_value": 26111179000,
+            "short_volume": 2275,
+            "short_value": 20478651000,
+            "net_volume": 624,
+            "net_value": 5632527000,
+            "oi_long": 5559,
+            "oi_long_value": 49771511000,
+            "oi_short": 3244,
+            "oi_short_value": 29069862000,
+            "oi_net": 2315,
+            "oi_net_value": 20701649000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "臺股期貨",
+            "investor": "投信",
+            "long_volume": 124,
+            "long_value": 1111804000,
+            "short_volume": 632,
+            "short_value": 5650987000,
+            "net_volume": -508,
+            "net_value": -4539183000,
+            "oi_long": 79244,
+            "oi_long_value": 709075312000,
+            "oi_short": 3436,
+            "oi_short_value": 30745328000,
+            "oi_net": 75808,
+            "oi_net_value": 678329984000
+          },
+          {
+            "date": "2026-08-24",
+            "contract": "臺股期貨",
+            "investor": "外資及陸資",
+            "long_volume": 41988,
+            "long_value": 378549737000,
+            "short_volume": 41880,
+            "short_value": 377616915000,
+            "net_volume": 108,
+            "net_value": 932823000,
+            "oi_long": 6842,
+            "oi_long_value": 61227091000,
+            "oi_short": 89371,
+            "oi_short_value": 799717724000,
+            "oi_net": -82529,
+            "oi_net_value": -738490633000
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-25T17:53:09+08:00",
+          "data_date": "2026-08-24",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 1499,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 2,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
+    }
+  }
+}
