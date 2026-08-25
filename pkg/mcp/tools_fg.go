@@ -372,6 +372,51 @@ func flexDateArg(s string) string {
 	return s
 }
 
+// handlerGetInstitutionalTotalHistory：三大法人期貨+選擇權合計總表歷史
+// （TAIFEX-DL totalTableDateDown，T130；區間 ≤ 92 日）。
+func handlerGetInstitutionalTotalHistory(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	start := flexDateArg(strVal(args["start"]))
+	if start == "" {
+		start = flexDateArg(strVal(args["start_date"]))
+	}
+	end := flexDateArg(strVal(args["end"]))
+	if end == "" {
+		end = flexDateArg(strVal(args["end_date"]))
+	}
+	if start == "" || end == "" {
+		return HandlerResult{}, fmt.Errorf("參數 start（start_date）與 end（end_date）為必填")
+	}
+	sd, ed, err := validateRange(start, end)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	sT, errT := model.ParseDate(sd)
+	eT, _ := model.ParseDate(ed)
+	if errT == nil && int(eT.Sub(sT).Hours()/24) > instiSplitRangeCap {
+		return HandlerResult{}, fmt.Errorf("查詢區間不可超過 %d 天，請縮小範圍", instiSplitRangeCap)
+	}
+	byDay, err := q.FetchRange(ctx, model.TAInstiTotal, sd, ed, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 範圍查詢失敗: %w", model.TAInstiTotal, err)
+	}
+	rows, err := collectRangeRows[model.InstiGeneralRow](model.TAInstiTotal, byDay)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	sort.Slice(rows, func(i, j int) bool {
+		if rows[i].Date != rows[j].Date {
+			return rows[i].Date < rows[j].Date
+		}
+		return rows[i].Investor < rows[j].Investor
+	})
+	return HandlerResult{Data: rows, Lineage: rangeLineage(byDay, ed, a.taifexTTL())}, nil
+}
+
 // handlerGetPutCallRatio：買賣權比（date 或 range，支援歷史，§10.F）。
 func handlerGetPutCallRatio(a *App, args map[string]any) (HandlerResult, error) {
 	ctx := context.Background()

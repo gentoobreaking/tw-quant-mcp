@@ -234,6 +234,21 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstitutionalGeneral,
 	}) // T129
 	r.Register(ToolDef{
+		Symbol:      "get_institutional_total_history",
+		Name:        "get_institutional_total_history",
+		Description: "查詢三大法人期貨與選擇權合計總表歷史（可回溯查詢；TAIFEX-DL totalTableDateDown，T130）。" +
+			"與 get_institutional_traders_by_futures_history（僅期貨）不同，本工具為期貨+選擇權合計數字。區間不可超過 92 日。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"start": map[string]any{"type": "string", "description": "起始日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 start_date）"},
+				"end":   map[string]any{"type": "string", "description": "結束日期 YYYY-MM-DD（或 YYYYMMDD；亦可用 end_date）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetInstitutionalTotalHistory,
+	}) // T130
+	r.Register(ToolDef{
 		Symbol: "get_institutional_futures_history",
 		Name:   "get_institutional_futures_history",
 		Description: "查詢三大法人期貨部位歷史（TAIFEX-DL 回溯，§9.3；L2 永久快取）。" +

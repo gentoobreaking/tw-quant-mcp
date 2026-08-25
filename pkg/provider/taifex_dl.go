@@ -87,6 +87,10 @@ var taifexDLSpecs = map[model.TAIFEXDataset]taifexDLSpec{
 		view: "futAndOptDate", down: "futAndOptDateDown",
 		fields: []string{"queryStartDate", "queryEndDate"},
 	},
+	model.TAInstiTotal: {
+		view: "totalTableDate", down: "totalTableDateDown",
+		fields: []string{"queryStartDate", "queryEndDate"},
+	},
 }
 
 // dlSupported 判定資料集是否由 DL 提供（§9.2；保證金僅 API）。
@@ -305,6 +309,13 @@ var dlHeaders = map[model.TAIFEXDataset][]string{
 		"期貨多空未平倉口數淨額", "選擇權多空未平倉口數淨額",
 		"期貨多空未平倉契約金額淨額(千元)", "選擇權多空未平倉契約金額淨額(千元)",
 	},
+	model.TAInstiTotal: {
+		"日期", "身份別", "多方交易口數", "多方交易契約金額(百萬元)",
+		"空方交易口數", "空方交易契約金額(百萬元)", "多空交易口數淨額",
+		"多空交易契約金額淨額(百萬元)", "多方未平倉口數", "多方未平倉契約金額(百萬元)",
+		"空方未平倉口數", "空方未平倉契約金額(百萬元)", "多空未平倉口數淨額",
+		"多空未平倉契約金額淨額(百萬元)",
+	},
 }
 
 func validateTAIFEXDL(raw *RawResponse) error {
@@ -406,6 +417,8 @@ func normalizeTAIFEXDL(raw *RawResponse) ([]byte, error) {
 		out = normalizeDLInstitutional(records[1:], col)
 	case model.TAInstiFutOptSplit:
 		out = normalizeDLInstiSplit(records[1:], col)
+	case model.TAInstiTotal:
+		out = normalizeDLInstiGeneral(records[1:], col)
 	case model.TALargeTraderFut, model.TALargeTraderOpt:
 		out = normalizeDLLargeTrader(records[1:], col)
 	case model.TAPutCallRatio:
@@ -577,6 +590,34 @@ func normalizeDLInstiSplit(recs [][]string, col func([]string, string) string) [
 			OptOINet:      dlInt(col(rec, "選擇權多空未平倉口數淨額")),
 			FutOINetVal:   dlFloat(col(rec, "期貨多空未平倉契約金額淨額(千元)")),
 			OptOINetVal:   dlFloat(col(rec, "選擇權多空未平倉契約金額淨額(千元)")),
+		})
+	}
+	return out
+}
+
+// normalizeDLInstiGeneral：三大法人期貨+選擇權合計總表 CSV（T130，欄序同 T129 API CSV）。
+func normalizeDLInstiGeneral(recs [][]string, col func([]string, string) string) []model.InstiGeneralRow {
+	out := make([]model.InstiGeneralRow, 0, len(recs))
+	for _, rec := range recs {
+		d, ok := dlDate(col(rec, "日期"))
+		if !ok {
+			continue
+		}
+		out = append(out, model.InstiGeneralRow{
+			Date:         d,
+			Investor:     col(rec, "身份別"),
+			LongVolume:   dlInt(col(rec, "多方交易口數")),
+			LongValue:    dlFloat(col(rec, "多方交易契約金額(百萬元)")),
+			ShortVolume:  dlInt(col(rec, "空方交易口數")),
+			ShortValue:   dlFloat(col(rec, "空方交易契約金額(百萬元)")),
+			NetVolume:    dlInt(col(rec, "多空交易口數淨額")),
+			NetValue:     dlFloat(col(rec, "多空交易契約金額淨額(百萬元)")),
+			OILong:       dlInt(col(rec, "多方未平倉口數")),
+			OILongValue:  dlFloat(col(rec, "多方未平倉契約金額(百萬元)")),
+			OIShort:      dlInt(col(rec, "空方未平倉口數")),
+			OIShortValue: dlFloat(col(rec, "空方未平倉契約金額(百萬元)")),
+			OINet:        dlInt(col(rec, "多空未平倉口數淨額")),
+			OINetValue:   dlFloat(col(rec, "多空未平倉契約金額淨額(百萬元)")),
 		})
 	}
 	return out

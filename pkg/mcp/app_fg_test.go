@@ -170,6 +170,12 @@ func stubFG(f *fakeTAIFEX) {
 		"2026-07-28": tfStubDL([]model.InstiSplitRow{{Date: "2026-07-28", Investor: "外資及陸資", FutLongVol: 605000, FutNetVol: -9000}}, ""),
 		"2026-07-29": tfStubDL([]model.InstiSplitRow{{Date: "2026-07-29", Investor: "外資及陸資", FutLongVol: 610000, FutNetVol: -8000, OptNetVol: 500}}, ""),
 	}
+	// 三大法人合計總表歷史（T130，DL）
+	f.ranges[tfRangeKey(model.TAInstiTotal, "2026-07-27", "2026-07-29", "")] = map[string]provider.TAIFEXQueryResult{
+		"2026-07-27": tfStubDL([]model.InstiGeneralRow{{Date: "2026-07-27", Investor: "外資及陸資", LongVolume: 700000, NetVolume: -20000}}, ""),
+		"2026-07-28": tfStubDL([]model.InstiGeneralRow{{Date: "2026-07-28", Investor: "外資及陸資", LongVolume: 705000, NetVolume: -19000}}, ""),
+		"2026-07-29": tfStubDL([]model.InstiGeneralRow{{Date: "2026-07-29", Investor: "外資及陸資", LongVolume: 710000, NetVolume: -18000}}, ""),
+	}
 	// 保證金一覽（T127）
 	f.single[tfKey(model.TAMargin, "2026-07-29", "")] = tfStub([]model.MarginRow{
 		{Date: "2026-07-29", Contract: "臺股期貨", ClearingMargin: 214000, MaintenanceMargin: 165000, InitialMargin: 278000},
