@@ -520,6 +520,22 @@ func registerBCTools(r *Registry) {
 	}) // T060
 
 	r.Register(ToolDef{
+		Symbol:      "get_companies_with_independent_directors",
+		Name:        "get_companies_with_independent_directors",
+		Description: "查詢上市公司獨立董監事兼任情形彙總表（TWSE-API t187ap30_L，T063）。可選 name 過濾。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"name":   map[string]any{"type": "string", "description": "公司名稱關鍵字（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  apiListSpec{ds: provider.TWSEAPIIndepDirectors}.handler(),
+	}) // T063
+
+	r.Register(ToolDef{
 		Symbol:      "get_after_hours_trading",
 		Name:        "get_after_hours_trading",
 		Description: "查詢集中市場盤後定價交易（TWSE-WEB BFT41U，T040）。" +
