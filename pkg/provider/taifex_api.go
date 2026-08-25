@@ -58,6 +58,7 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAFAnnualVolume:  "/AnnualTradingVolume",
 	model.TAFMonthlyStats:  "/MonthlyTradingStatisticsFutures", // T148
 	model.TAInstiDivided:   "/MarketDataOfMajorInstitutionalTradersDividedByFuturesAndOptionsBytheDate", // T126
+	model.TAInstiGeneral:   "/MarketDataOfMajorInstitutionalTradersGeneralBytheDate",                     // T129
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -148,6 +149,15 @@ func validateTAIFEXAPI(raw *RawResponse) error {
 		}
 		return nil
 	}
+	if ds == model.TAInstiGeneral {
+		// 三大法人整體交易總表：不帶參數回 CSV（UTF-8 含 BOM）、帶 query 參數
+		// 回 JSON 陣列（T129 實測），兩者皆接受。
+		b := string(raw.Body)
+		if !strings.HasPrefix(b, "\ufeff日期") && !strings.HasPrefix(b, "日期") && !isJSONArray(raw.Body) {
+			return fmt.Errorf("provider: %s 回應非官方 CSV/JSON（格式變更？）", ds)
+		}
+		return nil
+	}
 	if !isJSONArray(raw.Body) {
 		return fmt.Errorf("provider: %s 回應非 JSON 陣列（官方格式可能變更）", ds)
 	}
@@ -196,6 +206,8 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		// 期貨與選擇權合計每日交易資訊：欄位繁多（多空量/金額/OI/契約價值），
 		// 直通保留官方英文鍵名（T126）。
 		out = json.RawMessage(raw.Body)
+	case model.TAInstiGeneral:
+		out, err = normalizeTAIInstiGeneral(raw.Body, date)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
 	}
@@ -516,6 +528,96 @@ func normalizeTAIMargin(body []byte, date, contract string) ([]model.MarginRow, 
 			ClearingMargin:    taifexAPIInt(m["ClearingMargin"]),
 			MaintenanceMargin: taifexAPIInt(m["MaintenanceMargin"]),
 			InitialMargin:     taifexAPIInt(m["InitialMargin"]),
+		})
+	}
+	return out, nil
+}
+
+// normalizeTAIInstiGeneral：三大法人整體交易總表 → InstiGeneralRow（T129）。
+// 端點帶 query 參數時回 JSON 陣列（英文鍵）、不帶參數回 CSV（中文欄），兩者皆處理。
+func normalizeTAIInstiGeneral(body []byte, date string) ([]model.InstiGeneralRow, error) {
+	b := string(body)
+	if strings.HasPrefix(b, "[") || strings.HasPrefix(b, "\ufeff[") {
+		return normalizeTAIInstiGeneralJSON(body, date)
+	}
+	return normalizeTAIInstiGeneralCSV(body, date)
+}
+
+func normalizeTAIInstiGeneralJSON(body []byte, date string) ([]model.InstiGeneralRow, error) {
+	var rows []map[string]json.RawMessage
+	if err := json.Unmarshal(body, &rows); err != nil {
+		return nil, fmt.Errorf("provider: insti_general JSON 解析失敗: %w", err)
+	}
+	wantDate := strings.ReplaceAll(date, "-", "")
+	out := make([]model.InstiGeneralRow, 0, len(rows))
+	for _, raw := range rows {
+		m := taifexAPIMap(raw)
+		d, ok := taifexAPIDate(m["Date"])
+		if !ok {
+			continue
+		}
+		if wantDate != "" && strings.ReplaceAll(d, "-", "") != wantDate {
+			continue
+		}
+		out = append(out, model.InstiGeneralRow{
+			Date: d, Investor: m["Item"],
+			LongVolume: taifexAPIInt(m["TradingVolume(Long)"]), LongValue: taifexAPIFloat(m["TradingValue(Long)(Millions)"]),
+			ShortVolume: taifexAPIInt(m["TradingVolume(Short)"]), ShortValue: taifexAPIFloat(m["TradingValue(Short)(Millions)"]),
+			NetVolume: taifexAPIInt(m["TradingVolume(Net)"]), NetValue: taifexAPIFloat(m["TradingValue(Net)(Millions)"]),
+			OILong: taifexAPIInt(m["OpenInterest(Long)"]), OILongValue: taifexAPIFloat(m["ContractValueOfOpenInterest(Long)(Millions)"]),
+			OIShort: taifexAPIInt(m["OpenInterest(Short)"]), OIShortValue: taifexAPIFloat(m["ContractValueOfOpenInterest(Short)(Millions)"]),
+			OINet: taifexAPIInt(m["OpenInterest(Net)"]), OINetValue: taifexAPIFloat(m["ContractValueOfOpenInterest(Net)(Millions)"]),
+		})
+	}
+	return out, nil
+}
+
+func normalizeTAIInstiGeneralCSV(body []byte, date string) ([]model.InstiGeneralRow, error) {
+	text := strings.TrimPrefix(string(body), "\ufeff")
+	r := csv.NewReader(strings.NewReader(text))
+	r.FieldsPerRecord = -1
+	records, err := r.ReadAll()
+	if err != nil {
+		return nil, fmt.Errorf("provider: insti_general CSV 解析失敗: %w", err)
+	}
+	if len(records) < 2 {
+		return nil, fmt.Errorf("provider: insti_general CSV 無資料列")
+	}
+	idx := map[string]int{}
+	for i, h := range records[0] {
+		idx[strings.TrimSpace(h)] = i
+	}
+	col := func(rec []string, name string) string {
+		if i, ok := idx[name]; ok && i < len(rec) {
+			return strings.TrimSpace(rec[i])
+		}
+		return ""
+	}
+	wantDate := strings.ReplaceAll(date, "-", "") // API date 參數為 YYYY-MM-DD；CSV 為 YYYYMMDD
+	out := make([]model.InstiGeneralRow, 0, len(records)-1)
+	for _, rec := range records[1:] {
+		d, ok := taifexAPIDate(col(rec, "日期"))
+		if !ok {
+			continue
+		}
+		if wantDate != "" && strings.ReplaceAll(d, "-", "") != wantDate {
+			continue
+		}
+		out = append(out, model.InstiGeneralRow{
+			Date:         d,
+			Investor:     col(rec, "身份別"),
+			LongVolume:   taifexAPIInt(col(rec, "多方交易口數")),
+			LongValue:    taifexAPIFloat(col(rec, "多方交易契約金額(百萬元)")),
+			ShortVolume:  taifexAPIInt(col(rec, "空方交易口數")),
+			ShortValue:   taifexAPIFloat(col(rec, "空方交易契約金額(百萬元)")),
+			NetVolume:    taifexAPIInt(col(rec, "多空交易口數淨額")),
+			NetValue:     taifexAPIFloat(col(rec, "多空交易契約金額淨額(百萬元)")),
+			OILong:       taifexAPIInt(col(rec, "多方未平倉口數")),
+			OILongValue:  taifexAPIFloat(col(rec, "多方未平倉契約金額(百萬元)")),
+			OIShort:      taifexAPIInt(col(rec, "空方未平倉口數")),
+			OIShortValue: taifexAPIFloat(col(rec, "空方未平倉契約金額(百萬元)")),
+			OINet:        taifexAPIInt(col(rec, "多空未平倉口數淨額")),
+			OINetValue:   taifexAPIFloat(col(rec, "多空未平倉契約金額淨額(百萬元)")),
 		})
 	}
 	return out, nil

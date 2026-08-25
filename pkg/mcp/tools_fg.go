@@ -509,6 +509,29 @@ func handlerGetFuturesInstitutional(a *App, args map[string]any) (HandlerResult,
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// handlerGetInstitutionalGeneral：三大法人整體交易總表（期貨+選擇權合計，
+// TAIFEX-API GeneralBytheDate，T129；端點回 CSV，date 省略為最新交易日）。
+func handlerGetInstitutionalGeneral(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAInstiGeneral, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAInstiGeneral, err)
+	}
+	rows, err := taifexRows[model.InstiGeneralRow](model.TAInstiGeneral, d, res)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // instiSplitRangeCap 為 T128 分計歷史之最長跨度（遠端對齊 92 日）。
 const instiSplitRangeCap = 92
 

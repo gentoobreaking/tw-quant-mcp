@@ -15,6 +15,7 @@ const (
 	TAInstiFutures   TAIFEXDataset = "insti_futures"    // 三大法人期貨部位
 	TAInstiOptions   TAIFEXDataset = "insti_options"    // 三大法人選擇權部位
 	TAInstiDivided   TAIFEXDataset = "insti_divided"    // 三大法人期貨與選擇權合計每日交易資訊（T126）
+	TAInstiGeneral   TAIFEXDataset = "insti_general"    // 三大法人整體交易總表（CSV，T129）
 	TAInstiFutOptSplit TAIFEXDataset = "insti_fut_opt_split" // 三大法人期貨/選擇權分計歷史（僅 DL，T128）
 	TALargeTraderFut TAIFEXDataset = "large_trader_fut" // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt TAIFEXDataset = "large_trader_opt" // 大額交易人選擇權未沖銷部位
@@ -115,6 +116,25 @@ type InstiSplitRow struct {
 	OptOINet      int64   `json:"opt_oi_net"`      // 選擇權多空未平倉口數淨額
 	FutOINetVal   float64 `json:"fut_oi_net_val"`  // 期貨多空未平倉契約金額淨額（千元）
 	OptOINetVal   float64 `json:"opt_oi_net_val"`  // 選擇權多空未平倉契約金額淨額（千元）
+}
+
+// InstiGeneralRow 為三大法人整體交易總表（期貨+選擇權合計，T129）。
+// 金額單位百萬元。
+type InstiGeneralRow struct {
+	Date         string  `json:"date"`          // YYYY-MM-DD
+	Investor     string  `json:"investor"`      // 身份別
+	LongVolume   int64   `json:"long_volume"`   // 多方交易口數
+	LongValue    float64 `json:"long_value"`    // 多方交易契約金額（百萬元）
+	ShortVolume  int64   `json:"short_volume"`  // 空方交易口數
+	ShortValue   float64 `json:"short_value"`   // 空方交易契約金額（百萬元）
+	NetVolume    int64   `json:"net_volume"`    // 多空交易口數淨額
+	NetValue     float64 `json:"net_value"`     // 多空交易契約金額淨額（百萬元）
+	OILong       int64   `json:"oi_long"`       // 多方未平倉口數
+	OILongValue  float64 `json:"oi_long_value"` // 多方未平倉契約金額（百萬元）
+	OIShort      int64   `json:"oi_short"`      // 空方未平倉口數
+	OIShortValue float64 `json:"oi_short_value"` // 空方未平倉契約金額（百萬元）
+	OINet        int64   `json:"oi_net"`        // 多空未平倉口數淨額
+	OINetValue   float64 `json:"oi_net_value"`  // 多空未平倉契約金額淨額（百萬元）
 }
 
 // LargeTraderRow 為單一商品/月份/交易人類別之大額交易人未沖銷部位。
