@@ -94,6 +94,18 @@ func registerDETools(r *Registry) {
 		Handler:  handlerGetESGReport,
 	})
 	r.Register(ToolDef{
+		Symbol:      "get_companies_with_refineries_in_populated_areas",
+		Name:        "get_companies_with_refineries_in_populated_areas",
+		Description: "查詢所有已申報在人口密集區設有煉油廠的上市公司（排除零值及 N/A；" +
+			"TWSE-API ESG t187ap46_L_15，T065）。", 
+		Schema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetRefineriesPopulatedAreas,
+	}) // T065
+	r.Register(ToolDef{
 		Symbol: "get_company_profile",
 		Name:   "get_company_profile",
 		Description: "查詢公司基本資料（MOPS t187ap03_L：董事長、資本額、上市日期、" +

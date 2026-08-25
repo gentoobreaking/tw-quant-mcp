@@ -18,6 +18,7 @@ import (
 	"net/url"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"tw-quant-mcp/pkg/cache"
@@ -319,4 +320,37 @@ func handlerGetESGReport(a *App, args map[string]any) (HandlerResult, error) {
 	ttl, _ := a.ttlOf(string(cache.DatasetESG))
 	lg := postLineage(usedSource, dataDate, cachedAny, staleAny, ttl)
 	return HandlerResult{Data: out, Lineage: lg}, nil
+}
+
+// esgRefineryField 為 topic 15 之煉油廠數量欄位名（T065）。
+const esgRefineryField = "在人口密集地區的煉油廠數量(座)"
+
+// handlerGetRefineriesPopulatedAreas：人口密集區設有煉油廠之上市公司
+//（ESG topic 15，排除零值與 N/A；T065）。
+func handlerGetRefineriesPopulatedAreas(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	dataDate := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]provider.ESGRow](a, ctx,
+		string(provider.TWSEAPIESG), dataDate,
+		cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIESG), dataDate, "", map[string]string{"topic": "15"}),
+		func() ([]byte, error) {
+			return a.fetchAPIRaw(ctx, provider.TWSEAPIESG, url.Values{"topic": {"15"}})
+		})
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(string(provider.TWSEAPIESG))
+	lineage := postLineage(model.SourceTWSEAPI, dataDate, cached || stale, stale, ttl)
+
+	out := make([]map[string]any, 0)
+	for _, r := range rows {
+		v := strings.TrimSpace(r.Fields[esgRefineryField])
+		if v == "" || v == "N/A" || commaFloat(v) == 0 {
+			continue
+		}
+		out = append(out, map[string]any{
+			"code": r.Code, "name": r.Name, "year": r.Year, "refineries": v,
+		})
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
 }

@@ -76,6 +76,10 @@ func stubDE(f *fakeFetch) {
 		f.stub("esg", urlValuesTopic(topic), `[
 			{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"指標":"topic`+strconv.Itoa(topic)+`"}}]`)
 	}
+	// ESG topic 15：煉油廠（T065）
+	f.stub("esg", urlValuesTopic(15), `[
+		{"report_date":"2026-07-31","year":"2025","code":"6505","name":"台塑石化","fields":{"在人口密集地區的煉油廠數量(座)":"3"}},
+		{"report_date":"2026-07-31","year":"2025","code":"1102","name":"亞泥","fields":{"在人口密集地區的煉油廠數量(座)":"0"}}]`)
 	for _, ds := range mopsESGDatasets {
 		f.stub(string(ds), nil, `[
 			{"report_date":"2026-07-31","year":"2025","code":"2330","name":"台積電","fields":{"指標":"MOPS"}}]`)
