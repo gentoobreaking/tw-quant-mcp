@@ -1352,7 +1352,7 @@ func normalizeMarketClose(raw *RawResponse) ([]MarketCloseRow, error) {
 			High:        commaFloatOrZero(m["最高價"]),
 			Low:         commaFloatOrZero(m["最低價"]),
 			Close:       commaFloatOrZero(m["收盤價"]),
-			ChangeDir:   strings.TrimSpace(m["漲跌(+/-)"]),
+			ChangeDir:   stripHTMLTags(strings.TrimSpace(m["漲跌(+/-)"])),
 			Change:      commaFloatOrZero(m["漲跌價差"]),
 			PE:          commaFloatOrZero(m["本益比"]),
 		}
@@ -2109,4 +2109,27 @@ func normalizePunish(raw *RawResponse) ([]PunishRow, error) {
 		return nil, fmt.Errorf("provider: punish 無有效資料列")
 	}
 	return out, nil
+}
+
+// stripHTMLTags 移除上游欄位值內嵌之 HTML 標籤（如 MI_INDEX 漲跌(+/-) 欄的
+// "<p style= color:red>+</p>"，2026-08 上游改版引入），僅保留標籤間文字。
+func stripHTMLTags(s string) string {
+	if !strings.Contains(s, "<") {
+		return s
+	}
+	var b strings.Builder
+	depth := 0
+	for _, r := range s {
+		switch {
+		case r == '<':
+			depth++
+		case r == '>':
+			if depth > 0 {
+				depth--
+			}
+		case depth == 0:
+			b.WriteRune(r)
+		}
+	}
+	return strings.TrimSpace(b.String())
 }

@@ -1220,3 +1220,53 @@ func handlerGetTwseEvents(a *App, args map[string]any) (HandlerResult, error) {
 	}
 	return HandlerResult{Data: rows, Lineage: lineage}, nil
 }
+
+// handlerGetAllStocksDailyClose：指定日期全市場逐檔收盤行情（T192）。
+// 「單一日期 × 全市場」快照，與 get_stock_daily_quote（個股跨日）互補。
+// 上游 MI_INDEX type=ALLBUT0999 之「每日收盤行情」表；stock_no/name 為
+// 本地端過濾；date 相容 YYYYMMDD 與 YYYY-MM-DD（本機慣例）。
+func handlerGetAllStocksDailyClose(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	rawDate := strVal(args["date"])
+	if len(rawDate) == 8 && !strings.Contains(rawDate, "-") {
+		rawDate = rawDate[:4] + "-" + rawDate[4:6] + "-" + rawDate[6:]
+	}
+	date, err := a.resolveDate(rawDate)
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	limit, offset := listPaging(args)
+	stockNo, nameArg := strVal(args["stock_no"]), strVal(args["name"])
+
+	params := url.Values{"date": {dateYMD(date)}, "type": {"ALLBUT0999"}}
+	rows, cached, stale, err := fetchNormalize[[]provider.MarketCloseRow](a, ctx,
+		string(provider.TWSEWDMarketClose), date,
+		cache.KeyString(model.SourceTWSEWeb, string(provider.TWSEWDMarketClose), date, "", vals(params)),
+		func() ([]byte, error) { return a.fetchWebRaw(ctx, provider.TWSEWDMarketClose, params) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+
+	ttl, _ := a.ttlOf(string(provider.TWSEWDMarketClose))
+	lineage := postLineage(model.SourceTWSEWeb, date, cached || stale, stale, ttl)
+
+	out := make([]provider.MarketCloseRow, 0, len(rows))
+	for _, r := range rows {
+		if stockNo != "" && r.Code != stockNo {
+			continue
+		}
+		if nameArg != "" && !strings.Contains(r.Name, nameArg) {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []provider.MarketCloseRow{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}

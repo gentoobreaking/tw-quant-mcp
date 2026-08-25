@@ -958,6 +958,26 @@ func registerBCTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetTwseEvents,
 	}) // T191
+	r.Register(ToolDef{
+		Symbol:      "get_all_stocks_daily_close",
+		Name:        "get_all_stocks_daily_close",
+		Description: "查詢指定日期全部上市股票的每日收盤行情（開高低收、成交量、本益比；TWSE-WEB MI_INDEX，T192）。" +
+			"與 get_stock_daily_quote（單一股票跨日）互補：此工具是「單一日期查全市場」快照。" +
+			"date 需為交易日；stock_no/name 為本地端過濾；limit/offset 分頁（預設 50）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"date":     map[string]any{"type": "string", "description": "查詢日期 YYYY-MM-DD 或 YYYYMMDD（需為交易日），例如 \"2026-08-25\""},
+				"stock_no": map[string]any{"type": "string", "description": "股票代號（選填），指定則只回傳該股票"},
+				"name":     map[string]any{"type": "string", "description": "股票名稱關鍵字（選填）"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限（預設 50）"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+			"required": []string{"date"},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetAllStocksDailyClose,
+	}) // T192
 
 	r.Register(ToolDef{
 		Symbol:      "get_company_sec_regulatory_penalties",
