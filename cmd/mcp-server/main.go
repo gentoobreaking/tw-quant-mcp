@@ -23,7 +23,7 @@ import (
 )
 
 // version 於 build 時以 -ldflags "-X main.version=..." 覆寫。
-var version = "0.1.0"
+var version = "2.1.0" // 與 docs/RELEASE-v2.1.0.md 同步（make build 可用 VERSION= 覆寫）
 
 func main() {
 	cfg, err := config.Load()

@@ -3,7 +3,7 @@
 # EXPECTED_TOOLS 隨 parity 任務更新（T191–T194 後為 194；唯 set_active_watchlist 可寫）。
 #
 # 用法：
-#   scripts/release_check.sh [version]   # 預設 1.3.0
+#   scripts/release_check.sh [version]   # 預設 2.1.0
 #
 # 驗證項目：
 #   1. CGO_ENABLED=0 go build 產出單一執行檔（CGO-free，無動態 cgo 依賴）
@@ -15,7 +15,7 @@
 
 set -euo pipefail
 
-VERSION="${1:-1.3.0}"
+VERSION="${1:-2.1.0}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BIN="$ROOT/bin/tw-quant-mcp-v$VERSION"
 

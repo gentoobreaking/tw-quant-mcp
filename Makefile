@@ -1,5 +1,5 @@
 BINARY := bin/tw-quant-mcp
-VERSION ?= 0.1.0
+VERSION ?= 2.1.0
 LDFLAGS := -ldflags "-X main.version=$(VERSION)"
 
 .PHONY: build test test-race test-live loadtest fixtures lint vet fmt check run clean snapshots snapshots-call snapshots-render snapshots-report
