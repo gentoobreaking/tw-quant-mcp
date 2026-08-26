@@ -95,6 +95,13 @@ const (
 	TPExWCBDaily      TPExDataset = "wcb_daily"             // 牛熊證收盤行情（T222）
 	TPExWXYIssue      TPExDataset = "wxy_issue"             // 展延牛熊證發行資料（T222）
 	TPExWXYDaily      TPExDataset = "wxy_daily"             // 展延牛熊證收盤行情（T222）
+	TPExRankPE        TPExDataset = "rank_pe"               // 上櫃本益比排行（T223）
+	TPExRankVolume    TPExDataset = "rank_volume"           // 上櫃成交量排行（T223）
+	TPExRankAmount    TPExDataset = "rank_amount"           // 上櫃成交值排行（T223）
+	TPExRankTurnover  TPExDataset = "rank_turnover"         // 上櫃週轉率排行（T223）
+	TPExRankMktVal    TPExDataset = "rank_market_value"     // 上櫃市值排行（T223）
+	TPExRankAmtAvg    TPExDataset = "rank_amount_avg"       // 上櫃日均值排行（T223）
+	TPExRankVolAvg    TPExDataset = "rank_volume_avg"       // 上櫃日均量排行（T223）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -152,6 +159,13 @@ var (
 		TPExWCBDaily:      "/tpex_warrant_wcb_daily_quts",       // 牛熊證收盤行情（T222）
 		TPExWXYIssue:      "/tpex_warrant_wxy_issue",            // 展延牛熊證發行資料（T222）
 		TPExWXYDaily:      "/tpex_warrant_wxy_daily_quts",       // 展延牛熊證收盤行情（T222）
+		TPExRankPE:        "/tpex_pe_ratio_top10",               // 本益比排行（T223）
+		TPExRankVolume:    "/tpex_volume_rank",                  // 成交量排行（T223）
+		TPExRankAmount:    "/tpex_amount_rank",                  // 成交值排行（T223）
+		TPExRankTurnover:  "/tpex_daily_turnover",               // 週轉率排行（T223）
+		TPExRankMktVal:    "/tpex_daily_market_value",           // 市值排行（T223）
+		TPExRankAmtAvg:    "/tpex_trading_amount_avg",           // 日均值排行（T223）
+		TPExRankVolAvg:    "/tpex_trading_volumes_avg",          // 日均量排行（T223）
 	}
 )
 
@@ -364,6 +378,12 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExWCBIssue), string(TPExWCBDaily), string(TPExWXYIssue), string(TPExWXYDaily):
 		// passthrough（T222 實測；牛熊證/展延牛熊證發行與行情，官方中英欄位
 		// 混用，原樣保留）。
+		out = ms
+	case string(TPExRankPE), string(TPExRankVolume), string(TPExRankAmount),
+		string(TPExRankTurnover), string(TPExRankMktVal), string(TPExRankAmtAvg),
+		string(TPExRankVolAvg):
+		// passthrough（T223 實測；歷史排行七類 Date/Rank/Code/Name+各排行
+		// 數值欄位，官方欄名不一，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

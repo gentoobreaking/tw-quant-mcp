@@ -1451,6 +1451,25 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcWcbWxy,
 	}) // T222
 	r.Register(ToolDef{
+		Symbol: "get_otc_history_ranks",
+		Name:   "get_otc_history_ranks",
+		Description: "查詢上櫃歷史排行（TPEx-API tpex_*_rank 系列，T223）。" +
+			"rank 切換七型：pe 本益比／volume 成交量／amount 成交值／turnover 週轉率／market_value 市值／amount_avg 日均值／volume_avg 日均量。" +
+			"code 過濾證券代號；date 過濾日期（官方恆回最新交易日）；limit 預設 50、offset 分頁。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"rank":   map[string]any{"type": "string", "enum": []string{"pe", "volume", "amount", "turnover", "market_value", "amount_avg", "volume_avg"}, "default": "volume", "description": "排行類別"},
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填），過濾特定標的"},
+				"date":   map[string]any{"type": "string", "description": "日期 YYYY-MM-DD（選填，本地端過濾）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcHistoryRanks,
+	}) // T223
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +

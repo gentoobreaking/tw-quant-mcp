@@ -173,6 +173,13 @@ var cacheDataset = map[string]string{
 	string(provider.TPExWCBDaily):           cache.DatasetDailyKLine,     // 牛熊證收盤行情（T222）
 	string(provider.TPExWXYIssue):           cache.DatasetDailyKLine,     // 展延牛熊證發行資料（T222）
 	string(provider.TPExWXYDaily):           cache.DatasetDailyKLine,     // 展延牛熊證收盤行情（T222）
+	string(provider.TPExRankPE):             cache.DatasetDailyKLine,     // 本益比排行（T223）
+	string(provider.TPExRankVolume):         cache.DatasetDailyKLine,     // 成交量排行（T223）
+	string(provider.TPExRankAmount):         cache.DatasetDailyKLine,     // 成交值排行（T223）
+	string(provider.TPExRankTurnover):       cache.DatasetDailyKLine,     // 週轉率排行（T223）
+	string(provider.TPExRankMktVal):         cache.DatasetDailyKLine,     // 市值排行（T223）
+	string(provider.TPExRankAmtAvg):         cache.DatasetDailyKLine,     // 日均值排行（T223）
+	string(provider.TPExRankVolAvg):         cache.DatasetDailyKLine,     // 日均量排行（T223）
 	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）

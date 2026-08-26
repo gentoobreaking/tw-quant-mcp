@@ -2176,6 +2176,65 @@ var wcbWxyDatasets = map[string]provider.TPExDataset{
 	"wxy|daily": provider.TPExWXYDaily,
 }
 
+// otcRankDatasets 為 T223 rank → 資料集對應（七排行共用模式）。
+var otcRankDatasets = map[string]provider.TPExDataset{
+	"pe":           provider.TPExRankPE,
+	"volume":       provider.TPExRankVolume,
+	"amount":       provider.TPExRankAmount,
+	"turnover":     provider.TPExRankTurnover,
+	"market_value": provider.TPExRankMktVal,
+	"amount_avg":   provider.TPExRankAmtAvg,
+	"volume_avg":   provider.TPExRankVolAvg,
+}
+
+// handlerGetOtcHistoryRanks：上櫃歷史排行系列（TPEx-API tpex_*_rank 等，
+// T223）。rank 切換 pe/volume/amount/turnover/market_value/amount_avg/
+// volume_avg 七型；code 過濾；passthrough。官方端點不接受日期參數
+// （恆回最新交易日），date 僅供本地端過濾 Date 欄。
+func handlerGetOtcHistoryRanks(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	rankArg := strVal(args["rank"])
+	if rankArg == "" {
+		rankArg = "volume"
+	}
+	ds, ok := otcRankDatasets[rankArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("rank 僅接受 pe/volume/amount/turnover/market_value/amount_avg/volume_avg，得到 %q", rankArg)
+	}
+	code := strVal(args["code"])
+	dateFilter := strings.ReplaceAll(strVal(args["date"]), "-", "")
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code+"|"+dateFilter, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode", "StockCode") != code {
+			continue
+		}
+		if dateFilter != "" && rowField(r, "Date") != dateFilter {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // handlerGetOtcWcbWxy：上櫃牛熊證/展延型牛熊證（T222，tpex_warrant_wcb_*/
 // wxy_*）。kind 切換 wcb/wxy；view 切換 issue/daily；code/underlying 過濾。
 func handlerGetOtcWcbWxy(a *App, args map[string]any) (HandlerResult, error) {
