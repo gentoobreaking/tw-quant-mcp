@@ -82,6 +82,14 @@ const (
 	TACMLists          TAIFEXDataset = "cm_lists"              // 結算會員名冊（僅 API，T234）
 	TAClearBankLists   TAIFEXDataset = "clear_bank_lists"      // 結算銀行名冊（僅 API，T234）
 	TACCP_CMLists      TAIFEXDataset = "ccp_cm_lists"          // CCP結算會員名冊（僅 API，T234）
+	TAFCMVolDailyFut   TAIFEXDataset = "fcm_vol_daily_fut"     // 期貨商交易量日報表-期貨（僅 API，T235）
+	TAFCMVolDailyOpt   TAIFEXDataset = "fcm_vol_daily_opt"     // 期貨商交易量日報表-選擇權（僅 API，T235）
+	TAFCMVolWeeklyFut  TAIFEXDataset = "fcm_vol_weekly_fut"    // 期貨商交易量週報表-期貨（僅 API，T235）
+	TAFCMVolWeeklyOpt  TAIFEXDataset = "fcm_vol_weekly_opt"    // 期貨商交易量週報表-選擇權（僅 API，T235）
+	TAFCMVolMonthlyFut TAIFEXDataset = "fcm_vol_monthly_fut"   // 期貨商交易量月報表-期貨（僅 API，T235）
+	TAFCMVolMonthlyOpt TAIFEXDataset = "fcm_vol_monthly_opt"   // 期貨商交易量月報表-選擇權（僅 API，T235）
+	TAFCMVolYearlyFut  TAIFEXDataset = "fcm_vol_yearly_fut"    // 期貨商交易量年報表-期貨（僅 API，T235）
+	TAFCMVolYearlyOpt  TAIFEXDataset = "fcm_vol_yearly_opt"    // 期貨商交易量年報表-選擇權（僅 API，T235）
 	TAStockOptOID      TAIFEXDataset = "stock_opt_oi_delta"    // 每日個股選擇權未平倉量增減（僅 API，T210）
 	TAStockFutStatsD   TAIFEXDataset = "stock_fut_stats_d"     // 每日個股期貨交易量統計（僅 API，T210）
 	TAStockFutStatsM   TAIFEXDataset = "stock_fut_stats_m"     // 每月個股期貨交易量統計（僅 API，T210）

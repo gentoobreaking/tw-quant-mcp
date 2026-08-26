@@ -84,7 +84,7 @@ func (a *App) querier() (TAIFEXQuerier, error) {
 }
 
 // taifexDate 解析 date 參數：省略時以最新交易日（API 判定）補齊。
-func taifexDate(a *App, q TAIFEXQuerier, ctx context.Context, date string) (string, error) {
+func taifexDate(_ *App, q TAIFEXQuerier, ctx context.Context, date string) (string, error) {
 	if date != "" {
 		t, err := model.ParseDate(date)
 		if err != nil {
@@ -2360,6 +2360,74 @@ func handlerGetMarketMakerCmLists(a *App, args map[string]any) (HandlerResult, e
 	out := make([]any, 0, len(rows))
 	for _, r := range rows {
 		if code != "" && rowField(r, "FCMCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
+// fcmVolKeys 為 T235 freq×market → 資料集對應。
+var fcmVolKeys = map[string]model.TAIFEXDataset{
+	"daily|fut":   model.TAFCMVolDailyFut,
+	"daily|opt":   model.TAFCMVolDailyOpt,
+	"weekly|fut":  model.TAFCMVolWeeklyFut,
+	"weekly|opt":  model.TAFCMVolWeeklyOpt,
+	"monthly|fut": model.TAFCMVolMonthlyFut,
+	"monthly|opt": model.TAFCMVolMonthlyOpt,
+	"yearly|fut":  model.TAFCMVolYearlyFut,
+	"yearly|opt":  model.TAFCMVolYearlyOpt,
+}
+
+// handlerGetFcmVolumeReports：期貨商交易量日/週/月/年報表（TAIFEX-API
+// Daily_FUT 等，T235）。freq 切換 daily/weekly/monthly/yearly；market
+// 切換 fut/opt；code 過濾 FCMCode；passthrough。
+func handlerGetFcmVolumeReports(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	freq := strVal(args["freq"])
+	if freq == "" {
+		freq = "daily"
+	}
+	market := strVal(args["market"])
+	if market == "" {
+		market = "fut"
+	}
+	ds, ok := fcmVolKeys[freq+"|"+market]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("freq 僅接受 daily/weekly/monthly/yearly，market 僅接受 fut/opt，得到 %s/%s", freq, market)
+	}
+	d, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	if len(res.Data) == 0 {
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料", ds)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	code := strings.TrimSpace(strVal(args["code"]))
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "FCMCode") != code && !strings.Contains(rowField(r, "FCMName"), code) {
 			continue
 		}
 		out = append(out, r)

@@ -121,6 +121,14 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TACMLists:          "/CMLists",                                                                  // 結算會員名冊（T234）
 	model.TAClearBankLists:   "/ClearingBankLists",                                                        // 結算銀行名冊（T234）
 	model.TACCP_CMLists:      "/CCP_CMLists",                                                              // CCP結算會員名冊（T234）
+	model.TAFCMVolDailyFut:   "/Daily_FUT",                                                                // 交易量日報表-期貨（T235）
+	model.TAFCMVolDailyOpt:   "/Daily_OPT",                                                                // 交易量日報表-選擇權（T235）
+	model.TAFCMVolWeeklyFut:  "/Weekly_FUT",                                                               // 交易量週報表-期貨（T235）
+	model.TAFCMVolWeeklyOpt:  "/Weekly_OPT",                                                               // 交易量週報表-選擇權（T235）
+	model.TAFCMVolMonthlyFut: "/Monthly_FUT",                                                              // 交易量月報表-期貨（T235）
+	model.TAFCMVolMonthlyOpt: "/Monthly_OPT",                                                              // 交易量月報表-選擇權（T235）
+	model.TAFCMVolYearlyFut:  "/Yearly_FUT",                                                               // 交易量年報表-期貨（T235）
+	model.TAFCMVolYearlyOpt:  "/Yearly_OPT",                                                               // 交易量年報表-選擇權（T235）
 	model.TAStockOptOID:      "/va02",                                                                     // 每日個股選擇權未平倉量增減（T210）
 	model.TAStockFutStatsD:   "/va12",                                                                     // 每日個股期貨交易量統計（T210）
 	model.TAStockFutStatsM:   "/va13",                                                                     // 每月個股期貨交易量統計（T210）
@@ -337,6 +345,12 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		model.TAClearBankLists, model.TACCP_CMLists:
 		// 造市者/結算會員/結算銀行名冊：直通保留官方欄位（T234；FCMCode/
 		// Contract/ClearBankName/Type 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TAFCMVolDailyFut, model.TAFCMVolDailyOpt, model.TAFCMVolWeeklyFut,
+		model.TAFCMVolWeeklyOpt, model.TAFCMVolMonthlyFut, model.TAFCMVolMonthlyOpt,
+		model.TAFCMVolYearlyFut, model.TAFCMVolYearlyOpt:
+		// 期貨商交易量日/週/月/年報表：直通保留官方欄位（T235；FCMCode/
+		// Date/FromDate/Contract/Volume 等）。
 		out = json.RawMessage(raw.Body)
 	case model.TAStockOptOID, model.TAStockFutStatsD, model.TAStockFutStatsM,
 		model.TAStockFutStatsY:

@@ -271,6 +271,10 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TACMLists, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"FCMCode": "F001", "FCMName": "國泰期貨(股)公司", "Type": "一般", "Date": "20260825"},
 	})
+	// 期貨商交易量報表（T235，直通官方欄位）
+	f.single[tfKey(model.TAFCMVolDailyFut, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"FCMCode": "F004000", "FCMName": "凱基期貨", "Date": "20260803", "Contract": "MXF", "Volume": "264272"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},

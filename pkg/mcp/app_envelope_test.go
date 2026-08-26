@@ -391,6 +391,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_fx_rate", args: map[string]any{}},
 		{name: "get_e_trade_qty", args: map[string]any{}},
 		{name: "get_market_maker_cm_lists", args: map[string]any{"kind": "cm", "limit": 3}},
+		{name: "get_fcm_volume_reports", args: map[string]any{"freq": "daily", "market": "fut", "limit": 3}},
 		{name: "get_otc_exdividend_result", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_targets", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_statistics", args: map[string]any{}},

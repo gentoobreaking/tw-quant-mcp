@@ -435,6 +435,24 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetMarketMakerCmLists,
 	}) // T234
 	r.Register(ToolDef{
+		Symbol: "get_fcm_volume_reports",
+		Name:   "get_fcm_volume_reports",
+		Description: "查詢期貨商交易量日/週/月/年報表（TAIFEX-API Daily_FUT 等，T235）。" +
+			"freq 切換 daily/weekly/monthly/yearly；market 切換 fut/opt。code 過濾期貨商代號或名稱；limit 預設 50、offset 分頁。利基/長尾資料，供期貨商市占分析。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"freq":   map[string]any{"type": "string", "enum": []string{"daily", "weekly", "monthly", "yearly"}, "default": "daily", "description": "報表頻率"},
+				"market": map[string]any{"type": "string", "enum": []string{"fut", "opt"}, "default": "fut", "description": "期貨或選擇權"},
+				"code":   map[string]any{"type": "string", "description": "期貨商代號或名稱子字串（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetFcmVolumeReports,
+	}) // T235
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +

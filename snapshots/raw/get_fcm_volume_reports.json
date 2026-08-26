@@ -1,0 +1,19 @@
+{
+  "arguments": {
+    "freq": "weekly",
+    "market": "opt",
+    "code": "凱基",
+    "limit": 2
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"Contract\":\"TEO\",\"FCMCode\":\"F004000\",\"FCMName\":\"凱基期貨\",\"FromDate\":\"20260803\",\"ToDate\":\"20260807\",\"Volume\":\"0\"},{\"Contract\":\"TFO\",\"FCMCode\":\"F004000\",\"FCMName\":\"凱基期貨\",\"FromDate\":\"20260803\",\"ToDate\":\"20260807\",\"Volume\":\"78\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T10:59:34+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1349,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}
