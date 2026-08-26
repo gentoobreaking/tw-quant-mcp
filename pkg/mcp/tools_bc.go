@@ -1708,6 +1708,76 @@ func handlerGetEmergingBoardHoldings(a *App, args map[string]any) (HandlerResult
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// emgFinSectors 為 T215 六產業格式後綴（fallback 順序同 T092/T158）。
+var emgFinSectors = []string{"ci", "fh", "basi", "bd", "ins", "mim"}
+
+// handlerGetEmergingFinancialStatements：興櫃財報三表（T215，
+// mopsfin_t187ap06_U_*/t187ap07_U_*，statement=income/balance）。
+// 六產業格式依序 fallback（同 T092/T158 模式），重用 TPExOtcMopsfin
+// kind 模板；passthrough 中文欄位；code 必填過濾。
+func handlerGetEmergingFinancialStatements(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	if code == "" {
+		return HandlerResult{}, fmt.Errorf("code 為必填參數")
+	}
+	statement := strVal(args["statement"])
+	if statement == "" {
+		statement = "income"
+	}
+	base := map[string]string{"income": "t187ap06_U_", "balance": "t187ap07_U_"}[statement]
+	if base == "" {
+		return HandlerResult{}, fmt.Errorf("statement 僅接受 income 或 balance，得到 %q", statement)
+	}
+	date := a.now().Format("2006-01-02")
+	var out []any
+	var lineage *model.Lineage
+	var lastErr error
+	for _, suf := range emgFinSectors {
+		path := base + suf
+		rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+			string(provider.TPExOtcMopsfin), date,
+			cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcMopsfin), date,
+				path+"|"+code, map[string]string{"kind": path}),
+			func() ([]byte, error) {
+				return a.fetchTPExRaw(ctx, provider.TPExOtcMopsfin,
+					url.Values{"kind": {path}})
+			})
+		if err != nil {
+			lastErr = err
+			continue // 空類別或暫時性錯誤則略過，掃下一產業格式
+		}
+		ttl, _ := a.ttlOf(cache.DatasetCalendar)
+		lineage = postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+		for _, r := range rows {
+			// 損益表用 SecuritiesCompanyCode、資產負債表用「公司代號」（官方不一致）。
+			if rowField(r, "SecuritiesCompanyCode", "公司代號") == code {
+				out = append(out, r)
+			}
+		}
+		if len(out) > 0 {
+			break // 命中即停（同一公司僅屬一產業格式）
+		}
+	}
+	if len(out) == 0 {
+		if lastErr != nil {
+			return HandlerResult{}, lastErr
+		}
+		return HandlerResult{}, fmt.Errorf("查無 %s 之興櫃%s資料", code,
+			map[string]string{"income": "綜合損益表", "balance": "資產負債表"}[statement])
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // handlerGetOtcExdividendResult：上櫃除權息計算結果表（T200）。
 // 對稱上市預告表 get_exdividend_calendar；本工具為事後實際計算數據。
 func handlerGetOtcExdividendResult(a *App, args map[string]any) (HandlerResult, error) {

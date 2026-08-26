@@ -1258,6 +1258,25 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetEmergingBoardHoldings,
 	}) // T214
 	r.Register(ToolDef{
+		Symbol: "get_emerging_financial_statements",
+		Name:   "get_emerging_financial_statements",
+		Description: "查詢興櫃公司財報（TPEx-API mopsfin_t187ap06_U_*/t187ap07_U_*，T215）。" +
+			"statement 切換 income 綜合損益表／balance 資產負債表，預設 income。" +
+			"六產業格式（一般/金控/證券期貨/保險/醫療/異業）依序 fallback，同 T092/T158 模式。code 必填；limit 預設 50、offset 分頁。對稱上市財報工具。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":      map[string]any{"type": "string", "description": "興櫃證券代號（必填），如 1260"},
+				"statement": map[string]any{"type": "string", "enum": []string{"income", "balance"}, "default": "income", "description": "報表類型：綜合損益表或資產負債表"},
+				"limit":     map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":    map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+			"required": []string{"code"},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetEmergingFinancialStatements,
+	}) // T215
+	r.Register(ToolDef{
 		Symbol: "get_otc_exdividend_result",
 		Name:   "get_otc_exdividend_result",
 		Description: "查詢上櫃股票除權息「計算結果」表（TPEx-API tpex_exright_daily，T200）。" +
