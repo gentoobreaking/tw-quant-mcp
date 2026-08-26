@@ -41,6 +41,17 @@ const (
 	TAFSPIR            TAIFEXDataset = "fsp_ir"                // 最後結算價-利率類（僅 API，T205）
 	TASPOptions        TAIFEXDataset = "fsp_options"           // 最後結算價-選擇權商品（僅 API，T205）
 	TAFSPSSO           TAIFEXDataset = "fsp_sso"               // 最後結算價-股票選擇權（僅 API，T205）
+	TASPAll            TAIFEXDataset = "sp_all"                // 到期履約交割-全部（僅 API，T206）
+	TASFutures         TAIFEXDataset = "sp_futures"            // 到期履約交割-期貨商品（僅 API，T206）
+	TASPIdxOpt         TAIFEXDataset = "sp_index_options"      // 到期履約交割-指數選擇權（僅 API，T206）
+	TASPFx             TAIFEXDataset = "sp_fx"                 // 到期履約交割-匯率選擇權（僅 API，T206）
+	TASPFxFut          TAIFEXDataset = "sp_fx_futures"         // 到期履約交割-匯率期貨（僅 API，T206）
+	TASPGold           TAIFEXDataset = "sp_gold"               // 到期履約交割-商品類（僅 API，T206）
+	TASPIR             TAIFEXDataset = "sp_ir"                 // 到期履約交割-利率類（僅 API，T206）
+	TASPIdxFut         TAIFEXDataset = "sp_index_futures"      // 到期履約交割-指數期貨（僅 API，T206）
+	TASPOpt            TAIFEXDataset = "sp_options"            // 到期履約交割-選擇權商品（僅 API，T206）
+	TASPSSF            TAIFEXDataset = "sp_ssf"                // 到期履約交割-股票期貨（僅 API，T206）
+	TASPSSO            TAIFEXDataset = "sp_sso"                // 到期履約交割-股票選擇權（僅 API，T206）
 	TALargeTraderFut   TAIFEXDataset = "large_trader_fut"      // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt   TAIFEXDataset = "large_trader_opt"      // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio     TAIFEXDataset = "put_call_ratio"        // 買賣權比（PCR）

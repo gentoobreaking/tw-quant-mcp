@@ -80,6 +80,17 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAFSPIR:            "/FinalSettlementPriceIR",                                                   // 最後結算價-利率類（T205）
 	model.TASPOptions:        "/FinalSettlementPriceOptions",                                              // 最後結算價-選擇權（T205）
 	model.TAFSPSSO:           "/FinalSettlementPriceSSO",                                                  // 最後結算價-股票選擇權（T205）
+	model.TASPAll:            "/SettledPositionsOfContractsOnExpirationDate",                              // 到期履約交割-全部（T206）
+	model.TASFutures:         "/SettledPositionsFutures",                                                  // 到期履約交割-期貨商品（T206）
+	model.TASPIdxOpt:         "/SettledPositionsIndexOptions",                                             // 到期履約交割-指數選擇權（T206）
+	model.TASPFx:             "/SettledPositionsFX",                                                       // 到期履約交割-匯率選擇權（T206）
+	model.TASPFxFut:          "/SettledPositionsFXFutures",                                                // 到期履約交割-匯率期貨（T206）
+	model.TASPGold:           "/SettledPositionsGold",                                                     // 到期履約交割-商品類（T206）
+	model.TASPIR:             "/SettledPositionsIR",                                                       // 到期履約交割-利率類（T206）
+	model.TASPIdxFut:         "/SettledPositionsIndexFutures",                                             // 到期履約交割-指數期貨（T206）
+	model.TASPOpt:            "/SettledPositionsOptions",                                                  // 到期履約交割-選擇權商品（T206）
+	model.TASPSSF:            "/SettledPositionsSSF",                                                      // 到期履約交割-股票期貨（T206）
+	model.TASPSSO:            "/SettledPositionsSSO",                                                      // 到期履約交割-股票選擇權（T206）
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -250,6 +261,12 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		model.TASPOptions, model.TAFSPSSO:
 		// 最後結算價系列：直通保留官方欄位（T205；TheFinalSettlementDay/
 		// Contract/ContractName/ContractDeliveryMonth/TheFinalSettlementPrice）。
+		out = json.RawMessage(raw.Body)
+	case model.TASPAll, model.TASFutures, model.TASPIdxOpt, model.TASPFx,
+		model.TASPFxFut, model.TASPGold, model.TASPIR, model.TASPIdxFut,
+		model.TASPOpt, model.TASPSSF, model.TASPSSO:
+		// 到期契約履約交割系列：直通保留官方欄位（T206；TheFinalSettlementDay/
+		// Contract/ContractName/Long/Short/CallPut 等）。
 		out = json.RawMessage(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
