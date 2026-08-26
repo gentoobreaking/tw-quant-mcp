@@ -453,6 +453,23 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetFcmVolumeReports,
 	}) // T235
 	r.Register(ToolDef{
+		Symbol: "get_calendar_spread_trades",
+		Name:   "get_calendar_spread_trades",
+		Description: "查詢期貨價差委託成交（TAIFEX-API DailyVolumeReportOnCalendarSpreadOrders / TimeAndSalesDataOnCalendarSpreadOrders，T236）。" +
+			"kind 切換 summary 每日概況表／tick 每筆成交。code 過濾商品代碼；limit 預設 50、offset 分頁。利基/長尾資料，供價差策略研究。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"summary", "tick"}, "default": "summary", "description": "每日概況或逐筆成交"},
+				"code":   map[string]any{"type": "string", "description": "商品代碼（選填，如 BRF）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetCalendarSpreadTrades,
+	}) // T236
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +

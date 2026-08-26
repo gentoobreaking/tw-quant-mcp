@@ -90,6 +90,8 @@ const (
 	TAFCMVolMonthlyOpt TAIFEXDataset = "fcm_vol_monthly_opt"   // 期貨商交易量月報表-選擇權（僅 API，T235）
 	TAFCMVolYearlyFut  TAIFEXDataset = "fcm_vol_yearly_fut"    // 期貨商交易量年報表-期貨（僅 API，T235）
 	TAFCMVolYearlyOpt  TAIFEXDataset = "fcm_vol_yearly_opt"    // 期貨商交易量年報表-選擇權（僅 API，T235）
+	TASpreadSummary    TAIFEXDataset = "spread_summary"        // 每日期貨價差委託成交概況表（僅 API，T236）
+	TASpreadTick       TAIFEXDataset = "spread_tick"           // 每日期貨價差每筆成交資料（僅 API，T236）
 	TAStockOptOID      TAIFEXDataset = "stock_opt_oi_delta"    // 每日個股選擇權未平倉量增減（僅 API，T210）
 	TAStockFutStatsD   TAIFEXDataset = "stock_fut_stats_d"     // 每日個股期貨交易量統計（僅 API，T210）
 	TAStockFutStatsM   TAIFEXDataset = "stock_fut_stats_m"     // 每月個股期貨交易量統計（僅 API，T210）

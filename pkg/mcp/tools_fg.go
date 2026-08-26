@@ -2443,3 +2443,62 @@ func handlerGetFcmVolumeReports(a *App, args map[string]any) (HandlerResult, err
 	}
 	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
+
+// spreadKinds 為 T236 kind → 資料集對應。
+var spreadKinds = map[string]model.TAIFEXDataset{
+	"summary": model.TASpreadSummary,
+	"tick":    model.TASpreadTick,
+}
+
+// handlerGetCalendarSpreadTrades：期貨價差委託成交（TAIFEX-API
+// DailyVolumeReportOnCalendarSpreadOrders / TimeAndSalesDataOnCalendarSpread
+// Orders，T236）。kind 切換 summary 概況表／tick 逐筆成交；code 過濾
+// ProductCode；passthrough。
+func handlerGetCalendarSpreadTrades(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "summary"
+	}
+	ds, ok := spreadKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 summary 或 tick，得到 %q", kindArg)
+	}
+	d, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	if len(res.Data) == 0 {
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料", ds)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	code := strings.TrimSpace(strVal(args["code"]))
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "ProductCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}

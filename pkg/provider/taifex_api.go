@@ -129,6 +129,8 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAFCMVolMonthlyOpt: "/Monthly_OPT",                                                              // 交易量月報表-選擇權（T235）
 	model.TAFCMVolYearlyFut:  "/Yearly_FUT",                                                               // 交易量年報表-期貨（T235）
 	model.TAFCMVolYearlyOpt:  "/Yearly_OPT",                                                               // 交易量年報表-選擇權（T235）
+	model.TASpreadSummary:    "/DailyVolumeReportOnCalendarSpreadOrders",                                  // 價差委託成交概況表（T236）
+	model.TASpreadTick:       "/TimeAndSalesDataOnCalendarSpreadOrders",                                   // 價差每筆成交資料（T236）
 	model.TAStockOptOID:      "/va02",                                                                     // 每日個股選擇權未平倉量增減（T210）
 	model.TAStockFutStatsD:   "/va12",                                                                     // 每日個股期貨交易量統計（T210）
 	model.TAStockFutStatsM:   "/va13",                                                                     // 每月個股期貨交易量統計（T210）
@@ -351,6 +353,11 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		model.TAFCMVolYearlyFut, model.TAFCMVolYearlyOpt:
 		// 期貨商交易量日/週/月/年報表：直通保留官方欄位（T235；FCMCode/
 		// Date/FromDate/Contract/Volume 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TASpreadSummary, model.TASpreadTick:
+		// 價差委託成交：直通保留官方欄位（T236；Date/ProductCode/
+		// FuturesSpreadTradingVolume(Buy+Sell)/ContractMonth(Week)/
+		// TimeOfTrades 等）。
 		out = json.RawMessage(raw.Body)
 	case model.TAStockOptOID, model.TAStockFutStatsD, model.TAStockFutStatsM,
 		model.TAStockFutStatsY:
