@@ -1488,6 +1488,24 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcBrokerTurnover,
 	}) // T224
 	r.Register(ToolDef{
+		Symbol: "get_otc_block_trade",
+		Name:   "get_otc_block_trade",
+		Description: "查詢上櫃鉅額交易系列（TPEx-API tpex_daily_qutoes_block 等，T225）。" +
+			"kind 切換 day 逐筆成交／stock 個股成交／summary_day 日量值統計／monthly 月統計／yearly 年統計。" +
+			"code 過濾證券代號（日/個股類）；limit 預設 50、offset 分頁。對稱 TWSE 鉅額交易系列（T042–T045）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"day", "stock", "summary_day", "monthly", "yearly"}, "default": "day", "description": "資料類型"},
+				"code":   map[string]any{"type": "string", "description": "證券代號子字串（選填，日/個股類適用）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcBlockTrade,
+	}) // T225
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +

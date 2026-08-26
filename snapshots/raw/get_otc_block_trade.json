@@ -1,0 +1,17 @@
+{
+  "arguments": {
+    "kind": "monthly",
+    "limit": 2
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"MarketShare\":\"0.00\",\"Month\":\"11501\",\"NumberOfSharesTraded\":\"0\",\"NumberOfTransactions\":\"0\",\"TradeValue\":\"0\",\"Type\":\"配對交易-組合型\"},{\"MarketShare\":\"0.95\",\"Month\":\"11501\",\"NumberOfSharesTraded\":\"1216683000\",\"NumberOfTransactions\":\"92\",\"TradeValue\":\"37176860542\",\"Type\":\"配對交易-單一型\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T09:55:17+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":154,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

@@ -182,6 +182,11 @@ var cacheDataset = map[string]string{
 	string(provider.TPExRankVolAvg):         cache.DatasetDailyKLine,     // 日均量排行（T223）
 	string(provider.TPExBrokerBranch):       cache.DatasetDailyKLine,     // 券商分公司營業金額（T224）
 	string(provider.TPExBrokerHQ):           cache.DatasetDailyKLine,     // 券商總公司營業金額（T224）
+	string(provider.TPExBlockDay):           cache.DatasetDailyKLine,     // 鉅額交易日成交資訊（T225）
+	string(provider.TPExBlockStock):         cache.DatasetDailyKLine,     // 個股鉅額交易成交資訊（T225）
+	string(provider.TPExBlockSummaryD):      cache.DatasetDailyKLine,     // 鉅額交易日量值統計（T225）
+	string(provider.TPExBlockMonthly):       cache.DatasetDailyKLine,     // 鉅額交易月統計（T225）
+	string(provider.TPExBlockYearly):        cache.DatasetDailyKLine,     // 鉅額交易年統計（T225）
 	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）
