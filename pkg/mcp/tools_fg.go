@@ -1553,6 +1553,131 @@ func handlerGetFcmProfiles(a *App, args map[string]any) (HandlerResult, error) {
 	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// posLimitCats 為 T231 category → 資料集對應。
+var posLimitCats = map[string]model.TAIFEXDataset{
+	"equity":     model.TAPosLimitEquity,
+	"non_equity": model.TAPosLimitNonEq,
+}
+
+// handlerGetPositionLimits：交易人部位限制（TAIFEX-API PositionLimit*，
+// T231）。category 切換 equity 個股類／non_equity 非個股類；contract 過濾；
+// passthrough。
+func handlerGetPositionLimits(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	catArg := strVal(args["category"])
+	if catArg == "" {
+		catArg = "equity"
+	}
+	ds, ok := posLimitCats[catArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("category 僅接受 equity 或 non_equity，得到 %q", catArg)
+	}
+	d, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	if len(res.Data) == 0 {
+		note := res.Note
+		if note == "" {
+			note = "無資料"
+		}
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料（%s）", ds, note)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	contract := strings.TrimSpace(strVal(args["contract"]))
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if contract != "" && rowField(r, "Contract") != contract {
+			continue
+		}
+		out = append(out, r)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
+// contractAdjViews 為 T231 view → 資料集對應。
+var contractAdjViews = map[string]model.TAIFEXDataset{
+	"adjust":   model.TAContractAdj,
+	"adjusted": model.TASSFAdjustedInfo,
+	"fee":      model.TAFeeSchedule,
+}
+
+// handlerGetContractAdjust：契約調整與收費標準（TAIFEX-API ContractAdj 等，
+// T231）。view 切換 adjust 調整一覽事項／adjusted 調整型契約資訊／fee 收費
+// 標準表；contract 過濾；passthrough。
+func handlerGetContractAdjust(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	viewArg := strVal(args["view"])
+	if viewArg == "" {
+		viewArg = "adjust"
+	}
+	ds, ok := contractAdjViews[viewArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("view 僅接受 adjust/adjusted/fee，得到 %q", viewArg)
+	}
+	d, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	if len(res.Data) == 0 {
+		note := res.Note
+		if note == "" {
+			note = "無資料"
+		}
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料（%s）", ds, note)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	contract := strings.TrimSpace(strVal(args["contract"]))
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if contract != "" && rowField(r, "Contract") != contract && !strings.Contains(rowField(r, "StockId"), contract) {
+			continue
+		}
+		out = append(out, r)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // handlerGetInstitutionalGeneral：三大法人整體交易總表（期貨+選擇權合計，
 // TAIFEX-API GeneralBytheDate，T129；端點回 CSV，date 省略為最新交易日）。
 func handlerGetInstitutionalGeneral(a *App, args map[string]any) (HandlerResult, error) {

@@ -1,0 +1,17 @@
+{
+  "arguments": {
+    "category": "non_equity",
+    "limit": 2
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"Contract\":\"BRF\",\"ContractName\":\"布蘭特原油期貨\",\"Individual\":\"1000\",\"Institution\":\"3000\",\"ProprietaryTrader/MarketMaker\":\"9000\"},{\"Contract\":\"BTF\",\"ContractName\":\"臺灣生技期貨\",\"Individual\":\"1000\",\"Institution\":\"3000\",\"ProprietaryTrader/MarketMaker\":\"9000\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T10:34:35+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1389,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

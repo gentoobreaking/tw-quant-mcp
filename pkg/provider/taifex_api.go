@@ -105,6 +105,11 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAFCMNetValue:      "/NetValuePerShareStatement",                                                // 期貨商每股淨值明細表（T230）
 	model.TAFCMIncome:        "/IncomeStatementF",                                                         // 專營期貨商稅前累計損益彙總表（T230）
 	model.TAFCMAccIncome:     "/AccumulatedIncomeStateF",                                                  // 專營期貨商累計損益明細表（T230）
+	model.TAPosLimitEquity:   "/PositionLimitEquity",                                                      // 部位限制-個股類（T231）
+	model.TAPosLimitNonEq:    "/PositionLimitNonEquity",                                                   // 部位限制-非個股類（T231）
+	model.TAContractAdj:      "/ContractAdj",                                                              // 契約調整一覽事項（T231）
+	model.TASSFAdjustedInfo:  "/SSFAdjustedInfo",                                                          // 調整型契約資訊（T231）
+	model.TAFeeSchedule:      "/FuturesAndOptionsFeeSchedule",                                             // 期貨及選擇權收費標準表（T231）
 	model.TAStockOptOID:      "/va02",                                                                     // 每日個股選擇權未平倉量增減（T210）
 	model.TAStockFutStatsD:   "/va12",                                                                     // 每日個股期貨交易量統計（T210）
 	model.TAStockFutStatsM:   "/va13",                                                                     // 每月個股期貨交易量統計（T210）
@@ -302,6 +307,11 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		model.TAFCMIncome, model.TAFCMAccIncome:
 		// 期貨商名冊/淨值/損益：直通保留官方欄位（T230；FCMCode/FCMName/
 		// NetValuePerShare/NetIncomeBeforeTaxThisMonth 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TAPosLimitEquity, model.TAPosLimitNonEq, model.TAContractAdj,
+		model.TASSFAdjustedInfo, model.TAFeeSchedule:
+		// 部位限制/契約調整/收費標準：直通保留官方欄位（T231；Contract/
+		// Tier/StockCode/CashDividend(NTD/share)/TransactionFee 等）。
 		out = json.RawMessage(raw.Body)
 	case model.TAStockOptOID, model.TAStockFutStatsD, model.TAStockFutStatsM,
 		model.TAStockFutStatsY:

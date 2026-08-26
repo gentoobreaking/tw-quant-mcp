@@ -385,6 +385,8 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_open_end_fund", args: map[string]any{"kind": "latest", "code": "T1001Y"}},
 		{name: "get_gisa_board", args: map[string]any{"kind": "company", "code": "7430"}},
 		{name: "get_fcm_profiles", args: map[string]any{"kind": "lists"}},
+		{name: "get_position_limits", args: map[string]any{"category": "non_equity"}},
+		{name: "get_contract_adjust", args: map[string]any{"view": "adjust", "contract": "3680"}},
 		{name: "get_otc_exdividend_result", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_targets", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_statistics", args: map[string]any{}},

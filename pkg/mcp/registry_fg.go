@@ -342,6 +342,40 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetFcmProfiles,
 	}) // T230
 	r.Register(ToolDef{
+		Symbol: "get_position_limits",
+		Name:   "get_position_limits",
+		Description: "查詢交易人部位限制（TAIFEX-API PositionLimitEquity/NonEquity，T231）。" +
+			"category 切換 equity 個股類／non_equity 非個股類。contract 過濾契約代號；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"category": map[string]any{"type": "string", "enum": []string{"equity", "non_equity"}, "default": "equity", "description": "個股類或非個股類"},
+				"contract": map[string]any{"type": "string", "description": "契約代號（選填）"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetPositionLimits,
+	}) // T231
+	r.Register(ToolDef{
+		Symbol: "get_contract_adjust",
+		Name:   "get_contract_adjust",
+		Description: "查詢股票期貨/選擇權契約調整與收費標準（TAIFEX-API ContractAdj/SSFAdjustedInfo/FuturesAndOptionsFeeSchedule，T231）。" +
+			"view 切換 adjust 調整一覽事項／adjusted 調整型契約資訊／fee 收費標準表。contract 過濾；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"view":     map[string]any{"type": "string", "enum": []string{"adjust", "adjusted", "fee"}, "default": "adjust", "description": "調整事項/調整型契約/收費標準"},
+				"contract": map[string]any{"type": "string", "description": "契約代號或股票代號（選填）"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetContractAdjust,
+	}) // T231
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +

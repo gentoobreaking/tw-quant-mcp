@@ -66,6 +66,11 @@ const (
 	TAFCMNetValue      TAIFEXDataset = "fcm_net_value"         // 期貨商每股淨值明細表（僅 API，T230）
 	TAFCMIncome        TAIFEXDataset = "fcm_income"            // 專營期貨商稅前累計損益彙總表（僅 API，T230）
 	TAFCMAccIncome     TAIFEXDataset = "fcm_acc_income"        // 專營期貨商累計損益明細表（僅 API，T230）
+	TAPosLimitEquity   TAIFEXDataset = "pos_limit_equity"      // 交易人部位限制-個股類（僅 API，T231）
+	TAPosLimitNonEq    TAIFEXDataset = "pos_limit_non_equity"  // 交易人部位限制-非個股類（僅 API，T231）
+	TAContractAdj      TAIFEXDataset = "contract_adj"          // 股票期貨/選擇權契約調整一覽事項（僅 API，T231）
+	TASSFAdjustedInfo  TAIFEXDataset = "ssf_adjusted_info"     // 股票期貨/選擇權調整型契約資訊（僅 API，T231）
+	TAFeeSchedule      TAIFEXDataset = "fee_schedule"          // 期貨及選擇權收費標準表（僅 API，T231）
 	TAStockOptOID      TAIFEXDataset = "stock_opt_oi_delta"    // 每日個股選擇權未平倉量增減（僅 API，T210）
 	TAStockFutStatsD   TAIFEXDataset = "stock_fut_stats_d"     // 每日個股期貨交易量統計（僅 API，T210）
 	TAStockFutStatsM   TAIFEXDataset = "stock_fut_stats_m"     // 每月個股期貨交易量統計（僅 API，T210）

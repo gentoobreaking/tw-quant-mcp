@@ -246,6 +246,13 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAFCMNetValue, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"YYYYMM": "202607", "FCMCode": "S509", "NetValue": "376473767", "Shares": "60000", "NetValuePerShare": "6.27"},
 	})
+	// 部位限制/契約調整/收費標準（T231，直通官方欄位）
+	f.single[tfKey(model.TAPosLimitNonEq, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Contract": "BRF", "ContractName": "布蘭特原油期貨", "Individual": "1000", "Institution": "3000"},
+	})
+	f.single[tfKey(model.TAContractAdj, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Contact": "SY", "StockName": "家登", "StockId": "3680", "CashDividend(CapitalRepayment)NTD/share": "4.99733964"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},
