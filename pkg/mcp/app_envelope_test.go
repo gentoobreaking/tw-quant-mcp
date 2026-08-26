@@ -207,6 +207,7 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["otc_margin_sbl|"] = `[{"Date":"1150803","SecuritiesCompanyCode":"00679B","CompanyName":"元大美債"}]`
 	f.bodies["otc_cmode|"] = `[{"Date":"1150825","SecuritiesCompanyCode":"2067","CompanyName":"嘉鋼"}]`
 	f.bodies["otc_prvol|"] = `[{"Date":"1150825","SecuritiesCompanyCode":"1264","CompanyNam":"德麥"}]`
+	f.bodies["ann_notice|"] = `[{"Number":"1","Code":"1101","Name":"台泥","NumberOfAnnouncement":"3"}]`
 	f.bodies["otc_broker_volume|"] = `[{"Date":"20260730","StockRanking":"1","SecuritiesCompanyCodeAndCompanyName":"華東(8110)","SecuritiesFirmsRanking":"1","SecuritiesFirmsCode":"元大","TotalPurchaseShares":"1000","TotalSellShares":"900"}]`
 	f.bodies["otc_monthly_revenue|"] = `[{"出表日期":"1150817","資料年月":"11507","公司代號":"1240","公司名稱":"茂生農經","營業收入-當月營收":"242511","營業收入-上月比較增減(%)":"-10.24"}]`
 	f.bodies["otc_daily|"] = `[{"date":"2026-07-30","code":"8110","name":"華東","close":30.5,"change_dir":"+","change":0.35,"open":30.1,"high":30.7,"low":30.0,"volume":120000,"amount":3660000,"transaction":80}]`
@@ -396,6 +397,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_otc_financial_statements", args: map[string]any{"code": "1240", "statement": "income"}},
 		{name: "get_otc_margin_sbl_detail", args: map[string]any{"kind": "used", "limit": 3}},
 		{name: "get_otc_trading_system_info", args: map[string]any{"kind": "cmode", "code": "2067"}},
+		{name: "get_twse_announcement_notice", args: map[string]any{"limit": 3}},
 		{name: "get_fcm_profiles", args: map[string]any{"kind": "lists"}},
 		{name: "get_position_limits", args: map[string]any{"category": "non_equity"}},
 		{name: "get_contract_adjust", args: map[string]any{"view": "adjust", "contract": "3680"}},

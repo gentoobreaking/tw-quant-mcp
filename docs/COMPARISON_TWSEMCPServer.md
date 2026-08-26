@@ -1,7 +1,8 @@
 # TWSE MCP 比較：TWSEMCPServer（線上遠端）vs tw-quant-mcp（本機 Go）
 
 > 更新時間: 2026-08-26（第三版：補入遠端獨有清單實測；修正名稱重疊過時描述）｜比較基準:
-> - 遠端: https://github.com/twjackysu/TWSEMCPServer（Python / FastMCP，MIT，151★）
+>
+> - 遠端: <https://github.com/twjackysu/TWSEMCPServer（Python> / FastMCP，MIT，151★）
 >   託管端點: `https://TW-Stock-MCP-Server.fastmcp.app/mcp`（實測 180 個工具，serverInfo v1.27.0）
 > - 本機: `~/Projects/tw-quant-mcp`（Go 1.26，v2.1 規格脈絡，實測 tools/list **190** 個工具；
 >   README 文末附錄由真實 tools/list 自動產生，舊「40 工具清單」章節已標記過時）
@@ -9,7 +10,7 @@
 ## 一、總覽
 
 | 面向 | TWSEMCPServer（遠端） | tw-quant-mcp（本機） |
-|---|---|---|
+| --- | --- | --- |
 | 定位 | 社群版「廣度優先」：把官方 OpenAPI 盡量整包暴露 | 「治理＋廣度並進」：OpenAPI 映射大幅補齊＋盤中引擎＋資料工程與真實呼叫稽核 |
 | 語言/執行檔 | Python（FastMCP） | Go 單一靜態執行檔（CGO_ENABLED=0） |
 | 取得方式 | 免費託管零維運；或 Docker／本地 uv | 自建：`make build`；stdio 或 streamable-http :8787 |
@@ -20,12 +21,12 @@
 ## 二、資料來源（兩者皆 100% 官方免費源，不接第三方行情商）
 
 | 來源 ID | 端點 | 內容 | 遠端 | 本機 |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | TWSE-API | openapi.twse.com.tw | 公司治理、ESG、日收盤、外資持股、權證、指數 | ✅（107 工具直接映射 OpenAPI schema，按來源分類實抓） | ✅（~76 工具映射，含鉅額交易、券商系列、經營權異動、ESG 全市場掃描） |
-| TWSE-WEB | www.twse.com.tw/exchangeReport/* 等 | 日 K、融資融券、三大法人、注意股、收盤行情 | ✅（40 工具） | ✅（37 工具） |
+| TWSE-WEB | <www.twse.com.tw/exchangeReport/>* 等 | 日 K、融資融券、三大法人、注意股、收盤行情 | ✅（40 工具） | ✅（37 工具） |
 | TWSE-ETF | e添富平台 ajaxEtfInfoChart / etfDiv | ETF NAV 折溢價、配息 | ❌ | ✅ |
 | TWSE-MIS | mis.twse.com.tw | 盤中即時快照 | ✅（單發查詢） | ✅✅（8 秒輪詢引擎） |
-| TPEx-API/WEB | www.tpex.org.tw | 上櫃收盤行情、櫃買指數、法人、融券、注意股、除權息、零股 | ✅（10 工具） | ✅（20 工具，含 get_otc_daily/_index/_odd_lot） |
+| TPEx-API/WEB | <www.tpex.org.tw> | 上櫃收盤行情、櫃買指數、法人、融券、注意股、除權息、零股 | ✅（10 工具） | ✅（20 工具，含 get_otc_daily/_index/_odd_lot） |
 | MOPS | mops.twse.com.tw | 月營收、財報三表、重大訊息、ESG 八主題 | ✅ | ✅（雙來源速度選源+fallback） |
 | TAIFEX-API | openapi.taifex.com.tw | 期權最新交易日行情、PCR、大額交易人 | ✅（12 工具） | ✅（32 工具，含年成交量統計等） |
 | TAIFEX-DL | taifex 下載頁 CSV | 期權歷史回溯（≤366 日） | ✅（10 工具） | ✅（L2 永久快取） |
@@ -34,11 +35,13 @@
 ## 三、能力深度差異
 
 ### 遠端獨有／較強
+
 - **廣度仍略勝**：TWSE OpenAPI 映射 107 vs 本機 ~76——董事薪酬、內部人每日交易預審/未轉讓、董監質押、股東會系列、監理裁罰細項、上市程序等冷門 endpoint 本機尚未全數納入
 - 零安裝零維運，適合隨手查證與低頻呼叫
 - 官方託管（Prefect Horizon），可用性由供應商保證
 
 ### 本機獨有／較強
+
 - **盤中即時引擎**（6 工具）：`set_active_watchlist` 觸發 MIS 8 秒輪詢 →
   `get_intraday_kline`（1 分/5 分 K）、`get_intraday_quote`（五檔）、
   `get_intraday_vwap`（VWAP+Fib 支撐壓力）、`detect_volume_surge`（爆量偵測）、
@@ -65,7 +68,7 @@
 ### A. 真正遠端獨有（本機無對應工具）——已立任務 T191–T193
 
 | 遠端工具 | 內容 | 本機缺口 | 上游取值 API |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `get_twse_events` | 證交所活動訊息 | 無任何對應 | `openapi.twse.com.tw/v1/news/eventList` |
 | `get_all_stocks_daily_close` | 指定日期**全市場逐檔**收盤行情（OHLC＋PE） | 本機僅個股日收盤／市場彙總，無「單日查全市場」工具 | TWSE-WEB `MI_INDEX?date=&type=ALLBUT0999`（tables 取「每日收盤行情」表） |
 | `get_abnormal_accumulated_notice_stocks` | 注意股**累計次數**異常資訊 | 本機注意/處置僅當日清單，無累計次數維度 | `openapi.twse.com.tw/v1/announcement/notetrans` |
@@ -74,7 +77,7 @@
 
 | 遠端工具 | 差異 |
 |---|---|
-| `get_realtime_quote` | **任意多檔單發**即時報價（MIS `getStockInfo.jsp`，tse_ 前綴優先、otc_ 重試）；本機盤中引擎雖較強，但須先 `set_active_watchlist`（上限 15 檔），watchlist 外標的無法隨手即時查 |
+| `get_realtime_quote` | **任意多檔單發**即時報價（MIS `getStockInfo.jsp`，tse_前綴優先、otc_ 重試）；本機盤中引擎雖較強，但須先 `set_active_watchlist`（上限 15 檔），watchlist 外標的無法隨手即時查 |
 
 ### C. 名稱不同但功能已被本機覆蓋——其餘 24 支
 
@@ -90,7 +93,7 @@ PCR 歷史 → `get_put_call_ratio`（同支援任意區間回溯）｜公開發
 ## 四、功能層級對照（名稱不同、功能對應）
 
 | 功能 | 遠端（Python） | 本機（Go） |
-|---|---|---|
+| --- | --- | --- |
 | 三大法人個股買賣超 | `get_twse_institutional_investors_by_stock` | `get_institutional_investors` |
 | 上櫃三大法人 | `get_otc_institutional` | `get_institutional_investors`（TPEx 併入） |
 | 月營收 | `get_company_monthly_revenue` | `get_monthly_revenue` |
@@ -115,7 +118,7 @@ PCR 歷史 → `get_put_call_ratio`（同支援任意區間回溯）｜公開發
 ## 五、穩定性與風險
 
 | 風險 | 遠端 | 本機 |
-|---|---|---|
+| --- | --- | --- |
 | 配額 | 託管版有上限（未公開數字），大量批次會被限 | 無（但須自律遵守官方來源合理使用） |
 | 可用性依賴 | Prefect Horizon 託管服務 | 自己的機器/容器 |
 | 上游改版衝擊 | 上游更新即受益，但也可能行為突變 | 版本鎖定在自己手裡 |
@@ -124,7 +127,7 @@ PCR 歷史 → `get_put_call_ratio`（同支援任意區間回溯）｜公開發
 ## 六、搭配 tw-quant 找買點管線的建議用法
 
 | 場景 | 用哪個 |
-|---|---|
+| --- | --- |
 | 對帳/驗證報告數據（法人買賣超、月營收、日 K） | 遠端（免費託管；本機 `mcporter` 目前未註冊，需要時依 §七指令加入） |
 | 盤中監控 Top5 進場區貼近度、VWAP、爆量 | 本機（唯一有盤中引擎） |
 | 批次回溯驗證（逐日法人部位、期貨歷史） | 本機（限流熔斷保護＋永久快取） |
@@ -151,3 +154,21 @@ mcporter config add tw-quant-mcp --url http://127.0.0.1:8787/mcp
 > 屬同一設計脈絡的兩種實作。本機稽核擴增後功能重疊已大幅上升——遠端優勢收斂至
 > 少數冷門 endpoint 與零維運（§三之一），本機優勢在盤中引擎、資料治理與可驗證性。
 > 本機逐源覆蓋明細另見 `docs/TOOL_COVERAGE_BY_SOURCE.md`。
+
+## TWSE OpenAPI 餘量端點等價覆蓋聲明（T242，2026-08-26）
+
+以下 12 條 TWSE OpenAPI 目錄端點已全數對齊：1 條新接線（announcement/notice →
+`get_twse_announcement_notice`），11 條由既有工具等價覆蓋：
+
+| OpenAPI 端點 | 等價覆蓋工具 | 備註 |
+| --- | --- | --- |
+| announcement/notice | get_twse_announcement_notice（T242 新接線） | passthrough |
+| block/BFIAUU_d | get_block_trades / get_block_trades_detail（T042/T043） | TWSE-WEB 同源 |
+| block/BFIAUU_m | get_block_trades_monthly（T044） | TWSE-WEB 同源 |
+| block/BFIAUU_y | get_block_trades_yearly（T045） | TWSE-WEB 同源 |
+| exchangeReport/BWIBBU_d | get_valuation_ratios（T014，BWIBBU_ALL 全市場快照） | d 為單日子集 |
+| exchangeReport/FMSRFK_ALL | get_stock_month_trade（T171，FMSRFK） | ALL 為全市場版 |
+| exchangeReport/FMTQIK | 成交統計工具（TWSE-WEB FMTQIK 同源） | 同一資料源 |
+| opendata/t187ap03_L/P | 上市基本資料工具（MOPS 版）；上櫃對稱 get_otc_fundamental_stats kind=profile（T238） | L=上市、P=上市櫃合併 |
+| opendata/t187ap04_L | 重大訊息工具；上櫃對稱 get_otc_fundamental_stats kind=major_message（T238） | 同上 |
+| opendata/t187ap05_L/P | 財測/查核差異工具；上櫃對稱 get_otc_fundamental_stats kind=forecast_*/audit_diff（T238） | 同上 |

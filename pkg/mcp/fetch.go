@@ -103,6 +103,7 @@ var cacheDataset = map[string]string{
 	string(provider.TWSEAPITwseNews):        cache.DatasetMaterialNews, // 證交所新聞（T186）
 	string(provider.TWSEAPITwseEvents):      cache.DatasetMaterialNews, // 證交所活動訊息（T191）
 	string(provider.TWSEAPINoteTrans):       cache.DatasetAlertStock,   // 注意累計次數異常（T193）
+	string(provider.TWSEAPIAnnNotice):       cache.DatasetAlertStock,   // 重大訊息公告（T242）
 	string(provider.TWSEAPIWarrantBasic):    cache.DatasetCalendar,     // 權證基本資料（T187）
 	string(provider.TWSEAPIWarrantTrader):   cache.DatasetCalendar,     // 權證流動量提供者（T189）
 	string(provider.TWSEAPIWarrantIssue):    cache.DatasetCalendar,     // 權證發行統計（T190）

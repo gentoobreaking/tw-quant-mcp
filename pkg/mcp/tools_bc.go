@@ -2960,3 +2960,37 @@ func handlerGetOtcTradingSystemInfo(a *App, args map[string]any) (HandlerResult,
 	}
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
+
+// handlerGetTwseAnnouncementNotice：上市重大訊息公告（T242，
+// TWSE-API announcement/notice）。passthrough；code 本地過濾。
+func handlerGetTwseAnnouncementNotice(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TWSEAPIAnnNotice), date,
+		cache.KeyString(model.SourceTWSEAPI, string(provider.TWSEAPIAnnNotice), date, code, nil),
+		func() ([]byte, error) { return a.fetchAPIRaw(ctx, provider.TWSEAPIAnnNotice, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(string(provider.TWSEAPIAnnNotice))
+	lineage := postLineage(model.SourceTWSEAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "Code") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}

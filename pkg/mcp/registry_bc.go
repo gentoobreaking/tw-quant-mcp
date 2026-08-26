@@ -1564,6 +1564,22 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcTradingSystemInfo,
 	}) // T241
 	r.Register(ToolDef{
+		Symbol: "get_twse_announcement_notice",
+		Name:   "get_twse_announcement_notice",
+		Description: "查詢上市重大訊息公告（TWSE-API announcement/notice，T242）。" +
+			"code 過濾證券代號；limit 預設 50、offset 分頁。對稱上櫃 get_otc_fundamental_stats kind=major_message。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填）過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetTwseAnnouncementNotice,
+	}) // T242
+	r.Register(ToolDef{
 		Symbol: "get_otc_block_trade",
 		Name:   "get_otc_block_trade",
 		Description: "查詢上櫃鉅額交易系列（TPEx-API tpex_daily_qutoes_block 等，T225）。" +

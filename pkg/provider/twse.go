@@ -82,6 +82,7 @@ const (
 	TWSEAPIIndices         TWSEAPIDataset = "indices"            // 每日各指數行情
 	TWSEAPIESG             TWSEAPIDataset = "esg"                // ESG 資訊揭露（topic 1..21）
 	TWSEAPIGovernance      TWSEAPIDataset = "company_governance" // 公司治理
+	TWSEAPIAnnNotice       TWSEAPIDataset = "ann_notice"         // 重大訊息公告（僅 API，T242）
 	TWSEAPIPunish          TWSEAPIDataset = "punish"             // 集中市場公布處置股票（T011）
 	TWSEAPINoteTrans       TWSEAPIDataset = "note_trans"         // 公布注意累計次數異常資訊（announcement/notetrans，T193）
 	TWSEAPIValuation       TWSEAPIDataset = "valuation"          // 本益比/殖利率/股價淨值比（T014）
@@ -240,6 +241,7 @@ var (
 		TWSEAPIGovernance:      "/opendata/t187ap32_L",
 		TWSEAPIPunish:          "/announcement/punish",
 		TWSEAPINoteTrans:       "/announcement/notetrans",           // 注意累計次數異常（T193）
+		TWSEAPIAnnNotice:       "/announcement/notice",              // 重大訊息公告（T242）
 		TWSEAPIValuation:       "/exchangeReport/BWIBBU_ALL",        // 上市個股日本益比、殖利率及股價淨值比
 		TWSEAPIExDiv:           "/exchangeReport/TWT48U_ALL",        // 除權除息預告表
 		TWSEAPIDividend:        "/opendata/t187ap45_L",              // 上市公司股利分派情形
@@ -801,6 +803,9 @@ func normalizeTWSE(raw *RawResponse, sourceID string) ([]byte, error) {
 		"broker_reg_inv":
 		out, err = normalizePassthroughArray(raw)
 	case "supervisor_ack":
+		out, err = normalizePassthroughArray(raw)
+	case "ann_notice":
+		// 重大訊息公告（T242，announcement/notice）：直通保留官方欄位。
 		out, err = normalizePassthroughArray(raw)
 	case "profitability":
 		out, err = normalizePassthroughArray(raw)
