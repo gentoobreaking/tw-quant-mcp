@@ -194,6 +194,13 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TASFutures, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"TheFinalSettlementDay": "20260819", "ContractDeliveryMonth": "202608", "ContractName": "南亞期貨", "Contract": "CAF", "Long(lot)": "100", "Short(lot)": "80"},
 	})
+	// 鉅額交易系列（T208，直通官方欄位）
+	f.single[tfKey(model.TABlockTrade, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260825", "Contract": "CCF", "ContractMonth(Week)": "202609", "StrikePrice": "-", "CallPut": "-", "Volume": "3067"},
+	})
+	f.single[tfKey(model.TABTFutSummary, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260825", "ProductCategory": "STF", "Volume": "9556", "MarketShare%": "2.17"},
+	})
 	// 選擇權 Delta（T151）與 OI 增減（T154）
 	f.single[tfKey(model.TAOptionsDelta, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Contract": "TXO", "CallPut": "買權", "ContractMonth(Week)": "202608", "StrikePrice": "21000.0", "Delta": "0.5123", "ContractSettlementDay": "20260819"},

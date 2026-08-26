@@ -1245,6 +1245,71 @@ func handlerGetSettledPositions(a *App, args map[string]any) (HandlerResult, err
 	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// btKinds 為 T208 kind → 資料集對應。
+var btKinds = map[string]model.TAIFEXDataset{
+	"all":             model.TABlockTrade,
+	"futures":         model.TABTFutInfo,
+	"options":         model.TABTOptInfo,
+	"summary_futures": model.TABTFutSummary,
+	"summary_options": model.TABTOptSummary,
+}
+
+// handlerGetTaifexBlockTrade：鉅額交易系列（TAIFEX-API BlockTrade*，T208）。
+// kind 切換五型：all 成交資訊全部／futures 期貨成交／options 選擇權成交／
+// summary_futures 期貨量統計／summary_options 選擇權量統計；passthrough。
+func handlerGetTaifexBlockTrade(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "all"
+	}
+	ds, ok := btKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 all/futures/options/summary_futures/summary_options，得到 %q", kindArg)
+	}
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	if len(res.Data) == 0 {
+		note := res.Note
+		if note == "" {
+			note = "無資料"
+		}
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料（%s）", ds, note)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	contract := strings.TrimSpace(strVal(args["contract"]))
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if contract != "" && !strings.Contains(rowField(r, "Contract"), contract) && !strings.Contains(rowField(r, "ProductCategory"), contract) {
+			continue
+		}
+		out = append(out, r)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // handlerGetInstitutionalGeneral：三大法人整體交易總表（期貨+選擇權合計，
 // TAIFEX-API GeneralBytheDate，T129；端點回 CSV，date 省略為最新交易日）。
 func handlerGetInstitutionalGeneral(a *App, args map[string]any) (HandlerResult, error) {

@@ -91,6 +91,11 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TASPOpt:            "/SettledPositionsOptions",                                                  // 到期履約交割-選擇權商品（T206）
 	model.TASPSSF:            "/SettledPositionsSSF",                                                      // 到期履約交割-股票期貨（T206）
 	model.TASPSSO:            "/SettledPositionsSSO",                                                      // 到期履約交割-股票選擇權（T206）
+	model.TABlockTrade:       "/BlockTrade",                                                               // 鉅額交易各商品成交資訊（T208）
+	model.TABTFutInfo:        "/BTDailyTradeInformationFutures",                                           // 鉅額交易成交資訊-期貨（T208）
+	model.TABTOptInfo:        "/BTDailyTradeInformationOptions",                                           // 鉅額交易成交資訊-選擇權（T208）
+	model.TABTFutSummary:     "/DailySummaryOfBlockTradeFutures",                                          // 鉅額交易成交量統計-期貨（T208）
+	model.TABTOptSummary:     "/DailySummaryOfBlockTradeOptions",                                          // 鉅額交易成交量統計-選擇權（T208）
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -267,6 +272,11 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		model.TASPOpt, model.TASPSSF, model.TASPSSO:
 		// 到期契約履約交割系列：直通保留官方欄位（T206；TheFinalSettlementDay/
 		// Contract/ContractName/Long/Short/CallPut 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TABlockTrade, model.TABTFutInfo, model.TABTOptInfo,
+		model.TABTFutSummary, model.TABTOptSummary:
+		// 鉅額交易系列：直通保留官方欄位（T208；Date/Contract/
+		// ContractMonth(Week)/StrikePrice/CallPut/Volume/MarketShare% 等）。
 		out = json.RawMessage(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)

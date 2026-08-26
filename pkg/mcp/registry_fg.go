@@ -263,6 +263,24 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetSettledPositions,
 	}) // T206
 	r.Register(ToolDef{
+		Symbol: "get_taifex_block_trade",
+		Name:   "get_taifex_block_trade",
+		Description: "查詢 TAIFEX 鉅額交易成交與統計（TAIFEX-API BlockTrade* 系列，T208）。" +
+			"kind 切換五型：all 各商品成交資訊／futures 期貨成交／options 選擇權成交／summary_futures 期貨成交量統計／summary_options 選擇權成交量統計。" +
+			"contract 選填契約代碼或商品類別過濾；limit 預設 50、offset 分頁。對稱 TWSE 鉅額交易系列（T042–T045）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":     map[string]any{"type": "string", "enum": []string{"all", "futures", "options", "summary_futures", "summary_options"}, "default": "all", "description": "資料類型"},
+				"contract": map[string]any{"type": "string", "description": "契約代碼或商品類別子字串（選填），如 CCF 或 TXO"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetTaifexBlockTrade,
+	}) // T208
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +

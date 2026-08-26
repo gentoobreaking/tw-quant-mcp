@@ -286,6 +286,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_insti_weekly", args: map[string]any{"type": "fut_contracts", "contract": "臺股期貨", "limit": 3, "offset": 1}},
 		{name: "get_final_settlement_price", args: map[string]any{"category": "futures", "contract": "南亞"}},
 		{name: "get_settled_positions", args: map[string]any{"category": "futures", "contract": "南亞"}},
+		{name: "get_taifex_block_trade", args: map[string]any{"kind": "summary_futures", "limit": 3}},
 		{name: "get_institutional_traders_by_futures_history", args: map[string]any{"start": "2026-07-27", "end": "2026-07-29"}},
 		{name: "get_large_traders_futures_history", args: map[string]any{"contract": "TX", "start": "2026-07-28", "end": "2026-07-29"}},
 		{name: "get_large_traders_futures_oi", args: map[string]any{}},

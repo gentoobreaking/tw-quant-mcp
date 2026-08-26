@@ -52,6 +52,11 @@ const (
 	TASPOpt            TAIFEXDataset = "sp_options"            // 到期履約交割-選擇權商品（僅 API，T206）
 	TASPSSF            TAIFEXDataset = "sp_ssf"                // 到期履約交割-股票期貨（僅 API，T206）
 	TASPSSO            TAIFEXDataset = "sp_sso"                // 到期履約交割-股票選擇權（僅 API，T206）
+	TABlockTrade       TAIFEXDataset = "block_trade"           // 鉅額交易各商品成交資訊（僅 API，T208）
+	TABTFutInfo        TAIFEXDataset = "bt_fut_info"           // 鉅額交易成交資訊-期貨（僅 API，T208）
+	TABTOptInfo        TAIFEXDataset = "bt_opt_info"           // 鉅額交易成交資訊-選擇權（僅 API，T208）
+	TABTFutSummary     TAIFEXDataset = "bt_fut_summary"        // 鉅額交易成交量統計-期貨（僅 API，T208）
+	TABTOptSummary     TAIFEXDataset = "bt_opt_summary"        // 鉅額交易成交量統計-選擇權（僅 API，T208）
 	TALargeTraderFut   TAIFEXDataset = "large_trader_fut"      // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt   TAIFEXDataset = "large_trader_opt"      // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio     TAIFEXDataset = "put_call_ratio"        // 買賣權比（PCR）
