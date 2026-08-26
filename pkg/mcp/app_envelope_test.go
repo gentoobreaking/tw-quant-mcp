@@ -388,6 +388,8 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_position_limits", args: map[string]any{"category": "non_equity"}},
 		{name: "get_contract_adjust", args: map[string]any{"view": "adjust", "contract": "3680"}},
 		{name: "get_acceptable_collateral", args: map[string]any{"kind": "stock", "code": "0050"}},
+		{name: "get_fx_rate", args: map[string]any{}},
+		{name: "get_e_trade_qty", args: map[string]any{}},
 		{name: "get_otc_exdividend_result", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_targets", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_statistics", args: map[string]any{}},

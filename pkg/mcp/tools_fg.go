@@ -2236,3 +2236,81 @@ func handlerGetTimeAndSales(a *App, args map[string]any) (HandlerResult, error) 
 	}
 	return HandlerResult{Data: rows, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
+
+// handlerGetFxRate：每日外幣參考匯率（TAIFEX-API
+// DailyForeignExchangeRates，T233）。passthrough。
+func handlerGetFxRate(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	d, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAFxRates, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAFxRates, err)
+	}
+	if len(res.Data) == 0 {
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料", model.TAFxRates)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", model.TAFxRates, err)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(rows) {
+		rows = rows[offset:]
+	} else {
+		rows = []map[string]any{}
+	}
+	if len(rows) > limit {
+		rows = rows[:limit]
+	}
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, r)
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
+// handlerGetETradeQty：每月電子式交易下單統計（TAIFEX-API eTradeQty，
+// T233）。passthrough。
+func handlerGetETradeQty(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	d, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, model.TAETradeQty, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", model.TAETradeQty, err)
+	}
+	if len(res.Data) == 0 {
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料", model.TAETradeQty)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", model.TAETradeQty, err)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(rows) {
+		rows = rows[offset:]
+	} else {
+		rows = []map[string]any{}
+	}
+	if len(rows) > limit {
+		rows = rows[:limit]
+	}
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, r)
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}

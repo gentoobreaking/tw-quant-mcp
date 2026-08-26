@@ -257,6 +257,13 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TACollStock, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Date": "20260826", "StockId": "0050", "StockName": "元大台灣50"},
 	})
+	// 匯率/電子交易統計（T233，直通官方欄位）
+	f.single[tfKey(model.TAFxRates, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260701", "USD/NTD": "31.874", "RMB/NTD": "4.687295"},
+	})
+	f.single[tfKey(model.TAETradeQty, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"YYYYMM": "202601", "Volume": "69067041"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},

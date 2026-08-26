@@ -393,6 +393,30 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetAcceptableCollateral,
 	}) // T232
 	r.Register(ToolDef{
+		Symbol: "get_fx_rate",
+		Name:   "get_fx_rate",
+		Description: "查詢每日外幣參考匯率（TAIFEX-API DailyForeignExchangeRates，T233）。" +
+			"含 USD/RMB/EUR/JPY/GBP/AUD/HKD 等對 NTD 或 USD 匯率。limit 預設 50、offset 分頁。利基/長尾資料，供換匯計算參考。",
+		Schema: map[string]any{"type": "object", "properties": map[string]any{
+			"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+			"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+		}},
+		ReadOnly: true,
+		Handler:  handlerGetFxRate,
+	}) // T233
+	r.Register(ToolDef{
+		Symbol: "get_e_trade_qty",
+		Name:   "get_e_trade_qty",
+		Description: "查詢每月市場電子式交易下單統計（TAIFEX-API eTradeQty，T233）。" +
+			"含各月電子式交易量。limit 預設 50、offset 分頁。利基/長尾資料，供交易渠道趨勢分析。",
+		Schema: map[string]any{"type": "object", "properties": map[string]any{
+			"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+			"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+		}},
+		ReadOnly: true,
+		Handler:  handlerGetETradeQty,
+	}) // T233
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +

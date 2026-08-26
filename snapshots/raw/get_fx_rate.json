@@ -1,0 +1,16 @@
+{
+  "arguments": {
+    "limit": 2
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"AUD/USD\":\"0.68915\",\"Date\":\"20260701\",\"EUR/USD\":\"1.14005\",\"GBP/USD\":\"1.3243\",\"NZD/USD\":\"0.56755\",\"RMB/NTD\":\"4.687295\",\"USD/HKD\":\"7.84385\",\"USD/JPY\":\"162.68\",\"USD/NTD\":\"31.874\",\"USD/RMB\":\"6.8001\",\"USD/ZAR\":\"16.42285\"},{\"AUD/USD\":\"0.69015\",\"Date\":\"20260702\",\"EUR/USD\":\"1.14165\",\"GBP/USD\":\"1.33525\",\"NZD/USD\":\"0.5686\",\"RMB/NTD\":\"4.699896\",\"USD/HKD\":\"7.8442\",\"USD/JPY\":\"161.2\",\"USD/NTD\":\"31.91\",\"USD/RMB\":\"6.7895\",\"USD/ZAR\":\"16.3772\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T10:46:22+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1219,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

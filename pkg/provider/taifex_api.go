@@ -114,6 +114,8 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TACollGovBond:      "/AcceptableCollateralGovernmentBonds",                                      // 可抵繳標的-公債（T232）
 	model.TACollIntlBond:     "/AcceptableCollateralInternationalBonds",                                   // 可抵繳標的-國際債（T232）
 	model.TACollLogStock:     "/AcceptableCollateralLogStock",                                             // 可抵繳標的增刪紀錄（T232）
+	model.TAFxRates:          "/DailyForeignExchangeRates",                                                // 每日外幣參考匯率（T233）
+	model.TAETradeQty:        "/eTradeQty",                                                                // 每月電子式交易下單統計（T233）
 	model.TAStockOptOID:      "/va02",                                                                     // 每日個股選擇權未平倉量增減（T210）
 	model.TAStockFutStatsD:   "/va12",                                                                     // 每日個股期貨交易量統計（T210）
 	model.TAStockFutStatsM:   "/va13",                                                                     // 每月個股期貨交易量統計（T210）
@@ -321,6 +323,10 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		model.TACollLogStock:
 		// 可抵繳標的：直通保留官方欄位（T232；Date/StockId/Code/
 		// InternationalBondCode/New/Delete 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TAFxRates, model.TAETradeQty:
+		// 匯率/電子交易統計：直通保留官方欄位（T233；Date/USD-NTD 或
+		// YYYYMM/Volume 等，原樣保留）。
 		out = json.RawMessage(raw.Body)
 	case model.TAStockOptOID, model.TAStockFutStatsD, model.TAStockFutStatsM,
 		model.TAStockFutStatsY:

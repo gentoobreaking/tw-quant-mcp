@@ -75,6 +75,8 @@ const (
 	TACollGovBond      TAIFEXDataset = "coll_gov_bond"         // 可抵繳標的-公債（僅 API，T232）
 	TACollIntlBond     TAIFEXDataset = "coll_intl_bond"        // 可抵繳標的-國際債（僅 API，T232）
 	TACollLogStock     TAIFEXDataset = "coll_log_stock"        // 可抵繳標的增刪紀錄（僅 API，T232）
+	TAFxRates          TAIFEXDataset = "fx_rates"              // 每日外幣參考匯率（僅 API，T233）
+	TAETradeQty        TAIFEXDataset = "etrade_qty"            // 每月電子式交易下單統計（僅 API，T233）
 	TAStockOptOID      TAIFEXDataset = "stock_opt_oi_delta"    // 每日個股選擇權未平倉量增減（僅 API，T210）
 	TAStockFutStatsD   TAIFEXDataset = "stock_fut_stats_d"     // 每日個股期貨交易量統計（僅 API，T210）
 	TAStockFutStatsM   TAIFEXDataset = "stock_fut_stats_m"     // 每月個股期貨交易量統計（僅 API，T210）
