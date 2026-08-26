@@ -225,6 +225,13 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAMarginETF, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Contract": "NYF", "UnderlyingSecurityCode": "0050", "ContractName": "元大台灣50ETF期貨", "ClearingMargin": "3720", "Date": "20260729"},
 	})
+	// 個股期貨/選擇權交易統計 va 系列（T210，直通官方欄位）
+	f.single[tfKey(model.TAStockFutStatsD, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260825", "ContractType": "STF", "Volume": "421534"},
+	})
+	f.single[tfKey(model.TAStockOptOID, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260825", "ContractType": "STC", "OpenInterest": "2751", "PreviousDayOpenInterest": "2517", "Change": "234"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},

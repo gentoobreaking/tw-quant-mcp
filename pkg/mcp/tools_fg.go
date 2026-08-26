@@ -1310,6 +1310,66 @@ func handlerGetTaifexBlockTrade(a *App, args map[string]any) (HandlerResult, err
 	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// sfsPeriods 為 T210 period → 資料集對應。
+var sfsPeriods = map[string]model.TAIFEXDataset{
+	"daily":    model.TAStockFutStatsD,
+	"monthly":  model.TAStockFutStatsM,
+	"yearly":   model.TAStockFutStatsY,
+	"oi_daily": model.TAStockOptOID,
+}
+
+// handlerGetStockFuturesStats：個股期貨/選擇權交易統計 va 系列（TAIFEX-API，
+// T210）。period 切換 daily（va12）/monthly（va13）/yearly（va14）/
+// oi_daily（每日個股選擇權未平倉量增減，va02）；passthrough。
+func handlerGetStockFuturesStats(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	period := strVal(args["period"])
+	if period == "" {
+		period = "daily"
+	}
+	ds, ok := sfsPeriods[period]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("period 僅接受 daily/monthly/yearly/oi_daily，得到 %q", period)
+	}
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	if len(res.Data) == 0 {
+		note := res.Note
+		if note == "" {
+			note = "無資料"
+		}
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料（%s）", ds, note)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	limit, offset := listPaging(args)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // handlerMarginTable：保證金一覽表四類別共用路徑（T209）。passthrough；
 // contract 過濾（Contracts 或 Contract 欄位），查無時列出可用商品。
 func handlerMarginTable(a *App, args map[string]any, ds model.TAIFEXDataset) (HandlerResult, error) {

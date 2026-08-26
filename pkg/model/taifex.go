@@ -61,6 +61,10 @@ const (
 	TAMarginIR         TAIFEXDataset = "margin_ir"             // 保證金一覽表-利率類（僅 API，T209）
 	TAMarginGold       TAIFEXDataset = "margin_gold"           // 保證金一覽表-商品類（僅 API，T209）
 	TAMarginETF        TAIFEXDataset = "margin_etf"            // 保證金一覽表-股票類 ETF（僅 API，T209）
+	TAStockOptOID      TAIFEXDataset = "stock_opt_oi_delta"    // 每日個股選擇權未平倉量增減（僅 API，T210）
+	TAStockFutStatsD   TAIFEXDataset = "stock_fut_stats_d"     // 每日個股期貨交易量統計（僅 API，T210）
+	TAStockFutStatsM   TAIFEXDataset = "stock_fut_stats_m"     // 每月個股期貨交易量統計（僅 API，T210）
+	TAStockFutStatsY   TAIFEXDataset = "stock_fut_stats_y"     // 每年個股期貨交易量統計（僅 API，T210）
 	TALargeTraderFut   TAIFEXDataset = "large_trader_fut"      // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt   TAIFEXDataset = "large_trader_opt"      // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio     TAIFEXDataset = "put_call_ratio"        // 買賣權比（PCR）

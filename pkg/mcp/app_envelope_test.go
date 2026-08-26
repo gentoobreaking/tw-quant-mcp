@@ -291,6 +291,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_ir_margin", args: map[string]any{}},
 		{name: "get_gold_margin", args: map[string]any{"contract": "黃金"}},
 		{name: "get_etf_margin", args: map[string]any{}},
+		{name: "get_stock_futures_stats", args: map[string]any{"period": "daily"}},
 		{name: "get_institutional_traders_by_futures_history", args: map[string]any{"start": "2026-07-27", "end": "2026-07-29"}},
 		{name: "get_large_traders_futures_history", args: map[string]any{"contract": "TX", "start": "2026-07-28", "end": "2026-07-29"}},
 		{name: "get_large_traders_futures_oi", args: map[string]any{}},

@@ -280,6 +280,23 @@ func registerFGTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetTaifexBlockTrade,
 	}) // T208
+	r.Register(ToolDef{
+		Symbol: "get_stock_futures_stats",
+		Name:   "get_stock_futures_stats",
+		Description: "查詢個股期貨/選擇權交易量與未平倉統計（TAIFEX-API va 系列，T210）。" +
+			"period 切換 daily（每日個股期貨交易量，va12）／monthly（每月，va13）／yearly（每年，va14）／oi_daily（每日個股選擇權未平倉量增減，va02）。" +
+			"limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"period": map[string]any{"type": "string", "enum": []string{"daily", "monthly", "yearly", "oi_daily"}, "default": "daily", "description": "統計期間：日/月/年，或每日選擇權 OI 增減"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetStockFuturesStats,
+	}) // T210
 	r.Register(marginToolDef("get_fx_margin", "匯率類", "小型美元兌人民幣期貨",
 		"TAIFEX-API FXFuturesAndOptionsMargining，T209", handlerGetFxMargin))
 	r.Register(marginToolDef("get_ir_margin", "利率類", "十年期公債期貨",
