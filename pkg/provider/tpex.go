@@ -115,6 +115,9 @@ const (
 	TPExGoldLatest    TPExDataset = "gold_latest"           // 黃金現貨當日行情（T227）
 	TPExGoldHighlight TPExDataset = "gold_highlight"        // 黃金現貨市場現況（T227）
 	TPExGoldWarrant   TPExDataset = "gold_warrant"          // 黃金現貨權證發行資料（T227）
+	TPExOpFundLatest  TPExDataset = "opfund_latest"         // 開放式基金當日行情（T228）
+	TPExOpFundDealer  TPExDataset = "opfund_dealer"         // 開放式基金造市商資訊（T228）
+	TPExOpFundHigh    TPExDataset = "opfund_highlight"      // 開放式基金市場現況（T228）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -192,6 +195,9 @@ var (
 		TPExGoldLatest:    "/tpex_gold_latest",                   // 黃金現貨當日行情（T227）
 		TPExGoldHighlight: "/tpex_gold_market_highlight",         // 黃金現貨市場現況（T227）
 		TPExGoldWarrant:   "/tpex_warrant_gold",                  // 黃金權證發行資料（T227）
+		TPExOpFundLatest:  "/tpex_opfund_latest",                 // 開放式基金當日行情（T228）
+		TPExOpFundDealer:  "/tpex_opfund_recommended_dealer",     // 開放式基金造市商（T228）
+		TPExOpFundHigh:    "/tpex_opfund_market_highlight",       // 開放式基金市場現況（T228）
 	}
 )
 
@@ -426,6 +432,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExGoldLatest), string(TPExGoldHighlight), string(TPExGoldWarrant):
 		// passthrough（T227 實測；黃金現貨行情/市場現況/權證，官方中英欄位
 		// 混用，原樣保留）。
+		out = ms
+	case string(TPExOpFundLatest), string(TPExOpFundDealer), string(TPExOpFundHigh):
+		// passthrough（T228 實測；開放式基金行情/造市商/市場現況，官方中英
+		// 欄位混用，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

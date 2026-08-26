@@ -2268,6 +2268,56 @@ func handlerGetGoldSpot(a *App, args map[string]any) (HandlerResult, error) {
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// opFundKinds 為 T228 kind → 資料集對應。
+var opFundKinds = map[string]provider.TPExDataset{
+	"latest":    provider.TPExOpFundLatest,
+	"dealer":    provider.TPExOpFundDealer,
+	"highlight": provider.TPExOpFundHigh,
+}
+
+// handlerGetOpenEndFund：開放式基金（T228，tpex_opfund_*）。kind 切換
+// latest 當日行情／dealer 造市商資訊／highlight 市場現況；code 過濾
+// SecurityCode；passthrough。
+func handlerGetOpenEndFund(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "latest"
+	}
+	ds, ok := opFundKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 latest/dealer/highlight，得到 %q", kindArg)
+	}
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecurityCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // otcBlockKinds 為 T225 kind → 資料集對應。
 var otcBlockKinds = map[string]provider.TPExDataset{
 	"day":         provider.TPExBlockDay,

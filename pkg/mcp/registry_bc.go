@@ -1540,6 +1540,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetGoldSpot,
 	}) // T227
 	r.Register(ToolDef{
+		Symbol: "get_open_end_fund",
+		Name:   "get_open_end_fund",
+		Description: "查詢開放式基金（TPEx-API tpex_opfund_* 系列，T228）。" +
+			"kind 切換 latest 當日行情／dealer 造市商資訊／highlight 市場現況。code 過濾基金代號；limit 預設 50、offset 分頁。利基/長尾資料。對稱上市 get_etf_fund_statistics 等 ETF 工具。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"latest", "dealer", "highlight"}, "default": "latest", "description": "當日行情/造市商/市場現況"},
+				"code":   map[string]any{"type": "string", "description": "基金代號（選填，如 T1001Y）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOpenEndFund,
+	}) // T228
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +
