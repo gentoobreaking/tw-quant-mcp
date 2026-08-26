@@ -1,0 +1,17 @@
+{
+  "arguments": {
+    "kind": "profile",
+    "code": "1240"
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"AccountingFirm\":\"勤業眾信聯合會計師事務所\",\"Address\":\"2F.,No.30,Sec. 1,Heping W.Rd.,Zhongzheng Dist.,Taipei City 100028TAIPEI,TAIWAN(R.O.C)\",\"CPA.CharteredPublicAccountant.First\":\"陳重成\",\"CPA.CharteredPublicAccountant.Second\":\"洪偉倫\",\"Chairman\":\"吳清德\",\"CompanyAbbreviation\":\"茂生農經\",\"CompanyName\":\"茂生農經股份有限公司\",\"Date\":\"1150825\",\"DateOfIncorporation\":\"19670218\",\"DateOfListing\":\"20180808\",\"DeputySpokesperson\":\"邱紹齊\",\"EmailAddress\":\"bedford@morn-sun.com.tw\",\"Fax\":\"02-23640694\",\"GeneralManager\":\"吳清德\",\"IssueShares\":\"44232373\",\"Paidin.Capital.NTDollars\":\"442323730\",\"ParValueOfCommonStock\":\"新台幣                 10.0000元\",\"PreferredStock.shares\":\"0\",\"PreparationOfFinancialReportType\":\"1\",\"PrivateStock.shares\":\"0\",\"Registration\":\"－ \",\"SecuritiesCompanyCode\":\"1240\",\"SecuritiesIndustryCode\":\"33\",\"Spokesman\":\"林信鴻\",\"StockTransferAgent\":\"元大證券股份有限公司股務代理部\",\"StockTransferAgentAddress\":\"106045台北市大安區敦化南路二段67號地下1樓\",\"StockTransferAgentTelephone\":\"02-2586-5859\",\"Symbol\":\"MORNSUN　\",\"Telephone\":\"02-23671162\",\"TitleOfSpokesman\":\"公司治理主管\",\"UnifiedBusinessNo.\":\"18795706\",\"WebAddress\":\"https://www.morn-sun.com.tw/　\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T11:12:13+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":314,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

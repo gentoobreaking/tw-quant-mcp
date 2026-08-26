@@ -1488,6 +1488,25 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcBrokerTurnover,
 	}) // T224
 	r.Register(ToolDef{
+		Symbol: "get_otc_fundamental_stats",
+		Name:   "get_otc_fundamental_stats",
+		Description: "查詢上櫃基本面・營收統計・重大訊息（TPEx-API mopsfin_* 九端點，T238）。" +
+			"kind 切換：op_analysis 營益分析彙總／profile 股票基本資料／major_message 每日重大訊息／eps_industry 各產業EPS（一般業）／eps_financial 各產業EPS（金控業）／" +
+			"forecast_current 財測達成情形／forecast_update 財測更新／audit_diff 查核差異彙總／dividend_board 股利分派（董事會決議）。" +
+			"code 過濾證券代號；limit 預設 50、offset 分頁。對稱上市基本面工具群。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"op_analysis", "profile", "major_message", "eps_industry", "eps_financial", "forecast_current", "forecast_update", "audit_diff", "dividend_board"}, "default": "op_analysis", "description": "資料類別"},
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填）過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcFundamentalStats,
+	}) // T238
+	r.Register(ToolDef{
 		Symbol: "get_otc_block_trade",
 		Name:   "get_otc_block_trade",
 		Description: "查詢上櫃鉅額交易系列（TPEx-API tpex_daily_qutoes_block 等，T225）。" +

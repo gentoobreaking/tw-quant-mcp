@@ -199,6 +199,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["opfund_dealer|"] = `[{"Date":"1150825","SecurityCode":"T1001Y","SecurityName":"富邦FB","MarketMakerCode":"960T"}]`
 	f.bodies["gisa_company|"] = `[{"Date":"1150825","SecuritiesCompanyCode":"7430","CompanyName":"凱鑫"}]`
 	f.bodies["gisa_financing|"] = `[{"Date":"1141028","SecuritiesCompanyCode":"7670","CompanyName":"淞康"}]`
+	f.bodies["otc_mopsfin|kind=187ap17_O"] = `[{"Date":"1150825","SecuritiesCompanyCode":"1240","CompanyName":"茂生農經","營業利益(虧損)":"1,234"}]`
+	f.bodies["otc_mopsfin|kind=t187ap03_O"] = `[{"Date":"1150825","SecuritiesCompanyCode":"1240","CompanyName":"茂生農經股份有限公司","產業別":"食品工業"}]`
 	f.bodies["otc_broker_volume|"] = `[{"Date":"20260730","StockRanking":"1","SecuritiesCompanyCodeAndCompanyName":"華東(8110)","SecuritiesFirmsRanking":"1","SecuritiesFirmsCode":"元大","TotalPurchaseShares":"1000","TotalSellShares":"900"}]`
 	f.bodies["otc_monthly_revenue|"] = `[{"出表日期":"1150817","資料年月":"11507","公司代號":"1240","公司名稱":"茂生農經","營業收入-當月營收":"242511","營業收入-上月比較增減(%)":"-10.24"}]`
 	f.bodies["otc_daily|"] = `[{"date":"2026-07-30","code":"8110","name":"華東","close":30.5,"change_dir":"+","change":0.35,"open":30.1,"high":30.7,"low":30.0,"volume":120000,"amount":3660000,"transaction":80}]`
@@ -384,6 +386,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_gold_spot", args: map[string]any{"kind": "spot", "code": "AU9901"}},
 		{name: "get_open_end_fund", args: map[string]any{"kind": "latest", "code": "T1001Y"}},
 		{name: "get_gisa_board", args: map[string]any{"kind": "company", "code": "7430"}},
+		{name: "get_otc_fundamental_stats", args: map[string]any{"kind": "profile", "code": "1240"}},
 		{name: "get_fcm_profiles", args: map[string]any{"kind": "lists"}},
 		{name: "get_position_limits", args: map[string]any{"category": "non_equity"}},
 		{name: "get_contract_adjust", args: map[string]any{"view": "adjust", "contract": "3680"}},

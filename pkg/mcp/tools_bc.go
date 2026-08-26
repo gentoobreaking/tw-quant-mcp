@@ -1708,6 +1708,66 @@ func handlerGetEmergingBoardHoldings(a *App, args map[string]any) (HandlerResult
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// otcFundKinds 為 T238 kind → mopsfin 端點後綴對應。
+var otcFundKinds = map[string]string{
+	"op_analysis":      "187ap17_O",   // 營益分析彙總表
+	"profile":          "t187ap03_O",  // 上櫃股票基本資料
+	"major_message":    "t187ap04_O",  // 每日重大訊息
+	"eps_industry":     "t187ap05_OA", // 各產業 EPS 統計-一般業
+	"eps_financial":    "t187ap05_OB", // 各產業 EPS 統計-金控業
+	"forecast_current": "t187ap14_O",  // 財測達成情形（本季）
+	"forecast_update":  "t187ap15_O",  // 財測達成情形（更新版）
+	"audit_diff":       "t187ap16_O",  // 查核差異彙總表
+	"dividend_board":   "t187ap39_O",  // 股利分派情形（董事會決議）
+}
+
+// handlerGetOtcFundamentalStats：上櫃基本面・營收統計・重大訊息（T238，
+// mopsfin_* 九端點）。kind 切換九型；code 本地過濾；重用 TPExOtcMopsfin
+// kind 模板；passthrough。
+func handlerGetOtcFundamentalStats(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "op_analysis"
+	}
+	path, ok := otcFundKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 op_analysis/profile/major_message/eps_industry/eps_financial/forecast_current/forecast_update/audit_diff/dividend_board，得到 %q", kindArg)
+	}
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExOtcMopsfin), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcMopsfin), date,
+			path+"|"+code, map[string]string{"kind": path}),
+		func() ([]byte, error) {
+			return a.fetchTPExRaw(ctx, provider.TPExOtcMopsfin,
+				url.Values{"kind": {path}})
+		})
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetCalendar)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode", "公司代號") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // emgFinSectors 為 T215 六產業格式後綴（fallback 順序同 T092/T158）。
 var emgFinSectors = []string{"ci", "fh", "basi", "bd", "ins", "mim"}
 
