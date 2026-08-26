@@ -85,6 +85,9 @@ const (
 	TPExGIConst       TPExDataset = "gi_constituents"       // 公司治理指數成分股（T219）
 	TPExSILatest      TPExDataset = "si_latest"             // 薪酬指數當日收盤（T219）
 	TPExSIConst       TPExDataset = "si_constituents"       // 薪酬指數成分股（T219）
+	TPExEmp88History  TPExDataset = "emp88_history"         // 勞工就業88指數歷史收盤（T220）
+	TPExEmp88Latest   TPExDataset = "emp88_latest"          // 勞工就業88指數當日收盤（T220）
+	TPExEmp88Const    TPExDataset = "emp88_constituents"    // 勞工就業88指數成分股（T220）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -132,6 +135,9 @@ var (
 		TPExGIConst:       "/tpcgi_constituents",                // 治理指數成分股（T219）
 		TPExSILatest:      "/tpci_change",                       // 薪酬指數當日收盤（T219）
 		TPExSIConst:       "/tpci_constituents",                 // 薪酬指數成分股（T219）
+		TPExEmp88History:  "/tpex_emp88_reward_index",           // 勞工就業88歷史收盤（T220）
+		TPExEmp88Latest:   "/tpex_emp88_change",                 // 勞工就業88當日收盤（T220）
+		TPExEmp88Const:    "/tpex_emp88_constituents",           // 勞工就業88成分股（T220）
 	}
 )
 
@@ -332,6 +338,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExGILatest), string(TPExGIConst), string(TPExSILatest), string(TPExSIConst):
 		// passthrough（T219 實測；治理/薪酬指數 Date/Name/Index/Change 或
 		// SecuritiesCompanyCode/CompanyName，原樣保留）。
+		out = ms
+	case string(TPExEmp88History), string(TPExEmp88Latest), string(TPExEmp88Const):
+		// passthrough（T220 實測；勞工就業88指數 GretaiLaborEmployment88*/
+		// Name/Index/Change 或 SecuritiesCompanyCode，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

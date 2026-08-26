@@ -1,0 +1,16 @@
+{
+  "arguments": {
+    "view": "latest"
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"Change\":\"0.01\",\"Date\":\"1150825\",\"Index\":\"350.61\",\"Name\":\"櫃買勞工就業88指數\"},{\"Change\":\"0.02\",\"Date\":\"1150825\",\"Index\":\"570.25\",\"Name\":\"櫃買勞工就業88報酬指數\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T09:20:19+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":272,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

@@ -2024,6 +2024,49 @@ func handlerGetGovernanceSalaryIndex(a *App, args map[string]any) (HandlerResult
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// handlerGetEmp88Index：勞工就業88指數（TPEx-API tpex_emp88_* 系列，T220）。
+// view 切換 history 歷史收盤/latest 當日收盤/constituents 成分股；passthrough。
+func handlerGetEmp88Index(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	view := strVal(args["view"])
+	if view == "" {
+		view = "latest"
+	}
+	var ds provider.TPExDataset
+	switch view {
+	case "history":
+		ds = provider.TPExEmp88History
+	case "constituents":
+		ds = provider.TPExEmp88Const
+	default:
+		ds = provider.TPExEmp88Latest
+	}
+	limit, offset := listPaging(args)
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, "", nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // otcGovernanceKinds 為 T237 上櫃治理系列之語意 kind → 官方端點對照。
 var otcGovernanceKinds = []struct {
 	Kind     string // 語意化查詢類別（工具參數值）

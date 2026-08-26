@@ -1379,6 +1379,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetHighDividendIndex,
 	}) // T218
 	r.Register(ToolDef{
+		Symbol: "get_emp88_index",
+		Name:   "get_emp88_index",
+		Description: "查詢勞工就業88指數（TPEx-API tpex_emp88_* 系列，T220）。" +
+			"view 切換 history 歷史收盤含報酬指數／latest 當日收盤（預設）／constituents 成分股。" +
+			"limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"view":   map[string]any{"type": "string", "enum": []string{"history", "latest", "constituents"}, "default": "latest", "description": "資料檢視模式"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetEmp88Index,
+	}) // T220
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +
