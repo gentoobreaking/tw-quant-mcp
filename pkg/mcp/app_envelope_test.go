@@ -50,6 +50,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	// get_etf_nav（§30.1：fundPric netPrice+atmps / close 市價）
 	f.bodies["etf|0050|fundPric"] = `{"netPrice":[{"date":"2026/07/30","count":101.0},{"date":"2026/07/29","count":100.0}],"atmps":[{"date":"2026/07/30","count":0.15},{"date":"2026/07/29","count":-0.1}]}`
 	f.bodies["etf|0050|close"] = `[{"date":"2026/07/30","count":101.15},{"date":"2026/07/29","count":99.9}]`
+	f.bodies["etf_perf|0050"] = `{"state":"ok","dates":["2025/07/01","2025/07/02"],"performanceA":[10,21],"performanceB":[8,-17]}`
+	f.bodies["etf_divdetail|0056"] = `{"status":"ok","data":[["0056","元大高股息","115年08月12日","115年09月02日","115年09月20日","","政策全文測試"]]}`
 	// get_block_trades_daily（T042，tables 型）
 	f.bodies["block_trades|"] = `[{"date":"2026-08-03","trade_type":"逐筆交易","class":"特定證券","volume":1000000,"volume_share":0.01,"amount":50000000,"amount_share":0.05}]`
 	// get_after_hours_trading（T040）
@@ -285,6 +287,8 @@ func allToolProbes() []envelopeProbe {
 		// ── ETF（§30.1，2）──
 		{name: "get_etf_nav", args: map[string]any{"symbol": "0050"}},
 		{name: "get_etf_dividend", args: map[string]any{"symbol": "0056"}},
+		{name: "get_etf_performance", args: map[string]any{"symbol": "0050", "limit": 2}},
+		{name: "get_etf_dividend_detail", args: map[string]any{"symbol": "0056", "upcoming_only": true}},
 		// ── C 組（籌碼/法人，6）──
 		{name: "get_institutional_investors", args: map[string]any{"market": "tse", "date": "2026-07-30"}},
 		{name: "get_foreign_industry_holdings", args: map[string]any{"date": "2026-07-30"}},

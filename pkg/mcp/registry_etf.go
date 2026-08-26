@@ -43,4 +43,40 @@ func registerETFTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetETFDividend,
 	})
+	r.Register(ToolDef{
+		Symbol: "get_etf_performance",
+		Name:   "get_etf_performance",
+		Description: "查詢 ETF 報酬率績效序列（e添富 ajaxPerformance，T243）。" +
+			"回傳 dates＋performanceA/B 兩組數列（官方未標明 A/B 語意，原樣保留，推測為兩種期間報酬或含/不含配息）。" +
+			"symbol 必填；limit 回傳最後 N 點。對稱既有 get_etf_nav（NAV 折溢價）工具。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"symbol": map[string]any{"type": "string", "description": "ETF 代號（必填），如 0050"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳最後 N 點"},
+			},
+			"required": []string{"symbol"},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetETFPerformance,
+	}) // T243
+	r.Register(ToolDef{
+		Symbol: "get_etf_dividend_detail",
+		Name:   "get_etf_dividend_detail",
+		Description: "查詢 ETF 配息明細與收益分配政策全文（e添富 ajaxDividendData，T243）。" +
+			"含「尚未發生」之預定除息日/預定發放日（可提前得知下一期配息日程）與政策全文。" +
+			"symbol 必填；upcoming_only 僅回未發放之預定配息。對稱既有 get_etf_dividend（僅歷史已發放配息）。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"symbol":        map[string]any{"type": "string", "description": "ETF 代號（必填），如 0056"},
+				"upcoming_only": map[string]any{"type": "boolean", "default": false, "description": "僅回未發放之預定配息"},
+				"limit":         map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":        map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+			"required": []string{"symbol"},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetETFDividendDetail,
+	}) // T243
 }

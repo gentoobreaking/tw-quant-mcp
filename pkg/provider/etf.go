@@ -238,3 +238,45 @@ func httpHeader(kv map[string]string) http.Header {
 	}
 	return h
 }
+
+// PerformanceFetch 取得 e添富 ETF 報酬率績效序列（ajaxPerformance，
+// T243）。GET；etfId 為 ETF 代號。
+func (s *ETFortuneSource) PerformanceFetch(ctx context.Context, etfID string) ([]byte, error) {
+	u := s.base + "/ajaxPerformance?response=json&etfId=" + url.QueryEscape(strings.TrimSpace(etfID))
+	req := RawRequest{
+		Method: "GET",
+		URL:    u,
+		Headers: httpHeader(map[string]string{
+			"Referer": s.base + "/hotetfList",
+		}),
+	}
+	resp, err := s.client.Do(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("provider: ETFortune ajaxPerformance 回傳 %d", resp.StatusCode)
+	}
+	return resp.Body, nil
+}
+
+// DividendDetailFetch 取得 e添富 ETF 配息明細與收益分配政策全文
+// （ajaxDividendData，T243）。GET；etfId 為 ETF 代號。
+func (s *ETFortuneSource) DividendDetailFetch(ctx context.Context, etfID string) ([]byte, error) {
+	u := s.base + "/ajaxDividendData?response=json&etfId=" + url.QueryEscape(strings.TrimSpace(etfID))
+	req := RawRequest{
+		Method: "GET",
+		URL:    u,
+		Headers: httpHeader(map[string]string{
+			"Referer": s.base + "/hotetfList",
+		}),
+	}
+	resp, err := s.client.Do(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("provider: ETFortune ajaxDividendData 回傳 %d", resp.StatusCode)
+	}
+	return resp.Body, nil
+}

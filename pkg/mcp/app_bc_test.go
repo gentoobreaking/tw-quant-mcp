@@ -71,6 +71,30 @@ func (e fakeETF) ChartFetch(_ context.Context, code string, chartType provider.E
 	return []byte(body), nil
 }
 
+func (e fakeETF) PerformanceFetch(_ context.Context, etfID string) ([]byte, error) {
+	key := "etf_perf|" + etfID
+	e.f.mu.Lock()
+	e.f.calls[key]++
+	body, ok := e.f.bodies[key]
+	e.f.mu.Unlock()
+	if !ok {
+		e.f.t.Fatalf("fakeETF: 未 stub 之請求鍵 %q", key)
+	}
+	return []byte(body), nil
+}
+
+func (e fakeETF) DividendDetailFetch(_ context.Context, etfID string) ([]byte, error) {
+	key := "etf_divdetail|" + etfID
+	e.f.mu.Lock()
+	e.f.calls[key]++
+	body, ok := e.f.bodies[key]
+	e.f.mu.Unlock()
+	if !ok {
+		e.f.t.Fatalf("fakeETF: 未 stub 之請求鍵 %q", key)
+	}
+	return []byte(body), nil
+}
+
 // fakeWeb/fakeAPI/fakeTPEx 為 fakeFetch 之介面適配（URL 參數型別各異）。
 type fakeWeb struct{ f *fakeFetch }
 

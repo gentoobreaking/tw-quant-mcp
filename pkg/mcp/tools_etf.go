@@ -14,6 +14,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"sort"
+	"strconv"
+	"strings"
 	"time"
 
 	"tw-quant-mcp/pkg/cache"
@@ -39,6 +41,8 @@ type etfPoint struct {
 // etfFetcher 為 e添富資料源之 handler 視界（測試可注入 fake）。
 type etfFetcher interface {
 	ChartFetch(ctx context.Context, code string, chartType provider.ETFChartType, start, end string) ([]byte, error)
+	PerformanceFetch(ctx context.Context, etfID string) ([]byte, error)
+	DividendDetailFetch(ctx context.Context, etfID string) ([]byte, error)
 }
 
 // etfDivFetcher 為 ETF 分配收益資料源之 handler 視界（測試可注入 fake）。
@@ -299,4 +303,156 @@ func (a *App) etfDivFetch(ctx context.Context, dataset, key string, fetch func()
 		return cached, stale, nil, nil
 	}
 	return cached, stale, points, json.Unmarshal(raw, &points)
+}
+
+// etfPerfPoint 為 T243 績效序列單點。
+type etfPerfPoint struct {
+	Date         string `json:"date"`
+	PerformanceA any    `json:"performance_a"`
+	PerformanceB any    `json:"performance_b"`
+}
+
+// rocDateToISO 將民國日期字串（如「115年09月08日」）轉為 ISO YYYY-MM-DD；
+// 已是西元格式或空值則原樣回傳。
+func rocDateToISO(s string) string {
+	s = strings.TrimSpace(s)
+	var y, m, d int
+	if n, _ := fmt.Sscanf(s, "%d年%d月%d日", &y, &m, &d); n == 3 && y < 200 {
+		return fmt.Sprintf("%04d-%02d-%02d", y+1911, m, d)
+	}
+	if len(s) == 7 { // 1150908
+		if _, err := fmt.Sscanf(s, "%d", &y); err == nil {
+			m, _ = strconv.Atoi(s[3:5])
+			d, _ = strconv.Atoi(s[5:7])
+			y2, _ := strconv.Atoi(s[:3])
+			return fmt.Sprintf("%04d-%02d-%02d", y2+1911, m, d)
+		}
+	}
+	return s
+}
+
+// handlerGetETFPerformance：e添富 ETF 報酬率績效序列（T243，
+// ajaxPerformance）。performanceA/B 官方未標明語意，原樣保留；symbol 必填。
+func handlerGetETFPerformance(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	code := strings.TrimSpace(strVal(args["symbol"]))
+	if code == "" {
+		return HandlerResult{}, fmt.Errorf("symbol 為必填參數")
+	}
+	if a.etf == nil {
+		return HandlerResult{}, fmt.Errorf("e添富資料源尚未接線")
+	}
+	date := a.now().Format("2006-01-02")
+	key := cache.KeyString(model.SourceTWSEWeb, "etf_performance", date, code, nil)
+	var payload struct {
+		State        string   `json:"state"`
+		Dates        []string `json:"dates"`
+		PerformanceA []any    `json:"performanceA"`
+		PerformanceB []any    `json:"performanceB"`
+	}
+	cached, stale, err := a.etfFetchJSON(ctx, cache.DatasetDailyKLine, key,
+		func() ([]byte, error) { return a.etf.PerformanceFetch(ctx, code) }, &payload)
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("績效資料取得失敗: %w", err)
+	}
+	if payload.State != "ok" || len(payload.Dates) == 0 {
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之績效資料", code)
+	}
+	n := len(payload.Dates)
+	points := make([]etfPerfPoint, 0, n)
+	for i := 0; i < n; i++ {
+		p := etfPerfPoint{Date: payload.Dates[i]}
+		if i < len(payload.PerformanceA) {
+			p.PerformanceA = payload.PerformanceA[i]
+		}
+		if i < len(payload.PerformanceB) {
+			p.PerformanceB = payload.PerformanceB[i]
+		}
+		points = append(points, p)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(points) {
+		points = points[offset:]
+	} else {
+		points = []etfPerfPoint{}
+	}
+	if len(points) > limit {
+		points = points[len(points)-limit:] // 回傳最後 N 點（時序尾端）
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lg := postLineage(model.SourceTWSEWeb, date, cached || stale, stale, ttl)
+	return HandlerResult{Data: points, Lineage: lg}, nil
+}
+
+// handlerGetETFDividendDetail：e添富 ETF 配息明細與收益分配政策全文（T243，
+// ajaxDividendData）。含「尚未發生」之預定除息/發放日；symbol 必填；
+// upcoming_only 僅回未發放之預定配息。
+func handlerGetETFDividendDetail(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	code := strings.TrimSpace(strVal(args["symbol"]))
+	if code == "" {
+		return HandlerResult{}, fmt.Errorf("symbol 為必填參數")
+	}
+	upcomingOnly := args["upcoming_only"] == true
+	if a.etf == nil {
+		return HandlerResult{}, fmt.Errorf("e添富資料源尚未接線")
+	}
+	date := a.now().Format("2006-01-02")
+	key := cache.KeyString(model.SourceTWSEWeb, "etf_dividend_detail", date, code, map[string]string{"up": fmt.Sprint(upcomingOnly)})
+	var payload struct {
+		Status string  `json:"status"`
+		Data   [][]any `json:"data"`
+	}
+	cached, stale, err := a.etfFetchJSON(ctx, cache.DatasetDailyKLine, key,
+		func() ([]byte, error) { return a.etf.DividendDetailFetch(ctx, code) }, &payload)
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("配息明細取得失敗: %w", err)
+	}
+	if payload.Status != "ok" {
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之配息明細或格式異常", code)
+	}
+	type detailRow struct {
+		Code            string `json:"code"`
+		Name            string `json:"name"`
+		ExpectedExDate  string `json:"expected_ex_date"`  // 預定除息日
+		ExpectedPayDate string `json:"expected_pay_date"` // 預定發放日
+		PaidDate        string `json:"paid_date"`         // 實際發放日
+		PolicyText      string `json:"policy_text"`       // 收益分配政策全文
+	}
+	outRows := make([]detailRow, 0, len(payload.Data))
+	for _, row := range payload.Data {
+		if len(row) < 5 {
+			continue // 欄位不足之殘列
+		}
+		cell := func(i int) string { v, _ := row[i].(string); return strings.TrimSpace(v) }
+		r := detailRow{
+			Code:            cell(0),
+			Name:            cell(1),
+			ExpectedExDate:  rocDateToISO(cell(2)),
+			ExpectedPayDate: rocDateToISO(cell(3)),
+			PaidDate:        rocDateToISO(cell(4)),
+		}
+		if len(row) > 6 {
+			r.PolicyText = cell(6) // 政策全文含換行，原樣保留
+		}
+		if r.Code != "" && r.Code != code && !strings.Contains(r.Name, code) {
+			continue // 端點恆回全 ETF 清單，過濾指定標的
+		}
+		if upcomingOnly && r.PaidDate != "" {
+			continue // 僅保留尚未發放之預定配息
+		}
+		outRows = append(outRows, r)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(outRows) {
+		outRows = outRows[offset:]
+	} else {
+		outRows = []detailRow{}
+	}
+	if len(outRows) > limit {
+		outRows = outRows[:limit]
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lg := postLineage(model.SourceTWSEWeb, date, cached || stale, stale, ttl)
+	return HandlerResult{Data: outRows, Lineage: lg}, nil
 }
