@@ -1092,6 +1092,82 @@ func handlerGetInstiWeekly(a *App, args map[string]any) (HandlerResult, error) {
 	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// fspCategories 為 T205 category → 資料集對應。
+var fspCategories = map[string]model.TAIFEXDataset{
+	"all":           model.TAFSPAll,
+	"futures":       model.TAFSPFutures,
+	"index_futures": model.TAFSPIdxFut,
+	"ssf":           model.TAFSPSSf,
+	"index_options": model.TAFSPIdxOpt,
+	"fx":            model.TAFSPFx,
+	"gold":          model.TAFSPGold,
+	"ir":            model.TAFSPIR,
+	"options":       model.TASPOptions,
+	"sso":           model.TAFSPSSO,
+}
+
+// handlerGetFinalSettlementPrice：最後結算價系列（TAIFEX-API
+// FinalSettlementPrice*，T205）。category 切換商品類別；date 指定到期日
+// （本地端過濾 TheFinalSettlementDay，省略回全部）；passthrough。
+func handlerGetFinalSettlementPrice(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	catArg := strVal(args["category"])
+	if catArg == "" {
+		catArg = "all"
+	}
+	ds, ok := fspCategories[catArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("category 僅接受 all/futures/index_futures/ssf/index_options/fx/gold/ir/options/sso，得到 %q", catArg)
+	}
+	dateArg := strVal(args["date"])
+	// 端點恆回近期各到期日全量，不接受日期參數；快取鍵固定用最新交易日
+	// （傳入過去日期會誤走 DL 歷史查詢路徑），date 僅供本地端過濾。
+	d, err := taifexDate(a, q, ctx, "")
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	if len(res.Data) == 0 {
+		note := res.Note
+		if note == "" {
+			note = "無資料"
+		}
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料（%s）", ds, note)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	contract := strings.TrimSpace(strVal(args["contract"]))
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if dateArg != "" && rowField(r, "TheFinalSettlementDay") != strings.ReplaceAll(dateArg, "-", "") {
+			continue
+		}
+		if contract != "" && !strings.Contains(rowField(r, "Contract"), contract) && !strings.Contains(rowField(r, "ContractName"), contract) {
+			continue
+		}
+		out = append(out, r)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // handlerGetInstitutionalGeneral：三大法人整體交易總表（期貨+選擇權合計，
 // TAIFEX-API GeneralBytheDate，T129；端點回 CSV，date 省略為最新交易日）。
 func handlerGetInstitutionalGeneral(a *App, args map[string]any) (HandlerResult, error) {

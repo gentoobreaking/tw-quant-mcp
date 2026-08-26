@@ -225,6 +225,25 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetInstiWeekly,
 	}) // T204
 	r.Register(ToolDef{
+		Symbol: "get_final_settlement_price",
+		Name:   "get_final_settlement_price",
+		Description: "查詢期貨/選擇權最後結算價（TAIFEX-API FinalSettlementPrice* 系列，T205）。" +
+			"category 切換商品類別：all 全部／futures 期貨／index_futures 指數類期貨／ssf 股票期貨／index_options 指數選擇權／fx 匯率類／gold 商品类／ir 利率类／options 選擇權／sso 股票選擇權。" +
+			"date 指定到期日 YYYY-MM-DD（本地端過濾，省略回全部近期到期）；contract 選填代號或中文名過濾；limit 預設 50、offset 分頁。供到期損益試算。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"category": map[string]any{"type": "string", "enum": []string{"all", "futures", "index_futures", "ssf", "index_options", "fx", "gold", "ir", "options", "sso"}, "default": "all", "description": "商品類別"},
+				"date":     map[string]any{"type": "string", "description": "到期日 YYYY-MM-DD（選填，本地端過濾 TheFinalSettlementDay）"},
+				"contract": map[string]any{"type": "string", "description": "契約代號或中文名子字串（選填），如「臺股期貨」或 TXO"},
+				"limit":    map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":   map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetFinalSettlementPrice,
+	}) // T205
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +

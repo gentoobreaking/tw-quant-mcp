@@ -31,6 +31,16 @@ const (
 	TAInstiFutContWeek TAIFEXDataset = "insti_fut_cont_week"   // 三大法人區分各期貨契約-依週別（僅 API，T204）
 	TAInstiOptContWeek TAIFEXDataset = "insti_opt_cont_week"   // 三大法人區分各選擇權契約-依週別（僅 API，T204）
 	TAInstiCPWeek      TAIFEXDataset = "insti_cp_week"         // 三大法人買賣權分計-依週別（僅 API，T204）
+	TAFSPAll           TAIFEXDataset = "fsp_all"               // 最後結算價-全部商品（僅 API，T205）
+	TAFSPFutures       TAIFEXDataset = "fsp_futures"           // 最後結算價-期貨商品（僅 API，T205）
+	TAFSPIdxFut        TAIFEXDataset = "fsp_index_futures"     // 最後結算價-股價指數類期貨（僅 API，T205）
+	TAFSPSSf           TAIFEXDataset = "fsp_ssf"               // 最後結算價-股票期貨（僅 API，T205）
+	TAFSPIdxOpt        TAIFEXDataset = "fsp_index_options"     // 最後結算價-指數選擇權（僅 API，T205）
+	TAFSPFx            TAIFEXDataset = "fsp_fx"                // 最後結算價-匯率類（僅 API，T205）
+	TAFSPGold          TAIFEXDataset = "fsp_gold"              // 最後結算價-商品類（僅 API，T205）
+	TAFSPIR            TAIFEXDataset = "fsp_ir"                // 最後結算價-利率類（僅 API，T205）
+	TASPOptions        TAIFEXDataset = "fsp_options"           // 最後結算價-選擇權商品（僅 API，T205）
+	TAFSPSSO           TAIFEXDataset = "fsp_sso"               // 最後結算價-股票選擇權（僅 API，T205）
 	TALargeTraderFut   TAIFEXDataset = "large_trader_fut"      // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt   TAIFEXDataset = "large_trader_opt"      // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio     TAIFEXDataset = "put_call_ratio"        // 買賣權比（PCR）

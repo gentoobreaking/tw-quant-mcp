@@ -70,6 +70,16 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAInstiFutContWeek: "/MarketDataOfMajorInstitutionalTradersDetailsOfFuturesContractsBytheWeek",  // 各期貨契約-依週別（T204）
 	model.TAInstiOptContWeek: "/MarketDataOfMajorInstitutionalTradersDetailsOfOptionsContractsBytheWeek",  // 各選擇權契約-依週別（T204）
 	model.TAInstiCPWeek:      "/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheWeek",      // 買賣權分計-依週別（T204）
+	model.TAFSPAll:           "/FinalSettlementPrice",                                                     // 最後結算價-全部（T205）
+	model.TAFSPFutures:       "/FinalSettlementPriceFutures",                                              // 最後結算價-期貨（T205）
+	model.TAFSPIdxFut:        "/FinalSettlementPriceIndexFutures",                                         // 最後結算價-指數期貨（T205）
+	model.TAFSPSSf:           "/FinalSettlementPriceSSF",                                                  // 最後結算價-股票期貨（T205）
+	model.TAFSPIdxOpt:        "/FinalSettlementPriceIndexOptions",                                         // 最後結算價-指數選擇權（T205）
+	model.TAFSPFx:            "/FinalSettlementPriceFx",                                                   // 最後結算價-匯率類（T205）
+	model.TAFSPGold:          "/FinalSettlementPriceGold",                                                 // 最後結算價-商品類（T205）
+	model.TAFSPIR:            "/FinalSettlementPriceIR",                                                   // 最後結算價-利率類（T205）
+	model.TASPOptions:        "/FinalSettlementPriceOptions",                                              // 最後結算價-選擇權（T205）
+	model.TAFSPSSO:           "/FinalSettlementPriceSSO",                                                  // 最後結算價-股票選擇權（T205）
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -234,6 +244,12 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		// 三大法人依週別系列：直通保留官方欄位（T204；FromDate/ToDate/
 		// Item/ContractCode/CallPut/TradingVolume(Long) 等）。週別資料官方
 		// 不接受日期過濾（恆回近期各週），date 僅供工具層參考。
+		out = json.RawMessage(raw.Body)
+	case model.TAFSPAll, model.TAFSPFutures, model.TAFSPIdxFut, model.TAFSPSSf,
+		model.TAFSPIdxOpt, model.TAFSPFx, model.TAFSPGold, model.TAFSPIR,
+		model.TASPOptions, model.TAFSPSSO:
+		// 最後結算價系列：直通保留官方欄位（T205；TheFinalSettlementDay/
+		// Contract/ContractName/ContractDeliveryMonth/TheFinalSettlementPrice）。
 		out = json.RawMessage(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
