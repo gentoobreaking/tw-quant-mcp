@@ -1552,6 +1552,61 @@ func handlerGetOtcWarningNoteAccumulated(a *App, args map[string]any) (HandlerRe
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// handlerGetEmergingQuotes：興櫃股票當日行情表（T212，tpex_esb_latest_statistics）。
+// passthrough；code 為本地端過濾。
+func handlerGetEmergingQuotes(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExEmgQuotes), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExEmgQuotes), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExEmgQuotes, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
+// handlerGetEmergingMarketStatus：興櫃市場現況（T212，tpex_esb_highlight）。
+// passthrough 單列統計（註冊家數/總市值/成交金額等）。
+func handlerGetEmergingMarketStatus(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExEmgHighlight), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExEmgHighlight), date, "", nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExEmgHighlight, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, r)
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // handlerGetOtcExdividendResult：上櫃除權息計算結果表（T200）。
 // 對稱上市預告表 get_exdividend_calendar；本工具為事後實際計算數據。
 func handlerGetOtcExdividendResult(a *App, args map[string]any) (HandlerResult, error) {

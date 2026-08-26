@@ -162,6 +162,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["otc_dealer_trading|"] = `[{"Date":"1150825","Rank":"1","SecuritiesCompanyCode":"00937B","CompanyName":"群益ESG投等債20+","Buy":"8614","Sell":"3608","NetBuySell":"5006","NetBuy":"4876"}]`
 	f.bodies["otc_after_hours|"] = `[{"Date":"1150825","SecuritiesCompanyCode":"00679B","CompanyName":"元大美債20年","Close":"25.89","Transactions":"7","TradeVolume":"11","TradeAmount":"284790"}]`
 	f.bodies["otc_warn_note|"] = `[{"Date":"20260825","SecuritiesCompanyCode":"3362","CompanyName":"先進光","AccumulationSituation":"115年08月20日至115年08月25日連續四次"},{"Date":"20260825","SecuritiesCompanyCode":"702281","CompanyName":"精測元大5C購01","AccumulationSituation":"115年08月24日至115年08月25日連續二次"}]`
+	f.bodies["emerging_quotes|"] = `[{"Date":"1150825","SecuritiesCompanyCode":"1260","CompanyName":"富味鄉","LatestPrice":"31","TransactionVolume":"23805"}]`
+	f.bodies["emerging_highlight|"] = `[{"Date":"1150825","RegisteredStocksNumber":"361","TotalMarketValue":"1579523"}]`
 	f.bodies["otc_broker_volume|"] = `[{"Date":"20260730","StockRanking":"1","SecuritiesCompanyCodeAndCompanyName":"華東(8110)","SecuritiesFirmsRanking":"1","SecuritiesFirmsCode":"元大","TotalPurchaseShares":"1000","TotalSellShares":"900"}]`
 	f.bodies["otc_monthly_revenue|"] = `[{"出表日期":"1150817","資料年月":"11507","公司代號":"1240","公司名稱":"茂生農經","營業收入-當月營收":"242511","營業收入-上月比較增減(%)":"-10.24"}]`
 	f.bodies["otc_daily|"] = `[{"date":"2026-07-30","code":"8110","name":"華東","close":30.5,"change_dir":"+","change":0.35,"open":30.1,"high":30.7,"low":30.0,"volume":120000,"amount":3660000,"transaction":80}]`
@@ -329,6 +331,8 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_otc_institutional_breakdown", args: map[string]any{"kind": "dealer", "limit": 3, "offset": 1}},
 		{name: "get_otc_after_hours", args: map[string]any{"code": "00679B"}},
 		{name: "get_otc_warning_note_accumulated", args: map[string]any{"kind": "stock", "name": "先進光"}},
+		{name: "get_emerging_quotes", args: map[string]any{"code": "1260"}},
+		{name: "get_emerging_market_status", args: map[string]any{}},
 		{name: "get_otc_exdividend_result", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_targets", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_statistics", args: map[string]any{}},

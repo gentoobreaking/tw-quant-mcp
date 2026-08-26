@@ -1,0 +1,16 @@
+{
+  "arguments": {
+    "code": "1260"
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"ApplyingDate\":\"\",\"ApplyingStatus\":\"\",\"Average\":\"30.36\",\"Buy/Sell\":\"B\",\"BuyingPrice\":\"29.55\",\"BuyingQuantity\":\"3000\",\"CompanyName\":\"富味鄉\",\"Date\":\"1150825\",\"Highest\":\"31\",\"LatestPrice\":\"31\",\"Lowest\":\"30\",\"PreviousAveragePrice\":\"30.51\",\"SecuritiesCompanyCode\":\"1260\",\"SellingPrice\":\"31\",\"SellingQuantity\":\"2995\",\"SuspendTime\":\"000000\",\"Time\":\"163004\",\"TransactionVolume\":\"23805\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T08:49:45+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":585,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

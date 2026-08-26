@@ -1198,6 +1198,31 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcWarningNoteAccumulated,
 	}) // T203
 	r.Register(ToolDef{
+		Symbol: "get_emerging_quotes",
+		Name:   "get_emerging_quotes",
+		Description: "查詢興櫃股票當日行情表（TPEx-API tpex_esb_latest_statistics，T212）。" +
+			"含最新成交/買賣報價、均價、最高最低、成交量與暫停資訊。code 選填過濾；limit 預設 50、offset 分頁。興櫃市場首發工具。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填），過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetEmergingQuotes,
+	}) // T212
+	r.Register(ToolDef{
+		Symbol: "get_emerging_market_status",
+		Name:   "get_emerging_market_status",
+		Description: "查詢興櫃市場現況統計（TPEx-API tpex_esb_highlight，T212）。" +
+			"含註冊家數、總實收資本額、總市值、成交金額/股數/筆數與推薦證券商統計。興櫃市場首發工具。",
+		Schema:   map[string]any{"type": "object", "properties": map[string]any{}},
+		ReadOnly: true,
+		Handler:  handlerGetEmergingMarketStatus,
+	}) // T212
+	r.Register(ToolDef{
 		Symbol: "get_otc_exdividend_result",
 		Name:   "get_otc_exdividend_result",
 		Description: "查詢上櫃股票除權息「計算結果」表（TPEx-API tpex_exright_daily，T200）。" +

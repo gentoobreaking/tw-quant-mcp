@@ -72,6 +72,8 @@ const (
 	TPExOtcDealerTrd  TPExDataset = "otc_dealer_trading"    // 上櫃自營商買賣超彙總（T199）
 	TPExOtcAfterHours TPExDataset = "otc_after_hours"       // 上櫃盤後定價行情（T202）
 	TPExOtcWarnNote   TPExDataset = "otc_warn_note"         // 上櫃注意累計次數異常（T203）
+	TPExEmgQuotes     TPExDataset = "emerging_quotes"       // 興櫃當日行情表（T212）
+	TPExEmgHighlight  TPExDataset = "emerging_highlight"    // 興櫃市場現況（T212）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -106,6 +108,8 @@ var (
 		TPExOtcDealerTrd:  "/tpex_3insti_dealer_trading",        // 自營商買賣超彙總（T199）
 		TPExOtcAfterHours: "/tpex_off_market",                   // 盤後定價行情（T202）
 		TPExOtcWarnNote:   "/tpex_trading_warning_note",         // 注意累計次數異常（T203）
+		TPExEmgQuotes:     "/tpex_esb_latest_statistics",        // 興櫃當日行情表（T212）
+		TPExEmgHighlight:  "/tpex_esb_highlight",                // 興櫃市場現況（T212）
 	}
 )
 
@@ -288,6 +292,11 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExOtcWarnNote):
 		// passthrough（T203 實測；欄位 Date/SecuritiesCompanyCode/CompanyName/
 		// AccumulationSituation，原樣保留）。
+		out = ms
+	case string(TPExEmgQuotes), string(TPExEmgHighlight):
+		// passthrough（T212 實測；興櫃行情 Date/SecuritiesCompanyCode/
+		// CompanyName/LatestPrice/TransactionVolume 等、市場現況
+		// RegisteredStocksNumber/TotalMarketValue 等，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/
