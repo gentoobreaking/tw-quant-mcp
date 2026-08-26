@@ -1526,6 +1526,25 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcFinancialStatements,
 	}) // T239
 	r.Register(ToolDef{
+		Symbol: "get_otc_margin_sbl_detail",
+		Name:   "get_otc_margin_sbl_detail",
+		Description: "查詢上櫃信用交易細項（TPEx-API tpex_margin_* 系列等 11 端點，T240）。" +
+			"kind 切換：used 融券使用率排行／short_sell 融券賣出資訊／margin_sbl 借券賣出餘額／daily_short 每日融券賣出成交量值／adjust 調整成數／lend 標借／" +
+			"mark 注意處置標記／marginspot 券商融資融券餘額／term 融券期限／dpsp_monthly 當沖券差借券費率月報／intraday_fee 標借標購費用。" +
+			"code 過濾證券代號；limit 預設 50、offset 分頁。供券源回補壓力與軋空分析。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"used", "short_sell", "margin_sbl", "daily_short", "adjust", "lend", "mark", "marginspot", "term", "dpsp_monthly", "intraday_fee"}, "default": "used", "description": "細項類別"},
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填）過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcMarginSblDetail,
+	}) // T240
+	r.Register(ToolDef{
 		Symbol: "get_otc_block_trade",
 		Name:   "get_otc_block_trade",
 		Description: "查詢上櫃鉅額交易系列（TPEx-API tpex_daily_qutoes_block 等，T225）。" +

@@ -182,6 +182,17 @@ var cacheDataset = map[string]string{
 	string(provider.TPExRankVolAvg):         cache.DatasetDailyKLine,     // 日均量排行（T223）
 	string(provider.TPExBrokerBranch):       cache.DatasetDailyKLine,     // 券商分公司營業金額（T224）
 	string(provider.TPExBrokerHQ):           cache.DatasetDailyKLine,     // 券商總公司營業金額（T224）
+	string(provider.TPExOtcMgnDpsp):         cache.DatasetDailyKLine,     // 當沖券差借券費率月報（T240）
+	string(provider.TPExOtcIntraday):        cache.DatasetDailyKLine,     // 標借/標購費用（T240）
+	string(provider.TPExOtcMarginSbl):       cache.DatasetDailyKLine,     // 借券賣出餘額（T240）
+	string(provider.TPExOtcMtAdjust):        cache.DatasetDailyKLine,     // 調整成數（T240）
+	string(provider.TPExOtcMtLend):          cache.DatasetDailyKLine,     // 標借資訊（T240）
+	string(provider.TPExOtcMtMark):          cache.DatasetDailyKLine,     // 注意/處置標記（T240）
+	string(provider.TPExOtcMtUsed):          cache.DatasetDailyKLine,     // 融券使用率排行（T240）
+	string(provider.TPExOtcMtSpot):          cache.DatasetDailyKLine,     // 券商融資融券餘額（T240）
+	string(provider.TPExOtcMtShort):         cache.DatasetDailyKLine,     // 融券賣出資訊（T240）
+	string(provider.TPExOtcMtTerm):          cache.DatasetDailyKLine,     // 融券期限資訊（T240）
+	string(provider.TPExOtcShortSell):       cache.DatasetDailyKLine,     // 每日融券賣出成交量值（T240）
 	string(provider.TPExBlockDay):           cache.DatasetDailyKLine,     // 鉅額交易日成交資訊（T225）
 	string(provider.TPExBlockStock):         cache.DatasetDailyKLine,     // 個股鉅額交易成交資訊（T225）
 	string(provider.TPExBlockSummaryD):      cache.DatasetDailyKLine,     // 鉅額交易日量值統計（T225）

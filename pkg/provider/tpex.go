@@ -104,6 +104,17 @@ const (
 	TPExRankVolAvg    TPExDataset = "rank_volume_avg"       // 上櫃日均量排行（T223）
 	TPExBrokerBranch  TPExDataset = "otc_broker_branch"     // 上櫃券商分公司營業金額（T224）
 	TPExBrokerHQ      TPExDataset = "otc_broker_hq"         // 上櫃券商總公司營業金額（T224）
+	TPExOtcMgnDpsp    TPExDataset = "otc_dpsp_monthly"      // 當沖券差借券費率月報（T240）
+	TPExOtcIntraday   TPExDataset = "otc_intraday_fee"      // 標借/標購相關費用（T240）
+	TPExOtcMarginSbl  TPExDataset = "otc_margin_sbl"        // 借券賣出餘額（T240）
+	TPExOtcMtAdjust   TPExDataset = "otc_mt_adjust"         // 融資融券調整成數（T240）
+	TPExOtcMtLend     TPExDataset = "otc_mt_lend"           // 標借資訊（T240）
+	TPExOtcMtMark     TPExDataset = "otc_mt_mark"           // 注意/處置標記（T240）
+	TPExOtcMtUsed     TPExDataset = "otc_mt_used"           // 融券使用率排行（T240）
+	TPExOtcMtSpot     TPExDataset = "otc_mt_marginspot"     // 券商融資融券餘額（T240）
+	TPExOtcMtShort    TPExDataset = "otc_mt_short_sell"     // 融券賣出資訊（T240）
+	TPExOtcMtTerm     TPExDataset = "otc_mt_term"           // 融券期限資訊（T240）
+	TPExOtcShortSell  TPExDataset = "otc_short_sell"        // 每日融券賣出成交量值（T240）
 	TPExBlockDay      TPExDataset = "otc_block_day"         // 上櫃鉅額交易日成交資訊（T225）
 	TPExBlockStock    TPExDataset = "otc_block_stock"       // 上櫃個股鉅額交易成交資訊（T225）
 	TPExBlockSummaryD TPExDataset = "otc_block_summary_day" // 上櫃鉅額交易日量值統計（T225）
@@ -187,6 +198,17 @@ var (
 		TPExRankVolAvg:    "/tpex_trading_volumes_avg",           // 日均量排行（T223）
 		TPExBrokerBranch:  "/tpex_daily_broker1",                 // 券商分公司營業金額（T224）
 		TPExBrokerHQ:      "/tpex_daily_broker2",                 // 券商總公司營業金額（T224）
+		TPExOtcMgnDpsp:    "/tpex_dpsp_monthly_CBmcs007",         // 當沖券差借券費率月報（T240）
+		TPExOtcIntraday:   "/tpex_intraday_fee",                  // 標借/標購費用（T240）
+		TPExOtcMarginSbl:  "/tpex_margin_sbl",                    // 借券賣出餘額（T240）
+		TPExOtcMtAdjust:   "/tpex_margin_trading_adjust",         // 調整成數（T240）
+		TPExOtcMtLend:     "/tpex_margin_trading_lend",           // 標借資訊（T240）
+		TPExOtcMtMark:     "/tpex_margin_trading_margin_mark",    // 注意/處置標記（T240）
+		TPExOtcMtUsed:     "/tpex_margin_trading_margin_used",    // 融券使用率排行（T240）
+		TPExOtcMtSpot:     "/tpex_margin_trading_marginspot",     // 券商融資融券餘額（T240）
+		TPExOtcMtShort:    "/tpex_margin_trading_short_sell",     // 融券賣出資訊（T240）
+		TPExOtcMtTerm:     "/tpex_margin_trading_term",           // 融券期限資訊（T240）
+		TPExOtcShortSell:  "/tpex_short_sell",                    // 每日融券賣出成交量值（T240）
 		TPExBlockDay:      "/tpex_daily_qutoes_block",            // 鉅額交易日成交資訊（T225）
 		TPExBlockStock:    "/tpex_daily_trading_block",           // 個股鉅額交易成交資訊（T225）
 		TPExBlockSummaryD: "/tpex_daily_trading_summary_odd",     // 鉅額交易日量值統計（T225）
@@ -426,6 +448,13 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExBrokerBranch), string(TPExBrokerHQ):
 		// passthrough（T224 實測；券商營業金額 Date/Ranking/Code 或
 		// FinancialInstitutionsCode/TradingAmount 等，原樣保留）。
+		out = ms
+	case string(TPExOtcMgnDpsp), string(TPExOtcIntraday), string(TPExOtcMarginSbl),
+		string(TPExOtcMtAdjust), string(TPExOtcMtLend), string(TPExOtcMtMark),
+		string(TPExOtcMtUsed), string(TPExOtcMtSpot), string(TPExOtcMtShort),
+		string(TPExOtcMtTerm), string(TPExOtcShortSell):
+		// passthrough（T240 實測；上櫃信用交易/借券細項，官方中英欄位混用，
+		// 原樣保留）。
 		out = ms
 	case string(TPExBlockDay), string(TPExBlockStock), string(TPExBlockSummaryD),
 		string(TPExBlockMonthly), string(TPExBlockYearly):

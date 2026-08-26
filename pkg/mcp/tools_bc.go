@@ -2844,3 +2844,62 @@ func handlerGetOtcForeignHoldingsRank(a *App, args map[string]any) (HandlerResul
 	}
 	return HandlerResult{Data: rows, Lineage: lineage}, nil
 }
+
+// otcMgnKinds 為 T240 kind → 資料集對應。
+var otcMgnKinds = map[string]provider.TPExDataset{
+	"dpsp_monthly": provider.TPExOtcMgnDpsp,
+	"intraday_fee": provider.TPExOtcIntraday,
+	"margin_sbl":   provider.TPExOtcMarginSbl,
+	"adjust":       provider.TPExOtcMtAdjust,
+	"lend":         provider.TPExOtcMtLend,
+	"mark":         provider.TPExOtcMtMark,
+	"used":         provider.TPExOtcMtUsed,
+	"marginspot":   provider.TPExOtcMtSpot,
+	"short_sell":   provider.TPExOtcMtShort,
+	"term":         provider.TPExOtcMtTerm,
+	"daily_short":  provider.TPExOtcShortSell,
+}
+
+// handlerGetOtcMarginSblDetail：上櫃融資融券・借券細項（T240，tpex_margin_*
+// 系列等 11 端點）。kind 切換 dpsp_monthly/intraday_fee/margin_sbl/adjust/
+// lend/mark/used/marginspot/short_sell/term/daily_short；code 本地過濾；
+// passthrough。
+func handlerGetOtcMarginSblDetail(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "used"
+	}
+	ds, ok := otcMgnKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 dpsp_monthly/intraday_fee/margin_sbl/adjust/lend/mark/used/marginspot/short_sell/term/daily_short，得到 %q", kindArg)
+	}
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
