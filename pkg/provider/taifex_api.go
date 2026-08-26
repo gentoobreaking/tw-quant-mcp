@@ -100,6 +100,11 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAMarginIR:         "/InterestRateFuturesMargining",                                             // 保證金一覽表-利率類（T209）
 	model.TAMarginGold:       "/GoldFuturesAndOptionsMargining",                                           // 保證金一覽表-商品類（T209）
 	model.TAMarginETF:        "/SingleStockFuturesETFMargining",                                           // 保證金一覽表-股票類 ETF（T209）
+	model.TAFCMLists:         "/FCMLists",                                                                 // 期貨商總公司名冊（T230）
+	model.TAFCMBranchLists:   "/FCMBranchLists",                                                           // 期貨商分公司名冊（T230）
+	model.TAFCMNetValue:      "/NetValuePerShareStatement",                                                // 期貨商每股淨值明細表（T230）
+	model.TAFCMIncome:        "/IncomeStatementF",                                                         // 專營期貨商稅前累計損益彙總表（T230）
+	model.TAFCMAccIncome:     "/AccumulatedIncomeStateF",                                                  // 專營期貨商累計損益明細表（T230）
 	model.TAStockOptOID:      "/va02",                                                                     // 每日個股選擇權未平倉量增減（T210）
 	model.TAStockFutStatsD:   "/va12",                                                                     // 每日個股期貨交易量統計（T210）
 	model.TAStockFutStatsM:   "/va13",                                                                     // 每月個股期貨交易量統計（T210）
@@ -292,6 +297,11 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 	case model.TAMarginFx, model.TAMarginIR, model.TAMarginGold, model.TAMarginETF:
 		// 保證金一覽表四類別：直通保留官方欄位（T209；Contracts 或 Contract/
 		// ClearingMargin/MaintenanceMargin/InitialMargin 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TAFCMLists, model.TAFCMBranchLists, model.TAFCMNetValue,
+		model.TAFCMIncome, model.TAFCMAccIncome:
+		// 期貨商名冊/淨值/損益：直通保留官方欄位（T230；FCMCode/FCMName/
+		// NetValuePerShare/NetIncomeBeforeTaxThisMonth 等）。
 		out = json.RawMessage(raw.Body)
 	case model.TAStockOptOID, model.TAStockFutStatsD, model.TAStockFutStatsM,
 		model.TAStockFutStatsY:

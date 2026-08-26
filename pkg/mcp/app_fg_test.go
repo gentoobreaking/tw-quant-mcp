@@ -239,6 +239,13 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TASTFTop10, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Date": "20260825", "Contract": "CCF", "ContractName": "聯電期貨", "Volume": "38735"},
 	})
+	// 期貨商名冊與財務概況（T230，直通官方欄位）
+	f.single[tfKey(model.TAFCMLists, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"FCMCode": "F001", "FCMName": "國泰期貨股份有限公司", "Address": "台北市敦化南路二段333號19樓"},
+	})
+	f.single[tfKey(model.TAFCMNetValue, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"YYYYMM": "202607", "FCMCode": "S509", "NetValue": "376473767", "Shares": "60000", "NetValuePerShare": "6.27"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},

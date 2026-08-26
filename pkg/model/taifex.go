@@ -61,6 +61,11 @@ const (
 	TAMarginIR         TAIFEXDataset = "margin_ir"             // 保證金一覽表-利率類（僅 API，T209）
 	TAMarginGold       TAIFEXDataset = "margin_gold"           // 保證金一覽表-商品類（僅 API，T209）
 	TAMarginETF        TAIFEXDataset = "margin_etf"            // 保證金一覽表-股票類 ETF（僅 API，T209）
+	TAFCMLists         TAIFEXDataset = "fcm_lists"             // 期貨商總公司名冊（僅 API，T230）
+	TAFCMBranchLists   TAIFEXDataset = "fcm_branch_lists"      // 期貨商分公司名冊（僅 API，T230）
+	TAFCMNetValue      TAIFEXDataset = "fcm_net_value"         // 期貨商每股淨值明細表（僅 API，T230）
+	TAFCMIncome        TAIFEXDataset = "fcm_income"            // 專營期貨商稅前累計損益彙總表（僅 API，T230）
+	TAFCMAccIncome     TAIFEXDataset = "fcm_acc_income"        // 專營期貨商累計損益明細表（僅 API，T230）
 	TAStockOptOID      TAIFEXDataset = "stock_opt_oi_delta"    // 每日個股選擇權未平倉量增減（僅 API，T210）
 	TAStockFutStatsD   TAIFEXDataset = "stock_fut_stats_d"     // 每日個股期貨交易量統計（僅 API，T210）
 	TAStockFutStatsM   TAIFEXDataset = "stock_fut_stats_m"     // 每月個股期貨交易量統計（僅 API，T210）

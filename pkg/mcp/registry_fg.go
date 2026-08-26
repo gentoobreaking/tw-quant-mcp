@@ -324,6 +324,24 @@ func registerFGTools(r *Registry) {
 	r.Register(marginToolDef("get_etf_margin", "股票類（ETF）", "元大台灣50ETF期貨",
 		"TAIFEX-API SingleStockFuturesETFMargining，T209", handlerGetEtfMargin))
 	r.Register(ToolDef{
+		Symbol: "get_fcm_profiles",
+		Name:   "get_fcm_profiles",
+		Description: "查詢期貨商名冊與財務概況（TAIFEX-API FCMLists 等，T230）。" +
+			"kind 切換 lists 總公司名冊／branch 分公司名冊／netvalue 每股淨值／income 稅前累計損益彙總／accumulated 累計損益明細。" +
+			"code 過濾期貨商代號；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"lists", "branch", "netvalue", "income", "accumulated"}, "default": "lists", "description": "名冊/淨值/損益類別"},
+				"code":   map[string]any{"type": "string", "description": "期貨商代號（選填，如 F001）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetFcmProfiles,
+	}) // T230
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +

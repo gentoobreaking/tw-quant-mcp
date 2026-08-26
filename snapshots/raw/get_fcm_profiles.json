@@ -1,0 +1,17 @@
+{
+  "arguments": {
+    "kind": "netvalue",
+    "code": "S509"
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"FCMCode\":\"S509\",\"NetValue\":\"376473767\",\"NetValuePerShare\":\"6.27\",\"Shares\":\"60000\",\"YYYYMM\":\"202607\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T10:27:00+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1452,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}
