@@ -1708,7 +1708,79 @@ func handlerGetEmergingBoardHoldings(a *App, args map[string]any) (HandlerResult
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
-// otcFundKinds 為 T238 kind → mopsfin 端點後綴對應。
+// otcFinSectors 為 T239 上櫃六產業格式後綴（fallback 順序同 T092/T215）。
+var otcFinSectors = []string{"ci", "fh", "basi", "bd", "ins", "mim"}
+
+// handlerGetOtcFinancialStatements：上櫃財報三表（T239，
+// mopsfin_t187ap06_O_*/t187ap07_O_*）。statement 切換 income/balance；
+// 六產業格式依序 fallback，每產業先試基礎版再試 A 變體（官方雙欄位
+// 命名並存）；code 必填過濾；重用 TPExOtcMopsfin kind 模板；passthrough。
+func handlerGetOtcFinancialStatements(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	if code == "" {
+		return HandlerResult{}, fmt.Errorf("code 為必填參數")
+	}
+	statement := strVal(args["statement"])
+	if statement == "" {
+		statement = "income"
+	}
+	base := map[string]string{"income": "t187ap06_O_", "balance": "t187ap07_O_"}[statement]
+	if base == "" {
+		return HandlerResult{}, fmt.Errorf("statement 僅接受 income 或 balance，得到 %q", statement)
+	}
+	date := a.now().Format("2006-01-02")
+	var out []any
+	var lineage *model.Lineage
+	var lastErr error
+fetch:
+	for _, suf := range otcFinSectors {
+		for _, variant := range []string{"", "A"} {
+			path := base + suf + variant
+			rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+				string(provider.TPExOtcMopsfin), date,
+				cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcMopsfin), date,
+					path+"|"+code, map[string]string{"kind": path}),
+				func() ([]byte, error) {
+					return a.fetchTPExRaw(ctx, provider.TPExOtcMopsfin,
+						url.Values{"kind": {path}})
+				})
+			if err != nil {
+				lastErr = err
+				continue // 空類別或暫時性錯誤則略過，掃下一變體/產業
+			}
+			ttl, _ := a.ttlOf(cache.DatasetCalendar)
+			lineage = postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+			for _, r := range rows {
+				// 官方雙欄位命名並存：SecuritiesCompanyCode／公司代號。
+				if rowField(r, "SecuritiesCompanyCode", "公司代號") == code {
+					out = append(out, r)
+				}
+			}
+			if len(out) > 0 {
+				break fetch // 命中即停
+			}
+		}
+	}
+	if len(out) == 0 {
+		if lastErr != nil {
+			return HandlerResult{}, lastErr
+		}
+		return HandlerResult{}, fmt.Errorf("查無 %s 之上櫃%s資料", code,
+			map[string]string{"income": "綜合損益表", "balance": "資產負債表"}[statement])
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 var otcFundKinds = map[string]string{
 	"op_analysis":      "187ap17_O",   // 營益分析彙總表
 	"profile":          "t187ap03_O",  // 上櫃股票基本資料

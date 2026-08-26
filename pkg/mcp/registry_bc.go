@@ -1507,6 +1507,25 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcFundamentalStats,
 	}) // T238
 	r.Register(ToolDef{
+		Symbol: "get_otc_financial_statements",
+		Name:   "get_otc_financial_statements",
+		Description: "查詢上櫃公司財報三表（TPEx-API mopsfin_t187ap06_O_*/t187ap07_O_*，T239）。" +
+			"statement 切換 income 綜合損益表／balance 資產負債表，預設 income。" +
+			"六產業格式（一般/金控/證券期貨/保險/醫療/異業）依序 fallback，每格式先試基礎版再試 A 變體（官方雙欄位命名並存），同 T092/T215 模式。code 必填；limit 預設 50、offset 分頁。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":      map[string]any{"type": "string", "description": "上櫃證券代號（必填），如 1240"},
+				"statement": map[string]any{"type": "string", "enum": []string{"income", "balance"}, "default": "income", "description": "報表類型：綜合損益表或資產負債表"},
+				"limit":     map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":    map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+			"required": []string{"code"},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcFinancialStatements,
+	}) // T239
+	r.Register(ToolDef{
 		Symbol: "get_otc_block_trade",
 		Name:   "get_otc_block_trade",
 		Description: "查詢上櫃鉅額交易系列（TPEx-API tpex_daily_qutoes_block 等，T225）。" +
