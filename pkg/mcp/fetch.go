@@ -193,6 +193,16 @@ var cacheDataset = map[string]string{
 	string(provider.TPExOtcMtShort):         cache.DatasetDailyKLine,     // 融券賣出資訊（T240）
 	string(provider.TPExOtcMtTerm):          cache.DatasetDailyKLine,     // 融券期限資訊（T240）
 	string(provider.TPExOtcShortSell):       cache.DatasetDailyKLine,     // 每日融券賣出成交量值（T240）
+	string(provider.TPExOtcCeilNon):         cache.DatasetDailyKLine,     // 漲跌停未成交（T241）
+	string(provider.TPExOtcCmode):           cache.DatasetDailyKLine,     // 變更交易/分盤交易（T241）
+	string(provider.TPExOtcTradeIdx):        cache.DatasetDailyKLine,     // 成交分價/市場統計（T241）
+	string(provider.TPExOtcDelayClose):      cache.DatasetDailyKLine,     // 暫緩收盤股票（T241）
+	string(provider.TPExOtcDelayOpen):       cache.DatasetDailyKLine,     // 暫緩開盤股票（T241）
+	string(provider.TPExOtcIpoNoLim):        cache.DatasetDailyKLine,     // IPO 無漲跌停期間（T241）
+	string(provider.TPExOtcMainHigh):        cache.DatasetDailyKLine,     // 上櫃市場現況（T241）
+	string(provider.TPExOtcPrVol):           cache.DatasetDailyKLine,     // 公布注意股票（T241）
+	string(provider.TPExOtcSpendiHist):      cache.DatasetDailyKLine,     // 停止交易歷史（T241）
+	string(provider.TPExOtcSpendiToday):     cache.DatasetDailyKLine,     // 停止/恢復交易當日（T241）
 	string(provider.TPExBlockDay):           cache.DatasetDailyKLine,     // 鉅額交易日成交資訊（T225）
 	string(provider.TPExBlockStock):         cache.DatasetDailyKLine,     // 個股鉅額交易成交資訊（T225）
 	string(provider.TPExBlockSummaryD):      cache.DatasetDailyKLine,     // 鉅額交易日量值統計（T225）

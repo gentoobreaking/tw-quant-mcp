@@ -44,188 +44,208 @@ type TPExDataset string
 
 // TPEx-API 資料集（§2 登錄表 TPEx-API 內容範圍）。
 const (
-	TPExDailyClose    TPExDataset = "daily_close"           // 上櫃收盤行情
-	TPExPEValuation   TPExDataset = "pe_valuation"          // 本益比/殖利率/股價淨值比
-	TPExIndices       TPExDataset = "indices"               // 櫃買指數歷史
-	TPExInstitutional TPExDataset = "institutional"         // 三大法人買賣明細（個股）
-	TPExInstiSummary  TPExDataset = "institutional_summary" // 三大法人買賣金額彙總
-	TPExMargin        TPExDataset = "margin"                // 融資融券餘額
-	TPExAttention     TPExDataset = "attention"             // 注意股票
-	TPExDisposition   TPExDataset = "disposition"           // 處置股票
-	TPExExRights      TPExDataset = "ex_rights"             // 除權息預告表
-	TPExOddLot        TPExDataset = "odd_lot"               // 零股交易
-	TPExOtcDaily      TPExDataset = "otc_daily"             // 上櫃每日收盤行情（T155）
-	TPExOtcMonthlyRev TPExDataset = "otc_monthly_revenue"   // 上櫃月營收彙總（T195）
-	TPExBrokerVolume  TPExDataset = "otc_broker_volume"     // 上櫃熱門股券商進出排行（T196）
-	TPExOtcForeignTrd TPExDataset = "otc_foreign_trading"   // 上櫃外資及陸資買賣超彙總（T197）
-	TPExOtcExRightDay TPExDataset = "otc_exright_daily"     // 上櫃除權息計算結果（T200）
-	TPExOtcDTTargets  TPExDataset = "otc_daytrade_targets"  // 上櫃當沖標的（T201）
-	TPExOtcDTStats    TPExDataset = "otc_daytrade_stats"    // 上櫃當沖統計（T201）
-	TPExOtcESG        TPExDataset = "otc_esg"               // 上櫃 ESG 揭露（T216，topic 1~21）
-	TPExHDIndex       TPExDataset = "hd_index"              // 高殖利率指數歷史（T218）
-	TPExHDLatest      TPExDataset = "hd_latest"             // 高殖利率指數當日（T218）
-	TPExHDConstituent TPExDataset = "hd_constituents"       // 高殖利率指數成分股（T218）
-	TPExOtcMopsfin    TPExDataset = "otc_mopsfin"           // 上櫃治理/監理/股務（T237，kind 模板）
-	TPExOtcQfiiRank   TPExDataset = "otc_qfii_rank"         // 上櫃外資持股排行（T198）
-	TPExOtcQfiiInd    TPExDataset = "otc_qfii_industry"     // 上櫃外資類股持股（T198）
-	TPExOtcInstiTrd   TPExDataset = "otc_insti_trading"     // 上櫃投信買賣超彙總（T199）
-	TPExOtcDealerTrd  TPExDataset = "otc_dealer_trading"    // 上櫃自營商買賣超彙總（T199）
-	TPExOtcAfterHours TPExDataset = "otc_after_hours"       // 上櫃盤後定價行情（T202）
-	TPExOtcWarnNote   TPExDataset = "otc_warn_note"         // 上櫃注意累計次數異常（T203）
-	TPExEmgQuotes     TPExDataset = "emerging_quotes"       // 興櫃當日行情表（T212）
-	TPExEmgHighlight  TPExDataset = "emerging_highlight"    // 興櫃市場現況（T212）
-	TPExEmgEpsRank    TPExDataset = "emerging_eps_rank"     // 興櫃 EPS 排名（T213）
-	TPExEmgCapRank    TPExDataset = "emerging_cap_rank"     // 興櫃資本額排名（T213）
-	TPExT50Latest     TPExDataset = "t50_latest"            // 富櫃50當日收盤（T217）
-	TPExT50History    TPExDataset = "t50_history"           // 富櫃50歷史收盤（T217）
-	TPExT50Const      TPExDataset = "t50_constituents"      // 富櫃50成分股（T217）
-	TPExT200Latest    TPExDataset = "t200_latest"           // 富櫃200當日收盤（T217）
-	TPExT200Const     TPExDataset = "t200_constituents"     // 富櫃200成分股（T217）
-	TPExGILatest      TPExDataset = "gi_latest"             // 公司治理指數當日收盤（T219）
-	TPExGIConst       TPExDataset = "gi_constituents"       // 公司治理指數成分股（T219）
-	TPExSILatest      TPExDataset = "si_latest"             // 薪酬指數當日收盤（T219）
-	TPExSIConst       TPExDataset = "si_constituents"       // 薪酬指數成分股（T219）
-	TPExEmp88History  TPExDataset = "emp88_history"         // 勞工就業88指數歷史收盤（T220）
-	TPExEmp88Latest   TPExDataset = "emp88_latest"          // 勞工就業88指數當日收盤（T220）
-	TPExEmp88Const    TPExDataset = "emp88_constituents"    // 勞工就業88指數成分股（T220）
-	TPExWarrantDaily  TPExDataset = "otc_warrant_daily"     // 上櫃權證收盤行情（T221）
-	TPExWarrantBasic  TPExDataset = "otc_warrant_basic"     // 上櫃權證基本資料彙總（T221）
-	TPExWarrantIssue  TPExDataset = "otc_warrant_issue"     // 上櫃權證發行基本資料（T221）
-	TPExWCBIssue      TPExDataset = "wcb_issue"             // 牛熊證發行基本資料（T222）
-	TPExWCBDaily      TPExDataset = "wcb_daily"             // 牛熊證收盤行情（T222）
-	TPExWXYIssue      TPExDataset = "wxy_issue"             // 展延牛熊證發行資料（T222）
-	TPExWXYDaily      TPExDataset = "wxy_daily"             // 展延牛熊證收盤行情（T222）
-	TPExRankPE        TPExDataset = "rank_pe"               // 上櫃本益比排行（T223）
-	TPExRankVolume    TPExDataset = "rank_volume"           // 上櫃成交量排行（T223）
-	TPExRankAmount    TPExDataset = "rank_amount"           // 上櫃成交值排行（T223）
-	TPExRankTurnover  TPExDataset = "rank_turnover"         // 上櫃週轉率排行（T223）
-	TPExRankMktVal    TPExDataset = "rank_market_value"     // 上櫃市值排行（T223）
-	TPExRankAmtAvg    TPExDataset = "rank_amount_avg"       // 上櫃日均值排行（T223）
-	TPExRankVolAvg    TPExDataset = "rank_volume_avg"       // 上櫃日均量排行（T223）
-	TPExBrokerBranch  TPExDataset = "otc_broker_branch"     // 上櫃券商分公司營業金額（T224）
-	TPExBrokerHQ      TPExDataset = "otc_broker_hq"         // 上櫃券商總公司營業金額（T224）
-	TPExOtcMgnDpsp    TPExDataset = "otc_dpsp_monthly"      // 當沖券差借券費率月報（T240）
-	TPExOtcIntraday   TPExDataset = "otc_intraday_fee"      // 標借/標購相關費用（T240）
-	TPExOtcMarginSbl  TPExDataset = "otc_margin_sbl"        // 借券賣出餘額（T240）
-	TPExOtcMtAdjust   TPExDataset = "otc_mt_adjust"         // 融資融券調整成數（T240）
-	TPExOtcMtLend     TPExDataset = "otc_mt_lend"           // 標借資訊（T240）
-	TPExOtcMtMark     TPExDataset = "otc_mt_mark"           // 注意/處置標記（T240）
-	TPExOtcMtUsed     TPExDataset = "otc_mt_used"           // 融券使用率排行（T240）
-	TPExOtcMtSpot     TPExDataset = "otc_mt_marginspot"     // 券商融資融券餘額（T240）
-	TPExOtcMtShort    TPExDataset = "otc_mt_short_sell"     // 融券賣出資訊（T240）
-	TPExOtcMtTerm     TPExDataset = "otc_mt_term"           // 融券期限資訊（T240）
-	TPExOtcShortSell  TPExDataset = "otc_short_sell"        // 每日融券賣出成交量值（T240）
-	TPExBlockDay      TPExDataset = "otc_block_day"         // 上櫃鉅額交易日成交資訊（T225）
-	TPExBlockStock    TPExDataset = "otc_block_stock"       // 上櫃個股鉅額交易成交資訊（T225）
-	TPExBlockSummaryD TPExDataset = "otc_block_summary_day" // 上櫃鉅額交易日量值統計（T225）
-	TPExBlockMonthly  TPExDataset = "otc_block_monthly"     // 上櫃鉅額交易月統計（T225）
-	TPExBlockYearly   TPExDataset = "otc_block_yearly"      // 上櫃鉅額交易年統計（T225）
-	TPExIntlBondQuote TPExDataset = "intl_bond_quotes"      // 國際債券盤中報價（T226）
-	TPExIntlBondTrade TPExDataset = "intl_bond_trade"       // 國際債券盤中成交（T226）
-	TPExBondIssue     TPExDataset = "bond_issue"            // 公債發行資料（T226）
-	TPExGoldLatest    TPExDataset = "gold_latest"           // 黃金現貨當日行情（T227）
-	TPExGoldHighlight TPExDataset = "gold_highlight"        // 黃金現貨市場現況（T227）
-	TPExGoldWarrant   TPExDataset = "gold_warrant"          // 黃金現貨權證發行資料（T227）
-	TPExOpFundLatest  TPExDataset = "opfund_latest"         // 開放式基金當日行情（T228）
-	TPExOpFundDealer  TPExDataset = "opfund_dealer"         // 開放式基金造市商資訊（T228）
-	TPExOpFundHigh    TPExDataset = "opfund_highlight"      // 開放式基金市場現況（T228）
-	TPExGisaCompany   TPExDataset = "gisa_company"          // 創櫃板公司資訊（T229）
-	TPExGisaHighlight TPExDataset = "gisa_highlight"        // 創櫃板市場現況（T229）
-	TPExGisaFinancing TPExDataset = "gisa_financing"        // 創櫃板辦理中籌資資訊（T229）
+	TPExDailyClose     TPExDataset = "daily_close"           // 上櫃收盤行情
+	TPExPEValuation    TPExDataset = "pe_valuation"          // 本益比/殖利率/股價淨值比
+	TPExIndices        TPExDataset = "indices"               // 櫃買指數歷史
+	TPExInstitutional  TPExDataset = "institutional"         // 三大法人買賣明細（個股）
+	TPExInstiSummary   TPExDataset = "institutional_summary" // 三大法人買賣金額彙總
+	TPExMargin         TPExDataset = "margin"                // 融資融券餘額
+	TPExAttention      TPExDataset = "attention"             // 注意股票
+	TPExDisposition    TPExDataset = "disposition"           // 處置股票
+	TPExExRights       TPExDataset = "ex_rights"             // 除權息預告表
+	TPExOddLot         TPExDataset = "odd_lot"               // 零股交易
+	TPExOtcDaily       TPExDataset = "otc_daily"             // 上櫃每日收盤行情（T155）
+	TPExOtcMonthlyRev  TPExDataset = "otc_monthly_revenue"   // 上櫃月營收彙總（T195）
+	TPExBrokerVolume   TPExDataset = "otc_broker_volume"     // 上櫃熱門股券商進出排行（T196）
+	TPExOtcForeignTrd  TPExDataset = "otc_foreign_trading"   // 上櫃外資及陸資買賣超彙總（T197）
+	TPExOtcExRightDay  TPExDataset = "otc_exright_daily"     // 上櫃除權息計算結果（T200）
+	TPExOtcDTTargets   TPExDataset = "otc_daytrade_targets"  // 上櫃當沖標的（T201）
+	TPExOtcDTStats     TPExDataset = "otc_daytrade_stats"    // 上櫃當沖統計（T201）
+	TPExOtcESG         TPExDataset = "otc_esg"               // 上櫃 ESG 揭露（T216，topic 1~21）
+	TPExHDIndex        TPExDataset = "hd_index"              // 高殖利率指數歷史（T218）
+	TPExHDLatest       TPExDataset = "hd_latest"             // 高殖利率指數當日（T218）
+	TPExHDConstituent  TPExDataset = "hd_constituents"       // 高殖利率指數成分股（T218）
+	TPExOtcMopsfin     TPExDataset = "otc_mopsfin"           // 上櫃治理/監理/股務（T237，kind 模板）
+	TPExOtcQfiiRank    TPExDataset = "otc_qfii_rank"         // 上櫃外資持股排行（T198）
+	TPExOtcQfiiInd     TPExDataset = "otc_qfii_industry"     // 上櫃外資類股持股（T198）
+	TPExOtcInstiTrd    TPExDataset = "otc_insti_trading"     // 上櫃投信買賣超彙總（T199）
+	TPExOtcDealerTrd   TPExDataset = "otc_dealer_trading"    // 上櫃自營商買賣超彙總（T199）
+	TPExOtcAfterHours  TPExDataset = "otc_after_hours"       // 上櫃盤後定價行情（T202）
+	TPExOtcWarnNote    TPExDataset = "otc_warn_note"         // 上櫃注意累計次數異常（T203）
+	TPExEmgQuotes      TPExDataset = "emerging_quotes"       // 興櫃當日行情表（T212）
+	TPExEmgHighlight   TPExDataset = "emerging_highlight"    // 興櫃市場現況（T212）
+	TPExEmgEpsRank     TPExDataset = "emerging_eps_rank"     // 興櫃 EPS 排名（T213）
+	TPExEmgCapRank     TPExDataset = "emerging_cap_rank"     // 興櫃資本額排名（T213）
+	TPExT50Latest      TPExDataset = "t50_latest"            // 富櫃50當日收盤（T217）
+	TPExT50History     TPExDataset = "t50_history"           // 富櫃50歷史收盤（T217）
+	TPExT50Const       TPExDataset = "t50_constituents"      // 富櫃50成分股（T217）
+	TPExT200Latest     TPExDataset = "t200_latest"           // 富櫃200當日收盤（T217）
+	TPExT200Const      TPExDataset = "t200_constituents"     // 富櫃200成分股（T217）
+	TPExGILatest       TPExDataset = "gi_latest"             // 公司治理指數當日收盤（T219）
+	TPExGIConst        TPExDataset = "gi_constituents"       // 公司治理指數成分股（T219）
+	TPExSILatest       TPExDataset = "si_latest"             // 薪酬指數當日收盤（T219）
+	TPExSIConst        TPExDataset = "si_constituents"       // 薪酬指數成分股（T219）
+	TPExEmp88History   TPExDataset = "emp88_history"         // 勞工就業88指數歷史收盤（T220）
+	TPExEmp88Latest    TPExDataset = "emp88_latest"          // 勞工就業88指數當日收盤（T220）
+	TPExEmp88Const     TPExDataset = "emp88_constituents"    // 勞工就業88指數成分股（T220）
+	TPExWarrantDaily   TPExDataset = "otc_warrant_daily"     // 上櫃權證收盤行情（T221）
+	TPExWarrantBasic   TPExDataset = "otc_warrant_basic"     // 上櫃權證基本資料彙總（T221）
+	TPExWarrantIssue   TPExDataset = "otc_warrant_issue"     // 上櫃權證發行基本資料（T221）
+	TPExWCBIssue       TPExDataset = "wcb_issue"             // 牛熊證發行基本資料（T222）
+	TPExWCBDaily       TPExDataset = "wcb_daily"             // 牛熊證收盤行情（T222）
+	TPExWXYIssue       TPExDataset = "wxy_issue"             // 展延牛熊證發行資料（T222）
+	TPExWXYDaily       TPExDataset = "wxy_daily"             // 展延牛熊證收盤行情（T222）
+	TPExRankPE         TPExDataset = "rank_pe"               // 上櫃本益比排行（T223）
+	TPExRankVolume     TPExDataset = "rank_volume"           // 上櫃成交量排行（T223）
+	TPExRankAmount     TPExDataset = "rank_amount"           // 上櫃成交值排行（T223）
+	TPExRankTurnover   TPExDataset = "rank_turnover"         // 上櫃週轉率排行（T223）
+	TPExRankMktVal     TPExDataset = "rank_market_value"     // 上櫃市值排行（T223）
+	TPExRankAmtAvg     TPExDataset = "rank_amount_avg"       // 上櫃日均值排行（T223）
+	TPExRankVolAvg     TPExDataset = "rank_volume_avg"       // 上櫃日均量排行（T223）
+	TPExBrokerBranch   TPExDataset = "otc_broker_branch"     // 上櫃券商分公司營業金額（T224）
+	TPExBrokerHQ       TPExDataset = "otc_broker_hq"         // 上櫃券商總公司營業金額（T224）
+	TPExOtcMgnDpsp     TPExDataset = "otc_dpsp_monthly"      // 當沖券差借券費率月報（T240）
+	TPExOtcIntraday    TPExDataset = "otc_intraday_fee"      // 標借/標購相關費用（T240）
+	TPExOtcMarginSbl   TPExDataset = "otc_margin_sbl"        // 借券賣出餘額（T240）
+	TPExOtcMtAdjust    TPExDataset = "otc_mt_adjust"         // 融資融券調整成數（T240）
+	TPExOtcMtLend      TPExDataset = "otc_mt_lend"           // 標借資訊（T240）
+	TPExOtcMtMark      TPExDataset = "otc_mt_mark"           // 注意/處置標記（T240）
+	TPExOtcMtUsed      TPExDataset = "otc_mt_used"           // 融券使用率排行（T240）
+	TPExOtcMtSpot      TPExDataset = "otc_mt_marginspot"     // 券商融資融券餘額（T240）
+	TPExOtcMtShort     TPExDataset = "otc_mt_short_sell"     // 融券賣出資訊（T240）
+	TPExOtcMtTerm      TPExDataset = "otc_mt_term"           // 融券期限資訊（T240）
+	TPExOtcShortSell   TPExDataset = "otc_short_sell"        // 每日融券賣出成交量值（T240）
+	TPExOtcCeilNon     TPExDataset = "otc_ceil_non"          // 漲跌停未成交（T241）
+	TPExOtcCmode       TPExDataset = "otc_cmode"             // 變更交易/分盤交易（T241）
+	TPExOtcTradeIdx    TPExDataset = "otc_trade_index"       // 成交分價表/市場統計（T241）
+	TPExOtcDelayClose  TPExDataset = "otc_delay_close"       // 暫緩收盤股票（T241）
+	TPExOtcDelayOpen   TPExDataset = "otc_delay_open"        // 暫緩開盤股票（T241）
+	TPExOtcIpoNoLim    TPExDataset = "otc_ipo_no_limit"      // IPO 無漲跌停期間（T241）
+	TPExOtcMainHigh    TPExDataset = "otc_main_highlight"    // 上櫃市場現況（T241）
+	TPExOtcPrVol       TPExDataset = "otc_prvol"             // 公布注意股票（T241）
+	TPExOtcSpendiHist  TPExDataset = "otc_spendi_history"    // 停止交易歷史（T241）
+	TPExOtcSpendiToday TPExDataset = "otc_spendi_today"      // 停止/恢復交易（當日）（T241）
+	TPExBlockDay       TPExDataset = "otc_block_day"         // 上櫃鉅額交易日成交資訊（T225）
+	TPExBlockStock     TPExDataset = "otc_block_stock"       // 上櫃個股鉅額交易成交資訊（T225）
+	TPExBlockSummaryD  TPExDataset = "otc_block_summary_day" // 上櫃鉅額交易日量值統計（T225）
+	TPExBlockMonthly   TPExDataset = "otc_block_monthly"     // 上櫃鉅額交易月統計（T225）
+	TPExBlockYearly    TPExDataset = "otc_block_yearly"      // 上櫃鉅額交易年統計（T225）
+	TPExIntlBondQuote  TPExDataset = "intl_bond_quotes"      // 國際債券盤中報價（T226）
+	TPExIntlBondTrade  TPExDataset = "intl_bond_trade"       // 國際債券盤中成交（T226）
+	TPExBondIssue      TPExDataset = "bond_issue"            // 公債發行資料（T226）
+	TPExGoldLatest     TPExDataset = "gold_latest"           // 黃金現貨當日行情（T227）
+	TPExGoldHighlight  TPExDataset = "gold_highlight"        // 黃金現貨市場現況（T227）
+	TPExGoldWarrant    TPExDataset = "gold_warrant"          // 黃金現貨權證發行資料（T227）
+	TPExOpFundLatest   TPExDataset = "opfund_latest"         // 開放式基金當日行情（T228）
+	TPExOpFundDealer   TPExDataset = "opfund_dealer"         // 開放式基金造市商資訊（T228）
+	TPExOpFundHigh     TPExDataset = "opfund_highlight"      // 開放式基金市場現況（T228）
+	TPExGisaCompany    TPExDataset = "gisa_company"          // 創櫃板公司資訊（T229）
+	TPExGisaHighlight  TPExDataset = "gisa_highlight"        // 創櫃板市場現況（T229）
+	TPExGisaFinancing  TPExDataset = "gisa_financing"        // 創櫃板辦理中籌資資訊（T229）
 )
 
 // 端點路徑（2026-07 實測可用）。
 var (
 	tpexBase  = "https://www.tpex.org.tw/openapi/v1"
 	tpexPaths = map[TPExDataset]string{
-		TPExDailyClose:    "/tpex_mainboard_quotes",
-		TPExPEValuation:   "/tpex_mainboard_peratio_analysis",
-		TPExIndices:       "/tpex_index",
-		TPExInstitutional: "/tpex_3insti_daily_trading",
-		TPExInstiSummary:  "/tpex_3insti_summary",
-		TPExMargin:        "/tpex_mainboard_margin_balance",
-		TPExAttention:     "/tpex_trading_warning_information",
-		TPExDisposition:   "/tpex_disposal_information",
-		TPExExRights:      "/tpex_exright_prepost",
-		TPExOddLot:        "/tpex_odd_stock",
-		TPExOtcDaily:      "/tpex_mainboard_daily_close_quotes",  // T155
-		TPExOtcMonthlyRev: "/mopsfin_t187ap05_O",                 // 上櫃月營收彙總（T195）
-		TPExBrokerVolume:  "/tpex_active_broker_volume",          // 熱門股券商進出排行（T196）
-		TPExOtcForeignTrd: "/tpex_3insti_qfii_trading",           // 外資及陸資買賣超彙總（T197）
-		TPExOtcExRightDay: "/tpex_exright_daily",                 // 除權息計算結果（T200）
-		TPExOtcDTTargets:  "/tpex_securities",                    // 當沖標的（T201）
-		TPExOtcDTStats:    "/tpex_intraday_trading_statistics",   // 當沖統計（T201）
-		TPExOtcESG:        "/t187ap46_O_%s",                      // 上櫃 ESG 揭露 topic 模板（T216）
-		TPExHDIndex:       "/tphd_index",                         // 高殖利率指數歷史（T218）
-		TPExHDLatest:      "/tphd_change",                        // 高殖利率指數當日（T218）
-		TPExHDConstituent: "/tphd_constituents",                  // 高殖利率指數成分股（T218）
-		TPExOtcMopsfin:    "/mopsfin_%s",                         // 上櫃治理系列端點模板（T237）
-		TPExOtcQfiiRank:   "/tpex_3insti_qfii",                   // 外資持股排行（T198）
-		TPExOtcQfiiInd:    "/tpex_3insti_qfii_industry",          // 類股外資持股（T198）
-		TPExOtcInstiTrd:   "/tpex_3insti_trading",                // 投信買賣超彙總（T199）
-		TPExOtcDealerTrd:  "/tpex_3insti_dealer_trading",         // 自營商買賣超彙總（T199）
-		TPExOtcAfterHours: "/tpex_off_market",                    // 盤後定價行情（T202）
-		TPExOtcWarnNote:   "/tpex_trading_warning_note",          // 注意累計次數異常（T203）
-		TPExEmgQuotes:     "/tpex_esb_latest_statistics",         // 興櫃當日行情表（T212）
-		TPExEmgHighlight:  "/tpex_esb_highlight",                 // 興櫃市場現況（T212）
-		TPExEmgEpsRank:    "/tpex_esb_eps_rank",                  // 興櫃 EPS 排名（T213）
-		TPExEmgCapRank:    "/tpex_esb_capitals_rank",             // 興櫃資本額排名（T213）
-		TPExT50Latest:     "/tpex50_change",                      // 富櫃50當日收盤（T217）
-		TPExT50History:    "/tpex50_index",                       // 富櫃50歷史收盤（T217）
-		TPExT50Const:      "/tpex50_constituents",                // 富櫃50成分股（T217）
-		TPExT200Latest:    "/tpex200_change",                     // 富櫃200當日收盤（T217）
-		TPExT200Const:     "/tpex200_constituents",               // 富櫃200成分股（T217）
-		TPExGILatest:      "/tpcgi_change",                       // 治理指數當日收盤（T219）
-		TPExGIConst:       "/tpcgi_constituents",                 // 治理指數成分股（T219）
-		TPExSILatest:      "/tpci_change",                        // 薪酬指數當日收盤（T219）
-		TPExSIConst:       "/tpci_constituents",                  // 薪酬指數成分股（T219）
-		TPExEmp88History:  "/tpex_emp88_reward_index",            // 勞工就業88歷史收盤（T220）
-		TPExEmp88Latest:   "/tpex_emp88_change",                  // 勞工就業88當日收盤（T220）
-		TPExEmp88Const:    "/tpex_emp88_constituents",            // 勞工就業88成分股（T220）
-		TPExWarrantDaily:  "/tpex_warrant_daily_quts",            // 上櫃權證收盤行情（T221）
-		TPExWarrantBasic:  "/mopsfin_t187ap37_O",                 // 上櫃權證基本資料彙總（T221）
-		TPExWarrantIssue:  "/tpex_warrant_issue",                 // 上櫃權證發行基本資料（T221）
-		TPExWCBIssue:      "/tpex_warrant_wcb_issue",             // 牛熊證發行資料（T222）
-		TPExWCBDaily:      "/tpex_warrant_wcb_daily_quts",        // 牛熊證收盤行情（T222）
-		TPExWXYIssue:      "/tpex_warrant_wxy_issue",             // 展延牛熊證發行資料（T222）
-		TPExWXYDaily:      "/tpex_warrant_wxy_daily_quts",        // 展延牛熊證收盤行情（T222）
-		TPExRankPE:        "/tpex_pe_ratio_top10",                // 本益比排行（T223）
-		TPExRankVolume:    "/tpex_volume_rank",                   // 成交量排行（T223）
-		TPExRankAmount:    "/tpex_amount_rank",                   // 成交值排行（T223）
-		TPExRankTurnover:  "/tpex_daily_turnover",                // 週轉率排行（T223）
-		TPExRankMktVal:    "/tpex_daily_market_value",            // 市值排行（T223）
-		TPExRankAmtAvg:    "/tpex_trading_amount_avg",            // 日均值排行（T223）
-		TPExRankVolAvg:    "/tpex_trading_volumes_avg",           // 日均量排行（T223）
-		TPExBrokerBranch:  "/tpex_daily_broker1",                 // 券商分公司營業金額（T224）
-		TPExBrokerHQ:      "/tpex_daily_broker2",                 // 券商總公司營業金額（T224）
-		TPExOtcMgnDpsp:    "/tpex_dpsp_monthly_CBmcs007",         // 當沖券差借券費率月報（T240）
-		TPExOtcIntraday:   "/tpex_intraday_fee",                  // 標借/標購費用（T240）
-		TPExOtcMarginSbl:  "/tpex_margin_sbl",                    // 借券賣出餘額（T240）
-		TPExOtcMtAdjust:   "/tpex_margin_trading_adjust",         // 調整成數（T240）
-		TPExOtcMtLend:     "/tpex_margin_trading_lend",           // 標借資訊（T240）
-		TPExOtcMtMark:     "/tpex_margin_trading_margin_mark",    // 注意/處置標記（T240）
-		TPExOtcMtUsed:     "/tpex_margin_trading_margin_used",    // 融券使用率排行（T240）
-		TPExOtcMtSpot:     "/tpex_margin_trading_marginspot",     // 券商融資融券餘額（T240）
-		TPExOtcMtShort:    "/tpex_margin_trading_short_sell",     // 融券賣出資訊（T240）
-		TPExOtcMtTerm:     "/tpex_margin_trading_term",           // 融券期限資訊（T240）
-		TPExOtcShortSell:  "/tpex_short_sell",                    // 每日融券賣出成交量值（T240）
-		TPExBlockDay:      "/tpex_daily_qutoes_block",            // 鉅額交易日成交資訊（T225）
-		TPExBlockStock:    "/tpex_daily_trading_block",           // 個股鉅額交易成交資訊（T225）
-		TPExBlockSummaryD: "/tpex_daily_trading_summary_odd",     // 鉅額交易日量值統計（T225）
-		TPExBlockMonthly:  "/tpex_monthly_trading_summary_block", // 鉅額交易月統計（T225）
-		TPExBlockYearly:   "/tpex_yearly_trading_summary_block",  // 鉅額交易年統計（T225）
-		TPExIntlBondQuote: "/tpex_international_bond_quotes",     // 國際債券報價（T226）
-		TPExIntlBondTrade: "/tpex_international_bond_trade",      // 國際債券成交（T226）
-		TPExBondIssue:     "/bond_ISSBD1_data",                   // 公債發行資料（T226）
-		TPExGoldLatest:    "/tpex_gold_latest",                   // 黃金現貨當日行情（T227）
-		TPExGoldHighlight: "/tpex_gold_market_highlight",         // 黃金現貨市場現況（T227）
-		TPExGoldWarrant:   "/tpex_warrant_gold",                  // 黃金權證發行資料（T227）
-		TPExOpFundLatest:  "/tpex_opfund_latest",                 // 開放式基金當日行情（T228）
-		TPExOpFundDealer:  "/tpex_opfund_recommended_dealer",     // 開放式基金造市商（T228）
-		TPExOpFundHigh:    "/tpex_opfund_market_highlight",       // 開放式基金市場現況（T228）
-		TPExGisaCompany:   "/tpex_gisa_company",                  // 創櫃板公司資訊（T229）
-		TPExGisaHighlight: "/tpex_gisa_highlight",                // 創櫃板市場現況（T229）
-		TPExGisaFinancing: "/tpex_gisa_financing_in_process",     // 創櫃板辦理中籌資（T229）
+		TPExDailyClose:     "/tpex_mainboard_quotes",
+		TPExPEValuation:    "/tpex_mainboard_peratio_analysis",
+		TPExIndices:        "/tpex_index",
+		TPExInstitutional:  "/tpex_3insti_daily_trading",
+		TPExInstiSummary:   "/tpex_3insti_summary",
+		TPExMargin:         "/tpex_mainboard_margin_balance",
+		TPExAttention:      "/tpex_trading_warning_information",
+		TPExDisposition:    "/tpex_disposal_information",
+		TPExExRights:       "/tpex_exright_prepost",
+		TPExOddLot:         "/tpex_odd_stock",
+		TPExOtcDaily:       "/tpex_mainboard_daily_close_quotes",  // T155
+		TPExOtcMonthlyRev:  "/mopsfin_t187ap05_O",                 // 上櫃月營收彙總（T195）
+		TPExBrokerVolume:   "/tpex_active_broker_volume",          // 熱門股券商進出排行（T196）
+		TPExOtcForeignTrd:  "/tpex_3insti_qfii_trading",           // 外資及陸資買賣超彙總（T197）
+		TPExOtcExRightDay:  "/tpex_exright_daily",                 // 除權息計算結果（T200）
+		TPExOtcDTTargets:   "/tpex_securities",                    // 當沖標的（T201）
+		TPExOtcDTStats:     "/tpex_intraday_trading_statistics",   // 當沖統計（T201）
+		TPExOtcESG:         "/t187ap46_O_%s",                      // 上櫃 ESG 揭露 topic 模板（T216）
+		TPExHDIndex:        "/tphd_index",                         // 高殖利率指數歷史（T218）
+		TPExHDLatest:       "/tphd_change",                        // 高殖利率指數當日（T218）
+		TPExHDConstituent:  "/tphd_constituents",                  // 高殖利率指數成分股（T218）
+		TPExOtcMopsfin:     "/mopsfin_%s",                         // 上櫃治理系列端點模板（T237）
+		TPExOtcQfiiRank:    "/tpex_3insti_qfii",                   // 外資持股排行（T198）
+		TPExOtcQfiiInd:     "/tpex_3insti_qfii_industry",          // 類股外資持股（T198）
+		TPExOtcInstiTrd:    "/tpex_3insti_trading",                // 投信買賣超彙總（T199）
+		TPExOtcDealerTrd:   "/tpex_3insti_dealer_trading",         // 自營商買賣超彙總（T199）
+		TPExOtcAfterHours:  "/tpex_off_market",                    // 盤後定價行情（T202）
+		TPExOtcWarnNote:    "/tpex_trading_warning_note",          // 注意累計次數異常（T203）
+		TPExEmgQuotes:      "/tpex_esb_latest_statistics",         // 興櫃當日行情表（T212）
+		TPExEmgHighlight:   "/tpex_esb_highlight",                 // 興櫃市場現況（T212）
+		TPExEmgEpsRank:     "/tpex_esb_eps_rank",                  // 興櫃 EPS 排名（T213）
+		TPExEmgCapRank:     "/tpex_esb_capitals_rank",             // 興櫃資本額排名（T213）
+		TPExT50Latest:      "/tpex50_change",                      // 富櫃50當日收盤（T217）
+		TPExT50History:     "/tpex50_index",                       // 富櫃50歷史收盤（T217）
+		TPExT50Const:       "/tpex50_constituents",                // 富櫃50成分股（T217）
+		TPExT200Latest:     "/tpex200_change",                     // 富櫃200當日收盤（T217）
+		TPExT200Const:      "/tpex200_constituents",               // 富櫃200成分股（T217）
+		TPExGILatest:       "/tpcgi_change",                       // 治理指數當日收盤（T219）
+		TPExGIConst:        "/tpcgi_constituents",                 // 治理指數成分股（T219）
+		TPExSILatest:       "/tpci_change",                        // 薪酬指數當日收盤（T219）
+		TPExSIConst:        "/tpci_constituents",                  // 薪酬指數成分股（T219）
+		TPExEmp88History:   "/tpex_emp88_reward_index",            // 勞工就業88歷史收盤（T220）
+		TPExEmp88Latest:    "/tpex_emp88_change",                  // 勞工就業88當日收盤（T220）
+		TPExEmp88Const:     "/tpex_emp88_constituents",            // 勞工就業88成分股（T220）
+		TPExWarrantDaily:   "/tpex_warrant_daily_quts",            // 上櫃權證收盤行情（T221）
+		TPExWarrantBasic:   "/mopsfin_t187ap37_O",                 // 上櫃權證基本資料彙總（T221）
+		TPExWarrantIssue:   "/tpex_warrant_issue",                 // 上櫃權證發行基本資料（T221）
+		TPExWCBIssue:       "/tpex_warrant_wcb_issue",             // 牛熊證發行資料（T222）
+		TPExWCBDaily:       "/tpex_warrant_wcb_daily_quts",        // 牛熊證收盤行情（T222）
+		TPExWXYIssue:       "/tpex_warrant_wxy_issue",             // 展延牛熊證發行資料（T222）
+		TPExWXYDaily:       "/tpex_warrant_wxy_daily_quts",        // 展延牛熊證收盤行情（T222）
+		TPExRankPE:         "/tpex_pe_ratio_top10",                // 本益比排行（T223）
+		TPExRankVolume:     "/tpex_volume_rank",                   // 成交量排行（T223）
+		TPExRankAmount:     "/tpex_amount_rank",                   // 成交值排行（T223）
+		TPExRankTurnover:   "/tpex_daily_turnover",                // 週轉率排行（T223）
+		TPExRankMktVal:     "/tpex_daily_market_value",            // 市值排行（T223）
+		TPExRankAmtAvg:     "/tpex_trading_amount_avg",            // 日均值排行（T223）
+		TPExRankVolAvg:     "/tpex_trading_volumes_avg",           // 日均量排行（T223）
+		TPExBrokerBranch:   "/tpex_daily_broker1",                 // 券商分公司營業金額（T224）
+		TPExBrokerHQ:       "/tpex_daily_broker2",                 // 券商總公司營業金額（T224）
+		TPExOtcMgnDpsp:     "/tpex_dpsp_monthly_CBmcs007",         // 當沖券差借券費率月報（T240）
+		TPExOtcIntraday:    "/tpex_intraday_fee",                  // 標借/標購費用（T240）
+		TPExOtcMarginSbl:   "/tpex_margin_sbl",                    // 借券賣出餘額（T240）
+		TPExOtcMtAdjust:    "/tpex_margin_trading_adjust",         // 調整成數（T240）
+		TPExOtcMtLend:      "/tpex_margin_trading_lend",           // 標借資訊（T240）
+		TPExOtcMtMark:      "/tpex_margin_trading_margin_mark",    // 注意/處置標記（T240）
+		TPExOtcMtUsed:      "/tpex_margin_trading_margin_used",    // 融券使用率排行（T240）
+		TPExOtcMtSpot:      "/tpex_margin_trading_marginspot",     // 券商融資融券餘額（T240）
+		TPExOtcMtShort:     "/tpex_margin_trading_short_sell",     // 融券賣出資訊（T240）
+		TPExOtcMtTerm:      "/tpex_margin_trading_term",           // 融券期限資訊（T240）
+		TPExOtcShortSell:   "/tpex_short_sell",                    // 每日融券賣出成交量值（T240）
+		TPExOtcCeilNon:     "/tpex_ceil_non_trading",              // 漲跌停未成交（T241）
+		TPExOtcCmode:       "/tpex_cmode",                         // 變更交易/分盤交易（T241）
+		TPExOtcTradeIdx:    "/tpex_daily_trading_index",           // 成交分價/市場統計（T241）
+		TPExOtcDelayClose:  "/tpex_delayed_stock_close",           // 暫緩收盤股票（T241）
+		TPExOtcDelayOpen:   "/tpex_delayed_stock_open",            // 暫緩開盤股票（T241）
+		TPExOtcIpoNoLim:    "/tpex_ipo_no_limit",                  // IPO 無漲跌停期間（T241）
+		TPExOtcMainHigh:    "/tpex_mainborad_highlight",           // 上櫃市場現況（T241）
+		TPExOtcPrVol:       "/tpex_prvol",                         // 公布注意股票（T241）
+		TPExOtcSpendiHist:  "/tpex_spendi_history",                // 停止交易歷史（T241）
+		TPExOtcSpendiToday: "/tpex_spendi_today",                  // 停止/恢復交易當日（T241）
+		TPExBlockDay:       "/tpex_daily_qutoes_block",            // 鉅額交易日成交資訊（T225）
+		TPExBlockStock:     "/tpex_daily_trading_block",           // 個股鉅額交易成交資訊（T225）
+		TPExBlockSummaryD:  "/tpex_daily_trading_summary_odd",     // 鉅額交易日量值統計（T225）
+		TPExBlockMonthly:   "/tpex_monthly_trading_summary_block", // 鉅額交易月統計（T225）
+		TPExBlockYearly:    "/tpex_yearly_trading_summary_block",  // 鉅額交易年統計（T225）
+		TPExIntlBondQuote:  "/tpex_international_bond_quotes",     // 國際債券報價（T226）
+		TPExIntlBondTrade:  "/tpex_international_bond_trade",      // 國際債券成交（T226）
+		TPExBondIssue:      "/bond_ISSBD1_data",                   // 公債發行資料（T226）
+		TPExGoldLatest:     "/tpex_gold_latest",                   // 黃金現貨當日行情（T227）
+		TPExGoldHighlight:  "/tpex_gold_market_highlight",         // 黃金現貨市場現況（T227）
+		TPExGoldWarrant:    "/tpex_warrant_gold",                  // 黃金權證發行資料（T227）
+		TPExOpFundLatest:   "/tpex_opfund_latest",                 // 開放式基金當日行情（T228）
+		TPExOpFundDealer:   "/tpex_opfund_recommended_dealer",     // 開放式基金造市商（T228）
+		TPExOpFundHigh:     "/tpex_opfund_market_highlight",       // 開放式基金市場現況（T228）
+		TPExGisaCompany:    "/tpex_gisa_company",                  // 創櫃板公司資訊（T229）
+		TPExGisaHighlight:  "/tpex_gisa_highlight",                // 創櫃板市場現況（T229）
+		TPExGisaFinancing:  "/tpex_gisa_financing_in_process",     // 創櫃板辦理中籌資（T229）
 	}
 )
 
@@ -455,6 +475,13 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		string(TPExOtcMtTerm), string(TPExOtcShortSell):
 		// passthrough（T240 實測；上櫃信用交易/借券細項，官方中英欄位混用，
 		// 原樣保留）。
+		out = ms
+	case string(TPExOtcCeilNon), string(TPExOtcCmode), string(TPExOtcTradeIdx),
+		string(TPExOtcDelayClose), string(TPExOtcDelayOpen), string(TPExOtcIpoNoLim),
+		string(TPExOtcMainHigh), string(TPExOtcPrVol), string(TPExOtcSpendiHist),
+		string(TPExOtcSpendiToday):
+		// passthrough（T241 實測；上櫃交易制度與市場資訊，官方中英欄位
+		// 混用，原樣保留）。
 		out = ms
 	case string(TPExBlockDay), string(TPExBlockStock), string(TPExBlockSummaryD),
 		string(TPExBlockMonthly), string(TPExBlockYearly):

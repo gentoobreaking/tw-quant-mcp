@@ -2903,3 +2903,60 @@ func handlerGetOtcMarginSblDetail(a *App, args map[string]any) (HandlerResult, e
 	}
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
+
+// otcSysKinds 為 T241 kind → 資料集對應。
+var otcSysKinds = map[string]provider.TPExDataset{
+	"ceil_non":        provider.TPExOtcCeilNon,
+	"cmode":           provider.TPExOtcCmode,
+	"trade_idx":       provider.TPExOtcTradeIdx,
+	"delay_close":     provider.TPExOtcDelayClose,
+	"delay_open":      provider.TPExOtcDelayOpen,
+	"ipo_no_limit":    provider.TPExOtcIpoNoLim,
+	"highlight":       provider.TPExOtcMainHigh,
+	"prvol":           provider.TPExOtcPrVol,
+	"suspend_history": provider.TPExOtcSpendiHist,
+	"suspend_today":   provider.TPExOtcSpendiToday,
+}
+
+// handlerGetOtcTradingSystemInfo：上櫃交易制度與市場資訊（T241，10 端點）。
+// kind 切換 ceil_non/cmode/trade_idx/delay_close/delay_open/ipo_no_limit/
+// highlight/prvol/suspend_history/suspend_today；code 本地過濾；passthrough。
+func handlerGetOtcTradingSystemInfo(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "cmode"
+	}
+	ds, ok := otcSysKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 ceil_non/cmode/trade_idx/delay_close/delay_open/ipo_no_limit/highlight/prvol/suspend_history/suspend_today，得到 %q", kindArg)
+	}
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}

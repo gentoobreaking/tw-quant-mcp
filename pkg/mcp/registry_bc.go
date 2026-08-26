@@ -1545,6 +1545,25 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcMarginSblDetail,
 	}) // T240
 	r.Register(ToolDef{
+		Symbol: "get_otc_trading_system_info",
+		Name:   "get_otc_trading_system_info",
+		Description: "查詢上櫃交易制度與市場資訊（TPEx-API 10 端點，T241）。" +
+			"kind 切換：cmode 變更交易/分盤／prvol 公布注意股票／ceil_non 漲跌停未成交／delay_open 暫緩開盤／delay_close 暫緩收盤／suspend_today 停止恢復交易當日／" +
+			"suspend_history 停止交易歷史／ipo_no_limit IPO 無漲跌停期間／trade_idx 成交分價市場統計／highlight 上櫃市場現況。" +
+			"code 過濾證券代號；limit 預設 50、offset 分頁。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"cmode", "prvol", "ceil_non", "delay_open", "delay_close", "suspend_today", "suspend_history", "ipo_no_limit", "trade_idx", "highlight"}, "default": "cmode", "description": "制度面資料類別"},
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填）過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcTradingSystemInfo,
+	}) // T241
+	r.Register(ToolDef{
 		Symbol: "get_otc_block_trade",
 		Name:   "get_otc_block_trade",
 		Description: "查詢上櫃鉅額交易系列（TPEx-API tpex_daily_qutoes_block 等，T225）。" +
