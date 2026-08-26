@@ -116,6 +116,11 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TACollLogStock:     "/AcceptableCollateralLogStock",                                             // 可抵繳標的增刪紀錄（T232）
 	model.TAFxRates:          "/DailyForeignExchangeRates",                                                // 每日外幣參考匯率（T233）
 	model.TAETradeQty:        "/eTradeQty",                                                                // 每月電子式交易下單統計（T233）
+	model.TAMMFutLists:       "/MarketMakerListsFut",                                                      // 期貨商品造市者清單（T234）
+	model.TAMMOptLists:       "/MarketMakerListsOpt",                                                      // 選擇權商品造市者清單（T234）
+	model.TACMLists:          "/CMLists",                                                                  // 結算會員名冊（T234）
+	model.TAClearBankLists:   "/ClearingBankLists",                                                        // 結算銀行名冊（T234）
+	model.TACCP_CMLists:      "/CCP_CMLists",                                                              // CCP結算會員名冊（T234）
 	model.TAStockOptOID:      "/va02",                                                                     // 每日個股選擇權未平倉量增減（T210）
 	model.TAStockFutStatsD:   "/va12",                                                                     // 每日個股期貨交易量統計（T210）
 	model.TAStockFutStatsM:   "/va13",                                                                     // 每月個股期貨交易量統計（T210）
@@ -327,6 +332,11 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 	case model.TAFxRates, model.TAETradeQty:
 		// 匯率/電子交易統計：直通保留官方欄位（T233；Date/USD-NTD 或
 		// YYYYMM/Volume 等，原樣保留）。
+		out = json.RawMessage(raw.Body)
+	case model.TAMMFutLists, model.TAMMOptLists, model.TACMLists,
+		model.TAClearBankLists, model.TACCP_CMLists:
+		// 造市者/結算會員/結算銀行名冊：直通保留官方欄位（T234；FCMCode/
+		// Contract/ClearBankName/Type 等）。
 		out = json.RawMessage(raw.Body)
 	case model.TAStockOptOID, model.TAStockFutStatsD, model.TAStockFutStatsM,
 		model.TAStockFutStatsY:

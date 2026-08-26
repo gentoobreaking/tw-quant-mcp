@@ -264,6 +264,13 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAETradeQty, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"YYYYMM": "202601", "Volume": "69067041"},
 	})
+	// 造市者/結算會員名冊（T234，直通官方欄位）
+	f.single[tfKey(model.TAMMFutLists, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"FCMCode": "B224999", "FCMName": "中信銀", "Contract": "RHF", "ContractName": "美元兌人民幣期貨"},
+	})
+	f.single[tfKey(model.TACMLists, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"FCMCode": "F001", "FCMName": "國泰期貨(股)公司", "Type": "一般", "Date": "20260825"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},

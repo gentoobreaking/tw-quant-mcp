@@ -417,6 +417,24 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetETradeQty,
 	}) // T233
 	r.Register(ToolDef{
+		Symbol: "get_market_maker_cm_lists",
+		Name:   "get_market_maker_cm_lists",
+		Description: "查詢造市者與結算會員/結算銀行名冊（TAIFEX-API MarketMakerLists*/CMLists 等，T234）。" +
+			"kind 切換 mm_fut 期貨造市者／mm_opt 選擇權造市者／cm 結算會員／bank 結算銀行／ccp_cm CCP結算會員。" +
+			"code 過濾期貨商代號；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"mm_fut", "mm_opt", "cm", "bank", "ccp_cm"}, "default": "mm_fut", "description": "名冊類別"},
+				"code":   map[string]any{"type": "string", "description": "期貨商代號（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetMarketMakerCmLists,
+	}) // T234
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +

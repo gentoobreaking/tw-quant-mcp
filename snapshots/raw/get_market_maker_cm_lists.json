@@ -1,0 +1,17 @@
+{
+  "arguments": {
+    "kind": "cm",
+    "limit": 2
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"Date\":\"20260825\",\"FCMCode\":\"F001\",\"FCMName\":\"國泰期貨(股)公司\",\"Type\":\"一般\"},{\"Date\":\"20260825\",\"FCMCode\":\"F002\",\"FCMName\":\"永豐期貨(股)公司\",\"Type\":\"一般\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T10:51:21+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1426,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

@@ -77,6 +77,11 @@ const (
 	TACollLogStock     TAIFEXDataset = "coll_log_stock"        // 可抵繳標的增刪紀錄（僅 API，T232）
 	TAFxRates          TAIFEXDataset = "fx_rates"              // 每日外幣參考匯率（僅 API，T233）
 	TAETradeQty        TAIFEXDataset = "etrade_qty"            // 每月電子式交易下單統計（僅 API，T233）
+	TAMMFutLists       TAIFEXDataset = "mm_fut_lists"          // 期貨商品造市者清單（僅 API，T234）
+	TAMMOptLists       TAIFEXDataset = "mm_opt_lists"          // 選擇權商品造市者清單（僅 API，T234）
+	TACMLists          TAIFEXDataset = "cm_lists"              // 結算會員名冊（僅 API，T234）
+	TAClearBankLists   TAIFEXDataset = "clear_bank_lists"      // 結算銀行名冊（僅 API，T234）
+	TACCP_CMLists      TAIFEXDataset = "ccp_cm_lists"          // CCP結算會員名冊（僅 API，T234）
 	TAStockOptOID      TAIFEXDataset = "stock_opt_oi_delta"    // 每日個股選擇權未平倉量增減（僅 API，T210）
 	TAStockFutStatsD   TAIFEXDataset = "stock_fut_stats_d"     // 每日個股期貨交易量統計（僅 API，T210）
 	TAStockFutStatsM   TAIFEXDataset = "stock_fut_stats_m"     // 每月個股期貨交易量統計（僅 API，T210）
