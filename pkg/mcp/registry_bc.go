@@ -1223,6 +1223,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetEmergingMarketStatus,
 	}) // T212
 	r.Register(ToolDef{
+		Symbol: "get_emerging_ranks",
+		Name:   "get_emerging_ranks",
+		Description: "查詢興櫃公司 EPS 排名與資本額排名（TPEx-API tpex_esb_eps_rank / tpex_esb_capitals_rank，T213）。" +
+			"kind 切換 eps/capital，預設 eps。code 選填過濾；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"eps", "capital"}, "default": "eps", "description": "排名類別：EPS 或資本額"},
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填），過濾特定標的"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetEmergingRanks,
+	}) // T213
+	r.Register(ToolDef{
 		Symbol: "get_otc_exdividend_result",
 		Name:   "get_otc_exdividend_result",
 		Description: "查詢上櫃股票除權息「計算結果」表（TPEx-API tpex_exright_daily，T200）。" +

@@ -1,0 +1,17 @@
+{
+  "arguments": {
+    "kind": "eps",
+    "limit": 2
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"CompanyName\":\"貝爾威勒\",\"Date\":\"1150825\",\"EPS\":\"22.85\",\"Rank\":\"1\",\"SecuritiesCompanyCode\":\"7861\"},{\"CompanyName\":\"漢測\",\"Date\":\"1150825\",\"EPS\":\"21.5\",\"Rank\":\"2\",\"SecuritiesCompanyCode\":\"7856\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T08:55:51+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":175,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

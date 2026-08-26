@@ -74,6 +74,8 @@ const (
 	TPExOtcWarnNote   TPExDataset = "otc_warn_note"         // 上櫃注意累計次數異常（T203）
 	TPExEmgQuotes     TPExDataset = "emerging_quotes"       // 興櫃當日行情表（T212）
 	TPExEmgHighlight  TPExDataset = "emerging_highlight"    // 興櫃市場現況（T212）
+	TPExEmgEpsRank    TPExDataset = "emerging_eps_rank"     // 興櫃 EPS 排名（T213）
+	TPExEmgCapRank    TPExDataset = "emerging_cap_rank"     // 興櫃資本額排名（T213）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -110,6 +112,8 @@ var (
 		TPExOtcWarnNote:   "/tpex_trading_warning_note",         // 注意累計次數異常（T203）
 		TPExEmgQuotes:     "/tpex_esb_latest_statistics",        // 興櫃當日行情表（T212）
 		TPExEmgHighlight:  "/tpex_esb_highlight",                // 興櫃市場現況（T212）
+		TPExEmgEpsRank:    "/tpex_esb_eps_rank",                 // 興櫃 EPS 排名（T213）
+		TPExEmgCapRank:    "/tpex_esb_capitals_rank",            // 興櫃資本額排名（T213）
 	}
 )
 
@@ -297,6 +301,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		// passthrough（T212 實測；興櫃行情 Date/SecuritiesCompanyCode/
 		// CompanyName/LatestPrice/TransactionVolume 等、市場現況
 		// RegisteredStocksNumber/TotalMarketValue 等，原樣保留）。
+		out = ms
+	case string(TPExEmgEpsRank), string(TPExEmgCapRank):
+		// passthrough（T213 實測；欄位 Date/Rank/SecuritiesCompanyCode/
+		// CompanyName/EPS 或 Capital，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

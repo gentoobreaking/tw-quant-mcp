@@ -1607,6 +1607,54 @@ func handlerGetEmergingMarketStatus(a *App, args map[string]any) (HandlerResult,
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// emgRankKinds 為 T213 kind → 資料集對應。
+var emgRankKinds = map[string]provider.TPExDataset{
+	"eps":     provider.TPExEmgEpsRank,
+	"capital": provider.TPExEmgCapRank,
+}
+
+// handlerGetEmergingRanks：興櫃 EPS/資本額排名（T213，tpex_esb_eps_rank /
+// tpex_esb_capitals_rank）。kind 切換 eps/capital；passthrough。
+func handlerGetEmergingRanks(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "eps"
+	}
+	ds, ok := emgRankKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 eps 或 capital，得到 %q", kindArg)
+	}
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // handlerGetOtcExdividendResult：上櫃除權息計算結果表（T200）。
 // 對稱上市預告表 get_exdividend_calendar；本工具為事後實際計算數據。
 func handlerGetOtcExdividendResult(a *App, args map[string]any) (HandlerResult, error) {
