@@ -91,6 +91,10 @@ const (
 	TPExWarrantDaily  TPExDataset = "otc_warrant_daily"     // 上櫃權證收盤行情（T221）
 	TPExWarrantBasic  TPExDataset = "otc_warrant_basic"     // 上櫃權證基本資料彙總（T221）
 	TPExWarrantIssue  TPExDataset = "otc_warrant_issue"     // 上櫃權證發行基本資料（T221）
+	TPExWCBIssue      TPExDataset = "wcb_issue"             // 牛熊證發行基本資料（T222）
+	TPExWCBDaily      TPExDataset = "wcb_daily"             // 牛熊證收盤行情（T222）
+	TPExWXYIssue      TPExDataset = "wxy_issue"             // 展延牛熊證發行資料（T222）
+	TPExWXYDaily      TPExDataset = "wxy_daily"             // 展延牛熊證收盤行情（T222）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -144,6 +148,10 @@ var (
 		TPExWarrantDaily:  "/tpex_warrant_daily_quts",           // 上櫃權證收盤行情（T221）
 		TPExWarrantBasic:  "/mopsfin_t187ap37_O",                // 上櫃權證基本資料彙總（T221）
 		TPExWarrantIssue:  "/tpex_warrant_issue",                // 上櫃權證發行基本資料（T221）
+		TPExWCBIssue:      "/tpex_warrant_wcb_issue",            // 牛熊證發行資料（T222）
+		TPExWCBDaily:      "/tpex_warrant_wcb_daily_quts",       // 牛熊證收盤行情（T222）
+		TPExWXYIssue:      "/tpex_warrant_wxy_issue",            // 展延牛熊證發行資料（T222）
+		TPExWXYDaily:      "/tpex_warrant_wxy_daily_quts",       // 展延牛熊證收盤行情（T222）
 	}
 )
 
@@ -351,6 +359,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		out = ms
 	case string(TPExWarrantDaily), string(TPExWarrantBasic), string(TPExWarrantIssue):
 		// passthrough（T221 實測；上櫃權證行情/基本/發行資料，官方中英欄位
+		// 混用，原樣保留）。
+		out = ms
+	case string(TPExWCBIssue), string(TPExWCBDaily), string(TPExWXYIssue), string(TPExWXYDaily):
+		// passthrough（T222 實測；牛熊證/展延牛熊證發行與行情，官方中英欄位
 		// 混用，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):

@@ -183,6 +183,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["otc_warrant_daily|"] = `[{"Date":"1150825","Code":"72328U","Name":"環球晶群益59售01","Close":"1.5","UnderlyingStockCode":"6488"}]`
 	f.bodies["otc_warrant_basic|"] = `[{"出表日期":"1150825","權證代號":"700008","權證簡稱":"新應材元大56購02","權證類型":"認購"}]`
 	f.bodies["otc_warrant_issue|"] = `[{"Date":"1150825","Code":"72328U","Name":"環球晶群益59售01","Type":"認售","UnderlyingStockCode":"6488"}]`
+	f.bodies["wcb_issue|"] = `[{"Date":"1150601","Code":"70006C","Name":"元債20富邦56牛01","UnderlyingStockCode":"00679B"}]`
+	f.bodies["wxy_daily|"] = `[{"Date":"1090312","Code":"70005X","Name":"精華元大66展02","Close":"3.4"}]`
 	f.bodies["otc_broker_volume|"] = `[{"Date":"20260730","StockRanking":"1","SecuritiesCompanyCodeAndCompanyName":"華東(8110)","SecuritiesFirmsRanking":"1","SecuritiesFirmsCode":"元大","TotalPurchaseShares":"1000","TotalSellShares":"900"}]`
 	f.bodies["otc_monthly_revenue|"] = `[{"出表日期":"1150817","資料年月":"11507","公司代號":"1240","公司名稱":"茂生農經","營業收入-當月營收":"242511","營業收入-上月比較增減(%)":"-10.24"}]`
 	f.bodies["otc_daily|"] = `[{"date":"2026-07-30","code":"8110","name":"華東","close":30.5,"change_dir":"+","change":0.35,"open":30.1,"high":30.7,"low":30.0,"volume":120000,"amount":3660000,"transaction":80}]`
@@ -360,6 +362,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_emp88_index", args: map[string]any{"view": "latest"}},
 		{name: "get_otc_warrant_daily", args: map[string]any{"underlying": "6488", "limit": 3}},
 		{name: "get_otc_warrant_basic", args: map[string]any{"code": "700008"}},
+		{name: "get_otc_wcb_wxy", args: map[string]any{"kind": "wcb", "view": "issue", "limit": 3}},
 		{name: "get_otc_exdividend_result", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_targets", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_statistics", args: map[string]any{}},

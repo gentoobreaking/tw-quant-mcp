@@ -2168,6 +2168,64 @@ func containsAny(s string, vals ...string) bool {
 	return false
 }
 
+// wcbWxyDatasets 為 T222 kind×view → 資料集對應。
+var wcbWxyDatasets = map[string]provider.TPExDataset{
+	"wcb|issue": provider.TPExWCBIssue,
+	"wcb|daily": provider.TPExWCBDaily,
+	"wxy|issue": provider.TPExWXYIssue,
+	"wxy|daily": provider.TPExWXYDaily,
+}
+
+// handlerGetOtcWcbWxy：上櫃牛熊證/展延型牛熊證（T222，tpex_warrant_wcb_*/
+// wxy_*）。kind 切換 wcb/wxy；view 切換 issue/daily；code/underlying 過濾。
+func handlerGetOtcWcbWxy(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "wcb"
+	}
+	view := strVal(args["view"])
+	if view == "" {
+		view = "issue"
+	}
+	ds, ok := wcbWxyDatasets[kindArg+"|"+view]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 wcb 或 wxy，view 僅接受 issue 或 daily，得到 %s/%s", kindArg, view)
+	}
+	code := strVal(args["code"])
+	underlying := strVal(args["underlying"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code+"|"+underlying, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && !containsAny(rowField(r, "Code"), code) {
+			continue
+		}
+		if underlying != "" && !containsAny(rowField(r, "UnderlyingStockCode"), underlying) {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // otcGovernanceKinds 為 T237 上櫃治理系列之語意 kind → 官方端點對照。
 var otcGovernanceKinds = []struct {
 	Kind     string // 語意化查詢類別（工具參數值）

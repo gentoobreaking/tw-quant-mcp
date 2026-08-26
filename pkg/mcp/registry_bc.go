@@ -1431,6 +1431,26 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcWarrantBasic,
 	}) // T221
 	r.Register(ToolDef{
+		Symbol: "get_otc_wcb_wxy",
+		Name:   "get_otc_wcb_wxy",
+		Description: "查詢上櫃牛熊證與展延型牛熊證（TPEx-API tpex_warrant_wcb_*/wxy_* 系列，T222）。" +
+			"kind 切換 wcb 牛熊證／wxy 展延型牛熊證；view 切換 issue 發行基本資料／daily 收盤行情。" +
+			"code 過濾權證代號；underlying 過濾標的代號；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":       map[string]any{"type": "string", "enum": []string{"wcb", "wxy"}, "default": "wcb", "description": "牛熊證或展延型牛熊證"},
+				"view":       map[string]any{"type": "string", "enum": []string{"issue", "daily"}, "default": "issue", "description": "發行資料或收盤行情"},
+				"code":       map[string]any{"type": "string", "description": "權證代號子字串（選填）"},
+				"underlying": map[string]any{"type": "string", "description": "標的證券代號（選填）"},
+				"limit":      map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":     map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcWcbWxy,
+	}) // T222
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +
