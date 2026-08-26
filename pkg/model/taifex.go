@@ -65,6 +65,9 @@ const (
 	TAStockFutStatsD   TAIFEXDataset = "stock_fut_stats_d"     // 每日個股期貨交易量統計（僅 API，T210）
 	TAStockFutStatsM   TAIFEXDataset = "stock_fut_stats_m"     // 每月個股期貨交易量統計（僅 API，T210）
 	TAStockFutStatsY   TAIFEXDataset = "stock_fut_stats_y"     // 每年個股期貨交易量統計（僅 API，T210）
+	TASSFLists         TAIFEXDataset = "ssf_lists"             // 股票期貨交易標的（僅 API，T211）
+	TASTFTop10         TAIFEXDataset = "stf_top10"             // 每日股票期貨交易量前十大（僅 API，T211）
+	TASSOLists         TAIFEXDataset = "sso_lists"             // 股票選擇權交易標的（僅 API，T211）
 	TALargeTraderFut   TAIFEXDataset = "large_trader_fut"      // 大額交易人期貨未沖銷部位
 	TALargeTraderOpt   TAIFEXDataset = "large_trader_opt"      // 大額交易人選擇權未沖銷部位
 	TAPutCallRatio     TAIFEXDataset = "put_call_ratio"        // 買賣權比（PCR）

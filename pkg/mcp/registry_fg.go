@@ -297,6 +297,24 @@ func registerFGTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetStockFuturesStats,
 	}) // T210
+	r.Register(ToolDef{
+		Symbol: "get_ssf_overview",
+		Name:   "get_ssf_overview",
+		Description: "查詢股票期貨交易標的清單與每日前十大成交量統計（TAIFEX-API SSFLists/STFTop10/SSOLists，T211）。" +
+			"kind 切換三型：ssf_list 股票期貨標的／top10 每日交易量前十大／sso_list 股票選擇權標的。" +
+			"code 過濾股票代號或契約代碼；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"ssf_list", "top10", "sso_list"}, "default": "ssf_list", "description": "資料類型：期貨標的/量前十大多/選擇權標的"},
+				"code":   map[string]any{"type": "string", "description": "股票代號（如 1303）或契約代碼（如 CAF）過濾（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetSSFOverview,
+	}) // T211
 	r.Register(marginToolDef("get_fx_margin", "匯率類", "小型美元兌人民幣期貨",
 		"TAIFEX-API FXFuturesAndOptionsMargining，T209", handlerGetFxMargin))
 	r.Register(marginToolDef("get_ir_margin", "利率類", "十年期公債期貨",

@@ -232,6 +232,13 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAStockOptOID, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Date": "20260825", "ContractType": "STC", "OpenInterest": "2751", "PreviousDayOpenInterest": "2517", "Change": "234"},
 	})
+	// 股票期貨標的與前十大量（T211，直通官方欄位）
+	f.single[tfKey(model.TASSFLists, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Contract": "CAF", "UnderlyingStock": "南亞塑膠工業股份有限公司", "StockCode": "1303", "StockName": "南亞", "Type": "上市普通股標的證券"},
+	})
+	f.single[tfKey(model.TASTFTop10, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260825", "Contract": "CCF", "ContractName": "聯電期貨", "Volume": "38735"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},

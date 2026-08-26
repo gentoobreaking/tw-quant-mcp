@@ -1370,6 +1370,69 @@ func handlerGetStockFuturesStats(a *App, args map[string]any) (HandlerResult, er
 	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// ssfKinds 為 T211 kind → 資料集對應。
+var ssfKinds = map[string]model.TAIFEXDataset{
+	"ssf_list": model.TASSFLists,
+	"top10":    model.TASTFTop10,
+	"sso_list": model.TASSOLists,
+}
+
+// handlerGetSSFOverview：股票期貨標的與前十大量（TAIFEX-API SSFLists/
+// STFTop10/SSOLists，T211）。kind 切換三型；code 過濾 StockCode 或
+// Contract；passthrough。
+func handlerGetSSFOverview(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "ssf_list"
+	}
+	ds, ok := ssfKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 ssf_list/top10/sso_list，得到 %q", kindArg)
+	}
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	if len(res.Data) == 0 {
+		note := res.Note
+		if note == "" {
+			note = "無資料"
+		}
+		return HandlerResult{}, fmt.Errorf("官方無 %s 之資料（%s）", ds, note)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	code := strings.TrimSpace(strVal(args["code"]))
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "StockCode") != code && rowField(r, "Contract") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	limit, offset := listPaging(args)
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
 // handlerMarginTable：保證金一覽表四類別共用路徑（T209）。passthrough；
 // contract 過濾（Contracts 或 Contract 欄位），查無時列出可用商品。
 func handlerMarginTable(a *App, args map[string]any, ds model.TAIFEXDataset) (HandlerResult, error) {

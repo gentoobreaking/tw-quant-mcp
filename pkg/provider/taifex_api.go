@@ -104,6 +104,9 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAStockFutStatsD:   "/va12",                                                                     // 每日個股期貨交易量統計（T210）
 	model.TAStockFutStatsM:   "/va13",                                                                     // 每月個股期貨交易量統計（T210）
 	model.TAStockFutStatsY:   "/va14",                                                                     // 每年個股期貨交易量統計（T210）
+	model.TASSFLists:         "/SSFLists",                                                                 // 股票期貨交易標的（T211）
+	model.TASTFTop10:         "/STFTop10",                                                                 // 每日股票期貨量前十大（T211）
+	model.TASSOLists:         "/SSOLists",                                                                 // 股票選擇權交易標的（T211）
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -294,6 +297,10 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		model.TAStockFutStatsY:
 		// 個股期貨/選擇權交易統計 va 系列：直通保留官方欄位（T210；
 		// Date/YYYYMM/YYYY/ContractType/OpenInterest/Volume/Change 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TASSFLists, model.TASTFTop10, model.TASSOLists:
+		// 股票期貨/選擇權標的與前十大：直通保留官方欄位（T211；Contract/
+		// UnderlyingStock/StockCode/StockName/Type/Volume 等）。
 		out = json.RawMessage(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)
