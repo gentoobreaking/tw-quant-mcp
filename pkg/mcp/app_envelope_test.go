@@ -166,6 +166,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["emerging_highlight|"] = `[{"Date":"1150825","RegisteredStocksNumber":"361","TotalMarketValue":"1579523"}]`
 	f.bodies["emerging_eps_rank|"] = `[{"Date":"1150825","Rank":"1","SecuritiesCompanyCode":"7861","CompanyName":"貝爾威勒","EPS":"22.85"}]`
 	f.bodies["emerging_cap_rank|"] = `[{"Date":"1150825","Rank":"1","SecuritiesCompanyCode":"9957","CompanyName":"燁聯","Capital":"32204.136"}]`
+	f.bodies["otc_mopsfin|kind=t187ap11_R"] = `[{"Date":"1150820","資料年月":"11507","SecuritiesCompanyCode":"1260","CompanyName":"富味鄉","職稱":"董事長本人","姓名":"宏貿投資股份有限公司","目前持股":"9719483"}]`
+	f.bodies["otc_mopsfin|kind=t187ap03_R"] = `[{"Date":"1150825","SecuritiesCompanyCode":"1260","CompanyName":"富味鄉食品股份有限公司"}]`
 	f.bodies["otc_broker_volume|"] = `[{"Date":"20260730","StockRanking":"1","SecuritiesCompanyCodeAndCompanyName":"華東(8110)","SecuritiesFirmsRanking":"1","SecuritiesFirmsCode":"元大","TotalPurchaseShares":"1000","TotalSellShares":"900"}]`
 	f.bodies["otc_monthly_revenue|"] = `[{"出表日期":"1150817","資料年月":"11507","公司代號":"1240","公司名稱":"茂生農經","營業收入-當月營收":"242511","營業收入-上月比較增減(%)":"-10.24"}]`
 	f.bodies["otc_daily|"] = `[{"date":"2026-07-30","code":"8110","name":"華東","close":30.5,"change_dir":"+","change":0.35,"open":30.1,"high":30.7,"low":30.0,"volume":120000,"amount":3660000,"transaction":80}]`
@@ -336,6 +338,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_emerging_quotes", args: map[string]any{"code": "1260"}},
 		{name: "get_emerging_market_status", args: map[string]any{}},
 		{name: "get_emerging_ranks", args: map[string]any{"kind": "eps", "limit": 3}},
+		{name: "get_emerging_board_holdings", args: map[string]any{"code": "1260"}},
 		{name: "get_otc_exdividend_result", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_targets", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_statistics", args: map[string]any{}},

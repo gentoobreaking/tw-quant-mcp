@@ -1240,6 +1240,24 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetEmergingRanks,
 	}) // T213
 	r.Register(ToolDef{
+		Symbol: "get_emerging_board_holdings",
+		Name:   "get_emerging_board_holdings",
+		Description: "查詢興櫃公司董監事持股餘額明細（TPEx-API mopsfin_t187ap11_R，T214）。" +
+			"含職稱、姓名、選任時/目前持股、設質股數與比例。view=profile 改查興櫃公司基本資料（t187ap03_R）。" +
+			"code 選填過濾；limit 預設 50、offset 分頁。對稱上市 get_company_board_shareholdings。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":   map[string]any{"type": "string", "description": "證券代號（選填），過濾特定標的"},
+				"view":   map[string]any{"type": "string", "enum": []string{"holdings", "profile"}, "default": "holdings", "description": "查詢類型：董監持股餘額或公司基本資料"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetEmergingBoardHoldings,
+	}) // T214
+	r.Register(ToolDef{
 		Symbol: "get_otc_exdividend_result",
 		Name:   "get_otc_exdividend_result",
 		Description: "查詢上櫃股票除權息「計算結果」表（TPEx-API tpex_exright_daily，T200）。" +

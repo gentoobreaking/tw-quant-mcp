@@ -1655,6 +1655,59 @@ func handlerGetEmergingRanks(a *App, args map[string]any) (HandlerResult, error)
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// emgBoardViews 為 T214 view → mopsfin 端點對應。
+var emgBoardViews = map[string]string{
+	"holdings": "t187ap11_R", // 興櫃董監事持股餘額明細
+	"profile":  "t187ap03_R", // 興櫃公司基本資料
+}
+
+// handlerGetEmergingBoardHoldings：興櫃董監持股餘額（T214，
+// mopsfin_t187ap11_R；view=profile 時回 t187ap03_R 基本資料）。
+// 對稱上市 t187ap11_L（T072）；重用 TPExOtcMopsfin kind 模板；passthrough。
+func handlerGetEmergingBoardHoldings(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	view := strVal(args["view"])
+	if view == "" {
+		view = "holdings"
+	}
+	path, ok := emgBoardViews[view]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("view 僅接受 holdings 或 profile，得到 %q", view)
+	}
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExOtcMopsfin), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExOtcMopsfin), date,
+			path+"|"+code, map[string]string{"kind": path}),
+		func() ([]byte, error) {
+			return a.fetchTPExRaw(ctx, provider.TPExOtcMopsfin,
+				url.Values{"kind": {path}})
+		})
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetCalendar)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // handlerGetOtcExdividendResult：上櫃除權息計算結果表（T200）。
 // 對稱上市預告表 get_exdividend_calendar；本工具為事後實際計算數據。
 func handlerGetOtcExdividendResult(a *App, args map[string]any) (HandlerResult, error) {
