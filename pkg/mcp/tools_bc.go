@@ -2318,6 +2318,56 @@ func handlerGetOpenEndFund(a *App, args map[string]any) (HandlerResult, error) {
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// gisaKinds 為 T229 kind → 資料集對應。
+var gisaKinds = map[string]provider.TPExDataset{
+	"company":   provider.TPExGisaCompany,
+	"highlight": provider.TPExGisaHighlight,
+	"financing": provider.TPExGisaFinancing,
+}
+
+// handlerGetGisaBoard：創櫃板（T229，tpex_gisa_*）。kind 切換 company
+// 公司資訊／highlight 市場現況／financing 辦理中籌資；code 過濾
+// SecuritiesCompanyCode；passthrough。
+func handlerGetGisaBoard(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "company"
+	}
+	ds, ok := gisaKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 company/highlight/financing，得到 %q", kindArg)
+	}
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "SecuritiesCompanyCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // otcBlockKinds 為 T225 kind → 資料集對應。
 var otcBlockKinds = map[string]provider.TPExDataset{
 	"day":         provider.TPExBlockDay,

@@ -196,6 +196,9 @@ var cacheDataset = map[string]string{
 	string(provider.TPExOpFundLatest):       cache.DatasetDailyKLine,     // 開放式基金當日行情（T228）
 	string(provider.TPExOpFundDealer):       cache.DatasetDailyKLine,     // 開放式基金造市商資訊（T228）
 	string(provider.TPExOpFundHigh):         cache.DatasetDailyKLine,     // 開放式基金市場現況（T228）
+	string(provider.TPExGisaCompany):        cache.DatasetDailyKLine,     // 創櫃板公司資訊（T229）
+	string(provider.TPExGisaHighlight):      cache.DatasetDailyKLine,     // 創櫃板市場現況（T229）
+	string(provider.TPExGisaFinancing):      cache.DatasetDailyKLine,     // 創櫃板辦理中籌資資訊（T229）
 	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）

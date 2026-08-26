@@ -118,6 +118,9 @@ const (
 	TPExOpFundLatest  TPExDataset = "opfund_latest"         // 開放式基金當日行情（T228）
 	TPExOpFundDealer  TPExDataset = "opfund_dealer"         // 開放式基金造市商資訊（T228）
 	TPExOpFundHigh    TPExDataset = "opfund_highlight"      // 開放式基金市場現況（T228）
+	TPExGisaCompany   TPExDataset = "gisa_company"          // 創櫃板公司資訊（T229）
+	TPExGisaHighlight TPExDataset = "gisa_highlight"        // 創櫃板市場現況（T229）
+	TPExGisaFinancing TPExDataset = "gisa_financing"        // 創櫃板辦理中籌資資訊（T229）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -198,6 +201,9 @@ var (
 		TPExOpFundLatest:  "/tpex_opfund_latest",                 // 開放式基金當日行情（T228）
 		TPExOpFundDealer:  "/tpex_opfund_recommended_dealer",     // 開放式基金造市商（T228）
 		TPExOpFundHigh:    "/tpex_opfund_market_highlight",       // 開放式基金市場現況（T228）
+		TPExGisaCompany:   "/tpex_gisa_company",                  // 創櫃板公司資訊（T229）
+		TPExGisaHighlight: "/tpex_gisa_highlight",                // 創櫃板市場現況（T229）
+		TPExGisaFinancing: "/tpex_gisa_financing_in_process",     // 創櫃板辦理中籌資（T229）
 	}
 )
 
@@ -436,6 +442,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExOpFundLatest), string(TPExOpFundDealer), string(TPExOpFundHigh):
 		// passthrough（T228 實測；開放式基金行情/造市商/市場現況，官方中英
 		// 欄位混用，原樣保留）。
+		out = ms
+	case string(TPExGisaCompany), string(TPExGisaHighlight), string(TPExGisaFinancing):
+		// passthrough（T229 實測；創櫃板公司/現況/籌資，官方中英欄位混用，
+		// 原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

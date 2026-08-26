@@ -1557,6 +1557,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOpenEndFund,
 	}) // T228
 	r.Register(ToolDef{
+		Symbol: "get_gisa_board",
+		Name:   "get_gisa_board",
+		Description: "查詢創櫃板資訊（TPEx-API tpex_gisa_* 系列，T229）。" +
+			"kind 切換 company 公司資訊／highlight 市場現況／financing 辦理中籌資。code 過濾公司代號；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"company", "highlight", "financing"}, "default": "company", "description": "公司資訊/市場現況/籌資資訊"},
+				"code":   map[string]any{"type": "string", "description": "公司代號（選填，如 7430）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetGisaBoard,
+	}) // T229
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +
