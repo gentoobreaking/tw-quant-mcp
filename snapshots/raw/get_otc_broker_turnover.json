@@ -1,0 +1,17 @@
+{
+  "arguments": {
+    "level": "branch",
+    "code": "9268"
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"Code\":\"9268\",\"CurrentMonthClosingRatio\":\"7.16%\",\"CurrentMonthCumulativeAmount\":\"486728341\",\"CurrentMonthRanking\":\"1\",\"Date\":\"1150825\",\"DayClosingRatio\":\"7.62%\",\"Name\":\"凱基台北\",\"PreviousDayRanking\":\"2\",\"Ranking\":\"1\",\"TradingAmount\":\"26351175\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T09:47:33+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":175,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

@@ -1470,6 +1470,24 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcHistoryRanks,
 	}) // T223
 	r.Register(ToolDef{
+		Symbol: "get_otc_broker_turnover",
+		Name:   "get_otc_broker_turnover",
+		Description: "查詢上櫃券商當日營業金額統計（TPEx-API tpex_daily_broker1/broker2，T224）。" +
+			"level 切換 branch 分公司／hq 總公司（預設 branch），含排名、當日/當月累計營業金額與市占率。" +
+			"code 過濾分公司或總公司代號；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"level":  map[string]any{"type": "string", "enum": []string{"branch", "hq"}, "default": "branch", "description": "分公司或總公司統計"},
+				"code":   map[string]any{"type": "string", "description": "券商代號（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcBrokerTurnover,
+	}) // T224
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +

@@ -2169,6 +2169,56 @@ func containsAny(s string, vals ...string) bool {
 }
 
 // wcbWxyDatasets 為 T222 kind×view → 資料集對應。
+var brokerTurnoverLevels = map[string]provider.TPExDataset{
+	"branch": provider.TPExBrokerBranch,
+	"hq":     provider.TPExBrokerHQ,
+}
+
+// handlerGetOtcBrokerTurnover：上櫃券商當日營業金額（T224，
+// tpex_daily_broker1 分公司／tpex_daily_broker2 總公司）。level 切換
+// branch/hq；code 過濾（分公司 Code／總公司 FinancialInstitutionsCode）；
+// passthrough。
+func handlerGetOtcBrokerTurnover(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	level := strVal(args["level"])
+	if level == "" {
+		level = "branch"
+	}
+	ds, ok := brokerTurnoverLevels[level]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("level 僅接受 branch 或 hq，得到 %q", level)
+	}
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "Code", "FinancialInstitutionsCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
+// wcbWxyDatasets 為 T222 kind×view → 資料集對應。
 var wcbWxyDatasets = map[string]provider.TPExDataset{
 	"wcb|issue": provider.TPExWCBIssue,
 	"wcb|daily": provider.TPExWCBDaily,

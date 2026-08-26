@@ -102,6 +102,8 @@ const (
 	TPExRankMktVal    TPExDataset = "rank_market_value"     // 上櫃市值排行（T223）
 	TPExRankAmtAvg    TPExDataset = "rank_amount_avg"       // 上櫃日均值排行（T223）
 	TPExRankVolAvg    TPExDataset = "rank_volume_avg"       // 上櫃日均量排行（T223）
+	TPExBrokerBranch  TPExDataset = "otc_broker_branch"     // 上櫃券商分公司營業金額（T224）
+	TPExBrokerHQ      TPExDataset = "otc_broker_hq"         // 上櫃券商總公司營業金額（T224）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -166,6 +168,8 @@ var (
 		TPExRankMktVal:    "/tpex_daily_market_value",           // 市值排行（T223）
 		TPExRankAmtAvg:    "/tpex_trading_amount_avg",           // 日均值排行（T223）
 		TPExRankVolAvg:    "/tpex_trading_volumes_avg",          // 日均量排行（T223）
+		TPExBrokerBranch:  "/tpex_daily_broker1",                // 券商分公司營業金額（T224）
+		TPExBrokerHQ:      "/tpex_daily_broker2",                // 券商總公司營業金額（T224）
 	}
 )
 
@@ -384,6 +388,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		string(TPExRankVolAvg):
 		// passthrough（T223 實測；歷史排行七類 Date/Rank/Code/Name+各排行
 		// 數值欄位，官方欄名不一，原樣保留）。
+		out = ms
+	case string(TPExBrokerBranch), string(TPExBrokerHQ):
+		// passthrough（T224 實測；券商營業金額 Date/Ranking/Code 或
+		// FinancialInstitutionsCode/TradingAmount 等，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

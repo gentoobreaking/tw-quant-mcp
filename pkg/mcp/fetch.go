@@ -180,6 +180,8 @@ var cacheDataset = map[string]string{
 	string(provider.TPExRankMktVal):         cache.DatasetDailyKLine,     // 市值排行（T223）
 	string(provider.TPExRankAmtAvg):         cache.DatasetDailyKLine,     // 日均值排行（T223）
 	string(provider.TPExRankVolAvg):         cache.DatasetDailyKLine,     // 日均量排行（T223）
+	string(provider.TPExBrokerBranch):       cache.DatasetDailyKLine,     // 券商分公司營業金額（T224）
+	string(provider.TPExBrokerHQ):           cache.DatasetDailyKLine,     // 券商總公司營業金額（T224）
 	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）
