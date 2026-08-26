@@ -88,6 +88,9 @@ const (
 	TPExEmp88History  TPExDataset = "emp88_history"         // 勞工就業88指數歷史收盤（T220）
 	TPExEmp88Latest   TPExDataset = "emp88_latest"          // 勞工就業88指數當日收盤（T220）
 	TPExEmp88Const    TPExDataset = "emp88_constituents"    // 勞工就業88指數成分股（T220）
+	TPExWarrantDaily  TPExDataset = "otc_warrant_daily"     // 上櫃權證收盤行情（T221）
+	TPExWarrantBasic  TPExDataset = "otc_warrant_basic"     // 上櫃權證基本資料彙總（T221）
+	TPExWarrantIssue  TPExDataset = "otc_warrant_issue"     // 上櫃權證發行基本資料（T221）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -138,6 +141,9 @@ var (
 		TPExEmp88History:  "/tpex_emp88_reward_index",           // 勞工就業88歷史收盤（T220）
 		TPExEmp88Latest:   "/tpex_emp88_change",                 // 勞工就業88當日收盤（T220）
 		TPExEmp88Const:    "/tpex_emp88_constituents",           // 勞工就業88成分股（T220）
+		TPExWarrantDaily:  "/tpex_warrant_daily_quts",           // 上櫃權證收盤行情（T221）
+		TPExWarrantBasic:  "/mopsfin_t187ap37_O",                // 上櫃權證基本資料彙總（T221）
+		TPExWarrantIssue:  "/tpex_warrant_issue",                // 上櫃權證發行基本資料（T221）
 	}
 )
 
@@ -342,6 +348,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExEmp88History), string(TPExEmp88Latest), string(TPExEmp88Const):
 		// passthrough（T220 實測；勞工就業88指數 GretaiLaborEmployment88*/
 		// Name/Index/Change 或 SecuritiesCompanyCode，原樣保留）。
+		out = ms
+	case string(TPExWarrantDaily), string(TPExWarrantBasic), string(TPExWarrantIssue):
+		// passthrough（T221 實測；上櫃權證行情/基本/發行資料，官方中英欄位
+		// 混用，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

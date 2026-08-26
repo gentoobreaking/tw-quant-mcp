@@ -2067,6 +2067,107 @@ func handlerGetEmp88Index(a *App, args map[string]any) (HandlerResult, error) {
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// handlerGetOtcWarrantDaily：上櫃權證收盤行情日報表（T221，
+// tpex_warrant_daily_quts）。passthrough；code/underlying 本地過濾。
+func handlerGetOtcWarrantDaily(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	code := strVal(args["code"])
+	underlying := strVal(args["underlying"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(provider.TPExWarrantDaily), date,
+		cache.KeyString(model.SourceTPExAPI, string(provider.TPExWarrantDaily), date, code+"|"+underlying, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, provider.TPExWarrantDaily, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "Code") != code {
+			continue
+		}
+		if underlying != "" && rowField(r, "UnderlyingStockCode") != underlying {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
+// handlerGetOtcWarrantBasic：上櫃權證基本資料（T221）。view=basic 回
+// mopsfin_t187ap37_O 彙總表（中文欄位）；view=issue 回 tpex_warrant_issue
+// 發行基本資料。code 過濾欄位依 view 而異。
+func handlerGetOtcWarrantBasic(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	view := strVal(args["view"])
+	if view == "" {
+		view = "basic"
+	}
+	var ds provider.TPExDataset
+	var codeKeys []string
+	switch view {
+	case "issue":
+		ds = provider.TPExWarrantIssue
+		codeKeys = []string{"Code", "UnderlyingStockCode"}
+	default:
+		ds = provider.TPExWarrantBasic
+		codeKeys = []string{"權證代號", "標的證券代號"}
+	}
+	code := strVal(args["code"])
+	underlying := strVal(args["underlying"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code+"|"+underlying, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && !containsAny(rowField(r, codeKeys...), code) {
+			continue
+		}
+		if underlying != "" && !containsAny(rowField(r, "UnderlyingStockCode", "標的證券代號"), underlying) {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
+// containsAny 回傳 s 是否含 vals 中任一非空過濾字串。
+func containsAny(s string, vals ...string) bool {
+	for _, v := range vals {
+		if v != "" && strings.Contains(s, v) {
+			return true
+		}
+	}
+	return false
+}
+
 // otcGovernanceKinds 為 T237 上櫃治理系列之語意 kind → 官方端點對照。
 var otcGovernanceKinds = []struct {
 	Kind     string // 語意化查詢類別（工具參數值）

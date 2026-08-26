@@ -1396,6 +1396,41 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetEmp88Index,
 	}) // T220
 	r.Register(ToolDef{
+		Symbol: "get_otc_warrant_daily",
+		Name:   "get_otc_warrant_daily",
+		Description: "查詢上櫃權證收盤行情日報表（TPEx-API tpex_warrant_daily_quts，T221）。" +
+			"含開高低收、漲跌、成交量/筆數/金額與標的資訊。code 過濾權證代號；underlying 過濾標的證券代號；limit 預設 50、offset 分頁。對稱上市 get_warrant_activity。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"code":       map[string]any{"type": "string", "description": "權證代號（選填），如 72328U"},
+				"underlying": map[string]any{"type": "string", "description": "標的證券代號（選填），如 6488"},
+				"limit":      map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":     map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcWarrantDaily,
+	}) // T221
+	r.Register(ToolDef{
+		Symbol: "get_otc_warrant_basic",
+		Name:   "get_otc_warrant_basic",
+		Description: "查詢上櫃權證基本資料（TPEx-API mopsfin_t187ap37_O / tpex_warrant_issue，T221）。" +
+			"view=basic（預設）回基本資料彙總表（類型/履約價/到期日等）；view=issue 回發行基本資料。code 過濾權證或標的代號；limit 預設 50、offset 分頁。對稱上市 get_warrant_basic_info。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"view":       map[string]any{"type": "string", "enum": []string{"basic", "issue"}, "default": "basic", "description": "基本資料彙總表或發行基本資料"},
+				"code":       map[string]any{"type": "string", "description": "權證代號（選填）"},
+				"underlying": map[string]any{"type": "string", "description": "標的證券代號（選填）"},
+				"limit":      map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset":     map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetOtcWarrantBasic,
+	}) // T221
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +
