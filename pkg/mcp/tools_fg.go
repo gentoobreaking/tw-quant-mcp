@@ -1310,6 +1310,61 @@ func handlerGetTaifexBlockTrade(a *App, args map[string]any) (HandlerResult, err
 	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
 }
 
+// handlerMarginTable：保證金一覽表四類別共用路徑（T209）。passthrough；
+// contract 過濾（Contracts 或 Contract 欄位），查無時列出可用商品。
+func handlerMarginTable(a *App, args map[string]any, ds model.TAIFEXDataset) (HandlerResult, error) {
+	ctx := context.Background()
+	q, err := a.querier()
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	contract := strings.TrimSpace(strVal(args["contract"]))
+	d, err := taifexDate(a, q, ctx, strVal(args["date"]))
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	res, fromCache, err := q.Fetch(ctx, ds, d, "")
+	if err != nil {
+		return HandlerResult{}, fmt.Errorf("%s 取得失敗: %w", ds, err)
+	}
+	var rows []map[string]any
+	if err := json.Unmarshal(res.Data, &rows); err != nil {
+		return HandlerResult{}, fmt.Errorf("mcp: %s 解析失敗: %w", ds, err)
+	}
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if contract == "" || strings.Contains(rowField(r, "Contract"), contract) || strings.Contains(rowField(r, "Contracts"), contract) {
+			out = append(out, r)
+		}
+	}
+	if len(out) == 0 && contract != "" {
+		names := make([]string, 0, len(rows))
+		for _, r := range rows {
+			names = append(names, rowField(r, "Contract", "Contracts"))
+		}
+		return HandlerResult{}, fmt.Errorf("查無「%s」。可用商品：%s", contract, strings.Join(names, "、"))
+	}
+	return HandlerResult{Data: out, Lineage: taifexLineage(res, d, fromCache, a.taifexTTL())}, nil
+}
+
+// handlerGetFxMargin／GetIrMargin／GetGoldMargin／GetEtfMargin：保證金一覽表
+// 四類別（TAIFEX-API *Margining，T209）。
+func handlerGetFxMargin(a *App, args map[string]any) (HandlerResult, error) {
+	return handlerMarginTable(a, args, model.TAMarginFx)
+}
+
+func handlerGetIrMargin(a *App, args map[string]any) (HandlerResult, error) {
+	return handlerMarginTable(a, args, model.TAMarginIR)
+}
+
+func handlerGetGoldMargin(a *App, args map[string]any) (HandlerResult, error) {
+	return handlerMarginTable(a, args, model.TAMarginGold)
+}
+
+func handlerGetEtfMargin(a *App, args map[string]any) (HandlerResult, error) {
+	return handlerMarginTable(a, args, model.TAMarginETF)
+}
+
 // handlerGetInstitutionalGeneral：三大法人整體交易總表（期貨+選擇權合計，
 // TAIFEX-API GeneralBytheDate，T129；端點回 CSV，date 省略為最新交易日）。
 func handlerGetInstitutionalGeneral(a *App, args map[string]any) (HandlerResult, error) {

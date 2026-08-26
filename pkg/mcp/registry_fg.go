@@ -280,6 +280,14 @@ func registerFGTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetTaifexBlockTrade,
 	}) // T208
+	r.Register(marginToolDef("get_fx_margin", "匯率類", "小型美元兌人民幣期貨",
+		"TAIFEX-API FXFuturesAndOptionsMargining，T209", handlerGetFxMargin))
+	r.Register(marginToolDef("get_ir_margin", "利率類", "十年期公債期貨",
+		"TAIFEX-API InterestRateFuturesMargining，T209", handlerGetIrMargin))
+	r.Register(marginToolDef("get_gold_margin", "商品類", "黃金期貨",
+		"TAIFEX-API GoldFuturesAndOptionsMargining，T209", handlerGetGoldMargin))
+	r.Register(marginToolDef("get_etf_margin", "股票類（ETF）", "元大台灣50ETF期貨",
+		"TAIFEX-API SingleStockFuturesETFMargining，T209", handlerGetEtfMargin))
 	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
@@ -582,4 +590,23 @@ func registerFGTools(r *Registry) {
 		ReadOnly: true,
 		Handler:  handlerGetTradingCalendar,
 	})
+}
+
+// marginToolDef 建構保證金一覽表類工具（T209 四類別共用 schema）。
+func marginToolDef(symbol, category, example, source string, h func(*App, map[string]any) (HandlerResult, error)) ToolDef {
+	return ToolDef{
+		Symbol: symbol,
+		Name:   symbol,
+		Description: "查詢" + category + "保證金一覽表，含結算/維持/原始保證金（元；" + source + "）。" +
+			"contract 為契約名子字串過濾（如「" + example + "」），留空顯示全部。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"contract": map[string]any{"type": "string", "description": "契約名稱子字串（選填），如「" + example + "」。留空則顯示全部"},
+				"date":     map[string]any{"type": "string", "description": "交易日期 YYYY-MM-DD（預設最新交易日）"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  h,
+	}
 }

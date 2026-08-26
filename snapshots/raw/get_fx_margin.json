@@ -1,0 +1,16 @@
+{
+  "arguments": {
+    "contract": "人民幣"
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"ClearingMargin\":\"2200\",\"Contracts\":\"小型美元兌人民幣期貨\",\"Date\":\"20260825\",\"InitialMargin\":\"2970\",\"MaintenanceMargin\":\"2280\"},{\"ClearingMargin\":\"10800\",\"Contracts\":\"美元兌人民幣期貨\",\"Date\":\"20260825\",\"InitialMargin\":\"14580\",\"MaintenanceMargin\":\"11180\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T08:35:42+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1235,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

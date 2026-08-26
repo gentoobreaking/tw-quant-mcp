@@ -1,0 +1,17 @@
+{
+  "arguments": {
+    "contract": "黃金",
+    "limit": 3
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"ClearingMargin\":\"410\",\"Contract\":\"黃金期貨\",\"Date\":\"20260825\",\"InitialMargin\":\"560\",\"MaintenanceMargin\":\"430\"},{\"ClearingMargin\":\"13000\",\"Contract\":\"黃金選擇權風險保證金(A)值\",\"Date\":\"20260825\",\"InitialMargin\":\"18000\",\"MaintenanceMargin\":\"14000\"},{\"ClearingMargin\":\"7000\",\"Contract\":\"黃金選擇權風險保證金(B)值\",\"Date\":\"20260825\",\"InitialMargin\":\"9000\",\"MaintenanceMargin\":\"7000\"},{\"ClearingMargin\":\"16000\",\"Contract\":\"臺幣黃金期貨\",\"Date\":\"20260825\",\"InitialMargin\":\"22000\",\"MaintenanceMargin\":\"17000\"},{\"ClearingMargin\":\"0\",\"Contract\":\"黃金選擇權風險保證金(C)值\",\"Date\":\"20260825\",\"InitialMargin\":\"0\",\"MaintenanceMargin\":\"0\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T08:35:43+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1203,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

@@ -96,6 +96,10 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TABTOptInfo:        "/BTDailyTradeInformationOptions",                                           // 鉅額交易成交資訊-選擇權（T208）
 	model.TABTFutSummary:     "/DailySummaryOfBlockTradeFutures",                                          // 鉅額交易成交量統計-期貨（T208）
 	model.TABTOptSummary:     "/DailySummaryOfBlockTradeOptions",                                          // 鉅額交易成交量統計-選擇權（T208）
+	model.TAMarginFx:         "/FXFuturesAndOptionsMargining",                                             // 保證金一覽表-匯率類（T209）
+	model.TAMarginIR:         "/InterestRateFuturesMargining",                                             // 保證金一覽表-利率類（T209）
+	model.TAMarginGold:       "/GoldFuturesAndOptionsMargining",                                           // 保證金一覽表-商品類（T209）
+	model.TAMarginETF:        "/SingleStockFuturesETFMargining",                                           // 保證金一覽表-股票類 ETF（T209）
 }
 
 // NewTAIFEXAPISource 建立 TAIFEX-API 來源（Rate Limit 1 req/s，§4.4）。
@@ -277,6 +281,10 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		model.TABTFutSummary, model.TABTOptSummary:
 		// 鉅額交易系列：直通保留官方欄位（T208；Date/Contract/
 		// ContractMonth(Week)/StrikePrice/CallPut/Volume/MarketShare% 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TAMarginFx, model.TAMarginIR, model.TAMarginGold, model.TAMarginETF:
+		// 保證金一覽表四類別：直通保留官方欄位（T209；Contracts 或 Contract/
+		// ClearingMargin/MaintenanceMargin/InitialMargin 等）。
 		out = json.RawMessage(raw.Body)
 	default:
 		return nil, fmt.Errorf("provider: 不支援資料集 %q", ds)

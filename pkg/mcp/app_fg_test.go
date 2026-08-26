@@ -212,6 +212,19 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAStockMargin, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Contract": "CAF", "UnderlyingSecurityCode": "1303", "ContractName": "南亞期貨", "GroupLevel": "級距3", "ClearingMarginRate": "15.00%", "MaintenanceMarginRate": "15.53%", "InitialMarginRate": "20.25%", "Date": "20260729"},
 	})
+	// 保證金一覽表四類別（T209，直通官方欄位）
+	f.single[tfKey(model.TAMarginFx, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Contracts": "小型美元兌人民幣期貨", "ClearingMargin": "2200", "MaintenanceMargin": "2280", "InitialMargin": "2970", "Date": "20260729"},
+	})
+	f.single[tfKey(model.TAMarginIR, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Contract": "GBF", "ClearingMargin": "34000", "MaintenanceMargin": "36000", "InitialMargin": "46000", "Date": "20260729"},
+	})
+	f.single[tfKey(model.TAMarginGold, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Contract": "黃金期貨", "ClearingMargin": "410", "MaintenanceMargin": "430", "InitialMargin": "560", "Date": "20260729"},
+	})
+	f.single[tfKey(model.TAMarginETF, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Contract": "NYF", "UnderlyingSecurityCode": "0050", "ContractName": "元大台灣50ETF期貨", "ClearingMargin": "3720", "Date": "20260729"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},
