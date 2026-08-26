@@ -4,12 +4,12 @@
   },
   "response": {
     "jsonrpc": "2.0",
-    "id": 12,
+    "id": 152,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "非交易時段（2026-08-01 為非交易日）無法提供盤中資料"
+          "text": "代碼 2330 目前無盤中快照（請先加入 watchlist 並等待採樣）"
         }
       ],
       "isError": true

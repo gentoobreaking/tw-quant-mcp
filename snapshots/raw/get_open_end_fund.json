@@ -4,14 +4,51 @@
     "code": "T1001Y"
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 175,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Avg.\":\"-\",\"B.Price\":\"48.45\",\"B.Qty.\":\"2000\",\"Date\":\"1150825\",\"EstimatedNAV\":\"https://www.fubon.com/asset-management/Home/EmergingStockAdvert\",\"Highest\":\"-\",\"LatestPrice\":\"-\",\"ListedOpenEndedFund\":\"富邦FB\",\"Lowest\":\"-\",\"Pre Avg.\":\"50\",\"PreNAV\":\"49.81\",\"S.Price\":\"51\",\"S.Qty.\":\"2000\",\"SecurityCode\":\"T1001Y\",\"Time\":\"163004\",\"Type\":\"\",\"Volume\":\"-\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T10:14:00+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":257,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Avg.\":\"-\",\"B.Price\":\"48.45\",\"B.Qty.\":\"2000\",\"Date\":\"1150825\",\"EstimatedNAV\":\"https://www.fubon.com/asset-management/Home/EmergingStockAdvert\",\"Highest\":\"-\",\"LatestPrice\":\"-\",\"ListedOpenEndedFund\":\"富邦FB\",\"Lowest\":\"-\",\"Pre Avg.\":\"50\",\"PreNAV\":\"49.81\",\"S.Price\":\"51\",\"S.Qty.\":\"2000\",\"SecurityCode\":\"T1001Y\",\"Time\":\"163004\",\"Type\":\"\",\"Volume\":\"-\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:41:26+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":144,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "Avg.": "-",
+            "B.Price": "48.45",
+            "B.Qty.": "2000",
+            "Date": "1150825",
+            "EstimatedNAV": "https://www.fubon.com/asset-management/Home/EmergingStockAdvert",
+            "Highest": "-",
+            "LatestPrice": "-",
+            "ListedOpenEndedFund": "富邦FB",
+            "Lowest": "-",
+            "Pre Avg.": "50",
+            "PreNAV": "49.81",
+            "S.Price": "51",
+            "S.Qty.": "2000",
+            "SecurityCode": "T1001Y",
+            "Time": "163004",
+            "Type": "",
+            "Volume": "-"
+          }
+        ],
+        "_lineage": {
+          "source": "TPEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:41:26+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 144,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

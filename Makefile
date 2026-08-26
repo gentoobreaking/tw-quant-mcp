@@ -62,12 +62,12 @@ soak:
 release-check:
 	./scripts/release_check.sh $(VERSION)
 
-# T020：36 工具真實呼叫 + 截圖（一鍵：重建→呼叫→渲染）
+# T020：全部工具（252+）真實呼叫 + 截圖（一鍵：重建→呼叫→渲染）
 # 子流程與參數說明見 scripts/README-snapshots.md
 snapshots:
 	./scripts/run_all.sh
 
-# 只呼叫 36 工具（真資料源，更新 snapshots/raw/*.json）
+# 只呼叫全部工具（真資料源，更新 snapshots/raw/*.json）
 snapshots-call:
 	./scripts/run_all.sh --call-only
 
@@ -75,7 +75,7 @@ snapshots-call:
 snapshots-render:
 	./scripts/run_all.sh --render-only
 
-# 匯出 36 工具呼叫結果為 Markdown 報告（snapshots/REPORT.md）
+# 匯出全部工具呼叫結果為 Markdown 報告（snapshots/REPORT.md）
 snapshots-report:
 	python3 ./scripts/export_snapshots_md.py
 

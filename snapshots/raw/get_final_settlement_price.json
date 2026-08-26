@@ -1,18 +1,49 @@
 {
   "arguments": {
     "category": "futures",
-    "contract": "南亞",
-    "limit": 3
+    "contract": "南亞"
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 117,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Contract\":\"CAF\",\"ContractDeliveryMonth\":\"202608\",\"ContractName\":\"南亞期貨\",\"TheFinalSettlementDay\":\"20260819\",\"TheFinalSettlementPrice\":\"187.51\"},{\"Contract\":\"CYF\",\"ContractDeliveryMonth\":\"202608\",\"ContractName\":\"南亞科期貨\",\"TheFinalSettlementDay\":\"20260819\",\"TheFinalSettlementPrice\":\"482.49\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T07:58:19+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1281,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Contract\":\"CAF\",\"ContractDeliveryMonth\":\"202608\",\"ContractName\":\"南亞期貨\",\"TheFinalSettlementDay\":\"20260819\",\"TheFinalSettlementPrice\":\"187.51\"},{\"Contract\":\"CYF\",\"ContractDeliveryMonth\":\"202608\",\"ContractName\":\"南亞科期貨\",\"TheFinalSettlementDay\":\"20260819\",\"TheFinalSettlementPrice\":\"482.49\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:41+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":1,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "Contract": "CAF",
+            "ContractDeliveryMonth": "202608",
+            "ContractName": "南亞期貨",
+            "TheFinalSettlementDay": "20260819",
+            "TheFinalSettlementPrice": "187.51"
+          },
+          {
+            "Contract": "CYF",
+            "ContractDeliveryMonth": "202608",
+            "ContractName": "南亞科期貨",
+            "TheFinalSettlementDay": "20260819",
+            "TheFinalSettlementPrice": "482.49"
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:40:41+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 1,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

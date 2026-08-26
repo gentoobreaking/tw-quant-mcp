@@ -1,17 +1,60 @@
 {
   "arguments": {
     "symbol": "0050",
-    "limit": 3
+    "limit": 5
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 112,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"date\":\"2025/07/06\",\"performance_a\":-31,\"performance_b\":30},{\"date\":\"2025/07/07\",\"performance_a\":22,\"performance_b\":-15},{\"date\":\"2025/07/08\",\"performance_a\":-16,\"performance_b\":7}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T11:54:22+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":213,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"date\":\"2025/07/04\",\"performance_a\":22,\"performance_b\":-15},{\"date\":\"2025/07/05\",\"performance_a\":-16,\"performance_b\":7},{\"date\":\"2025/07/06\",\"performance_a\":-31,\"performance_b\":30},{\"date\":\"2025/07/07\",\"performance_a\":22,\"performance_b\":-15},{\"date\":\"2025/07/08\",\"performance_a\":-16,\"performance_b\":7}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:37+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1513,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "date": "2025/07/04",
+            "performance_a": 22,
+            "performance_b": -15
+          },
+          {
+            "date": "2025/07/05",
+            "performance_a": -16,
+            "performance_b": 7
+          },
+          {
+            "date": "2025/07/06",
+            "performance_a": -31,
+            "performance_b": 30
+          },
+          {
+            "date": "2025/07/07",
+            "performance_a": 22,
+            "performance_b": -15
+          },
+          {
+            "date": "2025/07/08",
+            "performance_a": -16,
+            "performance_b": 7
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_WEB",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:40:37+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 1513,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

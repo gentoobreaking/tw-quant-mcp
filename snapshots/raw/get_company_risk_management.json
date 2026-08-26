@@ -4,12 +4,12 @@
   },
   "response": {
     "jsonrpc": "2.0",
-    "id": 512,
+    "id": 83,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"與使用關鍵材料相關的風險管理之描述\":\"因應重大天災、貿易壁壘、政治或經濟動盪(包含軍事衝突)等對於關鍵材料的風險，台積公司持續與主要供應商就原物料品質與產能管理等議題進行廣泛磋商，為可能的增產或減產需求做好準備，並同時確保供應鏈維持足夠庫存水位；亦持續鼓勵供應商透過分散生產廠區，降低供應鏈風險，強化生產成本競爭力，並即時支援台積海外工廠需求。請詳見台積公司114年度年報6.2.3「採購集中之風險及因應措施-原物料」。\",\"重大事件之風險管理政策\":\"N/A\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T20:14:26+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1307,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"與使用關鍵材料相關的風險管理之描述\":\"因應重大天災、貿易壁壘、政治或經濟動盪(包含軍事衝突)等對於關鍵材料的風險，台積公司持續與主要供應商就原物料品質與產能管理等議題進行廣泛磋商，為可能的增產或減產需求做好準備，並同時確保供應鏈維持足夠庫存水位；亦持續鼓勵供應商透過分散生產廠區，降低供應鏈風險，強化生產成本競爭力，並即時支援台積海外工廠需求。請詳見台積公司114年度年報6.2.3「採購集中之風險及因應措施-原物料」。\",\"重大事件之風險管理政策\":\"N/A\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:15+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":3,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -26,15 +26,15 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-25T20:14:26+08:00",
-          "data_date": "2026-08-25",
+          "fetched_at": "2026-08-26T12:40:15+08:00",
+          "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
-          "is_cached": false,
-          "latency_ms": 1307,
+          "is_cached": true,
+          "latency_ms": 3,
           "grade": "AVAILABLE"
         },
-        "http_calls": 1,
+        "http_calls": 0,
         "disclaimer": "僅供研究參考，不構成投資建議"
       }
     }

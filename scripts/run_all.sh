@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 一鍵重跑「36 工具真實呼叫 + 截圖」測試
+# 一鍵重跑「全部工具（252+）真實呼叫 + 截圖」測試
 # 用法:
 #   ./scripts/run_all.sh            # 完整流程（重建→呼叫→渲染）
 #   ./scripts/run_all.sh --no-build # 跳過重建，用現有 bin/tw-quant-mcp
@@ -19,7 +19,7 @@ for arg in "$@"; do
 done
 
 echo "══════════════════════════════════════════"
-echo " tw-quant-mcp 36 工具真實呼叫 + 截圖"
+echo " tw-quant-mcp 全部工具真實呼叫 + 截圖"
 echo " $(date '+%Y-%m-%d %H:%M %Z')"
 echo "══════════════════════════════════════════"
 
@@ -29,12 +29,12 @@ if [ "$BUILD" = 1 ]; then
 fi
 
 if [ "$CALL" = 1 ]; then
-  echo "▶ 2/3 呼叫 36 工具（真實資料源，約 1~2 分鐘）..."
+  echo "▶ 2/3 呼叫全部工具（真實資料源，約 10~20 分鐘）..."
   python3 ./scripts/call_tw_quant_tools.py
 fi
 
 if [ "$RENDER" = 1 ]; then
-  echo "▶ 3/3 渲染 36 張 PNG 截圖..."
+  echo "▶ 3/3 渲染 PNG 截圖..."
   python3 ./scripts/render_tool_snapshots.py
 fi
 
@@ -45,4 +45,4 @@ echo "   PNG : snapshots/*.png"
 echo ""
 echo "注意:"
 echo "  - 週末/假日: A 群 5 個盤中工具會回「非交易時段」錯誤，屬正常"
-echo "  - 交易日 09:00-13:30 執行可得到完整 36/36 成功"
+echo "  - 交易日 09:00-13:30 執行可得到最高成功率（盤中工具即時資料完整）"

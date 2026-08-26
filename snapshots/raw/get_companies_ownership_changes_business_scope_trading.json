@@ -1,14 +1,38 @@
 {
   "arguments": {},
   "response": {
+    "jsonrpc": "2.0",
+    "id": 35,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"公司代號\":\"\",\"公司名稱\":\"\",\"出表日期\":\"1150824\",\"變更交易開始日\":\"\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T13:38:27+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1108,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"公司代號\":\"\",\"公司名稱\":\"\",\"出表日期\":\"1150824\",\"變更交易開始日\":\"\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:39:50+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "公司代號": "",
+            "公司名稱": "",
+            "出表日期": "1150824",
+            "變更交易開始日": ""
+          }
+        ],
+        "_lineage": {
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:39:50+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 0,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

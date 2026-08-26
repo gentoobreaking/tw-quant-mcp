@@ -4,12 +4,12 @@
   },
   "response": {
     "jsonrpc": "2.0",
-    "id": 29,
+    "id": 118,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"code\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"scoring_version\":\"v1\",\"date\":\"2026-08-01\",\"profit\":{\"score\":0,\"available\":false,\"note\":\"無獲利能力指標（MOPS profit_ratios）\"},\"growth\":{\"score\":0,\"available\":false,\"note\":\"無損益表摘要（MOPS income_summary）\"},\"structure\":{\"score\":0,\"available\":false,\"note\":\"無資產負債表（MOPS balance_sheet）\"},\"dividend\":{\"score\":58,\"available\":true,\"note\":\"連年配息 2 年（滿分基準 5 年）、有配息 2/2 年度、殖利率 0.91%\"},\"governance\":{\"score\":100,\"available\":true,\"note\":\"具 ESG、公司治理規程 揭露\"},\"total\":23.7,\"note\":\"評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）\"},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"helper\",\"derived_from\":[\"MOPS:income_summary\",\"MOPS:profit_ratios\",\"TWSE_API:dividend\",\"TWSE_API:valuation\",\"TWSE_API:esg\",\"TWSE_API:company_governance\"],\"fetched_at\":\"2026-08-01T18:27:43+08:00\",\"data_date\":\"2026-08-01\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":true,\"cache_ttl\":43200,\"latency_ms\":3176},\"_chart_meta\":{\"recommended_type\":\"radar\",\"y_axis\":{\"title\":\"財務健康五面向\"},\"axes\":[\"profit\",\"growth\",\"structure\",\"dividend\",\"governance\"],\"series\":[{\"type\":\"radar\"}]},\"http_calls\":4,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"code\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"scoring_version\":\"v1\",\"date\":\"2026-08-26\",\"profit\":{\"score\":100,\"available\":true,\"note\":\"毛利率 67.0%（滿分 40%）、營益率 59.3%、純益率 53.2%\"},\"growth\":{\"score\":0,\"available\":false,\"note\":\"無 2025Q2 去年同期財報（僅 2026Q2），成長性暫不計\"},\"structure\":{\"score\":100,\"available\":true,\"note\":\"負債比 30.9%（門檻 40%–80%）；營業現金流為正\"},\"dividend\":{\"score\":72,\"available\":true,\"note\":\"連年配息 3 年（滿分基準 5 年）、有配息 3/3 年度、殖利率 0.92%\"},\"governance\":{\"score\":100,\"available\":true,\"note\":\"具 ESG、公司治理規程 揭露\"},\"total\":75.8,\"note\":\"評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）\"},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:42+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":8,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"radar\",\"y_axis\":{\"title\":\"財務健康五面向\"},\"axes\":[\"profit\",\"growth\",\"structure\",\"dividend\",\"governance\"],\"series\":[{\"type\":\"radar\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -18,53 +18,45 @@
           "name": "台積電",
           "market": "tse",
           "scoring_version": "v1",
-          "date": "2026-08-01",
+          "date": "2026-08-26",
           "profit": {
-            "score": 0,
-            "available": false,
-            "note": "無獲利能力指標（MOPS profit_ratios）"
+            "score": 100,
+            "available": true,
+            "note": "毛利率 67.0%（滿分 40%）、營益率 59.3%、純益率 53.2%"
           },
           "growth": {
             "score": 0,
             "available": false,
-            "note": "無損益表摘要（MOPS income_summary）"
+            "note": "無 2025Q2 去年同期財報（僅 2026Q2），成長性暫不計"
           },
           "structure": {
-            "score": 0,
-            "available": false,
-            "note": "無資產負債表（MOPS balance_sheet）"
+            "score": 100,
+            "available": true,
+            "note": "負債比 30.9%（門檻 40%–80%）；營業現金流為正"
           },
           "dividend": {
-            "score": 58,
+            "score": 72,
             "available": true,
-            "note": "連年配息 2 年（滿分基準 5 年）、有配息 2/2 年度、殖利率 0.91%"
+            "note": "連年配息 3 年（滿分基準 5 年）、有配息 3/3 年度、殖利率 0.92%"
           },
           "governance": {
             "score": 100,
             "available": true,
             "note": "具 ESG、公司治理規程 揭露"
           },
-          "total": 23.7,
+          "total": 75.8,
           "note": "評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）"
         },
         "_lineage": {
           "source": "MOPS",
-          "source_role": "helper",
-          "derived_from": [
-            "MOPS:income_summary",
-            "MOPS:profit_ratios",
-            "TWSE_API:dividend",
-            "TWSE_API:valuation",
-            "TWSE_API:esg",
-            "TWSE_API:company_governance"
-          ],
-          "fetched_at": "2026-08-01T18:27:43+08:00",
-          "data_date": "2026-08-01",
-          "freshness": "POST_MARKET_TODAY",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:40:42+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "cache_ttl": 43200,
-          "latency_ms": 3176
+          "latency_ms": 8,
+          "grade": "AVAILABLE"
         },
         "_chart_meta": {
           "recommended_type": "radar",
@@ -84,7 +76,7 @@
             }
           ]
         },
-        "http_calls": 4,
+        "http_calls": 0,
         "disclaimer": "僅供研究參考，不構成投資建議"
       }
     }

@@ -1,82 +1,334 @@
 {
   "arguments": {
-    "kind": "board_insufficient",
-    "limit": 3
+    "kind": "major_shareholders"
   },
   "response": {
-    "content": [
-      {
-        "type": "text",
-        "text": "{\"data\":[{\"全體監察人不足股數\":\"\",\"全體監察人保留運用決定權信託股數\":\"0\",\"全體監察人應持有股數\":\"0\",\"全體監察人本人實際持有股數\":\"0\",\"全體監察人法人代表人分戶集保股數\":\"0\",\"全體董事不包含獨立董事不足股數\":\"1495000\",\"全體董事不包含獨立董事保留運用決定權信託股數\":\"0\",\"全體董事不包含獨立董事應持有股數\":\"3600000\",\"全體董事不包含獨立董事本人實際持有股數\":\"2105000\",\"全體董事不包含獨立董事法人代表人分戶集保股數\":\"0\",\"公司代號\":\"3122\",\"公司名稱\":\"笙泉            \",\"出表日期\":\"1150819\",\"已發行股份總額\":\"40771918\",\"持股不足已通知其董監\":\"O.K\"},{\"全體監察人不足股數\":\"\",\"全體監察人保留運用決定權信託股數\":\"0\",\"全體監察人應持有股數\":\"0\",\"全體監察人本人實際持有股數\":\"0\",\"全體監察人法人代表人分戶集保股數\":\"0\",\"全體董事不包含獨立董事不足股數\":\"533070\",\"全體董事不包含獨立董事保留運用決定權信託股數\":\"0\",\"全體董事不包含獨立董事應持有股數\":\"4400515\",\"全體董事不包含獨立董事本人實際持有股數\":\"3867445\",\"全體董事不包含獨立董事法人代表人分戶集保股數\":\"0\",\"公司代號\":\"3490\",\"公司名稱\":\"單井            \",\"出表日期\":\"1150819\",\"已發行股份總額\":\"55006435\",\"持股不足已通知其董監\":\"O.K\"},{\"全體監察人不足股數\":\"\",\"全體監察人保留運用決定權信託股數\":\"0\",\"全體監察人應持有股數\":\"0\",\"全體監察人本人實際持有股數\":\"0\",\"全體監察人法人代表人分戶集保股數\":\"0\",\"全體董事不包含獨立董事不足股數\":\"11062933\",\"全體董事不包含獨立董事保留運用決定權信託股數\":\"0\",\"全體董事不包含獨立董事應持有股數\":\"11145933\",\"全體董事不包含獨立董事本人實際持有股數\":\"83000\",\"全體董事不包含獨立董事法人代表人分戶集保股數\":\"0\",\"公司代號\":\"3521\",\"公司名稱\":\"台鋼建設        \",\"出表日期\":\"1150819\",\"已發行股份總額\":\"185765552\",\"持股不足已通知其董監\":\"O.K\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T07:14:23+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":133,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
-      }
-    ],
-    "structuredContent": {
-      "data": [
+    "jsonrpc": "2.0",
+    "id": 194,
+    "result": {
+      "content": [
         {
-          "全體監察人不足股數": "",
-          "全體監察人保留運用決定權信託股數": "0",
-          "全體監察人應持有股數": "0",
-          "全體監察人本人實際持有股數": "0",
-          "全體監察人法人代表人分戶集保股數": "0",
-          "全體董事不包含獨立董事不足股數": "1495000",
-          "全體董事不包含獨立董事保留運用決定權信託股數": "0",
-          "全體董事不包含獨立董事應持有股數": "3600000",
-          "全體董事不包含獨立董事本人實際持有股數": "2105000",
-          "全體董事不包含獨立董事法人代表人分戶集保股數": "0",
-          "公司代號": "3122",
-          "公司名稱": "笙泉            ",
-          "出表日期": "1150819",
-          "已發行股份總額": "40771918",
-          "持股不足已通知其董監": "O.K"
-        },
-        {
-          "全體監察人不足股數": "",
-          "全體監察人保留運用決定權信託股數": "0",
-          "全體監察人應持有股數": "0",
-          "全體監察人本人實際持有股數": "0",
-          "全體監察人法人代表人分戶集保股數": "0",
-          "全體董事不包含獨立董事不足股數": "533070",
-          "全體董事不包含獨立董事保留運用決定權信託股數": "0",
-          "全體董事不包含獨立董事應持有股數": "4400515",
-          "全體董事不包含獨立董事本人實際持有股數": "3867445",
-          "全體董事不包含獨立董事法人代表人分戶集保股數": "0",
-          "公司代號": "3490",
-          "公司名稱": "單井            ",
-          "出表日期": "1150819",
-          "已發行股份總額": "55006435",
-          "持股不足已通知其董監": "O.K"
-        },
-        {
-          "全體監察人不足股數": "",
-          "全體監察人保留運用決定權信託股數": "0",
-          "全體監察人應持有股數": "0",
-          "全體監察人本人實際持有股數": "0",
-          "全體監察人法人代表人分戶集保股數": "0",
-          "全體董事不包含獨立董事不足股數": "11062933",
-          "全體董事不包含獨立董事保留運用決定權信託股數": "0",
-          "全體董事不包含獨立董事應持有股數": "11145933",
-          "全體董事不包含獨立董事本人實際持有股數": "83000",
-          "全體董事不包含獨立董事法人代表人分戶集保股數": "0",
-          "公司代號": "3521",
-          "公司名稱": "台鋼建設        ",
-          "出表日期": "1150819",
-          "已發行股份總額": "185765552",
-          "持股不足已通知其董監": "O.K"
+          "type": "text",
+          "text": "{\"data\":[{\"CompanyName\":\"安心\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1259\",\"大股東名稱\":\"光元實業股份有限公司\"},{\"CompanyName\":\"安心\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1259\",\"大股東名稱\":\"日商魔術食品服務股份有限公司\"},{\"CompanyName\":\"德麥\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1264\",\"大股東名稱\":\"吳文欽\"},{\"CompanyName\":\"漢來美食\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1268\",\"大股東名稱\":\"又達興業股份有限公司\"},{\"CompanyName\":\"漢田生技\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1294\",\"大股東名稱\":\"漢碩投資股份有限公司\"},{\"CompanyName\":\"漢田生技\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1294\",\"大股東名稱\":\"漢畿投資股份有限公司\"},{\"CompanyName\":\"生合\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1295\",\"大股東名稱\":\"兆檉投資股份有限公司\"},{\"CompanyName\":\"生合\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1295\",\"大股東名稱\":\"楊連傳\"},{\"CompanyName\":\"台翰\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1336\",\"大股東名稱\":\"宣德科技股份有限公司\"},{\"CompanyName\":\"濱川\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1569\",\"大股東名稱\":\"蕭欽銘\"},{\"CompanyName\":\"力肯\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1570\",\"大股東名稱\":\"威剛科技股份有限公司\"},{\"CompanyName\":\"精剛\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1584\",\"大股東名稱\":\"榮剛材料科技股份有限公司\"},{\"CompanyName\":\"和勤\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1586\",\"大股東名稱\":\"久陽精密股份有限公司\"},{\"CompanyName\":\"台蠟\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1742\",\"大股東名稱\":\"新金龍財富股份有限公司\"},{\"CompanyName\":\"生泰\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1777\",\"大股東名稱\":\"百事達投資股份有限公司\"},{\"CompanyName\":\"生泰\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1777\",\"大股東名稱\":\"生達化學製藥股份有限公司\"},{\"CompanyName\":\"立弘\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1780\",\"大股東名稱\":\"兆豐國際商業銀行股份有限公司\"},{\"CompanyName\":\"立弘\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1780\",\"大股東名稱\":\"鈞寶電子工業股份有限公司\"},{\"CompanyName\":\"杏昌\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1788\",\"大股東名稱\":\"杏昌投資股份有限公司\"},{\"CompanyName\":\"金穎生技\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1796\",\"大股東名稱\":\"生展生物科技股份有限公司\"},{\"CompanyName\":\"易威\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1799\",\"大股東名稱\":\"行政院國家發展基金管理會\"},{\"CompanyName\":\"易威\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1799\",\"大股東名稱\":\"中華世紀投資股份有限公司\"},{\"CompanyName\":\"易威\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1799\",\"大股東名稱\":\"強生化學製藥廠股份有限公司\"},{\"CompanyName\":\"寶利徠\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1813\",\"大股東名稱\":\"寶島光學科技股份有限公司\"},{\"CompanyName\":\"富喬\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"1815\",\"大股東名稱\":\"達泰投資股份有限公司\"},{\"CompanyName\":\"唐榮公司\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2035\",\"大股東名稱\":\"臺灣銀行股份有限公司\"},{\"CompanyName\":\"唐榮公司\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2035\",\"大股東名稱\":\"經濟部\"},{\"CompanyName\":\"唐榮公司\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2035\",\"大股東名稱\":\"燁輝企業股份有限公司\"},{\"CompanyName\":\"唐榮公司\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2035\",\"大股東名稱\":\"聯輝開發股份有限公司\"},{\"CompanyName\":\"風青\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2061\",\"大股東名稱\":\"明泰投資股份有限公司\"},{\"CompanyName\":\"風青\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2061\",\"大股東名稱\":\"陳福得\"},{\"CompanyName\":\"晉椿\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2064\",\"大股東名稱\":\"建新電機有限公司\"},{\"CompanyName\":\"世豐\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2065\",\"大股東名稱\":\"麗泰股份有限公司\"},{\"CompanyName\":\"世豐\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2065\",\"大股東名稱\":\"世鎧精密股份有限公司\"},{\"CompanyName\":\"世德\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2066\",\"大股東名稱\":\"世紀投資股份有限公司\"},{\"CompanyName\":\"世德\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2066\",\"大股東名稱\":\"陳光裕\"},{\"CompanyName\":\"嘉鋼\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2067\",\"大股東名稱\":\"維昱股份有限公司\"},{\"CompanyName\":\"精湛\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2070\",\"大股東名稱\":\"洋鎧投資股份有限公司\"},{\"CompanyName\":\"精湛\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2070\",\"大股東名稱\":\"吳俊男\"},{\"CompanyName\":\"雄順\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2073\",\"大股東名稱\":\"陳啟祥\"},{\"CompanyName\":\"大甲\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2221\",\"大股東名稱\":\"黃士（上：山＋下：夆）\"},{\"CompanyName\":\"謚源\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2235\",\"大股東名稱\":\"堤維西交通工業股份有限公司\"},{\"CompanyName\":\"謚源\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2235\",\"大股東名稱\":\"威竑投資有限公司\"},{\"CompanyName\":\"謚源\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2235\",\"大股東名稱\":\"陳桂英\"},{\"CompanyName\":\"謚源\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2235\",\"大股東名稱\":\"吳碣石\"},{\"CompanyName\":\"綠意\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2596\",\"大股東名稱\":\"大觀投資顧問股份有限公司\"},{\"CompanyName\":\"綠意\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2596\",\"大股東名稱\":\"海寧投資股份有限公司\"},{\"CompanyName\":\"綠意\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2596\",\"大股東名稱\":\"日埜不動產投資顧問股份有限公司\"},{\"CompanyName\":\"大車隊\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2640\",\"大股東名稱\":\"萬事興股份有限公司\"},{\"CompanyName\":\"大車隊\",\"Date\":\"1150825\",\"SecuritiesCompanyCode\":\"2640\",\"大股東名稱\":\"林村田\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:16+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":1,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
-      "_lineage": {
-        "source": "TPEX_API",
-        "source_role": "CANONICAL",
-        "fetched_at": "2026-08-26T07:14:23+08:00",
-        "data_date": "2026-08-26",
-        "freshness": "POST_MARKET",
-        "sampling_sec": 0,
-        "is_cached": false,
-        "latency_ms": 133,
-        "grade": "AVAILABLE"
-      },
-      "http_calls": 1,
-      "disclaimer": "僅供研究參考，不構成投資建議"
+      "structuredContent": {
+        "data": [
+          {
+            "CompanyName": "安心",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1259",
+            "大股東名稱": "光元實業股份有限公司"
+          },
+          {
+            "CompanyName": "安心",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1259",
+            "大股東名稱": "日商魔術食品服務股份有限公司"
+          },
+          {
+            "CompanyName": "德麥",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1264",
+            "大股東名稱": "吳文欽"
+          },
+          {
+            "CompanyName": "漢來美食",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1268",
+            "大股東名稱": "又達興業股份有限公司"
+          },
+          {
+            "CompanyName": "漢田生技",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1294",
+            "大股東名稱": "漢碩投資股份有限公司"
+          },
+          {
+            "CompanyName": "漢田生技",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1294",
+            "大股東名稱": "漢畿投資股份有限公司"
+          },
+          {
+            "CompanyName": "生合",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1295",
+            "大股東名稱": "兆檉投資股份有限公司"
+          },
+          {
+            "CompanyName": "生合",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1295",
+            "大股東名稱": "楊連傳"
+          },
+          {
+            "CompanyName": "台翰",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1336",
+            "大股東名稱": "宣德科技股份有限公司"
+          },
+          {
+            "CompanyName": "濱川",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1569",
+            "大股東名稱": "蕭欽銘"
+          },
+          {
+            "CompanyName": "力肯",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1570",
+            "大股東名稱": "威剛科技股份有限公司"
+          },
+          {
+            "CompanyName": "精剛",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1584",
+            "大股東名稱": "榮剛材料科技股份有限公司"
+          },
+          {
+            "CompanyName": "和勤",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1586",
+            "大股東名稱": "久陽精密股份有限公司"
+          },
+          {
+            "CompanyName": "台蠟",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1742",
+            "大股東名稱": "新金龍財富股份有限公司"
+          },
+          {
+            "CompanyName": "生泰",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1777",
+            "大股東名稱": "百事達投資股份有限公司"
+          },
+          {
+            "CompanyName": "生泰",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1777",
+            "大股東名稱": "生達化學製藥股份有限公司"
+          },
+          {
+            "CompanyName": "立弘",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1780",
+            "大股東名稱": "兆豐國際商業銀行股份有限公司"
+          },
+          {
+            "CompanyName": "立弘",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1780",
+            "大股東名稱": "鈞寶電子工業股份有限公司"
+          },
+          {
+            "CompanyName": "杏昌",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1788",
+            "大股東名稱": "杏昌投資股份有限公司"
+          },
+          {
+            "CompanyName": "金穎生技",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1796",
+            "大股東名稱": "生展生物科技股份有限公司"
+          },
+          {
+            "CompanyName": "易威",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1799",
+            "大股東名稱": "行政院國家發展基金管理會"
+          },
+          {
+            "CompanyName": "易威",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1799",
+            "大股東名稱": "中華世紀投資股份有限公司"
+          },
+          {
+            "CompanyName": "易威",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1799",
+            "大股東名稱": "強生化學製藥廠股份有限公司"
+          },
+          {
+            "CompanyName": "寶利徠",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1813",
+            "大股東名稱": "寶島光學科技股份有限公司"
+          },
+          {
+            "CompanyName": "富喬",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "1815",
+            "大股東名稱": "達泰投資股份有限公司"
+          },
+          {
+            "CompanyName": "唐榮公司",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2035",
+            "大股東名稱": "臺灣銀行股份有限公司"
+          },
+          {
+            "CompanyName": "唐榮公司",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2035",
+            "大股東名稱": "經濟部"
+          },
+          {
+            "CompanyName": "唐榮公司",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2035",
+            "大股東名稱": "燁輝企業股份有限公司"
+          },
+          {
+            "CompanyName": "唐榮公司",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2035",
+            "大股東名稱": "聯輝開發股份有限公司"
+          },
+          {
+            "CompanyName": "風青",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2061",
+            "大股東名稱": "明泰投資股份有限公司"
+          },
+          {
+            "CompanyName": "風青",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2061",
+            "大股東名稱": "陳福得"
+          },
+          {
+            "CompanyName": "晉椿",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2064",
+            "大股東名稱": "建新電機有限公司"
+          },
+          {
+            "CompanyName": "世豐",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2065",
+            "大股東名稱": "麗泰股份有限公司"
+          },
+          {
+            "CompanyName": "世豐",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2065",
+            "大股東名稱": "世鎧精密股份有限公司"
+          },
+          {
+            "CompanyName": "世德",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2066",
+            "大股東名稱": "世紀投資股份有限公司"
+          },
+          {
+            "CompanyName": "世德",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2066",
+            "大股東名稱": "陳光裕"
+          },
+          {
+            "CompanyName": "嘉鋼",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2067",
+            "大股東名稱": "維昱股份有限公司"
+          },
+          {
+            "CompanyName": "精湛",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2070",
+            "大股東名稱": "洋鎧投資股份有限公司"
+          },
+          {
+            "CompanyName": "精湛",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2070",
+            "大股東名稱": "吳俊男"
+          },
+          {
+            "CompanyName": "雄順",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2073",
+            "大股東名稱": "陳啟祥"
+          },
+          {
+            "CompanyName": "大甲",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2221",
+            "大股東名稱": "黃士（上：山＋下：夆）"
+          },
+          {
+            "CompanyName": "謚源",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2235",
+            "大股東名稱": "堤維西交通工業股份有限公司"
+          },
+          {
+            "CompanyName": "謚源",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2235",
+            "大股東名稱": "威竑投資有限公司"
+          },
+          {
+            "CompanyName": "謚源",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2235",
+            "大股東名稱": "陳桂英"
+          },
+          {
+            "CompanyName": "謚源",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2235",
+            "大股東名稱": "吳碣石"
+          },
+          {
+            "CompanyName": "綠意",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2596",
+            "大股東名稱": "大觀投資顧問股份有限公司"
+          },
+          {
+            "CompanyName": "綠意",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2596",
+            "大股東名稱": "海寧投資股份有限公司"
+          },
+          {
+            "CompanyName": "綠意",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2596",
+            "大股東名稱": "日埜不動產投資顧問股份有限公司"
+          },
+          {
+            "CompanyName": "大車隊",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2640",
+            "大股東名稱": "萬事興股份有限公司"
+          },
+          {
+            "CompanyName": "大車隊",
+            "Date": "1150825",
+            "SecuritiesCompanyCode": "2640",
+            "大股東名稱": "林村田"
+          }
+        ],
+        "_lineage": {
+          "source": "TPEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:42:16+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 1,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

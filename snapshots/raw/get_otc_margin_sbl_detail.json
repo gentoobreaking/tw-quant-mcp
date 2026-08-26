@@ -1,17 +1,174 @@
 {
   "arguments": {
-    "kind": "used",
-    "code": "3252"
+    "kind": "used"
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 198,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"CompanyName\":\"海灣\",\"Date\":\"1150825\",\"Rank\":\"1\",\"SecuritiesCompanyCode\":\"3252\",\"UsageRatio\":\"97.8\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T11:26:26+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":179,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"CompanyName\":\"海灣\",\"Date\":\"1150825\",\"Rank\":\"1\",\"SecuritiesCompanyCode\":\"3252\",\"UsageRatio\":\"97.8\"},{\"CompanyName\":\"倉和\",\"Date\":\"1150825\",\"Rank\":\"2\",\"SecuritiesCompanyCode\":\"6538\",\"UsageRatio\":\"87.59\"},{\"CompanyName\":\"鏵友益\",\"Date\":\"1150825\",\"Rank\":\"3\",\"SecuritiesCompanyCode\":\"6877\",\"UsageRatio\":\"80.16\"},{\"CompanyName\":\"亞泰金屬\",\"Date\":\"1150825\",\"Rank\":\"4\",\"SecuritiesCompanyCode\":\"6727\",\"UsageRatio\":\"73.47\"},{\"CompanyName\":\"常珵\",\"Date\":\"1150825\",\"Rank\":\"5\",\"SecuritiesCompanyCode\":\"8097\",\"UsageRatio\":\"68.64\"},{\"CompanyName\":\"凱衛\",\"Date\":\"1150825\",\"Rank\":\"6\",\"SecuritiesCompanyCode\":\"5201\",\"UsageRatio\":\"67.67\"},{\"CompanyName\":\"擎亞\",\"Date\":\"1150825\",\"Rank\":\"7\",\"SecuritiesCompanyCode\":\"8096\",\"UsageRatio\":\"63.92\"},{\"CompanyName\":\"和勤\",\"Date\":\"1150825\",\"Rank\":\"8\",\"SecuritiesCompanyCode\":\"1586\",\"UsageRatio\":\"62.45\"},{\"CompanyName\":\"亞帝歐\",\"Date\":\"1150825\",\"Rank\":\"9\",\"SecuritiesCompanyCode\":\"3516\",\"UsageRatio\":\"62.08\"},{\"CompanyName\":\"智通*\",\"Date\":\"1150825\",\"Rank\":\"10\",\"SecuritiesCompanyCode\":\"8932\",\"UsageRatio\":\"61.99\"},{\"CompanyName\":\"新盛力\",\"Date\":\"1150825\",\"Rank\":\"11\",\"SecuritiesCompanyCode\":\"4931\",\"UsageRatio\":\"56.92\"},{\"CompanyName\":\"科嶠\",\"Date\":\"1150825\",\"Rank\":\"12\",\"SecuritiesCompanyCode\":\"4542\",\"UsageRatio\":\"56.31\"},{\"CompanyName\":\"德晉\",\"Date\":\"1150825\",\"Rank\":\"13\",\"SecuritiesCompanyCode\":\"3466\",\"UsageRatio\":\"54.92\"},{\"CompanyName\":\"寬魚國際\",\"Date\":\"1150825\",\"Rank\":\"14\",\"SecuritiesCompanyCode\":\"6101\",\"UsageRatio\":\"53.57\"},{\"CompanyName\":\"琉園\",\"Date\":\"1150825\",\"Rank\":\"15\",\"SecuritiesCompanyCode\":\"9949\",\"UsageRatio\":\"53.33\"},{\"CompanyName\":\"三一東林\",\"Date\":\"1150825\",\"Rank\":\"16\",\"SecuritiesCompanyCode\":\"3609\",\"UsageRatio\":\"53.14\"},{\"CompanyName\":\"大立\",\"Date\":\"1150825\",\"Rank\":\"17\",\"SecuritiesCompanyCode\":\"4716\",\"UsageRatio\":\"51.91\"},{\"CompanyName\":\"大世科\",\"Date\":\"1150825\",\"Rank\":\"18\",\"SecuritiesCompanyCode\":\"8099\",\"UsageRatio\":\"49.45\"},{\"CompanyName\":\"霖宏\",\"Date\":\"1150825\",\"Rank\":\"19\",\"SecuritiesCompanyCode\":\"5464\",\"UsageRatio\":\"48.16\"},{\"CompanyName\":\"中探針\",\"Date\":\"1150825\",\"Rank\":\"20\",\"SecuritiesCompanyCode\":\"6217\",\"UsageRatio\":\"46.68\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:19+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":498,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "CompanyName": "海灣",
+            "Date": "1150825",
+            "Rank": "1",
+            "SecuritiesCompanyCode": "3252",
+            "UsageRatio": "97.8"
+          },
+          {
+            "CompanyName": "倉和",
+            "Date": "1150825",
+            "Rank": "2",
+            "SecuritiesCompanyCode": "6538",
+            "UsageRatio": "87.59"
+          },
+          {
+            "CompanyName": "鏵友益",
+            "Date": "1150825",
+            "Rank": "3",
+            "SecuritiesCompanyCode": "6877",
+            "UsageRatio": "80.16"
+          },
+          {
+            "CompanyName": "亞泰金屬",
+            "Date": "1150825",
+            "Rank": "4",
+            "SecuritiesCompanyCode": "6727",
+            "UsageRatio": "73.47"
+          },
+          {
+            "CompanyName": "常珵",
+            "Date": "1150825",
+            "Rank": "5",
+            "SecuritiesCompanyCode": "8097",
+            "UsageRatio": "68.64"
+          },
+          {
+            "CompanyName": "凱衛",
+            "Date": "1150825",
+            "Rank": "6",
+            "SecuritiesCompanyCode": "5201",
+            "UsageRatio": "67.67"
+          },
+          {
+            "CompanyName": "擎亞",
+            "Date": "1150825",
+            "Rank": "7",
+            "SecuritiesCompanyCode": "8096",
+            "UsageRatio": "63.92"
+          },
+          {
+            "CompanyName": "和勤",
+            "Date": "1150825",
+            "Rank": "8",
+            "SecuritiesCompanyCode": "1586",
+            "UsageRatio": "62.45"
+          },
+          {
+            "CompanyName": "亞帝歐",
+            "Date": "1150825",
+            "Rank": "9",
+            "SecuritiesCompanyCode": "3516",
+            "UsageRatio": "62.08"
+          },
+          {
+            "CompanyName": "智通*",
+            "Date": "1150825",
+            "Rank": "10",
+            "SecuritiesCompanyCode": "8932",
+            "UsageRatio": "61.99"
+          },
+          {
+            "CompanyName": "新盛力",
+            "Date": "1150825",
+            "Rank": "11",
+            "SecuritiesCompanyCode": "4931",
+            "UsageRatio": "56.92"
+          },
+          {
+            "CompanyName": "科嶠",
+            "Date": "1150825",
+            "Rank": "12",
+            "SecuritiesCompanyCode": "4542",
+            "UsageRatio": "56.31"
+          },
+          {
+            "CompanyName": "德晉",
+            "Date": "1150825",
+            "Rank": "13",
+            "SecuritiesCompanyCode": "3466",
+            "UsageRatio": "54.92"
+          },
+          {
+            "CompanyName": "寬魚國際",
+            "Date": "1150825",
+            "Rank": "14",
+            "SecuritiesCompanyCode": "6101",
+            "UsageRatio": "53.57"
+          },
+          {
+            "CompanyName": "琉園",
+            "Date": "1150825",
+            "Rank": "15",
+            "SecuritiesCompanyCode": "9949",
+            "UsageRatio": "53.33"
+          },
+          {
+            "CompanyName": "三一東林",
+            "Date": "1150825",
+            "Rank": "16",
+            "SecuritiesCompanyCode": "3609",
+            "UsageRatio": "53.14"
+          },
+          {
+            "CompanyName": "大立",
+            "Date": "1150825",
+            "Rank": "17",
+            "SecuritiesCompanyCode": "4716",
+            "UsageRatio": "51.91"
+          },
+          {
+            "CompanyName": "大世科",
+            "Date": "1150825",
+            "Rank": "18",
+            "SecuritiesCompanyCode": "8099",
+            "UsageRatio": "49.45"
+          },
+          {
+            "CompanyName": "霖宏",
+            "Date": "1150825",
+            "Rank": "19",
+            "SecuritiesCompanyCode": "5464",
+            "UsageRatio": "48.16"
+          },
+          {
+            "CompanyName": "中探針",
+            "Date": "1150825",
+            "Rank": "20",
+            "SecuritiesCompanyCode": "6217",
+            "UsageRatio": "46.68"
+          }
+        ],
+        "_lineage": {
+          "source": "TPEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:42:19+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 498,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

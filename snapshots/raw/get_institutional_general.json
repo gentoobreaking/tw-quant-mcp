@@ -2,77 +2,77 @@
   "arguments": {},
   "response": {
     "jsonrpc": "2.0",
-    "id": 10,
+    "id": 142,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"date\":\"2026-08-24\",\"investor\":\"自營商\",\"long_volume\":116642,\"long_value\":59379,\"short_volume\":124421,\"short_value\":55775,\"net_volume\":-7779,\"net_value\":3604,\"oi_long\":135337,\"oi_long_value\":87290,\"oi_short\":362465,\"oi_short_value\":254752,\"oi_net\":-227128,\"oi_net_value\":-167462},{\"date\":\"2026-08-24\",\"investor\":\"投信\",\"long_volume\":124,\"long_value\":1112,\"short_volume\":1256,\"short_value\":5707,\"net_volume\":-1132,\"net_value\":-4595,\"oi_long\":93764,\"oi_long_value\":727614,\"oi_short\":7732,\"oi_short_value\":31336,\"oi_net\":86032,\"oi_net_value\":696278},{\"date\":\"2026-08-24\",\"investor\":\"外資及陸資\",\"long_volume\":567163,\"long_value\":772977,\"short_volume\":584040,\"short_value\":783184,\"net_volume\":-16877,\"net_value\":-10207,\"oi_long\":190353,\"oi_long_value\":207321,\"oi_short\":671597,\"oi_short_value\":1143190,\"oi_net\":-481244,\"oi_net_value\":-935869}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T17:43:54+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1177,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"date\":\"2026-08-25\",\"investor\":\"自營商\",\"long_volume\":183047,\"long_value\":85167,\"short_volume\":191944,\"short_value\":84045,\"net_volume\":-8897,\"net_value\":1122,\"oi_long\":141344,\"oi_long_value\":91330,\"oi_short\":376084,\"oi_short_value\":259735,\"oi_net\":-234740,\"oi_net_value\":-168405},{\"date\":\"2026-08-25\",\"investor\":\"投信\",\"long_volume\":549,\"long_value\":4620,\"short_volume\":309,\"short_value\":160,\"net_volume\":240,\"net_value\":4460,\"oi_long\":94186,\"oi_long_value\":735985,\"oi_short\":7914,\"oi_short_value\":30614,\"oi_net\":86272,\"oi_net_value\":705371},{\"date\":\"2026-08-25\",\"investor\":\"外資及陸資\",\"long_volume\":716362,\"long_value\":904701,\"short_volume\":707904,\"short_value\":917090,\"net_volume\":8458,\"net_value\":-12389,\"oi_long\":202779,\"oi_long_value\":200124,\"oi_short\":674604,\"oi_short_value\":1157599,\"oi_net\":-471825,\"oi_net_value\":-957475}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:59+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
         "data": [
           {
-            "date": "2026-08-24",
+            "date": "2026-08-25",
             "investor": "自營商",
-            "long_volume": 116642,
-            "long_value": 59379,
-            "short_volume": 124421,
-            "short_value": 55775,
-            "net_volume": -7779,
-            "net_value": 3604,
-            "oi_long": 135337,
-            "oi_long_value": 87290,
-            "oi_short": 362465,
-            "oi_short_value": 254752,
-            "oi_net": -227128,
-            "oi_net_value": -167462
+            "long_volume": 183047,
+            "long_value": 85167,
+            "short_volume": 191944,
+            "short_value": 84045,
+            "net_volume": -8897,
+            "net_value": 1122,
+            "oi_long": 141344,
+            "oi_long_value": 91330,
+            "oi_short": 376084,
+            "oi_short_value": 259735,
+            "oi_net": -234740,
+            "oi_net_value": -168405
           },
           {
-            "date": "2026-08-24",
+            "date": "2026-08-25",
             "investor": "投信",
-            "long_volume": 124,
-            "long_value": 1112,
-            "short_volume": 1256,
-            "short_value": 5707,
-            "net_volume": -1132,
-            "net_value": -4595,
-            "oi_long": 93764,
-            "oi_long_value": 727614,
-            "oi_short": 7732,
-            "oi_short_value": 31336,
-            "oi_net": 86032,
-            "oi_net_value": 696278
+            "long_volume": 549,
+            "long_value": 4620,
+            "short_volume": 309,
+            "short_value": 160,
+            "net_volume": 240,
+            "net_value": 4460,
+            "oi_long": 94186,
+            "oi_long_value": 735985,
+            "oi_short": 7914,
+            "oi_short_value": 30614,
+            "oi_net": 86272,
+            "oi_net_value": 705371
           },
           {
-            "date": "2026-08-24",
+            "date": "2026-08-25",
             "investor": "外資及陸資",
-            "long_volume": 567163,
-            "long_value": 772977,
-            "short_volume": 584040,
-            "short_value": 783184,
-            "net_volume": -16877,
-            "net_value": -10207,
-            "oi_long": 190353,
-            "oi_long_value": 207321,
-            "oi_short": 671597,
-            "oi_short_value": 1143190,
-            "oi_net": -481244,
-            "oi_net_value": -935869
+            "long_volume": 716362,
+            "long_value": 904701,
+            "short_volume": 707904,
+            "short_value": 917090,
+            "net_volume": 8458,
+            "net_value": -12389,
+            "oi_long": 202779,
+            "oi_long_value": 200124,
+            "oi_short": 674604,
+            "oi_short_value": 1157599,
+            "oi_net": -471825,
+            "oi_net_value": -957475
           }
         ],
         "_lineage": {
           "source": "TAIFEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-25T17:43:54+08:00",
-          "data_date": "2026-08-24",
+          "fetched_at": "2026-08-26T12:40:59+08:00",
+          "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
-          "is_cached": false,
-          "latency_ms": 1177,
+          "is_cached": true,
+          "latency_ms": 0,
           "grade": "AVAILABLE"
         },
-        "http_calls": 2,
+        "http_calls": 0,
         "disclaimer": "僅供研究參考，不構成投資建議"
       }
     }

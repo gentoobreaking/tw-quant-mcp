@@ -4,12 +4,12 @@
   },
   "response": {
     "jsonrpc": "2.0",
-    "id": 33,
+    "id": 260,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"total\":1969,\"matched\":5,\"limit\":5,\"rows\":[{\"code\":\"4523\",\"name\":\"永彰\",\"market\":\"otc\",\"pe\":1.06,\"pe_available\":true,\"pb\":0.76,\"dividend_yield_pct\":10.53,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2911\",\"name\":\"麗嬰房\",\"market\":\"tse\",\"pe\":1.75,\"pe_available\":true,\"pb\":0.49,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":-13.821194166192194,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"3708\",\"name\":\"上緯投控\",\"market\":\"tse\",\"pe\":2.25,\"pe_available\":true,\"pb\":0.48,\"dividend_yield_pct\":7.07,\"dividend_per_share\":0,\"revenue_growth_pct\":61.69786027854241,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2718\",\"name\":\"全心投控\",\"market\":\"otc\",\"pe\":2.27,\"pe_available\":true,\"pb\":0.57,\"dividend_yield_pct\":12.87,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"4123\",\"name\":\"晟德\",\"market\":\"otc\",\"pe\":2.68,\"pe_available\":true,\"pb\":0.99,\"dividend_yield_pct\":5.96,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"canonical\",\"derived_from\":[\"TWSE_API:valuation\",\"TPEx_API:pe_valuation\",\"MOPS:monthly_revenue\",\"MOPS:income_summary\",\"TWSE_API:dividend\"],\"fetched_at\":\"2026-08-01T18:27:50+08:00\",\"data_date\":\"2026-08-01\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":true,\"cache_ttl\":48729,\"latency_ms\":68},\"_chart_meta\":{\"recommended_type\":\"scatter\",\"x_axis\":{\"key\":\"pe\",\"type\":\"value\"},\"y_axis\":{\"key\":\"dividend_yield_pct\",\"title\":\"PE / 殖利率散佈\"},\"series\":[{\"key\":\"pb\",\"type\":\"bubble\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"total\":1969,\"matched\":5,\"limit\":5,\"rows\":[{\"code\":\"4523\",\"name\":\"永彰\",\"market\":\"otc\",\"pe\":0.89,\"pe_available\":true,\"pb\":0.85,\"dividend_yield_pct\":11.05,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2491\",\"name\":\"吉祥全\",\"market\":\"tse\",\"pe\":1.33,\"pe_available\":true,\"pb\":0.86,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":6.549761172544658,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2911\",\"name\":\"麗嬰房\",\"market\":\"tse\",\"pe\":1.65,\"pe_available\":true,\"pb\":0.51,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":-5.359436219384196,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2102\",\"name\":\"泰豐\",\"market\":\"tse\",\"pe\":2.17,\"pe_available\":true,\"pb\":0.89,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":2.52298877131371,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"5864\",\"name\":\"致和證\",\"market\":\"otc\",\"pe\":2.41,\"pe_available\":true,\"pb\":1.18,\"dividend_yield_pct\":4.78,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:44:24+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":8,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"scatter\",\"x_axis\":{\"key\":\"pe\",\"type\":\"value\"},\"y_axis\":{\"key\":\"dividend_yield_pct\",\"title\":\"PE / 殖利率散佈\"},\"series\":[{\"key\":\"pb\",\"type\":\"bubble\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -22,12 +22,26 @@
               "code": "4523",
               "name": "永彰",
               "market": "otc",
-              "pe": 1.06,
+              "pe": 0.89,
               "pe_available": true,
-              "pb": 0.76,
-              "dividend_yield_pct": 10.53,
+              "pb": 0.85,
+              "dividend_yield_pct": 11.05,
               "dividend_per_share": 0,
               "revenue_growth_pct": 0,
+              "profit_growth_pct": 0,
+              "consecutive_years": 0,
+              "matched": null
+            },
+            {
+              "code": "2491",
+              "name": "吉祥全",
+              "market": "tse",
+              "pe": 1.33,
+              "pe_available": true,
+              "pb": 0.86,
+              "dividend_yield_pct": 0,
+              "dividend_per_share": 0,
+              "revenue_growth_pct": 6.549761172544658,
               "profit_growth_pct": 0,
               "consecutive_years": 0,
               "matched": null
@@ -36,52 +50,38 @@
               "code": "2911",
               "name": "麗嬰房",
               "market": "tse",
-              "pe": 1.75,
+              "pe": 1.65,
               "pe_available": true,
-              "pb": 0.49,
+              "pb": 0.51,
               "dividend_yield_pct": 0,
               "dividend_per_share": 0,
-              "revenue_growth_pct": -13.821194166192194,
+              "revenue_growth_pct": -5.359436219384196,
               "profit_growth_pct": 0,
               "consecutive_years": 0,
               "matched": null
             },
             {
-              "code": "3708",
-              "name": "上緯投控",
+              "code": "2102",
+              "name": "泰豐",
               "market": "tse",
-              "pe": 2.25,
+              "pe": 2.17,
               "pe_available": true,
-              "pb": 0.48,
-              "dividend_yield_pct": 7.07,
+              "pb": 0.89,
+              "dividend_yield_pct": 0,
               "dividend_per_share": 0,
-              "revenue_growth_pct": 61.69786027854241,
+              "revenue_growth_pct": 2.52298877131371,
               "profit_growth_pct": 0,
               "consecutive_years": 0,
               "matched": null
             },
             {
-              "code": "2718",
-              "name": "全心投控",
+              "code": "5864",
+              "name": "致和證",
               "market": "otc",
-              "pe": 2.27,
+              "pe": 2.41,
               "pe_available": true,
-              "pb": 0.57,
-              "dividend_yield_pct": 12.87,
-              "dividend_per_share": 0,
-              "revenue_growth_pct": 0,
-              "profit_growth_pct": 0,
-              "consecutive_years": 0,
-              "matched": null
-            },
-            {
-              "code": "4123",
-              "name": "晟德",
-              "market": "otc",
-              "pe": 2.68,
-              "pe_available": true,
-              "pb": 0.99,
-              "dividend_yield_pct": 5.96,
+              "pb": 1.18,
+              "dividend_yield_pct": 4.78,
               "dividend_per_share": 0,
               "revenue_growth_pct": 0,
               "profit_growth_pct": 0,
@@ -92,21 +92,14 @@
         },
         "_lineage": {
           "source": "TWSE_API",
-          "source_role": "canonical",
-          "derived_from": [
-            "TWSE_API:valuation",
-            "TPEx_API:pe_valuation",
-            "MOPS:monthly_revenue",
-            "MOPS:income_summary",
-            "TWSE_API:dividend"
-          ],
-          "fetched_at": "2026-08-01T18:27:50+08:00",
-          "data_date": "2026-08-01",
-          "freshness": "POST_MARKET_TODAY",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:44:24+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "cache_ttl": 48729,
-          "latency_ms": 68
+          "latency_ms": 8,
+          "grade": "AVAILABLE"
         },
         "_chart_meta": {
           "recommended_type": "scatter",
@@ -125,7 +118,7 @@
             }
           ]
         },
-        "http_calls": 1,
+        "http_calls": 0,
         "disclaimer": "僅供研究參考，不構成投資建議"
       }
     }

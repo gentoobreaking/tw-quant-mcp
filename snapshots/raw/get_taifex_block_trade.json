@@ -1,17 +1,144 @@
 {
   "arguments": {
-    "kind": "summary_futures",
-    "limit": 3
+    "kind": "all"
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 239,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Date\":\"20260825\",\"MarketShare%\":\"2.17\",\"ProductCategory\":\"STF\",\"Volume\":\"9556\"},{\"Date\":\"20260825\",\"MarketShare%\":\"0.15\",\"ProductCategory\":\"TXF\",\"Volume\":\"130\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T08:10:52+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1671,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"CallPut\":\"-\",\"Contract\":\"CCF\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"120\",\"LowestPrice\":\"120\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"3067\"},{\"CallPut\":\"-\",\"Contract\":\"CDF\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"2350\",\"LowestPrice\":\"2350\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"590\"},{\"CallPut\":\"-\",\"Contract\":\"DIF\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"119\",\"LowestPrice\":\"119\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"1295\"},{\"CallPut\":\"-\",\"Contract\":\"IIF\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"268\",\"LowestPrice\":\"268\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"281\"},{\"CallPut\":\"-\",\"Contract\":\"IRF\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"1050\",\"LowestPrice\":\"1050\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"252\"},{\"CallPut\":\"-\",\"Contract\":\"LRF\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"31.3\",\"LowestPrice\":\"31.3\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"470\"},{\"CallPut\":\"-\",\"Contract\":\"NAF\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"355\",\"LowestPrice\":\"355\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"200\"},{\"CallPut\":\"-\",\"Contract\":\"NYF\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"102.55\",\"LowestPrice\":\"102.55\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"2576\"},{\"CallPut\":\"-\",\"Contract\":\"PSF\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"90.7\",\"LowestPrice\":\"90.7\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"825\"},{\"CallPut\":\"-\",\"Contract\":\"TX\",\"ContractMonth(Week)\":\"202609\",\"Date\":\"20260825\",\"HighestPrice\":\"44670\",\"LowestPrice\":\"44670\",\"StrikePrice\":\"-\",\"TradingSession\":\"一般\",\"Volume\":\"130\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:43:37+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":1,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "CallPut": "-",
+            "Contract": "CCF",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "120",
+            "LowestPrice": "120",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "3067"
+          },
+          {
+            "CallPut": "-",
+            "Contract": "CDF",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "2350",
+            "LowestPrice": "2350",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "590"
+          },
+          {
+            "CallPut": "-",
+            "Contract": "DIF",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "119",
+            "LowestPrice": "119",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "1295"
+          },
+          {
+            "CallPut": "-",
+            "Contract": "IIF",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "268",
+            "LowestPrice": "268",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "281"
+          },
+          {
+            "CallPut": "-",
+            "Contract": "IRF",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "1050",
+            "LowestPrice": "1050",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "252"
+          },
+          {
+            "CallPut": "-",
+            "Contract": "LRF",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "31.3",
+            "LowestPrice": "31.3",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "470"
+          },
+          {
+            "CallPut": "-",
+            "Contract": "NAF",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "355",
+            "LowestPrice": "355",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "200"
+          },
+          {
+            "CallPut": "-",
+            "Contract": "NYF",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "102.55",
+            "LowestPrice": "102.55",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "2576"
+          },
+          {
+            "CallPut": "-",
+            "Contract": "PSF",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "90.7",
+            "LowestPrice": "90.7",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "825"
+          },
+          {
+            "CallPut": "-",
+            "Contract": "TX",
+            "ContractMonth(Week)": "202609",
+            "Date": "20260825",
+            "HighestPrice": "44670",
+            "LowestPrice": "44670",
+            "StrikePrice": "-",
+            "TradingSession": "一般",
+            "Volume": "130"
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:43:37+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 1,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

@@ -1,39 +1,247 @@
 {
-  "arguments": {
-    "contract": "臺股期貨"
-  },
+  "arguments": {},
   "response": {
     "jsonrpc": "2.0",
-    "id": 10,
+    "id": 137,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"date\":\"2026-08-24\",\"contract\":\"臺股期貨\",\"clearing_margin\":519000,\"maintenance_margin\":538000,\"initial_margin\":701000}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T17:22:46+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1255,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"date\":\"2026-08-25\",\"contract\":\"臺股期貨\",\"clearing_margin\":519000,\"maintenance_margin\":538000,\"initial_margin\":701000},{\"date\":\"2026-08-25\",\"contract\":\"小型臺指\",\"clearing_margin\":129750,\"maintenance_margin\":134500,\"initial_margin\":175250},{\"date\":\"2026-08-25\",\"contract\":\"客製化小型臺指期貨\",\"clearing_margin\":129750,\"maintenance_margin\":134500,\"initial_margin\":175250},{\"date\":\"2026-08-25\",\"contract\":\"微型臺指期貨\",\"clearing_margin\":25950,\"maintenance_margin\":26900,\"initial_margin\":35050},{\"date\":\"2026-08-25\",\"contract\":\"臺指選擇權風險保證金(A)值\",\"clearing_margin\":138000,\"maintenance_margin\":143000,\"initial_margin\":187000},{\"date\":\"2026-08-25\",\"contract\":\"臺指選擇權風險保證金(B)值\",\"clearing_margin\":69000,\"maintenance_margin\":72000,\"initial_margin\":94000},{\"date\":\"2026-08-25\",\"contract\":\"臺指選擇權風險保證金(C)值\",\"clearing_margin\":13800,\"maintenance_margin\":14400,\"initial_margin\":18800},{\"date\":\"2026-08-25\",\"contract\":\"臺灣中型100期貨\",\"clearing_margin\":21000,\"maintenance_margin\":22000,\"initial_margin\":29000},{\"date\":\"2026-08-25\",\"contract\":\"電子期貨\",\"clearing_margin\":724000,\"maintenance_margin\":750000,\"initial_margin\":978000},{\"date\":\"2026-08-25\",\"contract\":\"小型電子期貨\",\"clearing_margin\":90500,\"maintenance_margin\":93750,\"initial_margin\":122250},{\"date\":\"2026-08-25\",\"contract\":\"電子選擇權風險保證金(A)值\",\"clearing_margin\":52000,\"maintenance_margin\":54000,\"initial_margin\":71000},{\"date\":\"2026-08-25\",\"contract\":\"電子選擇權風險保證金(B)值\",\"clearing_margin\":26000,\"maintenance_margin\":27000,\"initial_margin\":36000},{\"date\":\"2026-08-25\",\"contract\":\"電子選擇權風險保證金(C)值\",\"clearing_margin\":0,\"maintenance_margin\":0,\"initial_margin\":0},{\"date\":\"2026-08-25\",\"contract\":\"金融期貨\",\"clearing_margin\":117000,\"maintenance_margin\":122000,\"initial_margin\":158000},{\"date\":\"2026-08-25\",\"contract\":\"小型金融期貨\",\"clearing_margin\":29250,\"maintenance_margin\":30500,\"initial_margin\":39500},{\"date\":\"2026-08-25\",\"contract\":\"金融選擇權風險保證金(A)值\",\"clearing_margin\":33000,\"maintenance_margin\":35000,\"initial_margin\":45000},{\"date\":\"2026-08-25\",\"contract\":\"金融選擇權風險保證金(B)值\",\"clearing_margin\":17000,\"maintenance_margin\":18000,\"initial_margin\":23000},{\"date\":\"2026-08-25\",\"contract\":\"金融選擇權風險保證金(C)值\",\"clearing_margin\":0,\"maintenance_margin\":0,\"initial_margin\":0},{\"date\":\"2026-08-25\",\"contract\":\"非金電期貨\",\"clearing_margin\":7000,\"maintenance_margin\":8000,\"initial_margin\":10000},{\"date\":\"2026-08-25\",\"contract\":\"櫃買期貨\",\"clearing_margin\":96000,\"maintenance_margin\":100000,\"initial_margin\":130000},{\"date\":\"2026-08-25\",\"contract\":\"富櫃200期貨\",\"clearing_margin\":59000,\"maintenance_margin\":62000,\"initial_margin\":80000},{\"date\":\"2026-08-25\",\"contract\":\"臺灣永續期貨\",\"clearing_margin\":125000,\"maintenance_margin\":130000,\"initial_margin\":169000},{\"date\":\"2026-08-25\",\"contract\":\"臺灣生技期貨\",\"clearing_margin\":11000,\"maintenance_margin\":12000,\"initial_margin\":15000},{\"date\":\"2026-08-25\",\"contract\":\"半導體30期貨\",\"clearing_margin\":51000,\"maintenance_margin\":53000,\"initial_margin\":69000},{\"date\":\"2026-08-25\",\"contract\":\"航運期貨\",\"clearing_margin\":10000,\"maintenance_margin\":11000,\"initial_margin\":14000},{\"date\":\"2026-08-25\",\"contract\":\"東證期貨\",\"clearing_margin\":36000,\"maintenance_margin\":38000,\"initial_margin\":49000},{\"date\":\"2026-08-25\",\"contract\":\"美國道瓊期貨\",\"clearing_margin\":47000,\"maintenance_margin\":49000,\"initial_margin\":64000},{\"date\":\"2026-08-25\",\"contract\":\"美國標普500期貨\",\"clearing_margin\":76000,\"maintenance_margin\":79000,\"initial_margin\":103000},{\"date\":\"2026-08-25\",\"contract\":\"美國那斯達克100期貨\",\"clearing_margin\":72000,\"maintenance_margin\":75000,\"initial_margin\":98000},{\"date\":\"2026-08-25\",\"contract\":\"美國費城半導體期貨\",\"clearing_margin\":65000,\"maintenance_margin\":68000,\"initial_margin\":88000},{\"date\":\"2026-08-25\",\"contract\":\"英國富時100期貨\",\"clearing_margin\":21000,\"maintenance_margin\":22000,\"initial_margin\":29000}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:56+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
         "data": [
           {
-            "date": "2026-08-24",
+            "date": "2026-08-25",
             "contract": "臺股期貨",
             "clearing_margin": 519000,
             "maintenance_margin": 538000,
             "initial_margin": 701000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "小型臺指",
+            "clearing_margin": 129750,
+            "maintenance_margin": 134500,
+            "initial_margin": 175250
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "客製化小型臺指期貨",
+            "clearing_margin": 129750,
+            "maintenance_margin": 134500,
+            "initial_margin": 175250
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "微型臺指期貨",
+            "clearing_margin": 25950,
+            "maintenance_margin": 26900,
+            "initial_margin": 35050
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "臺指選擇權風險保證金(A)值",
+            "clearing_margin": 138000,
+            "maintenance_margin": 143000,
+            "initial_margin": 187000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "臺指選擇權風險保證金(B)值",
+            "clearing_margin": 69000,
+            "maintenance_margin": 72000,
+            "initial_margin": 94000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "臺指選擇權風險保證金(C)值",
+            "clearing_margin": 13800,
+            "maintenance_margin": 14400,
+            "initial_margin": 18800
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "臺灣中型100期貨",
+            "clearing_margin": 21000,
+            "maintenance_margin": 22000,
+            "initial_margin": 29000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "電子期貨",
+            "clearing_margin": 724000,
+            "maintenance_margin": 750000,
+            "initial_margin": 978000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "小型電子期貨",
+            "clearing_margin": 90500,
+            "maintenance_margin": 93750,
+            "initial_margin": 122250
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "電子選擇權風險保證金(A)值",
+            "clearing_margin": 52000,
+            "maintenance_margin": 54000,
+            "initial_margin": 71000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "電子選擇權風險保證金(B)值",
+            "clearing_margin": 26000,
+            "maintenance_margin": 27000,
+            "initial_margin": 36000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "電子選擇權風險保證金(C)值",
+            "clearing_margin": 0,
+            "maintenance_margin": 0,
+            "initial_margin": 0
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "金融期貨",
+            "clearing_margin": 117000,
+            "maintenance_margin": 122000,
+            "initial_margin": 158000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "小型金融期貨",
+            "clearing_margin": 29250,
+            "maintenance_margin": 30500,
+            "initial_margin": 39500
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "金融選擇權風險保證金(A)值",
+            "clearing_margin": 33000,
+            "maintenance_margin": 35000,
+            "initial_margin": 45000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "金融選擇權風險保證金(B)值",
+            "clearing_margin": 17000,
+            "maintenance_margin": 18000,
+            "initial_margin": 23000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "金融選擇權風險保證金(C)值",
+            "clearing_margin": 0,
+            "maintenance_margin": 0,
+            "initial_margin": 0
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "非金電期貨",
+            "clearing_margin": 7000,
+            "maintenance_margin": 8000,
+            "initial_margin": 10000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "櫃買期貨",
+            "clearing_margin": 96000,
+            "maintenance_margin": 100000,
+            "initial_margin": 130000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "富櫃200期貨",
+            "clearing_margin": 59000,
+            "maintenance_margin": 62000,
+            "initial_margin": 80000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "臺灣永續期貨",
+            "clearing_margin": 125000,
+            "maintenance_margin": 130000,
+            "initial_margin": 169000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "臺灣生技期貨",
+            "clearing_margin": 11000,
+            "maintenance_margin": 12000,
+            "initial_margin": 15000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "半導體30期貨",
+            "clearing_margin": 51000,
+            "maintenance_margin": 53000,
+            "initial_margin": 69000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "航運期貨",
+            "clearing_margin": 10000,
+            "maintenance_margin": 11000,
+            "initial_margin": 14000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "東證期貨",
+            "clearing_margin": 36000,
+            "maintenance_margin": 38000,
+            "initial_margin": 49000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "美國道瓊期貨",
+            "clearing_margin": 47000,
+            "maintenance_margin": 49000,
+            "initial_margin": 64000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "美國標普500期貨",
+            "clearing_margin": 76000,
+            "maintenance_margin": 79000,
+            "initial_margin": 103000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "美國那斯達克100期貨",
+            "clearing_margin": 72000,
+            "maintenance_margin": 75000,
+            "initial_margin": 98000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "美國費城半導體期貨",
+            "clearing_margin": 65000,
+            "maintenance_margin": 68000,
+            "initial_margin": 88000
+          },
+          {
+            "date": "2026-08-25",
+            "contract": "英國富時100期貨",
+            "clearing_margin": 21000,
+            "maintenance_margin": 22000,
+            "initial_margin": 29000
           }
         ],
         "_lineage": {
           "source": "TAIFEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-25T17:22:46+08:00",
-          "data_date": "2026-08-24",
+          "fetched_at": "2026-08-26T12:40:56+08:00",
+          "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
-          "is_cached": false,
-          "latency_ms": 1255,
+          "is_cached": true,
+          "latency_ms": 0,
           "grade": "AVAILABLE"
         },
-        "http_calls": 2,
+        "http_calls": 0,
         "disclaimer": "僅供研究參考，不構成投資建議"
       }
     }

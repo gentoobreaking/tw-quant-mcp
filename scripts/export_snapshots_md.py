@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""將 snapshots/raw/*.json（36 工具真實呼叫結果）匯出為單一 Markdown 報告。
+"""將 snapshots/raw/*.json（全部工具真實呼叫結果）匯出為單一 Markdown 報告。
 
 用法:
   python3 scripts/export_snapshots_md.py [輸出檔路徑]
@@ -75,8 +75,12 @@ def build_report(files):
     ok_count = 0
     err_count = 0
     for name in sorted(files):
-        with open(os.path.join(RAW_DIR, name), encoding="utf-8") as fh:
-            obj = json.load(fh)
+        try:
+            with open(os.path.join(RAW_DIR, name), encoding="utf-8") as fh:
+                obj = json.load(fh)
+        except (OSError, json.JSONDecodeError) as e:
+            print(f"略過無法解析的 {name}: {e}", file=sys.stderr)
+            continue
         result = extract_result(obj)
         is_err = result.get("isError", False)
         content = result.get("content") or []
@@ -128,7 +132,7 @@ def build_report(files):
 
     # 報告頭
     header = [
-        "# tw-quant-mcp 36 工具真實呼叫報告",
+        "# tw-quant-mcp 全部工具真實呼叫報告",
         "",
         f"- 產生時間: {datetime.now().strftime('%Y-%m-%d %H:%M %Z')}",
         f"- 工具總數: {ok_count + err_count}",
@@ -145,19 +149,31 @@ def build_report(files):
 
 def main():
     out = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_OUT
-    files = sorted(f for f in os.listdir(RAW_DIR) if f.endswith(".json"))
+    try:
+        files = sorted(f for f in os.listdir(RAW_DIR) if f.endswith(".json"))
+    except OSError as e:
+        print(f"無法讀取快照目錄 {RAW_DIR}: {e}", file=sys.stderr)
+        sys.exit(1)
     if not files:
         print(f"❌ {RAW_DIR} 沒有 JSON 結果，請先執行 make snapshots 或 make snapshots-call")
         sys.exit(1)
     report = build_report(files)
-    with open(out, "w", encoding="utf-8") as fh:
-        fh.write(report)
+    try:
+        with open(out, "w", encoding="utf-8") as fh:
+            fh.write(report)
+    except OSError as e:
+        print(f"寫入報告失敗: {e}", file=sys.stderr)
+        sys.exit(1)
     # 統計（依工具數，不依符號出現次數）
     ok_count = 0
     err_count = 0
     for f in files:
-        with open(os.path.join(RAW_DIR, f), encoding="utf-8") as fh:
-            obj = json.load(fh)
+        try:
+            with open(os.path.join(RAW_DIR, f), encoding="utf-8") as fh:
+                obj = json.load(fh)
+        except (OSError, json.JSONDecodeError) as e:
+            print(f"略過無法解析的 {f}: {e}", file=sys.stderr)
+            continue
         result = extract_result(obj)
         if result.get("isError", False):
             err_count += 1

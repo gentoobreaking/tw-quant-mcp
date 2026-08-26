@@ -2,12 +2,12 @@
   "arguments": {},
   "response": {
     "jsonrpc": "2.0",
-    "id": 12,
+    "id": 38,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"note\":\"官方資料源已下架（openapi.twse.com.tw/static/20151104/CSR103 回 404），目前無可替代之官方端點提供 103 年度 CSR 報告書名單\",\"status\":\"unavailable\"}],\"_lineage\":{\"source\":\"TWSE_MIS\",\"source_role\":\"SEMI_OFFICIAL_REALTIME\",\"fetched_at\":\"2026-08-25T18:53:53+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"REALTIME_INTRADAY\",\"sampling_sec\":8,\"is_cached\":false,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"note\":\"官方資料源已下架（openapi.twse.com.tw/static/20151104/CSR103 回 404），目前無可替代之官方端點提供 103 年度 CSR 報告書名單\",\"status\":\"unavailable\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:39:52+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -18,13 +18,13 @@
           }
         ],
         "_lineage": {
-          "source": "TWSE_MIS",
-          "source_role": "SEMI_OFFICIAL_REALTIME",
-          "fetched_at": "2026-08-25T18:53:53+08:00",
-          "data_date": "2026-08-25",
-          "freshness": "REALTIME_INTRADAY",
-          "sampling_sec": 8,
-          "is_cached": false,
+          "source": "TWSE_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:39:52+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
           "latency_ms": 0,
           "grade": "AVAILABLE"
         },

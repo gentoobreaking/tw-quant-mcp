@@ -1,0 +1,18 @@
+{
+  "arguments": {
+    "code": "2330"
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 56,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "查無 2330 之資料"
+        }
+      ],
+      "isError": true
+    }
+  }
+}

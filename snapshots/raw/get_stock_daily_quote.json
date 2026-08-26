@@ -4,12 +4,12 @@
   },
   "response": {
     "jsonrpc": "2.0",
-    "id": 16,
+    "id": 220,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"date\":\"2026-07-31\",\"open\":2350,\"high\":2425,\"low\":2345,\"close\":2425,\"volume\":69478145,\"amount\":166661984712,\"indicators\":{\"ma20\":2381.5,\"ma60\":2348.0833333333335,\"rsi14\":54.41799689320122,\"macd\":{\"macd\":-22.06017839272181,\"signal\":-14.388572823294608,\"hist\":-7.671605569427202}}},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"canonical\",\"derived_from\":[\"TWSE_WEB:daily_k\"],\"fetched_at\":\"2026-08-01T18:27:10+08:00\",\"data_date\":\"2026-07-31\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":48765,\"latency_ms\":4392},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"close\"],\"title\":\"收盤價 (元)\"}},\"http_calls\":3,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"date\":\"2026-08-25\",\"open\":2355,\"high\":2400,\"low\":2350,\"close\":2400,\"volume\":13538447,\"amount\":32130079305,\"indicators\":{\"ma20\":2368.5,\"ma60\":2382.25,\"rsi14\":52.05296025535314,\"macd\":{\"macd\":5.32602908973513,\"signal\":5.249094970005045,\"hist\":0.07693411973008502}}},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:52+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":6493,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"close\"],\"title\":\"收盤價 (元)\"}},\"http_calls\":3,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -17,37 +17,34 @@
           "symbol": "2330",
           "name": "台積電",
           "market": "tse",
-          "date": "2026-07-31",
-          "open": 2350,
-          "high": 2425,
-          "low": 2345,
-          "close": 2425,
-          "volume": 69478145,
-          "amount": 166661984712,
+          "date": "2026-08-25",
+          "open": 2355,
+          "high": 2400,
+          "low": 2350,
+          "close": 2400,
+          "volume": 13538447,
+          "amount": 32130079305,
           "indicators": {
-            "ma20": 2381.5,
-            "ma60": 2348.0833333333335,
-            "rsi14": 54.41799689320122,
+            "ma20": 2368.5,
+            "ma60": 2382.25,
+            "rsi14": 52.05296025535314,
             "macd": {
-              "macd": -22.06017839272181,
-              "signal": -14.388572823294608,
-              "hist": -7.671605569427202
+              "macd": 5.32602908973513,
+              "signal": 5.249094970005045,
+              "hist": 0.07693411973008502
             }
           }
         },
         "_lineage": {
           "source": "TWSE_WEB",
-          "source_role": "canonical",
-          "derived_from": [
-            "TWSE_WEB:daily_k"
-          ],
-          "fetched_at": "2026-08-01T18:27:10+08:00",
-          "data_date": "2026-07-31",
-          "freshness": "POST_MARKET_TODAY",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:42:52+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "cache_ttl": 48765,
-          "latency_ms": 4392
+          "latency_ms": 6493,
+          "grade": "AVAILABLE"
         },
         "_chart_meta": {
           "recommended_type": "line",

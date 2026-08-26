@@ -5,12 +5,12 @@
   },
   "response": {
     "jsonrpc": "2.0",
-    "id": 21,
+    "id": 124,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"symbol\":\"1101\",\"name\":\"台泥\",\"range\":3,\"series\":[{\"date\":\"2026-07-31\",\"foreign_shares\":1087366385,\"foreign_percent\":14.45},{\"date\":\"2026-07-31\",\"foreign_shares\":1087366385,\"foreign_percent\":14.45},{\"date\":\"2026-07-31\",\"foreign_shares\":1087366385,\"foreign_percent\":14.45}]},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"canonical\",\"fetched_at\":\"2026-08-01T18:27:23+08:00\",\"data_date\":\"2026-07-31\",\"freshness\":\"POST_MARKET_TODAY\",\"sampling_sec\":0,\"is_cached\":false,\"cache_ttl\":48752,\"latency_ms\":4128},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"foreign_percent\"],\"title\":\"外資持股比率 (%)\"}},\"http_calls\":3,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"symbol\":\"1101\",\"name\":\"台泥\",\"range\":3,\"series\":[{\"date\":\"2026-08-25\",\"foreign_shares\":1177811672,\"foreign_percent\":15.65}],\"note\":\"MI_QFIIS 現僅提供最新快照，歷史交易日資料已不再供查詢，series 僅含可取得之快照\"},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:46+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":2518,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"foreign_percent\"],\"title\":\"外資持股比率 (%)\"}},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -20,32 +20,23 @@
           "range": 3,
           "series": [
             {
-              "date": "2026-07-31",
-              "foreign_shares": 1087366385,
-              "foreign_percent": 14.45
-            },
-            {
-              "date": "2026-07-31",
-              "foreign_shares": 1087366385,
-              "foreign_percent": 14.45
-            },
-            {
-              "date": "2026-07-31",
-              "foreign_shares": 1087366385,
-              "foreign_percent": 14.45
+              "date": "2026-08-25",
+              "foreign_shares": 1177811672,
+              "foreign_percent": 15.65
             }
-          ]
+          ],
+          "note": "MI_QFIIS 現僅提供最新快照，歷史交易日資料已不再供查詢，series 僅含可取得之快照"
         },
         "_lineage": {
           "source": "TWSE_WEB",
-          "source_role": "canonical",
-          "fetched_at": "2026-08-01T18:27:23+08:00",
-          "data_date": "2026-07-31",
-          "freshness": "POST_MARKET_TODAY",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:40:46+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "cache_ttl": 48752,
-          "latency_ms": 4128
+          "latency_ms": 2518,
+          "grade": "AVAILABLE"
         },
         "_chart_meta": {
           "recommended_type": "line",
@@ -60,7 +51,7 @@
             "title": "外資持股比率 (%)"
           }
         },
-        "http_calls": 3,
+        "http_calls": 2,
         "disclaimer": "僅供研究參考，不構成投資建議"
       }
     }

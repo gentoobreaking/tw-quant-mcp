@@ -1,18 +1,205 @@
 {
   "arguments": {
-    "kind": "trust",
-    "code": "5347",
-    "limit": 3
+    "kind": "trust"
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 197,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Buy\":\"2587\",\"CompanyName\":\"世界\",\"Date\":\"1150825\",\"NetBuy\":\"2577\",\"Rank\":\"1\",\"SecuritiesCompanyCode\":\"5347\",\"Sell\":\"10\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T07:29:09+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":80,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Buy\":\"2587\",\"CompanyName\":\"世界\",\"Date\":\"1150825\",\"NetBuy\":\"2577\",\"Rank\":\"1\",\"SecuritiesCompanyCode\":\"5347\",\"Sell\":\"10\"},{\"Buy\":\"1319\",\"CompanyName\":\"富喬\",\"Date\":\"1150825\",\"NetBuy\":\"1319\",\"Rank\":\"2\",\"SecuritiesCompanyCode\":\"1815\",\"Sell\":\"0\"},{\"Buy\":\"1063\",\"CompanyName\":\"華星光\",\"Date\":\"1150825\",\"NetBuy\":\"1063\",\"Rank\":\"3\",\"SecuritiesCompanyCode\":\"4979\",\"Sell\":\"0\"},{\"Buy\":\"470\",\"CompanyName\":\"雙鴻\",\"Date\":\"1150825\",\"NetBuy\":\"470\",\"Rank\":\"4\",\"SecuritiesCompanyCode\":\"3324\",\"Sell\":\"0\"},{\"Buy\":\"468\",\"CompanyName\":\"威剛\",\"Date\":\"1150825\",\"NetBuy\":\"468\",\"Rank\":\"5\",\"SecuritiesCompanyCode\":\"3260\",\"Sell\":\"0\"},{\"Buy\":\"601\",\"CompanyName\":\"台燿\",\"Date\":\"1150825\",\"NetBuy\":\"443\",\"Rank\":\"6\",\"SecuritiesCompanyCode\":\"6274\",\"Sell\":\"158\"},{\"Buy\":\"271\",\"CompanyName\":\"環球晶\",\"Date\":\"1150825\",\"NetBuy\":\"271\",\"Rank\":\"7\",\"SecuritiesCompanyCode\":\"6488\",\"Sell\":\"0\"},{\"Buy\":\"193\",\"CompanyName\":\"昇達科\",\"Date\":\"1150825\",\"NetBuy\":\"193\",\"Rank\":\"8\",\"SecuritiesCompanyCode\":\"3491\",\"Sell\":\"0\"},{\"Buy\":\"182\",\"CompanyName\":\"竑騰\",\"Date\":\"1150825\",\"NetBuy\":\"170\",\"Rank\":\"9\",\"SecuritiesCompanyCode\":\"7751\",\"Sell\":\"12\"},{\"Buy\":\"113\",\"CompanyName\":\"萬潤\",\"Date\":\"1150825\",\"NetBuy\":\"113\",\"Rank\":\"10\",\"SecuritiesCompanyCode\":\"6187\",\"Sell\":\"0\"},{\"Buy\":\"76\",\"CompanyName\":\"中美晶\",\"Date\":\"1150825\",\"NetBuy\":\"76\",\"Rank\":\"11\",\"SecuritiesCompanyCode\":\"5483\",\"Sell\":\"0\"},{\"Buy\":\"69\",\"CompanyName\":\"聯亞\",\"Date\":\"1150825\",\"NetBuy\":\"62\",\"Rank\":\"12\",\"SecuritiesCompanyCode\":\"3081\",\"Sell\":\"7\"},{\"Buy\":\"58\",\"CompanyName\":\"大江\",\"Date\":\"1150825\",\"NetBuy\":\"58\",\"Rank\":\"13\",\"SecuritiesCompanyCode\":\"8436\",\"Sell\":\"0\"},{\"Buy\":\"22\",\"CompanyName\":\"台星科\",\"Date\":\"1150825\",\"NetBuy\":\"22\",\"Rank\":\"14\",\"SecuritiesCompanyCode\":\"3265\",\"Sell\":\"0\"},{\"Buy\":\"19\",\"CompanyName\":\"穩懋\",\"Date\":\"1150825\",\"NetBuy\":\"19\",\"Rank\":\"15\",\"SecuritiesCompanyCode\":\"3105\",\"Sell\":\"0\"},{\"Buy\":\"19\",\"CompanyName\":\"台半\",\"Date\":\"1150825\",\"NetBuy\":\"19\",\"Rank\":\"16\",\"SecuritiesCompanyCode\":\"5425\",\"Sell\":\"0\"},{\"Buy\":\"30\",\"CompanyName\":\"旺矽\",\"Date\":\"1150825\",\"NetBuy\":\"8\",\"Rank\":\"17\",\"SecuritiesCompanyCode\":\"6223\",\"Sell\":\"22\"},{\"Buy\":\"1\",\"CompanyName\":\"宜鼎\",\"Date\":\"1150825\",\"NetBuy\":\"1\",\"Rank\":\"18\",\"SecuritiesCompanyCode\":\"5289\",\"Sell\":\"0\"},{\"Buy\":\"1\",\"CompanyName\":\"南俊國際\",\"Date\":\"1150825\",\"NetBuy\":\"1\",\"Rank\":\"19\",\"SecuritiesCompanyCode\":\"6584\",\"Sell\":\"0\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:19+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":291,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "Buy": "2587",
+            "CompanyName": "世界",
+            "Date": "1150825",
+            "NetBuy": "2577",
+            "Rank": "1",
+            "SecuritiesCompanyCode": "5347",
+            "Sell": "10"
+          },
+          {
+            "Buy": "1319",
+            "CompanyName": "富喬",
+            "Date": "1150825",
+            "NetBuy": "1319",
+            "Rank": "2",
+            "SecuritiesCompanyCode": "1815",
+            "Sell": "0"
+          },
+          {
+            "Buy": "1063",
+            "CompanyName": "華星光",
+            "Date": "1150825",
+            "NetBuy": "1063",
+            "Rank": "3",
+            "SecuritiesCompanyCode": "4979",
+            "Sell": "0"
+          },
+          {
+            "Buy": "470",
+            "CompanyName": "雙鴻",
+            "Date": "1150825",
+            "NetBuy": "470",
+            "Rank": "4",
+            "SecuritiesCompanyCode": "3324",
+            "Sell": "0"
+          },
+          {
+            "Buy": "468",
+            "CompanyName": "威剛",
+            "Date": "1150825",
+            "NetBuy": "468",
+            "Rank": "5",
+            "SecuritiesCompanyCode": "3260",
+            "Sell": "0"
+          },
+          {
+            "Buy": "601",
+            "CompanyName": "台燿",
+            "Date": "1150825",
+            "NetBuy": "443",
+            "Rank": "6",
+            "SecuritiesCompanyCode": "6274",
+            "Sell": "158"
+          },
+          {
+            "Buy": "271",
+            "CompanyName": "環球晶",
+            "Date": "1150825",
+            "NetBuy": "271",
+            "Rank": "7",
+            "SecuritiesCompanyCode": "6488",
+            "Sell": "0"
+          },
+          {
+            "Buy": "193",
+            "CompanyName": "昇達科",
+            "Date": "1150825",
+            "NetBuy": "193",
+            "Rank": "8",
+            "SecuritiesCompanyCode": "3491",
+            "Sell": "0"
+          },
+          {
+            "Buy": "182",
+            "CompanyName": "竑騰",
+            "Date": "1150825",
+            "NetBuy": "170",
+            "Rank": "9",
+            "SecuritiesCompanyCode": "7751",
+            "Sell": "12"
+          },
+          {
+            "Buy": "113",
+            "CompanyName": "萬潤",
+            "Date": "1150825",
+            "NetBuy": "113",
+            "Rank": "10",
+            "SecuritiesCompanyCode": "6187",
+            "Sell": "0"
+          },
+          {
+            "Buy": "76",
+            "CompanyName": "中美晶",
+            "Date": "1150825",
+            "NetBuy": "76",
+            "Rank": "11",
+            "SecuritiesCompanyCode": "5483",
+            "Sell": "0"
+          },
+          {
+            "Buy": "69",
+            "CompanyName": "聯亞",
+            "Date": "1150825",
+            "NetBuy": "62",
+            "Rank": "12",
+            "SecuritiesCompanyCode": "3081",
+            "Sell": "7"
+          },
+          {
+            "Buy": "58",
+            "CompanyName": "大江",
+            "Date": "1150825",
+            "NetBuy": "58",
+            "Rank": "13",
+            "SecuritiesCompanyCode": "8436",
+            "Sell": "0"
+          },
+          {
+            "Buy": "22",
+            "CompanyName": "台星科",
+            "Date": "1150825",
+            "NetBuy": "22",
+            "Rank": "14",
+            "SecuritiesCompanyCode": "3265",
+            "Sell": "0"
+          },
+          {
+            "Buy": "19",
+            "CompanyName": "穩懋",
+            "Date": "1150825",
+            "NetBuy": "19",
+            "Rank": "15",
+            "SecuritiesCompanyCode": "3105",
+            "Sell": "0"
+          },
+          {
+            "Buy": "19",
+            "CompanyName": "台半",
+            "Date": "1150825",
+            "NetBuy": "19",
+            "Rank": "16",
+            "SecuritiesCompanyCode": "5425",
+            "Sell": "0"
+          },
+          {
+            "Buy": "30",
+            "CompanyName": "旺矽",
+            "Date": "1150825",
+            "NetBuy": "8",
+            "Rank": "17",
+            "SecuritiesCompanyCode": "6223",
+            "Sell": "22"
+          },
+          {
+            "Buy": "1",
+            "CompanyName": "宜鼎",
+            "Date": "1150825",
+            "NetBuy": "1",
+            "Rank": "18",
+            "SecuritiesCompanyCode": "5289",
+            "Sell": "0"
+          },
+          {
+            "Buy": "1",
+            "CompanyName": "南俊國際",
+            "Date": "1150825",
+            "NetBuy": "1",
+            "Rank": "19",
+            "SecuritiesCompanyCode": "6584",
+            "Sell": "0"
+          }
+        ],
+        "_lineage": {
+          "source": "TPEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:42:19+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 291,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

@@ -4,12 +4,12 @@
   },
   "response": {
     "jsonrpc": "2.0",
-    "id": 507,
+    "id": 70,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"因資訊外洩事件而受影響的顧客數(人)\":\"N/A\",\"與個資相關的資訊外洩事件占比\":\"N/A\",\"資訊外洩事件數量\":\"N/A\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T20:14:21+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":714,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"因資訊外洩事件而受影響的顧客數(人)\":\"N/A\",\"與個資相關的資訊外洩事件占比\":\"N/A\",\"資訊外洩事件數量\":\"N/A\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:08+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":1,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -27,15 +27,15 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-25T20:14:21+08:00",
-          "data_date": "2026-08-25",
+          "fetched_at": "2026-08-26T12:40:08+08:00",
+          "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
-          "is_cached": false,
-          "latency_ms": 714,
+          "is_cached": true,
+          "latency_ms": 1,
           "grade": "AVAILABLE"
         },
-        "http_calls": 1,
+        "http_calls": 0,
         "disclaimer": "僅供研究參考，不構成投資建議"
       }
     }

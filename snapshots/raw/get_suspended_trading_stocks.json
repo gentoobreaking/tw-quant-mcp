@@ -2,12 +2,12 @@
   "arguments": {},
   "response": {
     "jsonrpc": "2.0",
-    "id": 212,
+    "id": 236,
     "result": {
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"恢復交易日期\":\"115/08/14\",\"恢復交易時間\":\"8:00\",\"暫停交易日期\":\"115/08/13\",\"暫停交易時間\":\"8:00\",\"編號\":\"1\",\"證券代號\":\"1218\",\"證券名稱\":\"泰山\"}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T20:01:12+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1598,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"恢復交易日期\":\"115/08/14\",\"恢復交易時間\":\"8:00\",\"暫停交易日期\":\"115/08/13\",\"暫停交易時間\":\"8:00\",\"編號\":\"1\",\"證券代號\":\"1218\",\"證券名稱\":\"泰山\"}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:43:35+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -25,15 +25,15 @@
         "_lineage": {
           "source": "TWSE_WEB",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-25T20:01:12+08:00",
-          "data_date": "2026-08-25",
+          "fetched_at": "2026-08-26T12:43:35+08:00",
+          "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
-          "is_cached": false,
-          "latency_ms": 1598,
+          "is_cached": true,
+          "latency_ms": 0,
           "grade": "AVAILABLE"
         },
-        "http_calls": 2,
+        "http_calls": 0,
         "disclaimer": "僅供研究參考，不構成投資建議"
       }
     }

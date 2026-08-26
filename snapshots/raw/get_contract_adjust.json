@@ -1,17 +1,484 @@
 {
   "arguments": {
-    "view": "adjust",
-    "contract": "3680"
+    "view": "adjust"
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 93,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"AdjustmentDate\":\"20260527\",\"CashDividend(CapitalRepayment)NTD/share\":\"4.99733964\",\"Contact\":\"SY\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3680\",\"StockName\":\"家登\"},{\"AdjustmentDate\":\"20260527\",\"CashDividend(CapitalRepayment)NTD/share\":\"4.99733964\",\"Contact\":\"SZ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3680\",\"StockName\":\"小型家登\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T10:34:37+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1252,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"AdjustmentDate\":\"20260527\",\"CashDividend(CapitalRepayment)NTD/share\":\"4.99733964\",\"Contact\":\"SY\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3680\",\"StockName\":\"家登\"},{\"AdjustmentDate\":\"20260527\",\"CashDividend(CapitalRepayment)NTD/share\":\"4.99733964\",\"Contact\":\"SZ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3680\",\"StockName\":\"小型家登\"},{\"AdjustmentDate\":\"20260601\",\"CashDividend(CapitalRepayment)NTD/share\":\"3.5\",\"Contact\":\"KA\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"6176\",\"StockName\":\"瑞儀\"},{\"AdjustmentDate\":\"20260602\",\"CashDividend(CapitalRepayment)NTD/share\":\"2.8\",\"Contact\":\"FT\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2313\",\"StockName\":\"華通\"},{\"AdjustmentDate\":\"20260602\",\"CashDividend(CapitalRepayment)NTD/share\":\"8\",\"Contact\":\"HO\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2548\",\"StockName\":\"華固\"},{\"AdjustmentDate\":\"20260608\",\"CashDividend(CapitalRepayment)NTD/share\":\"7.79502656\",\"Contact\":\"IQ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3036\",\"StockName\":\"文曄\"},{\"AdjustmentDate\":\"20260608\",\"CashDividend(CapitalRepayment)NTD/share\":\"17\",\"Contact\":\"LE\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3406\",\"StockName\":\"玉晶光\"},{\"AdjustmentDate\":\"20260608\",\"CashDividend(CapitalRepayment)NTD/share\":\"17\",\"Contact\":\"QJ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3406\",\"StockName\":\"小型玉晶光\"},{\"AdjustmentDate\":\"20260608\",\"CashDividend(CapitalRepayment)NTD/share\":\"20\",\"Contact\":\"JB\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3443\",\"StockName\":\"創意\"},{\"AdjustmentDate\":\"20260608\",\"CashDividend(CapitalRepayment)NTD/share\":\"20\",\"Contact\":\"RW\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3443\",\"StockName\":\"小型創意\"},{\"AdjustmentDate\":\"20260608\",\"CashDividend(CapitalRepayment)NTD/share\":\"3.42169815\",\"Contact\":\"LU\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"4958\",\"StockName\":\"臻鼎-KY\"},{\"AdjustmentDate\":\"20260609\",\"CashDividend(CapitalRepayment)NTD/share\":\"0.05\",\"Contact\":\"SU\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"00940\",\"StockName\":\"元大台灣價值高息ETF\"},{\"AdjustmentDate\":\"20260610\",\"CashDividend(CapitalRepayment)NTD/share\":\"5.24042062\",\"Contact\":\"VC\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2421\",\"StockName\":\"建準\"},{\"AdjustmentDate\":\"20260610\",\"CashDividend(CapitalRepayment)NTD/share\":\"3\",\"Contact\":\"KD\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"6271\",\"StockName\":\"同欣電\"},{\"AdjustmentDate\":\"20260611\",\"CashDividend(CapitalRepayment)NTD/share\":\"0\",\"Contact\":\"EE\",\"CorporateAction\":\"現增\",\"StockDividend\":\"0\",\"StockId\":\"1312\",\"StockName\":\"國喬\"},{\"AdjustmentDate\":\"20260611\",\"CashDividend(CapitalRepayment)NTD/share\":\"0.5\",\"Contact\":\"CS\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"1605\",\"StockName\":\"華新\"},{\"AdjustmentDate\":\"20260611\",\"CashDividend(CapitalRepayment)NTD/share\":\"1.00004249\",\"Contact\":\"UX\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2329\",\"StockName\":\"華泰\"},{\"AdjustmentDate\":\"20260611\",\"CashDividend(CapitalRepayment)NTD/share\":\"6.00003573\",\"Contact\":\"CD\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2330\",\"StockName\":\"台積電\"},{\"AdjustmentDate\":\"20260611\",\"CashDividend(CapitalRepayment)NTD/share\":\"6.00003573\",\"Contact\":\"QF\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2330\",\"StockName\":\"小型台積電\"},{\"AdjustmentDate\":\"20260611\",\"CashDividend(CapitalRepayment)NTD/share\":\"2\",\"Contact\":\"NA\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3105\",\"StockName\":\"穩懋\"},{\"AdjustmentDate\":\"20260611\",\"CashDividend(CapitalRepayment)NTD/share\":\"2\",\"Contact\":\"QI\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3105\",\"StockName\":\"小型穩懋\"},{\"AdjustmentDate\":\"20260611\",\"CashDividend(CapitalRepayment)NTD/share\":\"1\",\"Contact\":\"DQ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3481\",\"StockName\":\"群創\"},{\"AdjustmentDate\":\"20260612\",\"CashDividend(CapitalRepayment)NTD/share\":\"5.99852571\",\"Contact\":\"LX\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2327\",\"StockName\":\"國巨\"},{\"AdjustmentDate\":\"20260612\",\"CashDividend(CapitalRepayment)NTD/share\":\"5.99852571\",\"Contact\":\"QE\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2327\",\"StockName\":\"小型國巨\"},{\"AdjustmentDate\":\"20260615\",\"CashDividend(CapitalRepayment)NTD/share\":\"7.2\",\"Contact\":\"GK\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2385\",\"StockName\":\"群光\"},{\"AdjustmentDate\":\"20260615\",\"CashDividend(CapitalRepayment)NTD/share\":\"4.00943684\",\"Contact\":\"JS\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"4938\",\"StockName\":\"和碩\"},{\"AdjustmentDate\":\"20260616\",\"CashDividend(CapitalRepayment)NTD/share\":\"0.262\",\"Contact\":\"UK\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"00687B\",\"StockName\":\"國泰20年美債ETF\"},{\"AdjustmentDate\":\"20260616\",\"CashDividend(CapitalRepayment)NTD/share\":\"0.14\",\"Contact\":\"SQ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"00772B\",\"StockName\":\"中信高評級公司債ETF\"},{\"AdjustmentDate\":\"20260616\",\"CashDividend(CapitalRepayment)NTD/share\":\"1\",\"Contact\":\"SM\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"00919\",\"StockName\":\"群益台灣精選高息ETF\"},{\"AdjustmentDate\":\"20260616\",\"CashDividend(CapitalRepayment)NTD/share\":\"0.072\",\"Contact\":\"UJ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"00937B\",\"StockName\":\"群益ESG投等債20+ETF\"},{\"AdjustmentDate\":\"20260616\",\"CashDividend(CapitalRepayment)NTD/share\":\"2.8\",\"Contact\":\"QC\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2606\",\"StockName\":\"裕民\"},{\"AdjustmentDate\":\"20260616\",\"CashDividend(CapitalRepayment)NTD/share\":\"1.8\",\"Contact\":\"IP\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3035\",\"StockName\":\"智原\"},{\"AdjustmentDate\":\"20260616\",\"CashDividend(CapitalRepayment)NTD/share\":\"4.8\",\"Contact\":\"IT\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3042\",\"StockName\":\"晶技\"},{\"AdjustmentDate\":\"20260616\",\"CashDividend(CapitalRepayment)NTD/share\":\"13.78420761\",\"Contact\":\"OQ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"6414\",\"StockName\":\"樺漢\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"0.26\",\"Contact\":\"SN\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"00929\",\"StockName\":\"復華台灣科技優息ETF\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"15\",\"Contact\":\"LW\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"1476\",\"StockName\":\"儒鴻\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"2\",\"Contact\":\"EM\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"1504\",\"StockName\":\"東元\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"1.8\",\"Contact\":\"FK\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2105\",\"StockName\":\"正新\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"11.6\",\"Contact\":\"FR\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2308\",\"StockName\":\"台達電\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"11.6\",\"Contact\":\"RV\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2308\",\"StockName\":\"小型台達電\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"1.3\",\"Contact\":\"DS\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2353\",\"StockName\":\"宏碁\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"19.5\",\"Contact\":\"MJ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2360\",\"StockName\":\"致茂\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"19.5\",\"Contact\":\"VD\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2360\",\"StockName\":\"小型致茂\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"16\",\"Contact\":\"CZ\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"2603\",\"StockName\":\"長榮\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"11.90330569\",\"Contact\":\"PT\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3324\",\"StockName\":\"雙鴻\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"11.90330569\",\"Contact\":\"UL\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"3324\",\"StockName\":\"小型雙鴻\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"0.5\",\"Contact\":\"NM\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"5371\",\"StockName\":\"中光電\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"2.8\",\"Contact\":\"NS\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"6147\",\"StockName\":\"頎邦\"},{\"AdjustmentDate\":\"20260617\",\"CashDividend(CapitalRepayment)NTD/share\":\"0.5\",\"Contact\":\"KK\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"8163\",\"StockName\":\"達方\"},{\"AdjustmentDate\":\"20260622\",\"CashDividend(CapitalRepayment)NTD/share\":\"5\",\"Contact\":\"EH\",\"CorporateAction\":\"除息\",\"StockDividend\":\"0\",\"StockId\":\"1319\",\"StockName\":\"東陽\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:20+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":1,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "AdjustmentDate": "20260527",
+            "CashDividend(CapitalRepayment)NTD/share": "4.99733964",
+            "Contact": "SY",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3680",
+            "StockName": "家登"
+          },
+          {
+            "AdjustmentDate": "20260527",
+            "CashDividend(CapitalRepayment)NTD/share": "4.99733964",
+            "Contact": "SZ",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3680",
+            "StockName": "小型家登"
+          },
+          {
+            "AdjustmentDate": "20260601",
+            "CashDividend(CapitalRepayment)NTD/share": "3.5",
+            "Contact": "KA",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "6176",
+            "StockName": "瑞儀"
+          },
+          {
+            "AdjustmentDate": "20260602",
+            "CashDividend(CapitalRepayment)NTD/share": "2.8",
+            "Contact": "FT",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2313",
+            "StockName": "華通"
+          },
+          {
+            "AdjustmentDate": "20260602",
+            "CashDividend(CapitalRepayment)NTD/share": "8",
+            "Contact": "HO",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2548",
+            "StockName": "華固"
+          },
+          {
+            "AdjustmentDate": "20260608",
+            "CashDividend(CapitalRepayment)NTD/share": "7.79502656",
+            "Contact": "IQ",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3036",
+            "StockName": "文曄"
+          },
+          {
+            "AdjustmentDate": "20260608",
+            "CashDividend(CapitalRepayment)NTD/share": "17",
+            "Contact": "LE",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3406",
+            "StockName": "玉晶光"
+          },
+          {
+            "AdjustmentDate": "20260608",
+            "CashDividend(CapitalRepayment)NTD/share": "17",
+            "Contact": "QJ",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3406",
+            "StockName": "小型玉晶光"
+          },
+          {
+            "AdjustmentDate": "20260608",
+            "CashDividend(CapitalRepayment)NTD/share": "20",
+            "Contact": "JB",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3443",
+            "StockName": "創意"
+          },
+          {
+            "AdjustmentDate": "20260608",
+            "CashDividend(CapitalRepayment)NTD/share": "20",
+            "Contact": "RW",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3443",
+            "StockName": "小型創意"
+          },
+          {
+            "AdjustmentDate": "20260608",
+            "CashDividend(CapitalRepayment)NTD/share": "3.42169815",
+            "Contact": "LU",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "4958",
+            "StockName": "臻鼎-KY"
+          },
+          {
+            "AdjustmentDate": "20260609",
+            "CashDividend(CapitalRepayment)NTD/share": "0.05",
+            "Contact": "SU",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "00940",
+            "StockName": "元大台灣價值高息ETF"
+          },
+          {
+            "AdjustmentDate": "20260610",
+            "CashDividend(CapitalRepayment)NTD/share": "5.24042062",
+            "Contact": "VC",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2421",
+            "StockName": "建準"
+          },
+          {
+            "AdjustmentDate": "20260610",
+            "CashDividend(CapitalRepayment)NTD/share": "3",
+            "Contact": "KD",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "6271",
+            "StockName": "同欣電"
+          },
+          {
+            "AdjustmentDate": "20260611",
+            "CashDividend(CapitalRepayment)NTD/share": "0",
+            "Contact": "EE",
+            "CorporateAction": "現增",
+            "StockDividend": "0",
+            "StockId": "1312",
+            "StockName": "國喬"
+          },
+          {
+            "AdjustmentDate": "20260611",
+            "CashDividend(CapitalRepayment)NTD/share": "0.5",
+            "Contact": "CS",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "1605",
+            "StockName": "華新"
+          },
+          {
+            "AdjustmentDate": "20260611",
+            "CashDividend(CapitalRepayment)NTD/share": "1.00004249",
+            "Contact": "UX",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2329",
+            "StockName": "華泰"
+          },
+          {
+            "AdjustmentDate": "20260611",
+            "CashDividend(CapitalRepayment)NTD/share": "6.00003573",
+            "Contact": "CD",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2330",
+            "StockName": "台積電"
+          },
+          {
+            "AdjustmentDate": "20260611",
+            "CashDividend(CapitalRepayment)NTD/share": "6.00003573",
+            "Contact": "QF",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2330",
+            "StockName": "小型台積電"
+          },
+          {
+            "AdjustmentDate": "20260611",
+            "CashDividend(CapitalRepayment)NTD/share": "2",
+            "Contact": "NA",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3105",
+            "StockName": "穩懋"
+          },
+          {
+            "AdjustmentDate": "20260611",
+            "CashDividend(CapitalRepayment)NTD/share": "2",
+            "Contact": "QI",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3105",
+            "StockName": "小型穩懋"
+          },
+          {
+            "AdjustmentDate": "20260611",
+            "CashDividend(CapitalRepayment)NTD/share": "1",
+            "Contact": "DQ",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3481",
+            "StockName": "群創"
+          },
+          {
+            "AdjustmentDate": "20260612",
+            "CashDividend(CapitalRepayment)NTD/share": "5.99852571",
+            "Contact": "LX",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2327",
+            "StockName": "國巨"
+          },
+          {
+            "AdjustmentDate": "20260612",
+            "CashDividend(CapitalRepayment)NTD/share": "5.99852571",
+            "Contact": "QE",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2327",
+            "StockName": "小型國巨"
+          },
+          {
+            "AdjustmentDate": "20260615",
+            "CashDividend(CapitalRepayment)NTD/share": "7.2",
+            "Contact": "GK",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2385",
+            "StockName": "群光"
+          },
+          {
+            "AdjustmentDate": "20260615",
+            "CashDividend(CapitalRepayment)NTD/share": "4.00943684",
+            "Contact": "JS",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "4938",
+            "StockName": "和碩"
+          },
+          {
+            "AdjustmentDate": "20260616",
+            "CashDividend(CapitalRepayment)NTD/share": "0.262",
+            "Contact": "UK",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "00687B",
+            "StockName": "國泰20年美債ETF"
+          },
+          {
+            "AdjustmentDate": "20260616",
+            "CashDividend(CapitalRepayment)NTD/share": "0.14",
+            "Contact": "SQ",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "00772B",
+            "StockName": "中信高評級公司債ETF"
+          },
+          {
+            "AdjustmentDate": "20260616",
+            "CashDividend(CapitalRepayment)NTD/share": "1",
+            "Contact": "SM",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "00919",
+            "StockName": "群益台灣精選高息ETF"
+          },
+          {
+            "AdjustmentDate": "20260616",
+            "CashDividend(CapitalRepayment)NTD/share": "0.072",
+            "Contact": "UJ",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "00937B",
+            "StockName": "群益ESG投等債20+ETF"
+          },
+          {
+            "AdjustmentDate": "20260616",
+            "CashDividend(CapitalRepayment)NTD/share": "2.8",
+            "Contact": "QC",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2606",
+            "StockName": "裕民"
+          },
+          {
+            "AdjustmentDate": "20260616",
+            "CashDividend(CapitalRepayment)NTD/share": "1.8",
+            "Contact": "IP",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3035",
+            "StockName": "智原"
+          },
+          {
+            "AdjustmentDate": "20260616",
+            "CashDividend(CapitalRepayment)NTD/share": "4.8",
+            "Contact": "IT",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3042",
+            "StockName": "晶技"
+          },
+          {
+            "AdjustmentDate": "20260616",
+            "CashDividend(CapitalRepayment)NTD/share": "13.78420761",
+            "Contact": "OQ",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "6414",
+            "StockName": "樺漢"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "0.26",
+            "Contact": "SN",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "00929",
+            "StockName": "復華台灣科技優息ETF"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "15",
+            "Contact": "LW",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "1476",
+            "StockName": "儒鴻"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "2",
+            "Contact": "EM",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "1504",
+            "StockName": "東元"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "1.8",
+            "Contact": "FK",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2105",
+            "StockName": "正新"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "11.6",
+            "Contact": "FR",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2308",
+            "StockName": "台達電"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "11.6",
+            "Contact": "RV",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2308",
+            "StockName": "小型台達電"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "1.3",
+            "Contact": "DS",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2353",
+            "StockName": "宏碁"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "19.5",
+            "Contact": "MJ",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2360",
+            "StockName": "致茂"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "19.5",
+            "Contact": "VD",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2360",
+            "StockName": "小型致茂"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "16",
+            "Contact": "CZ",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "2603",
+            "StockName": "長榮"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "11.90330569",
+            "Contact": "PT",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3324",
+            "StockName": "雙鴻"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "11.90330569",
+            "Contact": "UL",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "3324",
+            "StockName": "小型雙鴻"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "0.5",
+            "Contact": "NM",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "5371",
+            "StockName": "中光電"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "2.8",
+            "Contact": "NS",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "6147",
+            "StockName": "頎邦"
+          },
+          {
+            "AdjustmentDate": "20260617",
+            "CashDividend(CapitalRepayment)NTD/share": "0.5",
+            "Contact": "KK",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "8163",
+            "StockName": "達方"
+          },
+          {
+            "AdjustmentDate": "20260622",
+            "CashDividend(CapitalRepayment)NTD/share": "5",
+            "Contact": "EH",
+            "CorporateAction": "除息",
+            "StockDividend": "0",
+            "StockId": "1319",
+            "StockName": "東陽"
+          }
+        ],
+        "_lineage": {
+          "source": "TAIFEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:40:20+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 1,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

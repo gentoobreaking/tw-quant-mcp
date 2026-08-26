@@ -1,76 +1,482 @@
 {
-  "arguments": {
-    "stock_no": "6182",
-    "limit": 5
-  },
+  "arguments": {},
   "response": {
-    "content": [
-      {
-        "type": "text",
-        "text": "{\"data\":[{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"元大\",\"SecuritiesFirmsRanking\":\"1\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"12977\",\"TotalSellShares\":\"13075\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"凱基\",\"SecuritiesFirmsRanking\":\"2\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"10078\",\"TotalSellShares\":\"10173\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"富邦\",\"SecuritiesFirmsRanking\":\"3\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"5549\",\"TotalSellShares\":\"5801\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"國泰綜合\",\"SecuritiesFirmsRanking\":\"4\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"4098\",\"TotalSellShares\":\"3478\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"永豐金\",\"SecuritiesFirmsRanking\":\"5\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"2616\",\"TotalSellShares\":\"3459\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T06:09:19+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":212,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
-      }
-    ],
-    "structuredContent": {
-      "data": [
+    "jsonrpc": "2.0",
+    "id": 181,
+    "result": {
+      "content": [
         {
-          "Date": "20260825",
-          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
-          "SecuritiesFirmsCode": "元大",
-          "SecuritiesFirmsRanking": "1",
-          "StockRanking": "1",
-          "TotalPurchaseShares": "12977",
-          "TotalSellShares": "13075"
-        },
-        {
-          "Date": "20260825",
-          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
-          "SecuritiesFirmsCode": "凱基",
-          "SecuritiesFirmsRanking": "2",
-          "StockRanking": "1",
-          "TotalPurchaseShares": "10078",
-          "TotalSellShares": "10173"
-        },
-        {
-          "Date": "20260825",
-          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
-          "SecuritiesFirmsCode": "富邦",
-          "SecuritiesFirmsRanking": "3",
-          "StockRanking": "1",
-          "TotalPurchaseShares": "5549",
-          "TotalSellShares": "5801"
-        },
-        {
-          "Date": "20260825",
-          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
-          "SecuritiesFirmsCode": "國泰綜合",
-          "SecuritiesFirmsRanking": "4",
-          "StockRanking": "1",
-          "TotalPurchaseShares": "4098",
-          "TotalSellShares": "3478"
-        },
-        {
-          "Date": "20260825",
-          "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
-          "SecuritiesFirmsCode": "永豐金",
-          "SecuritiesFirmsRanking": "5",
-          "StockRanking": "1",
-          "TotalPurchaseShares": "2616",
-          "TotalSellShares": "3459"
+          "type": "text",
+          "text": "{\"data\":[{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"元大\",\"SecuritiesFirmsRanking\":\"1\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"12977\",\"TotalSellShares\":\"13075\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"凱基\",\"SecuritiesFirmsRanking\":\"2\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"10078\",\"TotalSellShares\":\"10173\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"富邦\",\"SecuritiesFirmsRanking\":\"3\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"5549\",\"TotalSellShares\":\"5801\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"國泰綜合\",\"SecuritiesFirmsRanking\":\"4\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"4098\",\"TotalSellShares\":\"3478\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"永豐金\",\"SecuritiesFirmsRanking\":\"5\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"2616\",\"TotalSellShares\":\"3459\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"台新\",\"SecuritiesFirmsRanking\":\"6\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"3165\",\"TotalSellShares\":\"2768\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"群益\",\"SecuritiesFirmsRanking\":\"7\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"2026\",\"TotalSellShares\":\"1789\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"星洲瑞銀\",\"SecuritiesFirmsRanking\":\"8\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"1485\",\"TotalSellShares\":\"2177\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"摩根大通\",\"SecuritiesFirmsRanking\":\"9\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"1559\",\"TotalSellShares\":\"1386\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"合晶(6182)\",\"SecuritiesFirmsCode\":\"兆豐\",\"SecuritiesFirmsRanking\":\"10\",\"StockRanking\":\"1\",\"TotalPurchaseShares\":\"1528\",\"TotalSellShares\":\"1352\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"元大\",\"SecuritiesFirmsRanking\":\"1\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"8653\",\"TotalSellShares\":\"6901\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"凱基\",\"SecuritiesFirmsRanking\":\"2\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"4928\",\"TotalSellShares\":\"4958\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"星洲瑞銀\",\"SecuritiesFirmsRanking\":\"3\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"1698\",\"TotalSellShares\":\"5228\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"富邦\",\"SecuritiesFirmsRanking\":\"4\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"2627\",\"TotalSellShares\":\"2338\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"永豐金\",\"SecuritiesFirmsRanking\":\"5\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"1932\",\"TotalSellShares\":\"1880\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"摩根士丹利\",\"SecuritiesFirmsRanking\":\"6\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"1646\",\"TotalSellShares\":\"1478\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"國泰綜合\",\"SecuritiesFirmsRanking\":\"7\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"1468\",\"TotalSellShares\":\"1591\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"台新\",\"SecuritiesFirmsRanking\":\"8\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"1615\",\"TotalSellShares\":\"1385\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"美商高盛亞\",\"SecuritiesFirmsRanking\":\"9\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"1790\",\"TotalSellShares\":\"1017\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"富喬(1815)\",\"SecuritiesFirmsCode\":\"美林證券\",\"SecuritiesFirmsRanking\":\"10\",\"StockRanking\":\"2\",\"TotalPurchaseShares\":\"686\",\"TotalSellShares\":\"1640\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"元大\",\"SecuritiesFirmsRanking\":\"1\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"6982\",\"TotalSellShares\":\"7386\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"凱基\",\"SecuritiesFirmsRanking\":\"2\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"3163\",\"TotalSellShares\":\"3452\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"富邦\",\"SecuritiesFirmsRanking\":\"3\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"2185\",\"TotalSellShares\":\"2843\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"台新\",\"SecuritiesFirmsRanking\":\"4\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"2448\",\"TotalSellShares\":\"2068\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"永豐金\",\"SecuritiesFirmsRanking\":\"5\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"1900\",\"TotalSellShares\":\"2284\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"國泰綜合\",\"SecuritiesFirmsRanking\":\"6\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"1719\",\"TotalSellShares\":\"2295\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"群益\",\"SecuritiesFirmsRanking\":\"7\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"1791\",\"TotalSellShares\":\"1917\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"美商高盛亞\",\"SecuritiesFirmsRanking\":\"8\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"2729\",\"TotalSellShares\":\"692\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"華南永昌\",\"SecuritiesFirmsRanking\":\"9\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"960\",\"TotalSellShares\":\"1218\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"亞電(4939)\",\"SecuritiesFirmsCode\":\"統一\",\"SecuritiesFirmsRanking\":\"10\",\"StockRanking\":\"3\",\"TotalPurchaseShares\":\"872\",\"TotalSellShares\":\"818\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"元大\",\"SecuritiesFirmsRanking\":\"1\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"7578\",\"TotalSellShares\":\"6812\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"凱基\",\"SecuritiesFirmsRanking\":\"2\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"2665\",\"TotalSellShares\":\"2964\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"台新\",\"SecuritiesFirmsRanking\":\"3\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"1822\",\"TotalSellShares\":\"2129\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"富邦\",\"SecuritiesFirmsRanking\":\"4\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"1876\",\"TotalSellShares\":\"1728\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"國泰綜合\",\"SecuritiesFirmsRanking\":\"5\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"1628\",\"TotalSellShares\":\"1679\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"永豐金\",\"SecuritiesFirmsRanking\":\"6\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"1715\",\"TotalSellShares\":\"1589\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"群益\",\"SecuritiesFirmsRanking\":\"7\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"1521\",\"TotalSellShares\":\"1578\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"統一\",\"SecuritiesFirmsRanking\":\"8\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"963\",\"TotalSellShares\":\"1428\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"摩根大通\",\"SecuritiesFirmsRanking\":\"9\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"502\",\"TotalSellShares\":\"1122\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"聯一光(3441)\",\"SecuritiesFirmsCode\":\"華南永昌\",\"SecuritiesFirmsRanking\":\"10\",\"StockRanking\":\"4\",\"TotalPurchaseShares\":\"826\",\"TotalSellShares\":\"767\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"元大\",\"SecuritiesFirmsRanking\":\"1\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"5603\",\"TotalSellShares\":\"4588\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"凱基\",\"SecuritiesFirmsRanking\":\"2\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"2747\",\"TotalSellShares\":\"4515\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"富邦\",\"SecuritiesFirmsRanking\":\"3\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"2555\",\"TotalSellShares\":\"1301\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"台新\",\"SecuritiesFirmsRanking\":\"4\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"1792\",\"TotalSellShares\":\"1865\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"永豐金\",\"SecuritiesFirmsRanking\":\"5\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"1215\",\"TotalSellShares\":\"1433\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"群益\",\"SecuritiesFirmsRanking\":\"6\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"898\",\"TotalSellShares\":\"1669\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"國泰綜合\",\"SecuritiesFirmsRanking\":\"7\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"1021\",\"TotalSellShares\":\"642\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"華南永昌\",\"SecuritiesFirmsRanking\":\"8\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"862\",\"TotalSellShares\":\"747\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"國票\",\"SecuritiesFirmsRanking\":\"9\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"818\",\"TotalSellShares\":\"423\"},{\"Date\":\"20260825\",\"SecuritiesCompanyCodeAndCompanyName\":\"正德(2641)\",\"SecuritiesFirmsCode\":\"統一\",\"SecuritiesFirmsRanking\":\"10\",\"StockRanking\":\"5\",\"TotalPurchaseShares\":\"707\",\"TotalSellShares\":\"474\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:41:44+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1733,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
-      "_lineage": {
-        "source": "TPEX_API",
-        "source_role": "CANONICAL",
-        "fetched_at": "2026-08-26T06:09:19+08:00",
-        "data_date": "2026-08-26",
-        "freshness": "POST_MARKET",
-        "sampling_sec": 0,
-        "is_cached": false,
-        "latency_ms": 212,
-        "grade": "AVAILABLE"
-      },
-      "http_calls": 1,
-      "disclaimer": "僅供研究參考，不構成投資建議"
+      "structuredContent": {
+        "data": [
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "元大",
+            "SecuritiesFirmsRanking": "1",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "12977",
+            "TotalSellShares": "13075"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "凱基",
+            "SecuritiesFirmsRanking": "2",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "10078",
+            "TotalSellShares": "10173"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "富邦",
+            "SecuritiesFirmsRanking": "3",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "5549",
+            "TotalSellShares": "5801"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "國泰綜合",
+            "SecuritiesFirmsRanking": "4",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "4098",
+            "TotalSellShares": "3478"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "永豐金",
+            "SecuritiesFirmsRanking": "5",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "2616",
+            "TotalSellShares": "3459"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "台新",
+            "SecuritiesFirmsRanking": "6",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "3165",
+            "TotalSellShares": "2768"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "群益",
+            "SecuritiesFirmsRanking": "7",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "2026",
+            "TotalSellShares": "1789"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "星洲瑞銀",
+            "SecuritiesFirmsRanking": "8",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "1485",
+            "TotalSellShares": "2177"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "摩根大通",
+            "SecuritiesFirmsRanking": "9",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "1559",
+            "TotalSellShares": "1386"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "合晶(6182)",
+            "SecuritiesFirmsCode": "兆豐",
+            "SecuritiesFirmsRanking": "10",
+            "StockRanking": "1",
+            "TotalPurchaseShares": "1528",
+            "TotalSellShares": "1352"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "元大",
+            "SecuritiesFirmsRanking": "1",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "8653",
+            "TotalSellShares": "6901"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "凱基",
+            "SecuritiesFirmsRanking": "2",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "4928",
+            "TotalSellShares": "4958"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "星洲瑞銀",
+            "SecuritiesFirmsRanking": "3",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "1698",
+            "TotalSellShares": "5228"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "富邦",
+            "SecuritiesFirmsRanking": "4",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "2627",
+            "TotalSellShares": "2338"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "永豐金",
+            "SecuritiesFirmsRanking": "5",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "1932",
+            "TotalSellShares": "1880"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "摩根士丹利",
+            "SecuritiesFirmsRanking": "6",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "1646",
+            "TotalSellShares": "1478"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "國泰綜合",
+            "SecuritiesFirmsRanking": "7",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "1468",
+            "TotalSellShares": "1591"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "台新",
+            "SecuritiesFirmsRanking": "8",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "1615",
+            "TotalSellShares": "1385"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "美商高盛亞",
+            "SecuritiesFirmsRanking": "9",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "1790",
+            "TotalSellShares": "1017"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "富喬(1815)",
+            "SecuritiesFirmsCode": "美林證券",
+            "SecuritiesFirmsRanking": "10",
+            "StockRanking": "2",
+            "TotalPurchaseShares": "686",
+            "TotalSellShares": "1640"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "元大",
+            "SecuritiesFirmsRanking": "1",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "6982",
+            "TotalSellShares": "7386"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "凱基",
+            "SecuritiesFirmsRanking": "2",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "3163",
+            "TotalSellShares": "3452"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "富邦",
+            "SecuritiesFirmsRanking": "3",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "2185",
+            "TotalSellShares": "2843"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "台新",
+            "SecuritiesFirmsRanking": "4",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "2448",
+            "TotalSellShares": "2068"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "永豐金",
+            "SecuritiesFirmsRanking": "5",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "1900",
+            "TotalSellShares": "2284"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "國泰綜合",
+            "SecuritiesFirmsRanking": "6",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "1719",
+            "TotalSellShares": "2295"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "群益",
+            "SecuritiesFirmsRanking": "7",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "1791",
+            "TotalSellShares": "1917"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "美商高盛亞",
+            "SecuritiesFirmsRanking": "8",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "2729",
+            "TotalSellShares": "692"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "華南永昌",
+            "SecuritiesFirmsRanking": "9",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "960",
+            "TotalSellShares": "1218"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "亞電(4939)",
+            "SecuritiesFirmsCode": "統一",
+            "SecuritiesFirmsRanking": "10",
+            "StockRanking": "3",
+            "TotalPurchaseShares": "872",
+            "TotalSellShares": "818"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "元大",
+            "SecuritiesFirmsRanking": "1",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "7578",
+            "TotalSellShares": "6812"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "凱基",
+            "SecuritiesFirmsRanking": "2",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "2665",
+            "TotalSellShares": "2964"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "台新",
+            "SecuritiesFirmsRanking": "3",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "1822",
+            "TotalSellShares": "2129"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "富邦",
+            "SecuritiesFirmsRanking": "4",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "1876",
+            "TotalSellShares": "1728"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "國泰綜合",
+            "SecuritiesFirmsRanking": "5",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "1628",
+            "TotalSellShares": "1679"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "永豐金",
+            "SecuritiesFirmsRanking": "6",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "1715",
+            "TotalSellShares": "1589"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "群益",
+            "SecuritiesFirmsRanking": "7",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "1521",
+            "TotalSellShares": "1578"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "統一",
+            "SecuritiesFirmsRanking": "8",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "963",
+            "TotalSellShares": "1428"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "摩根大通",
+            "SecuritiesFirmsRanking": "9",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "502",
+            "TotalSellShares": "1122"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "聯一光(3441)",
+            "SecuritiesFirmsCode": "華南永昌",
+            "SecuritiesFirmsRanking": "10",
+            "StockRanking": "4",
+            "TotalPurchaseShares": "826",
+            "TotalSellShares": "767"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "元大",
+            "SecuritiesFirmsRanking": "1",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "5603",
+            "TotalSellShares": "4588"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "凱基",
+            "SecuritiesFirmsRanking": "2",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "2747",
+            "TotalSellShares": "4515"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "富邦",
+            "SecuritiesFirmsRanking": "3",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "2555",
+            "TotalSellShares": "1301"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "台新",
+            "SecuritiesFirmsRanking": "4",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "1792",
+            "TotalSellShares": "1865"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "永豐金",
+            "SecuritiesFirmsRanking": "5",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "1215",
+            "TotalSellShares": "1433"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "群益",
+            "SecuritiesFirmsRanking": "6",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "898",
+            "TotalSellShares": "1669"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "國泰綜合",
+            "SecuritiesFirmsRanking": "7",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "1021",
+            "TotalSellShares": "642"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "華南永昌",
+            "SecuritiesFirmsRanking": "8",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "862",
+            "TotalSellShares": "747"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "國票",
+            "SecuritiesFirmsRanking": "9",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "818",
+            "TotalSellShares": "423"
+          },
+          {
+            "Date": "20260825",
+            "SecuritiesCompanyCodeAndCompanyName": "正德(2641)",
+            "SecuritiesFirmsCode": "統一",
+            "SecuritiesFirmsRanking": "10",
+            "StockRanking": "5",
+            "TotalPurchaseShares": "707",
+            "TotalSellShares": "474"
+          }
+        ],
+        "_lineage": {
+          "source": "TPEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:41:44+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 1733,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

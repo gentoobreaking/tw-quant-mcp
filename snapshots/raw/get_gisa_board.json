@@ -1,17 +1,334 @@
 {
   "arguments": {
-    "kind": "company",
-    "code": "7430"
+    "kind": "company"
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 132,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"CompanyName\":\"凱鑫\",\"Date\":\"1150825\",\"Industry\":\"2026/08/20\",\"SecuritiesCompanyCode\":\"7430\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T10:18:22+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":209,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"CompanyName\":\"凱鑫\",\"Date\":\"1150825\",\"Industry\":\"2026/08/20\",\"SecuritiesCompanyCode\":\"7430\"},{\"CompanyName\":\"昆億生技\",\"Date\":\"1150825\",\"Industry\":\"2026/08/03\",\"SecuritiesCompanyCode\":\"7423\"},{\"CompanyName\":\"薇米文旅\",\"Date\":\"1150825\",\"Industry\":\"2026/07/27\",\"SecuritiesCompanyCode\":\"7429\"},{\"CompanyName\":\"伍碩科技\",\"Date\":\"1150825\",\"Industry\":\"2026/07/17\",\"SecuritiesCompanyCode\":\"7420\"},{\"CompanyName\":\"康見國際\",\"Date\":\"1150825\",\"Industry\":\"2026/05/08\",\"SecuritiesCompanyCode\":\"7417\"},{\"CompanyName\":\"天工精密\",\"Date\":\"1150825\",\"Industry\":\"2026/04/30\",\"SecuritiesCompanyCode\":\"7416\"},{\"CompanyName\":\"澤聖擺渡\",\"Date\":\"1150825\",\"Industry\":\"2026/04/10\",\"SecuritiesCompanyCode\":\"7411\"},{\"CompanyName\":\"易得雲端\",\"Date\":\"1150825\",\"Industry\":\"2025/12/31\",\"SecuritiesCompanyCode\":\"7408\"},{\"CompanyName\":\"美格能\",\"Date\":\"1150825\",\"Industry\":\"2025/12/31\",\"SecuritiesCompanyCode\":\"7409\"},{\"CompanyName\":\"天龍材料\",\"Date\":\"1150825\",\"Industry\":\"2025/12/31\",\"SecuritiesCompanyCode\":\"7698\"},{\"CompanyName\":\"瑞利光\",\"Date\":\"1150825\",\"Industry\":\"2025/12/31\",\"SecuritiesCompanyCode\":\"7699\"},{\"CompanyName\":\"萬寶隆空間設計\",\"Date\":\"1150825\",\"Industry\":\"2025/12/30\",\"SecuritiesCompanyCode\":\"7410\"},{\"CompanyName\":\"宏潤生技\",\"Date\":\"1150825\",\"Industry\":\"2025/12/29\",\"SecuritiesCompanyCode\":\"7695\"},{\"CompanyName\":\"微笑元素創意\",\"Date\":\"1150825\",\"Industry\":\"2025/12/26\",\"SecuritiesCompanyCode\":\"7697\"},{\"CompanyName\":\"騰雲運算\",\"Date\":\"1150825\",\"Industry\":\"2025/12/24\",\"SecuritiesCompanyCode\":\"7405\"},{\"CompanyName\":\"格外農品\",\"Date\":\"1150825\",\"Industry\":\"2025/12/23\",\"SecuritiesCompanyCode\":\"7401\"},{\"CompanyName\":\"遠醫科\",\"Date\":\"1150825\",\"Industry\":\"2025/11/11\",\"SecuritiesCompanyCode\":\"7696\"},{\"CompanyName\":\"全球系統\",\"Date\":\"1150825\",\"Industry\":\"2025/10/22\",\"SecuritiesCompanyCode\":\"7693\"},{\"CompanyName\":\"寶澤\",\"Date\":\"1150825\",\"Industry\":\"2025/10/13\",\"SecuritiesCompanyCode\":\"7694\"},{\"CompanyName\":\"崙禾社企\",\"Date\":\"1150825\",\"Industry\":\"2025/10/03\",\"SecuritiesCompanyCode\":\"7690\"},{\"CompanyName\":\"亞歆海洋\",\"Date\":\"1150825\",\"Industry\":\"2025/10/03\",\"SecuritiesCompanyCode\":\"7691\"},{\"CompanyName\":\"台智能\",\"Date\":\"1150825\",\"Industry\":\"2025/08/27\",\"SecuritiesCompanyCode\":\"7692\"},{\"CompanyName\":\"創客共好\",\"Date\":\"1150825\",\"Industry\":\"2025/08/15\",\"SecuritiesCompanyCode\":\"7688\"},{\"CompanyName\":\"偉孚\",\"Date\":\"1150825\",\"Industry\":\"2025/08/15\",\"SecuritiesCompanyCode\":\"7685\"},{\"CompanyName\":\"矽谷能源\",\"Date\":\"1150825\",\"Industry\":\"2025/08/15\",\"SecuritiesCompanyCode\":\"7678\"},{\"CompanyName\":\"美家人力\",\"Date\":\"1150825\",\"Industry\":\"2025/07/28\",\"SecuritiesCompanyCode\":\"7680\"},{\"CompanyName\":\"佐見啦\",\"Date\":\"1150825\",\"Industry\":\"2025/07/24\",\"SecuritiesCompanyCode\":\"7687\"},{\"CompanyName\":\"瑪旺生醫\",\"Date\":\"1150825\",\"Industry\":\"2025/07/15\",\"SecuritiesCompanyCode\":\"7683\"},{\"CompanyName\":\"對稱資訊\",\"Date\":\"1150825\",\"Industry\":\"2025/07/15\",\"SecuritiesCompanyCode\":\"7684\"},{\"CompanyName\":\"深禾醫\",\"Date\":\"1150825\",\"Industry\":\"2025/07/02\",\"SecuritiesCompanyCode\":\"7681\"},{\"CompanyName\":\"永進木器\",\"Date\":\"1150825\",\"Industry\":\"2025/06/30\",\"SecuritiesCompanyCode\":\"7682\"},{\"CompanyName\":\"擺渡\",\"Date\":\"1150825\",\"Industry\":\"2025/06/26\",\"SecuritiesCompanyCode\":\"7679\"},{\"CompanyName\":\"淞康\",\"Date\":\"1150825\",\"Industry\":\"2025/06/18\",\"SecuritiesCompanyCode\":\"7670\"},{\"CompanyName\":\"小鹿文娛\",\"Date\":\"1150825\",\"Industry\":\"2025/06/10\",\"SecuritiesCompanyCode\":\"7665\"},{\"CompanyName\":\"埃爾思\",\"Date\":\"1150825\",\"Industry\":\"2025/06/06\",\"SecuritiesCompanyCode\":\"7677\"},{\"CompanyName\":\"數位獵人\",\"Date\":\"1150825\",\"Industry\":\"2025/05/28\",\"SecuritiesCompanyCode\":\"7674\"},{\"CompanyName\":\"卡德爾\",\"Date\":\"1150825\",\"Industry\":\"2025/05/16\",\"SecuritiesCompanyCode\":\"7675\"},{\"CompanyName\":\"方鼎資訊\",\"Date\":\"1150825\",\"Industry\":\"2025/05/07\",\"SecuritiesCompanyCode\":\"7673\"},{\"CompanyName\":\"台灣穩鴻\",\"Date\":\"1150825\",\"Industry\":\"2025/03/31\",\"SecuritiesCompanyCode\":\"7672\"},{\"CompanyName\":\"寶泓生醫\",\"Date\":\"1150825\",\"Industry\":\"2025/03/27\",\"SecuritiesCompanyCode\":\"7671\"},{\"CompanyName\":\"金玻\",\"Date\":\"1150825\",\"Industry\":\"2025/03/26\",\"SecuritiesCompanyCode\":\"7668\"},{\"CompanyName\":\"晨間廚房\",\"Date\":\"1150825\",\"Industry\":\"2025/02/18\",\"SecuritiesCompanyCode\":\"7666\"},{\"CompanyName\":\"露奇亞\",\"Date\":\"1150825\",\"Industry\":\"2025/02/18\",\"SecuritiesCompanyCode\":\"7667\"},{\"CompanyName\":\"數位玩家\",\"Date\":\"1150825\",\"Industry\":\"2025/02/05\",\"SecuritiesCompanyCode\":\"7663\"},{\"CompanyName\":\"皓德盛科技\",\"Date\":\"1150825\",\"Industry\":\"2024/12/16\",\"SecuritiesCompanyCode\":\"7661\"},{\"CompanyName\":\"乙丁\",\"Date\":\"1150825\",\"Industry\":\"2024/11/29\",\"SecuritiesCompanyCode\":\"7658\"},{\"CompanyName\":\"盛雲藥品\",\"Date\":\"1150825\",\"Industry\":\"2024/11/19\",\"SecuritiesCompanyCode\":\"7664\"},{\"CompanyName\":\"亞瑞仕\",\"Date\":\"1150825\",\"Industry\":\"2024/09/09\",\"SecuritiesCompanyCode\":\"7657\"},{\"CompanyName\":\"全瑩生技\",\"Date\":\"1150825\",\"Industry\":\"2024/07/16\",\"SecuritiesCompanyCode\":\"7656\"},{\"CompanyName\":\"依得科\",\"Date\":\"1150825\",\"Industry\":\"2024/05/24\",\"SecuritiesCompanyCode\":\"7655\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:53+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":160,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "CompanyName": "凱鑫",
+            "Date": "1150825",
+            "Industry": "2026/08/20",
+            "SecuritiesCompanyCode": "7430"
+          },
+          {
+            "CompanyName": "昆億生技",
+            "Date": "1150825",
+            "Industry": "2026/08/03",
+            "SecuritiesCompanyCode": "7423"
+          },
+          {
+            "CompanyName": "薇米文旅",
+            "Date": "1150825",
+            "Industry": "2026/07/27",
+            "SecuritiesCompanyCode": "7429"
+          },
+          {
+            "CompanyName": "伍碩科技",
+            "Date": "1150825",
+            "Industry": "2026/07/17",
+            "SecuritiesCompanyCode": "7420"
+          },
+          {
+            "CompanyName": "康見國際",
+            "Date": "1150825",
+            "Industry": "2026/05/08",
+            "SecuritiesCompanyCode": "7417"
+          },
+          {
+            "CompanyName": "天工精密",
+            "Date": "1150825",
+            "Industry": "2026/04/30",
+            "SecuritiesCompanyCode": "7416"
+          },
+          {
+            "CompanyName": "澤聖擺渡",
+            "Date": "1150825",
+            "Industry": "2026/04/10",
+            "SecuritiesCompanyCode": "7411"
+          },
+          {
+            "CompanyName": "易得雲端",
+            "Date": "1150825",
+            "Industry": "2025/12/31",
+            "SecuritiesCompanyCode": "7408"
+          },
+          {
+            "CompanyName": "美格能",
+            "Date": "1150825",
+            "Industry": "2025/12/31",
+            "SecuritiesCompanyCode": "7409"
+          },
+          {
+            "CompanyName": "天龍材料",
+            "Date": "1150825",
+            "Industry": "2025/12/31",
+            "SecuritiesCompanyCode": "7698"
+          },
+          {
+            "CompanyName": "瑞利光",
+            "Date": "1150825",
+            "Industry": "2025/12/31",
+            "SecuritiesCompanyCode": "7699"
+          },
+          {
+            "CompanyName": "萬寶隆空間設計",
+            "Date": "1150825",
+            "Industry": "2025/12/30",
+            "SecuritiesCompanyCode": "7410"
+          },
+          {
+            "CompanyName": "宏潤生技",
+            "Date": "1150825",
+            "Industry": "2025/12/29",
+            "SecuritiesCompanyCode": "7695"
+          },
+          {
+            "CompanyName": "微笑元素創意",
+            "Date": "1150825",
+            "Industry": "2025/12/26",
+            "SecuritiesCompanyCode": "7697"
+          },
+          {
+            "CompanyName": "騰雲運算",
+            "Date": "1150825",
+            "Industry": "2025/12/24",
+            "SecuritiesCompanyCode": "7405"
+          },
+          {
+            "CompanyName": "格外農品",
+            "Date": "1150825",
+            "Industry": "2025/12/23",
+            "SecuritiesCompanyCode": "7401"
+          },
+          {
+            "CompanyName": "遠醫科",
+            "Date": "1150825",
+            "Industry": "2025/11/11",
+            "SecuritiesCompanyCode": "7696"
+          },
+          {
+            "CompanyName": "全球系統",
+            "Date": "1150825",
+            "Industry": "2025/10/22",
+            "SecuritiesCompanyCode": "7693"
+          },
+          {
+            "CompanyName": "寶澤",
+            "Date": "1150825",
+            "Industry": "2025/10/13",
+            "SecuritiesCompanyCode": "7694"
+          },
+          {
+            "CompanyName": "崙禾社企",
+            "Date": "1150825",
+            "Industry": "2025/10/03",
+            "SecuritiesCompanyCode": "7690"
+          },
+          {
+            "CompanyName": "亞歆海洋",
+            "Date": "1150825",
+            "Industry": "2025/10/03",
+            "SecuritiesCompanyCode": "7691"
+          },
+          {
+            "CompanyName": "台智能",
+            "Date": "1150825",
+            "Industry": "2025/08/27",
+            "SecuritiesCompanyCode": "7692"
+          },
+          {
+            "CompanyName": "創客共好",
+            "Date": "1150825",
+            "Industry": "2025/08/15",
+            "SecuritiesCompanyCode": "7688"
+          },
+          {
+            "CompanyName": "偉孚",
+            "Date": "1150825",
+            "Industry": "2025/08/15",
+            "SecuritiesCompanyCode": "7685"
+          },
+          {
+            "CompanyName": "矽谷能源",
+            "Date": "1150825",
+            "Industry": "2025/08/15",
+            "SecuritiesCompanyCode": "7678"
+          },
+          {
+            "CompanyName": "美家人力",
+            "Date": "1150825",
+            "Industry": "2025/07/28",
+            "SecuritiesCompanyCode": "7680"
+          },
+          {
+            "CompanyName": "佐見啦",
+            "Date": "1150825",
+            "Industry": "2025/07/24",
+            "SecuritiesCompanyCode": "7687"
+          },
+          {
+            "CompanyName": "瑪旺生醫",
+            "Date": "1150825",
+            "Industry": "2025/07/15",
+            "SecuritiesCompanyCode": "7683"
+          },
+          {
+            "CompanyName": "對稱資訊",
+            "Date": "1150825",
+            "Industry": "2025/07/15",
+            "SecuritiesCompanyCode": "7684"
+          },
+          {
+            "CompanyName": "深禾醫",
+            "Date": "1150825",
+            "Industry": "2025/07/02",
+            "SecuritiesCompanyCode": "7681"
+          },
+          {
+            "CompanyName": "永進木器",
+            "Date": "1150825",
+            "Industry": "2025/06/30",
+            "SecuritiesCompanyCode": "7682"
+          },
+          {
+            "CompanyName": "擺渡",
+            "Date": "1150825",
+            "Industry": "2025/06/26",
+            "SecuritiesCompanyCode": "7679"
+          },
+          {
+            "CompanyName": "淞康",
+            "Date": "1150825",
+            "Industry": "2025/06/18",
+            "SecuritiesCompanyCode": "7670"
+          },
+          {
+            "CompanyName": "小鹿文娛",
+            "Date": "1150825",
+            "Industry": "2025/06/10",
+            "SecuritiesCompanyCode": "7665"
+          },
+          {
+            "CompanyName": "埃爾思",
+            "Date": "1150825",
+            "Industry": "2025/06/06",
+            "SecuritiesCompanyCode": "7677"
+          },
+          {
+            "CompanyName": "數位獵人",
+            "Date": "1150825",
+            "Industry": "2025/05/28",
+            "SecuritiesCompanyCode": "7674"
+          },
+          {
+            "CompanyName": "卡德爾",
+            "Date": "1150825",
+            "Industry": "2025/05/16",
+            "SecuritiesCompanyCode": "7675"
+          },
+          {
+            "CompanyName": "方鼎資訊",
+            "Date": "1150825",
+            "Industry": "2025/05/07",
+            "SecuritiesCompanyCode": "7673"
+          },
+          {
+            "CompanyName": "台灣穩鴻",
+            "Date": "1150825",
+            "Industry": "2025/03/31",
+            "SecuritiesCompanyCode": "7672"
+          },
+          {
+            "CompanyName": "寶泓生醫",
+            "Date": "1150825",
+            "Industry": "2025/03/27",
+            "SecuritiesCompanyCode": "7671"
+          },
+          {
+            "CompanyName": "金玻",
+            "Date": "1150825",
+            "Industry": "2025/03/26",
+            "SecuritiesCompanyCode": "7668"
+          },
+          {
+            "CompanyName": "晨間廚房",
+            "Date": "1150825",
+            "Industry": "2025/02/18",
+            "SecuritiesCompanyCode": "7666"
+          },
+          {
+            "CompanyName": "露奇亞",
+            "Date": "1150825",
+            "Industry": "2025/02/18",
+            "SecuritiesCompanyCode": "7667"
+          },
+          {
+            "CompanyName": "數位玩家",
+            "Date": "1150825",
+            "Industry": "2025/02/05",
+            "SecuritiesCompanyCode": "7663"
+          },
+          {
+            "CompanyName": "皓德盛科技",
+            "Date": "1150825",
+            "Industry": "2024/12/16",
+            "SecuritiesCompanyCode": "7661"
+          },
+          {
+            "CompanyName": "乙丁",
+            "Date": "1150825",
+            "Industry": "2024/11/29",
+            "SecuritiesCompanyCode": "7658"
+          },
+          {
+            "CompanyName": "盛雲藥品",
+            "Date": "1150825",
+            "Industry": "2024/11/19",
+            "SecuritiesCompanyCode": "7664"
+          },
+          {
+            "CompanyName": "亞瑞仕",
+            "Date": "1150825",
+            "Industry": "2024/09/09",
+            "SecuritiesCompanyCode": "7657"
+          },
+          {
+            "CompanyName": "全瑩生技",
+            "Date": "1150825",
+            "Industry": "2024/07/16",
+            "SecuritiesCompanyCode": "7656"
+          },
+          {
+            "CompanyName": "依得科",
+            "Date": "1150825",
+            "Industry": "2024/05/24",
+            "SecuritiesCompanyCode": "7655"
+          }
+        ],
+        "_lineage": {
+          "source": "TPEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:40:53+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 160,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

@@ -1,18 +1,54 @@
 {
   "arguments": {
     "kind": "wcb",
-    "view": "issue",
-    "limit": 2
+    "view": "issue"
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 205,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Accum.Accum.Issuance\":\"0\",\"Accum.CanceledWarrant\":\"0\",\"American/European\":\"歐式\",\"CapPrice/Index\":\"\",\"Code\":\"70006C\",\"Date\":\"1150601\",\"ExpiryDate\":\"20260603\",\"FloorPrice/Index\":\"21.77\",\"InitialIssuance\":\"20000\",\"Latest ExerciseRatio\":\"0.312\",\"LatestExercisePrice\":\"21.28\",\"ListedDate\":\"20250604\",\"Name\":\"元債20富邦56牛01\",\"Reset\":\"Y\",\"Type\":\"認購\",\"UnderlyingStock\":\"元大美\",\"UnderlyingStockCode\":\"00679B\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T09:30:04+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":175,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Accum.Accum.Issuance\":\"0\",\"Accum.CanceledWarrant\":\"0\",\"American/European\":\"歐式\",\"CapPrice/Index\":\"\",\"Code\":\"70006C\",\"Date\":\"1150601\",\"ExpiryDate\":\"20260603\",\"FloorPrice/Index\":\"21.77\",\"InitialIssuance\":\"20000\",\"Latest ExerciseRatio\":\"0.312\",\"LatestExercisePrice\":\"21.28\",\"ListedDate\":\"20250604\",\"Name\":\"元債20富邦56牛01\",\"Reset\":\"Y\",\"Type\":\"認購\",\"UnderlyingStock\":\"元大美\",\"UnderlyingStockCode\":\"00679B\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:41+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":225,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": [
+          {
+            "Accum.Accum.Issuance": "0",
+            "Accum.CanceledWarrant": "0",
+            "American/European": "歐式",
+            "CapPrice/Index": "",
+            "Code": "70006C",
+            "Date": "1150601",
+            "ExpiryDate": "20260603",
+            "FloorPrice/Index": "21.77",
+            "InitialIssuance": "20000",
+            "Latest ExerciseRatio": "0.312",
+            "LatestExercisePrice": "21.28",
+            "ListedDate": "20250604",
+            "Name": "元債20富邦56牛01",
+            "Reset": "Y",
+            "Type": "認購",
+            "UnderlyingStock": "元大美",
+            "UnderlyingStockCode": "00679B"
+          }
+        ],
+        "_lineage": {
+          "source": "TPEX_API",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:42:41+08:00",
+          "data_date": "2026-08-26",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": false,
+          "latency_ms": 225,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 1,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }

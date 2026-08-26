@@ -20,7 +20,11 @@ import time
 
 BIN = os.path.expanduser("~/Projects/tw-quant-mcp/bin/tw-quant-mcp")
 RAW_DIR = os.path.expanduser("~/Projects/tw-quant-mcp/snapshots/raw")
-os.makedirs(RAW_DIR, exist_ok=True)
+try:
+    os.makedirs(RAW_DIR, exist_ok=True)
+except OSError as e:
+    print(f"無法建立快照目錄 {RAW_DIR}: {e}", file=sys.stderr)
+    sys.exit(1)
 
 # 從批次腳本匯入 ARGS 表（工具名 → 預設參數）
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -49,8 +53,8 @@ def call_tool(proc, tool_name, args, msg_id):
             continue
         try:
             obj = json.loads(line)
-        except Exception:
-            continue
+        except json.JSONDecodeError:
+            continue  # 非 JSON 行，忽略
         if obj.get("id") == msg_id:
             return obj
     return {"jsonrpc": "2.0", "id": msg_id, "error": {"message": "timeout"}}
@@ -94,6 +98,9 @@ def main():
             "clientInfo": {"name": "one-tool-cli", "version": "1.0.0"},
         },
     }
+    if proc.stdin is None or proc.stdout is None:
+        print("無法建立 stdio 管線", file=sys.stderr)
+        sys.exit(1)
     proc.stdin.write(json.dumps(init) + "\n")
     proc.stdin.flush()
     deadline = time.time() + 15
@@ -103,8 +110,8 @@ def main():
             try:
                 if json.loads(line).get("id") == 1:
                     break
-            except Exception:
-                continue
+            except json.JSONDecodeError:
+                continue  # 非 JSON 行，忽略
     proc.stdin.write('{"jsonrpc":"2.0","method":"notifications/initialized"}\n')
     proc.stdin.flush()
 
@@ -139,10 +146,14 @@ def main():
         "response": {"result": result_obj},
     }
     path = os.path.join(RAW_DIR, f"{tool_name}.json")
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(out, f, ensure_ascii=False, indent=2)
-    print(f"已存: {path}")
-    print(f"提示: make snapshots-render 可重新渲染所有 PNG")
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(out, f, ensure_ascii=False, indent=2)
+        print(f"已存: {path}")
+    except OSError as e:
+        print(f"寫檔失敗: {e}", file=sys.stderr)
+        sys.exit(1)
+    print("提示: make snapshots-render 可重新渲染所有 PNG")
 
 
 if __name__ == "__main__":

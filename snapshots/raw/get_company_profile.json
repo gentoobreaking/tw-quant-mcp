@@ -1,16 +1,67 @@
 {
   "arguments": {
-    "symbol": "2884"
+    "symbol": "2330"
   },
   "response": {
+    "jsonrpc": "2.0",
+    "id": 78,
     "result": {
-      "isError": false,
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"table_date\":\"2026-08-24\",\"code\":\"2884\",\"name\":\"玉山金融控股股份有限公司\",\"short_name\":\"玉山金\",\"foreign_reg\":\"－\",\"industry\":\"17\",\"address\":\"臺北市松山區民生東路三段117號14樓及115號1樓\",\"tax_id\":\"70796305\",\"chairman\":\"黃男州\",\"president\":\"陳茂欽\",\"spokesman\":\"林俊佑\",\"spokesman_title\":\"玉山金控/銀行行銷長\",\"deputy_spokesman\":\"鄭恩融\",\"phone\":\"(02)2175-1313\",\"established\":\"2002-01-28\",\"listed\":\"2002-01-28\",\"par_value\":\"新台幣                 10.0000元\",\"capital\":161920000000000,\"private_stock\":0,\"preferred_stock\":0,\"fin_report_type\":\"1\",\"transfer_agent\":\"玉山金控行政管理處\",\"transfer_phone\":\"(02)2719-1313\",\"transfer_address\":\"臺北市松山區民生東路三段115號1樓\",\"auditor_firm\":\"勤業眾信聯合會計師事務所\",\"auditor_1\":\"楊承修\",\"auditor_2\":\"馬偉峻\",\"english_name\":\"E.S.F.H\",\"english_address\":\"14F., No. 117 and 1F., No.115 ,Sec. 3,Min Sheng E. Road,Taipei, Taiwan, R.O.C.\",\"fax\":\"(02)2713-7213\",\"email\":\"ir@esunbank.com\",\"website\":\"https://www.esunfhc.com\",\"shares_outstanding\":16192000000},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-25T14:15:14+08:00\",\"data_date\":\"2026-08-24\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":3056,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"table_date\":\"2026-08-25\",\"code\":\"2330\",\"name\":\"台灣積體電路製造股份有限公司\",\"short_name\":\"台積電\",\"foreign_reg\":\"－\",\"industry\":\"24\",\"address\":\"新竹科學園區力行六路8號\",\"tax_id\":\"22099131\",\"chairman\":\"魏哲家\",\"president\":\"總裁: 魏哲家\",\"spokesman\":\"黃仁昭\",\"spokesman_title\":\"資深副總經理暨財務長\",\"deputy_spokesman\":\"高孟華\",\"phone\":\"03-5636688\",\"established\":\"1987-02-21\",\"listed\":\"1994-09-05\",\"par_value\":\"新台幣                 10.0000元\",\"capital\":259323700670000,\"private_stock\":0,\"preferred_stock\":0,\"fin_report_type\":\"1\",\"transfer_agent\":\"中國信託商業銀行 代理部\",\"transfer_phone\":\"02-6636-5566\",\"transfer_address\":\"台北市重慶南路一段83號5樓\",\"auditor_firm\":\"勤業眾信聯合會計師事務所\",\"auditor_1\":\"吳世宗\",\"auditor_2\":\"陳彥君\",\"english_name\":\"TSMC\",\"english_address\":\"No. 8, Li-Hsin Rd. 6, Hsinchu Science Park,Hsin-Chu 300096, Taiwan, R.O.C.\",\"fax\":\"03-5797337\",\"email\":\"invest@tsmc.com\",\"website\":\"https://www.tsmc.com\",\"shares_outstanding\":25932370067},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:13+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":17,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
-      ]
+      ],
+      "structuredContent": {
+        "data": {
+          "table_date": "2026-08-25",
+          "code": "2330",
+          "name": "台灣積體電路製造股份有限公司",
+          "short_name": "台積電",
+          "foreign_reg": "－",
+          "industry": "24",
+          "address": "新竹科學園區力行六路8號",
+          "tax_id": "22099131",
+          "chairman": "魏哲家",
+          "president": "總裁: 魏哲家",
+          "spokesman": "黃仁昭",
+          "spokesman_title": "資深副總經理暨財務長",
+          "deputy_spokesman": "高孟華",
+          "phone": "03-5636688",
+          "established": "1987-02-21",
+          "listed": "1994-09-05",
+          "par_value": "新台幣                 10.0000元",
+          "capital": 259323700670000,
+          "private_stock": 0,
+          "preferred_stock": 0,
+          "fin_report_type": "1",
+          "transfer_agent": "中國信託商業銀行 代理部",
+          "transfer_phone": "02-6636-5566",
+          "transfer_address": "台北市重慶南路一段83號5樓",
+          "auditor_firm": "勤業眾信聯合會計師事務所",
+          "auditor_1": "吳世宗",
+          "auditor_2": "陳彥君",
+          "english_name": "TSMC",
+          "english_address": "No. 8, Li-Hsin Rd. 6, Hsinchu Science Park,Hsin-Chu 300096, Taiwan, R.O.C.",
+          "fax": "03-5797337",
+          "email": "invest@tsmc.com",
+          "website": "https://www.tsmc.com",
+          "shares_outstanding": 25932370067
+        },
+        "_lineage": {
+          "source": "MOPS",
+          "source_role": "CANONICAL",
+          "fetched_at": "2026-08-26T12:40:13+08:00",
+          "data_date": "2026-08-25",
+          "freshness": "POST_MARKET",
+          "sampling_sec": 0,
+          "is_cached": true,
+          "latency_ms": 17,
+          "grade": "AVAILABLE"
+        },
+        "http_calls": 0,
+        "disclaimer": "僅供研究參考，不構成投資建議"
+      }
     }
   }
 }
