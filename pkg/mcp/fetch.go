@@ -154,6 +154,11 @@ var cacheDataset = map[string]string{
 	string(provider.TPExEmgHighlight):       cache.DatasetDailyKLine,     // 興櫃市場現況（T212）
 	string(provider.TPExEmgEpsRank):         cache.DatasetDailyKLine,     // 興櫃 EPS 排名（T213）
 	string(provider.TPExEmgCapRank):         cache.DatasetDailyKLine,     // 興櫃資本額排名（T213）
+	string(provider.TPExT50Latest):          cache.DatasetDailyKLine,     // 富櫃50當日收盤（T217）
+	string(provider.TPExT50History):         cache.DatasetDailyKLine,     // 富櫃50歷史收盤（T217）
+	string(provider.TPExT50Const):           cache.DatasetDailyKLine,     // 富櫃50成分股（T217）
+	string(provider.TPExT200Latest):         cache.DatasetDailyKLine,     // 富櫃200當日收盤（T217）
+	string(provider.TPExT200Const):          cache.DatasetDailyKLine,     // 富櫃200成分股（T217）
 	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）

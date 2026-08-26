@@ -76,6 +76,11 @@ const (
 	TPExEmgHighlight  TPExDataset = "emerging_highlight"    // 興櫃市場現況（T212）
 	TPExEmgEpsRank    TPExDataset = "emerging_eps_rank"     // 興櫃 EPS 排名（T213）
 	TPExEmgCapRank    TPExDataset = "emerging_cap_rank"     // 興櫃資本額排名（T213）
+	TPExT50Latest     TPExDataset = "t50_latest"            // 富櫃50當日收盤（T217）
+	TPExT50History    TPExDataset = "t50_history"           // 富櫃50歷史收盤（T217）
+	TPExT50Const      TPExDataset = "t50_constituents"      // 富櫃50成分股（T217）
+	TPExT200Latest    TPExDataset = "t200_latest"           // 富櫃200當日收盤（T217）
+	TPExT200Const     TPExDataset = "t200_constituents"     // 富櫃200成分股（T217）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -114,6 +119,11 @@ var (
 		TPExEmgHighlight:  "/tpex_esb_highlight",                // 興櫃市場現況（T212）
 		TPExEmgEpsRank:    "/tpex_esb_eps_rank",                 // 興櫃 EPS 排名（T213）
 		TPExEmgCapRank:    "/tpex_esb_capitals_rank",            // 興櫃資本額排名（T213）
+		TPExT50Latest:     "/tpex50_change",                     // 富櫃50當日收盤（T217）
+		TPExT50History:    "/tpex50_index",                      // 富櫃50歷史收盤（T217）
+		TPExT50Const:      "/tpex50_constituents",               // 富櫃50成分股（T217）
+		TPExT200Latest:    "/tpex200_change",                    // 富櫃200當日收盤（T217）
+		TPExT200Const:     "/tpex200_constituents",              // 富櫃200成分股（T217）
 	}
 )
 
@@ -305,6 +315,11 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExEmgEpsRank), string(TPExEmgCapRank):
 		// passthrough（T213 實測；欄位 Date/Rank/SecuritiesCompanyCode/
 		// CompanyName/EPS 或 Capital，原樣保留）。
+		out = ms
+	case string(TPExT50Latest), string(TPExT50History), string(TPExT50Const),
+		string(TPExT200Latest), string(TPExT200Const):
+		// passthrough（T217 實測；富櫃50/200 指數與成分股，官方中英欄位
+		// 混用且兩家族格式不同，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

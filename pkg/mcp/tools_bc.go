@@ -1921,6 +1921,58 @@ func handlerGetHighDividendIndex(a *App, args map[string]any) (HandlerResult, er
 	return HandlerResult{Data: rows, Lineage: lineage}, nil
 }
 
+// tpexIndexDatasets 為 T217 family×view → 資料集對應。
+var tpexIndexDatasets = map[string]provider.TPExDataset{
+	"tpex50|latest":        provider.TPExT50Latest,
+	"tpex50|history":       provider.TPExT50History,
+	"tpex50|constituents":  provider.TPExT50Const,
+	"tpex200|latest":       provider.TPExT200Latest,
+	"tpex200|constituents": provider.TPExT200Const,
+}
+
+// handlerGetTpex200Index：富櫃50/200 指數（TPEx-API tpex50/tpex200 系列，
+// T217）。family 切換 tpex50/tpex200；view 切換 history/latest/constituents。
+// 官方無富櫃200 歷史端點，該組合回明確錯誤；passthrough。
+func handlerGetTpex200Index(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	family := strVal(args["family"])
+	if family == "" {
+		family = "tpex200"
+	}
+	view := strVal(args["view"])
+	if view == "" {
+		view = "latest"
+	}
+	ds, ok := tpexIndexDatasets[family+"|"+view]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("family/view 無效：%s/%s（官方無富櫃200歷史收盤端點；family 僅接受 tpex50/tpex200，view 僅接受 history/latest/constituents）", family, view)
+	}
+	limit, offset := listPaging(args)
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, "", nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // otcGovernanceKinds 為 T237 上櫃治理系列之語意 kind → 官方端點對照。
 var otcGovernanceKinds = []struct {
 	Kind     string // 語意化查詢類別（工具參數值）

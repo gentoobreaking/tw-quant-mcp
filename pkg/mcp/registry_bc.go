@@ -1326,6 +1326,24 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcDaytradeStatistics,
 	}) // T201
 	r.Register(ToolDef{
+		Symbol: "get_tpex200_index",
+		Name:   "get_tpex200_index",
+		Description: "查詢富櫃50/富櫃200 指數（TPEx-API tpex50_*/tpex200_* 系列，T217）。" +
+			"family 切換 tpex50/tpex200（預設 tpex200）；view 切換 history 歷史收盤/latest 當日收盤/constituents 成分股（預設 latest）。" +
+			"官方無富櫃200歷史收盤端點，該組合回明確錯誤。limit 預設 50、offset 分頁。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"family": map[string]any{"type": "string", "enum": []string{"tpex50", "tpex200"}, "default": "tpex200", "description": "指數家族"},
+				"view":   map[string]any{"type": "string", "enum": []string{"history", "latest", "constituents"}, "default": "latest", "description": "資料檢視模式（tpex200 不支援 history）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetTpex200Index,
+	}) // T217
+	r.Register(ToolDef{
 		Symbol: "get_high_dividend_index",
 		Name:   "get_high_dividend_index",
 		Description: "查詢櫃買高殖利率指數（TPEx-API tphd_* 系列，T218）。" +
