@@ -1344,6 +1344,24 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetTpex200Index,
 	}) // T217
 	r.Register(ToolDef{
+		Symbol: "get_governance_salary_index",
+		Name:   "get_governance_salary_index",
+		Description: "查詢上櫃公司治理指數與薪酬指數（TPEx-API tpcgi_*/tpci_* 系列，T219）。" +
+			"family 切換 governance 公司治理指數／salary 薪酬指數（預設 governance）；view 切換 latest 當日收盤／constituents 成分股（預設 latest）。" +
+			"limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"family": map[string]any{"type": "string", "enum": []string{"governance", "salary"}, "default": "governance", "description": "指數家族：公司治理或薪酬"},
+				"view":   map[string]any{"type": "string", "enum": []string{"latest", "constituents"}, "default": "latest", "description": "當日收盤或成分股"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetGovernanceSalaryIndex,
+	}) // T219
+	r.Register(ToolDef{
 		Symbol: "get_high_dividend_index",
 		Name:   "get_high_dividend_index",
 		Description: "查詢櫃買高殖利率指數（TPEx-API tphd_* 系列，T218）。" +

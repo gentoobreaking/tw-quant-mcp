@@ -81,6 +81,10 @@ const (
 	TPExT50Const      TPExDataset = "t50_constituents"      // 富櫃50成分股（T217）
 	TPExT200Latest    TPExDataset = "t200_latest"           // 富櫃200當日收盤（T217）
 	TPExT200Const     TPExDataset = "t200_constituents"     // 富櫃200成分股（T217）
+	TPExGILatest      TPExDataset = "gi_latest"             // 公司治理指數當日收盤（T219）
+	TPExGIConst       TPExDataset = "gi_constituents"       // 公司治理指數成分股（T219）
+	TPExSILatest      TPExDataset = "si_latest"             // 薪酬指數當日收盤（T219）
+	TPExSIConst       TPExDataset = "si_constituents"       // 薪酬指數成分股（T219）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -124,6 +128,10 @@ var (
 		TPExT50Const:      "/tpex50_constituents",               // 富櫃50成分股（T217）
 		TPExT200Latest:    "/tpex200_change",                    // 富櫃200當日收盤（T217）
 		TPExT200Const:     "/tpex200_constituents",              // 富櫃200成分股（T217）
+		TPExGILatest:      "/tpcgi_change",                      // 治理指數當日收盤（T219）
+		TPExGIConst:       "/tpcgi_constituents",                // 治理指數成分股（T219）
+		TPExSILatest:      "/tpci_change",                       // 薪酬指數當日收盤（T219）
+		TPExSIConst:       "/tpci_constituents",                 // 薪酬指數成分股（T219）
 	}
 )
 
@@ -320,6 +328,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 		string(TPExT200Latest), string(TPExT200Const):
 		// passthrough（T217 實測；富櫃50/200 指數與成分股，官方中英欄位
 		// 混用且兩家族格式不同，原樣保留）。
+		out = ms
+	case string(TPExGILatest), string(TPExGIConst), string(TPExSILatest), string(TPExSIConst):
+		// passthrough（T219 實測；治理/薪酬指數 Date/Name/Index/Change 或
+		// SecuritiesCompanyCode/CompanyName，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

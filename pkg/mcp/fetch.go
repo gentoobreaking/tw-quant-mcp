@@ -159,6 +159,10 @@ var cacheDataset = map[string]string{
 	string(provider.TPExT50Const):           cache.DatasetDailyKLine,     // 富櫃50成分股（T217）
 	string(provider.TPExT200Latest):         cache.DatasetDailyKLine,     // 富櫃200當日收盤（T217）
 	string(provider.TPExT200Const):          cache.DatasetDailyKLine,     // 富櫃200成分股（T217）
+	string(provider.TPExGILatest):           cache.DatasetDailyKLine,     // 治理指數當日收盤（T219）
+	string(provider.TPExGIConst):            cache.DatasetDailyKLine,     // 治理指數成分股（T219）
+	string(provider.TPExSILatest):           cache.DatasetDailyKLine,     // 薪酬指數當日收盤（T219）
+	string(provider.TPExSIConst):            cache.DatasetDailyKLine,     // 薪酬指數成分股（T219）
 	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）

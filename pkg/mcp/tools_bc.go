@@ -1973,6 +1973,57 @@ func handlerGetTpex200Index(a *App, args map[string]any) (HandlerResult, error) 
 	return HandlerResult{Data: out, Lineage: lineage}, nil
 }
 
+// gsIndexDatasets 為 T219 family×view → 資料集對應。
+var gsIndexDatasets = map[string]provider.TPExDataset{
+	"governance|latest":       provider.TPExGILatest,
+	"governance|constituents": provider.TPExGIConst,
+	"salary|latest":           provider.TPExSILatest,
+	"salary|constituents":     provider.TPExSIConst,
+}
+
+// handlerGetGovernanceSalaryIndex：公司治理/薪酬指數（TPEx-API tpcgi_*/
+// tpci_* 系列，T219）。family 切換 governance/salary；view 切換
+// latest/constituents；passthrough。
+func handlerGetGovernanceSalaryIndex(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	family := strVal(args["family"])
+	if family == "" {
+		family = "governance"
+	}
+	view := strVal(args["view"])
+	if view == "" {
+		view = "latest"
+	}
+	ds, ok := gsIndexDatasets[family+"|"+view]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("family 僅接受 governance 或 salary，view 僅接受 latest 或 constituents，得到 %s/%s", family, view)
+	}
+	limit, offset := listPaging(args)
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, "", nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // otcGovernanceKinds 為 T237 上櫃治理系列之語意 kind → 官方端點對照。
 var otcGovernanceKinds = []struct {
 	Kind     string // 語意化查詢類別（工具參數值）

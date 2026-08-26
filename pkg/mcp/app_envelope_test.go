@@ -173,6 +173,10 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["t200_latest|"] = `[{"資料日期":"1150825","指數":"富櫃200指數","收盤指數":"17,939.87","漲跌":"+","漲跌點數":"267.63","漲跌百分比":"1.19"}]`
 	f.bodies["t50_history|"] = `[{"Date":"1150803","TPEx50Index":"524.75","TPEx50TotalReturnIndex":"903.75"}]`
 	f.bodies["t200_constituents|"] = `[{"資料日期":"1150825","股票代號":"1268","股票名稱":"漢來美食"}]`
+	f.bodies["gi_latest|"] = `[{"Date":"1150825","Name":"櫃買公司治理指數","Index":"396.93","Change":"0.63"}]`
+	f.bodies["gi_constituents|"] = `[{"Date":"1150825","SecuritiesCompanyCode":"1268","CompanyName":"漢來美食"}]`
+	f.bodies["si_latest|"] = `[{"Date":"20260825","Name":"櫃買薪酬指數","Index":"223.92","Change":"0.18"}]`
+	f.bodies["si_constituents|"] = `[{"Date":"1150825","SecuritiesCompanyCode":"3078","CompanyName":"僑威"}]`
 	f.bodies["otc_broker_volume|"] = `[{"Date":"20260730","StockRanking":"1","SecuritiesCompanyCodeAndCompanyName":"華東(8110)","SecuritiesFirmsRanking":"1","SecuritiesFirmsCode":"元大","TotalPurchaseShares":"1000","TotalSellShares":"900"}]`
 	f.bodies["otc_monthly_revenue|"] = `[{"出表日期":"1150817","資料年月":"11507","公司代號":"1240","公司名稱":"茂生農經","營業收入-當月營收":"242511","營業收入-上月比較增減(%)":"-10.24"}]`
 	f.bodies["otc_daily|"] = `[{"date":"2026-07-30","code":"8110","name":"華東","close":30.5,"change_dir":"+","change":0.35,"open":30.1,"high":30.7,"low":30.0,"volume":120000,"amount":3660000,"transaction":80}]`
@@ -346,6 +350,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_emerging_board_holdings", args: map[string]any{"code": "1260"}},
 		{name: "get_emerging_financial_statements", args: map[string]any{"code": "1260", "statement": "income"}},
 		{name: "get_tpex200_index", args: map[string]any{"family": "tpex200", "view": "latest"}},
+		{name: "get_governance_salary_index", args: map[string]any{"family": "salary", "view": "constituents"}},
 		{name: "get_otc_exdividend_result", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_targets", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_statistics", args: map[string]any{}},
