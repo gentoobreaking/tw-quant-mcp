@@ -109,6 +109,9 @@ const (
 	TPExBlockSummaryD TPExDataset = "otc_block_summary_day" // 上櫃鉅額交易日量值統計（T225）
 	TPExBlockMonthly  TPExDataset = "otc_block_monthly"     // 上櫃鉅額交易月統計（T225）
 	TPExBlockYearly   TPExDataset = "otc_block_yearly"      // 上櫃鉅額交易年統計（T225）
+	TPExIntlBondQuote TPExDataset = "intl_bond_quotes"      // 國際債券盤中報價（T226）
+	TPExIntlBondTrade TPExDataset = "intl_bond_trade"       // 國際債券盤中成交（T226）
+	TPExBondIssue     TPExDataset = "bond_issue"            // 公債發行資料（T226）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -180,6 +183,9 @@ var (
 		TPExBlockSummaryD: "/tpex_daily_trading_summary_odd",     // 鉅額交易日量值統計（T225）
 		TPExBlockMonthly:  "/tpex_monthly_trading_summary_block", // 鉅額交易月統計（T225）
 		TPExBlockYearly:   "/tpex_yearly_trading_summary_block",  // 鉅額交易年統計（T225）
+		TPExIntlBondQuote: "/tpex_international_bond_quotes",     // 國際債券報價（T226）
+		TPExIntlBondTrade: "/tpex_international_bond_trade",      // 國際債券成交（T226）
+		TPExBondIssue:     "/bond_ISSBD1_data",                   // 公債發行資料（T226）
 	}
 )
 
@@ -406,6 +412,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExBlockDay), string(TPExBlockStock), string(TPExBlockSummaryD),
 		string(TPExBlockMonthly), string(TPExBlockYearly):
 		// passthrough（T225 實測；上櫃鉅額交易系列，官方中英欄位混用，原樣保留）。
+		out = ms
+	case string(TPExIntlBondQuote), string(TPExIntlBondTrade), string(TPExBondIssue):
+		// passthrough（T226 實測；國際債券/公債發行 Date/BondCode/BidYieldPrice
+		// 等，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

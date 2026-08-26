@@ -1,0 +1,17 @@
+{
+  "arguments": {
+    "kind": "quotes",
+    "code": "F00922"
+  },
+  "response": {
+    "result": {
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"data\":[{\"AskYieldPrice\":\"100.4000\",\"BidYieldPrice\":\"099.9000\",\"BondCode\":\"F00922\",\"BondName\":\"P21BNP2\",\"Date\":\"20260825\",\"Time\":\"163004\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T10:03:17+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":529,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+        }
+      ]
+    }
+  }
+}

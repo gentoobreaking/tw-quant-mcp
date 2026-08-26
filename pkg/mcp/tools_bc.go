@@ -2168,6 +2168,56 @@ func containsAny(s string, vals ...string) bool {
 	return false
 }
 
+// intlBondKinds 為 T226 kind → 資料集對應。
+var intlBondKinds = map[string]provider.TPExDataset{
+	"quotes": provider.TPExIntlBondQuote,
+	"trade":  provider.TPExIntlBondTrade,
+	"issue":  provider.TPExBondIssue,
+}
+
+// handlerGetInternationalBond：國際債券/寶島債（T226，
+// tpex_international_bond_quotes/trade、bond_ISSBD1_data）。kind 切換
+// quotes/trade/issue；code 過濾 BondCode；passthrough。
+func handlerGetInternationalBond(a *App, args map[string]any) (HandlerResult, error) {
+	ctx := context.Background()
+	limit, offset := listPaging(args)
+	kindArg := strVal(args["kind"])
+	if kindArg == "" {
+		kindArg = "quotes"
+	}
+	ds, ok := intlBondKinds[kindArg]
+	if !ok {
+		return HandlerResult{}, fmt.Errorf("kind 僅接受 quotes/trade/issue，得到 %q", kindArg)
+	}
+	code := strVal(args["code"])
+	date := a.now().Format("2006-01-02")
+	rows, cached, stale, err := fetchNormalize[[]map[string]any](a, ctx,
+		string(ds), date,
+		cache.KeyString(model.SourceTPExAPI, string(ds), date, code, nil),
+		func() ([]byte, error) { return a.fetchTPExRaw(ctx, ds, nil) })
+	if err != nil {
+		return HandlerResult{}, err
+	}
+	ttl, _ := a.ttlOf(cache.DatasetDailyKLine)
+	lineage := postLineage(model.SourceTPExAPI, date, cached || stale, stale, ttl)
+	out := make([]any, 0, len(rows))
+	for _, r := range rows {
+		if code != "" && rowField(r, "BondCode") != code {
+			continue
+		}
+		out = append(out, r)
+	}
+	if offset < len(out) {
+		out = out[offset:]
+	} else {
+		out = []any{}
+	}
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return HandlerResult{Data: out, Lineage: lineage}, nil
+}
+
 // otcBlockKinds 為 T225 kind → 資料集對應。
 var otcBlockKinds = map[string]provider.TPExDataset{
 	"day":         provider.TPExBlockDay,

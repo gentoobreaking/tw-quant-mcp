@@ -1506,6 +1506,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetOtcBlockTrade,
 	}) // T225
 	r.Register(ToolDef{
+		Symbol: "get_international_bond",
+		Name:   "get_international_bond",
+		Description: "查詢國際債券/寶島債（TPEx-API tpex_international_bond_quotes/trade、bond_ISSBD1_data，T226）。" +
+			"kind 切換 quotes 盤中報價／trade 盤中成交／issue 公債發行資料。code 過濾債券代號；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"quotes", "trade", "issue"}, "default": "quotes", "description": "報價/成交/發行資料"},
+				"code":   map[string]any{"type": "string", "description": "債券代號（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetInternationalBond,
+	}) // T226
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +
