@@ -253,6 +253,10 @@ func stubFG(f *fakeTAIFEX) {
 	f.single[tfKey(model.TAContractAdj, "2026-07-29", "")] = tfStub([]map[string]any{
 		{"Contact": "SY", "StockName": "家登", "StockId": "3680", "CashDividend(CapitalRepayment)NTD/share": "4.99733964"},
 	})
+	// 可抵繳標的（T232，直通官方欄位）
+	f.single[tfKey(model.TACollStock, "2026-07-29", "")] = tfStub([]map[string]any{
+		{"Date": "20260826", "StockId": "0050", "StockName": "元大台灣50"},
+	})
 	// 買買賣權比：單日 + 範圍
 	f.single[tfKey(model.TAPutCallRatio, "2026-07-29", "")] = tfStub([]model.PCRow{
 		{Date: "2026-07-29", CallVolume: 100000, PutVolume: 120500, VolumeRatio: 120.5, CallOI: 200000, PutOI: 210000, OIRatio: 105.0},

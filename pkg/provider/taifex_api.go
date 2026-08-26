@@ -110,6 +110,10 @@ var taifexAPIPaths = map[model.TAIFEXDataset]string{
 	model.TAContractAdj:      "/ContractAdj",                                                              // 契約調整一覽事項（T231）
 	model.TASSFAdjustedInfo:  "/SSFAdjustedInfo",                                                          // 調整型契約資訊（T231）
 	model.TAFeeSchedule:      "/FuturesAndOptionsFeeSchedule",                                             // 期貨及選擇權收費標準表（T231）
+	model.TACollStock:        "/AcceptableCollateralStock",                                                // 可抵繳標的-股票含ETF（T232）
+	model.TACollGovBond:      "/AcceptableCollateralGovernmentBonds",                                      // 可抵繳標的-公債（T232）
+	model.TACollIntlBond:     "/AcceptableCollateralInternationalBonds",                                   // 可抵繳標的-國際債（T232）
+	model.TACollLogStock:     "/AcceptableCollateralLogStock",                                             // 可抵繳標的增刪紀錄（T232）
 	model.TAStockOptOID:      "/va02",                                                                     // 每日個股選擇權未平倉量增減（T210）
 	model.TAStockFutStatsD:   "/va12",                                                                     // 每日個股期貨交易量統計（T210）
 	model.TAStockFutStatsM:   "/va13",                                                                     // 每月個股期貨交易量統計（T210）
@@ -312,6 +316,11 @@ func normalizeTAIFEXAPI(raw *RawResponse) ([]byte, error) {
 		model.TASSFAdjustedInfo, model.TAFeeSchedule:
 		// 部位限制/契約調整/收費標準：直通保留官方欄位（T231；Contract/
 		// Tier/StockCode/CashDividend(NTD/share)/TransactionFee 等）。
+		out = json.RawMessage(raw.Body)
+	case model.TACollStock, model.TACollGovBond, model.TACollIntlBond,
+		model.TACollLogStock:
+		// 可抵繳標的：直通保留官方欄位（T232；Date/StockId/Code/
+		// InternationalBondCode/New/Delete 等）。
 		out = json.RawMessage(raw.Body)
 	case model.TAStockOptOID, model.TAStockFutStatsD, model.TAStockFutStatsM,
 		model.TAStockFutStatsY:

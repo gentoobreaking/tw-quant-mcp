@@ -376,6 +376,23 @@ func registerFGTools(r *Registry) {
 		Handler:  handlerGetContractAdjust,
 	}) // T231
 	r.Register(ToolDef{
+		Symbol: "get_acceptable_collateral",
+		Name:   "get_acceptable_collateral",
+		Description: "查詢有價證券保證金可抵繳標的（TAIFEX-API AcceptableCollateral* 系列，T232）。" +
+			"kind 切換 stock 股票含ETF／bond 公債／international 國際債／log 增刪紀錄。code 過濾標的代號；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"stock", "bond", "international", "log"}, "default": "stock", "description": "股票/公債/國際債/增刪紀錄"},
+				"code":   map[string]any{"type": "string", "description": "標的代號（選填，如 0050）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetAcceptableCollateral,
+	}) // T232
+	r.Register(ToolDef{
 		Symbol: "get_index_futures_margin",
 		Name:   "get_index_futures_margin",
 		Description: "查詢股價指數類期貨與選擇權保證金一覽表，包含結算保證金、維持保證金、原始保證金（元；" +
