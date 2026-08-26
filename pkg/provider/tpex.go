@@ -112,6 +112,9 @@ const (
 	TPExIntlBondQuote TPExDataset = "intl_bond_quotes"      // 國際債券盤中報價（T226）
 	TPExIntlBondTrade TPExDataset = "intl_bond_trade"       // 國際債券盤中成交（T226）
 	TPExBondIssue     TPExDataset = "bond_issue"            // 公債發行資料（T226）
+	TPExGoldLatest    TPExDataset = "gold_latest"           // 黃金現貨當日行情（T227）
+	TPExGoldHighlight TPExDataset = "gold_highlight"        // 黃金現貨市場現況（T227）
+	TPExGoldWarrant   TPExDataset = "gold_warrant"          // 黃金現貨權證發行資料（T227）
 )
 
 // 端點路徑（2026-07 實測可用）。
@@ -186,6 +189,9 @@ var (
 		TPExIntlBondQuote: "/tpex_international_bond_quotes",     // 國際債券報價（T226）
 		TPExIntlBondTrade: "/tpex_international_bond_trade",      // 國際債券成交（T226）
 		TPExBondIssue:     "/bond_ISSBD1_data",                   // 公債發行資料（T226）
+		TPExGoldLatest:    "/tpex_gold_latest",                   // 黃金現貨當日行情（T227）
+		TPExGoldHighlight: "/tpex_gold_market_highlight",         // 黃金現貨市場現況（T227）
+		TPExGoldWarrant:   "/tpex_warrant_gold",                  // 黃金權證發行資料（T227）
 	}
 )
 
@@ -416,6 +422,10 @@ func normalizeTPEx(raw *RawResponse) ([]byte, error) {
 	case string(TPExIntlBondQuote), string(TPExIntlBondTrade), string(TPExBondIssue):
 		// passthrough（T226 實測；國際債券/公債發行 Date/BondCode/BidYieldPrice
 		// 等，原樣保留）。
+		out = ms
+	case string(TPExGoldLatest), string(TPExGoldHighlight), string(TPExGoldWarrant):
+		// passthrough（T227 實測；黃金現貨行情/市場現況/權證，官方中英欄位
+		// 混用，原樣保留）。
 		out = ms
 	case string(TPExOtcExRightDay):
 		// passthrough（T200 實測：Date/SecuritiesCompanyCode/CompanyName/

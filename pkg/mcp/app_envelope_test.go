@@ -193,6 +193,8 @@ func stubBCEnvelope(f *fakeFetch) {
 	f.bodies["otc_block_monthly|"] = `[{"Month":"11501","Type":"配對交易-組合型","NumberOfTransactions":"0"}]`
 	f.bodies["intl_bond_quotes|"] = `[{"Date":"20260825","BondCode":"F00922","BondName":"P21BNP2","BidYieldPrice":"099.9000"}]`
 	f.bodies["bond_issue|"] = `[{"Date":"20260825","IssuerName":"中央政府","BondCode":"A90105"}]`
+	f.bodies["gold_latest|"] = `[{"Date":"1150825","GoldCode":"AU9901","GoldShortName":"臺銀金"}]`
+	f.bodies["gold_warrant|"] = `[{"Date":"1070917","Code":"70001Y","Name":"一銀金元大63展01"}]`
 	f.bodies["otc_broker_volume|"] = `[{"Date":"20260730","StockRanking":"1","SecuritiesCompanyCodeAndCompanyName":"華東(8110)","SecuritiesFirmsRanking":"1","SecuritiesFirmsCode":"元大","TotalPurchaseShares":"1000","TotalSellShares":"900"}]`
 	f.bodies["otc_monthly_revenue|"] = `[{"出表日期":"1150817","資料年月":"11507","公司代號":"1240","公司名稱":"茂生農經","營業收入-當月營收":"242511","營業收入-上月比較增減(%)":"-10.24"}]`
 	f.bodies["otc_daily|"] = `[{"date":"2026-07-30","code":"8110","name":"華東","close":30.5,"change_dir":"+","change":0.35,"open":30.1,"high":30.7,"low":30.0,"volume":120000,"amount":3660000,"transaction":80}]`
@@ -375,6 +377,7 @@ func allToolProbes() []envelopeProbe {
 		{name: "get_otc_broker_turnover", args: map[string]any{"level": "branch", "code": "9268"}},
 		{name: "get_otc_block_trade", args: map[string]any{"kind": "monthly", "limit": 3}},
 		{name: "get_international_bond", args: map[string]any{"kind": "quotes", "code": "F00922"}},
+		{name: "get_gold_spot", args: map[string]any{"kind": "spot", "code": "AU9901"}},
 		{name: "get_otc_exdividend_result", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_targets", args: map[string]any{"code": "8110"}},
 		{name: "get_otc_daytrade_statistics", args: map[string]any{}},

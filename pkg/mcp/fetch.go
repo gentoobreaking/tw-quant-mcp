@@ -190,6 +190,9 @@ var cacheDataset = map[string]string{
 	string(provider.TPExIntlBondQuote):      cache.DatasetDailyKLine,     // 國際債券報價（T226）
 	string(provider.TPExIntlBondTrade):      cache.DatasetDailyKLine,     // 國際債券成交（T226）
 	string(provider.TPExBondIssue):          cache.DatasetDailyKLine,     // 公債發行資料（T226）
+	string(provider.TPExGoldLatest):         cache.DatasetDailyKLine,     // 黃金現貨當日行情（T227）
+	string(provider.TPExGoldHighlight):      cache.DatasetDailyKLine,     // 黃金現貨市場現況（T227）
+	string(provider.TPExGoldWarrant):        cache.DatasetDailyKLine,     // 黃金權證發行資料（T227）
 	string(provider.TPExOtcExRightDay):      cache.DatasetDailyKLine,     // 除權息計算結果（T200）
 	string(provider.TPExOtcDTTargets):       cache.DatasetAlertStock,     // 上櫃當沖標的（T201，僅 L1）
 	string(provider.TPExOtcDTStats):         cache.DatasetDailyKLine,     // 上櫃當沖統計（T201）

@@ -1523,6 +1523,23 @@ func registerBCTools(r *Registry) {
 		Handler:  handlerGetInternationalBond,
 	}) // T226
 	r.Register(ToolDef{
+		Symbol: "get_gold_spot",
+		Name:   "get_gold_spot",
+		Description: "查詢黃金現貨與黃金權證（TPEx-API tpex_gold_latest/market_highlight/warrant_gold，T227）。" +
+			"kind 切換 spot 當日行情／highlight 市場現況／warrant 權證發行資料。code 過濾黃金代號或權證代號；limit 預設 50、offset 分頁。利基/長尾資料。",
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"kind":   map[string]any{"type": "string", "enum": []string{"spot", "highlight", "warrant"}, "default": "spot", "description": "當日行情/市場現況/權證資料"},
+				"code":   map[string]any{"type": "string", "description": "黃金代號（如 AU9901）或權證代號（選填）"},
+				"limit":  map[string]any{"type": "integer", "default": 50, "minimum": 1, "description": "回傳筆數上限"},
+				"offset": map[string]any{"type": "integer", "default": 0, "minimum": 0, "description": "跳過前 N 筆"},
+			},
+		},
+		ReadOnly: true,
+		Handler:  handlerGetGoldSpot,
+	}) // T227
+	r.Register(ToolDef{
 		Symbol: "get_otc_governance",
 		Name:   "get_otc_governance",
 		Description: "查詢上櫃公司治理・監理・股務系列資料（TPEx-API mopsfin_* 系列，T237；24 種 kind）。" +
