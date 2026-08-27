@@ -1,48 +1,51 @@
 
- 版本號定義位置
+ 版本號定義位置（單一來源：根目錄 VERSION 檔）
 
- ┌───────────────────────────┬───────────────────────┐
- │ 檔案                      │ 位置                  │
- ├───────────────────────────┼───────────────────────┤
- │ cmd/mcp-server/main.go:13 │ var version = "2.1.0" │
- ├───────────────────────────┼───────────────────────┤
- │ Makefile:2                │ VERSION ?= 2.1.0      │
- └───────────────────────────┴───────────────────────┘
+ ┌───────────────────────────┬───────────────────────────────────────────────┐
+ │ 檔案                      │ 位置                                          │
+ ├───────────────────────────┼───────────────────────────────────────────────┤
+ │ VERSION（repo 根）        │ 2.2.0  ← 唯一定義版本號之處（發布時改這一檔）  │
+ ├───────────────────────────┼───────────────────────────────────────────────┤
+ │ Makefile:2                │ VERSION := $(shell cat VERSION) 自動讀取         │
+ ├───────────────────────────┼───────────────────────────────────────────────┤
+ │ cmd/mcp-server/main.go:26 │ var version = "2.2.0"（ldflags 會覆寫；與 VERSION 檔同步） │
+ └───────────────────────────┴───────────────────────────────────────────────┘
 
- 版本號在建置時透過 -ldflags "-X main.version=$(VERSION)" 注入。
+ 版本號在建置時透過 -ldflags "-X main.version=$(VERSION)" 注入；
+ $(VERSION) 預設來自根目錄 VERSION 檔，故所有 make 指令（build /
+ build-release / release-check）皆自動吃到正確版本，毋須每次手動打 VERSION=。
 
  ────────────────────────────────────────────────────────────────────────────────
 
  如何更換版本號
 
- ### 方式 1：單次建置指定版本（推薦、不改檔案）
+ ### 方式 1：修改 VERSION 檔（推薦、單一來源）
+
+ 發布升版時，只改根目錄 VERSION 檔一個字（如 2.2.0 → 2.3.0），
+ 其餘 make 指令全部自動繼承，不用每次打 VERSION=，也不會忘記/打錯。
 
  ```bash
-   # 開發建置
-   make build VERSION=2.2.0
-
-   # 發布建置（CGO-free 單一執行檔）
-   make build-release VERSION=2.2.0
-
-   # 完整發布檢查
-   make release-check VERSION=2.2.0
+   # 升版：編輯 VERSION 檔為新版本號，例如 2.3.0
+   # 日常使用（自動吃到 VERSION 檔）：
+   make build            # → 自動 2.3.0
+   make build-release    # → bin/tw-quant-mcp-v2.3.0
+   make release-check    # → 自動 2.3.0
  ```
 
- ### 方式 2：永久修改預設版本（修改兩處）
+ ### 方式 2：單次建置臨時覆寫（不改 VERSION 檔）
 
- 1. 編輯 cmd/mcp-server/main.go：
-    ```go
-      var version = "2.2.0" // 改這行
-    ```
- 2. 編輯 Makefile：
-    ```makefile
-      VERSION ?= 2.2.0  # 改這行
-    ```
+ 僅臨時想產出不同版本執行檔時用，不影響 VERSION 檔預設值：
+
+ ```bash
+   make build VERSION=2.2.1        # 一次性覆寫，VERSION 檔仍為 2.2.0
+   make build-release VERSION=2.2.1
+   make release-check VERSION=2.2.1
+ ```
 
  ### 方式 3：直接 go build
 
  ```bash
-   go build -ldflags "-X main.version=2.2.0" -o bin/tw-quant-mcp ./cmd/mcp-server
+   go build -ldflags "-X main.version=$(cat VERSION)" -o bin/tw-quant-mcp ./cmd/mcp-server
  ```
 
  ────────────────────────────────────────────────────────────────────────────────
