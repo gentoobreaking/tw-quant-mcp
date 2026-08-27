@@ -28,6 +28,27 @@ jobs:
         with:
           persist-credentials: false
 
+      # 版本號單一來源守門：根目錄 VERSION 檔必須與推送的 tag（去 v 前綴）一致，
+      # 否則在 build 前即失敗，避免「改了 tag 卻忘改 VERSION 檔」導致兩套版本號對不上。
+      - name: 驗證 VERSION 檔與 tag 一致
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          FILE_VERSION="$(cat VERSION 2>/dev/null || echo '')"
+          TAG_VERSION="${TAG#v}"
+          echo "VERSION 檔 : ${FILE_VERSION}"
+          echo "tag（去 v）: ${TAG_VERSION}"
+          if [ -z "$FILE_VERSION" ]; then
+            echo "::error::根目錄 VERSION 檔不存在或為空"
+            exit 1
+          fi
+          if [ "$FILE_VERSION" != "$TAG_VERSION" ]; then
+            echo "::error::VERSION 檔=${FILE_VERSION} 與 tag=${TAG_VERSION} 不符"
+            echo "::error::請同步 VERSION 檔與 tag 後重新打 tag"
+            exit 1
+          fi
+          echo "✓ VERSION 檔與 tag 一致"
+
       - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
           go-version-file: go.mod
