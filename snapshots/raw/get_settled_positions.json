@@ -10,7 +10,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Contract\":\"CAF\",\"ContractDeliveryMonth\":\"202608\",\"ContractName\":\"南亞期貨\",\"Long(lot)\":\"2884\",\"Short(lot)\":\"2884\",\"TheFinalSettlementDay\":\"20260819\"},{\"Contract\":\"CYF\",\"ContractDeliveryMonth\":\"202608\",\"ContractName\":\"南亞科期貨\",\"Long(lot)\":\"2475\",\"Short(lot)\":\"2475\",\"TheFinalSettlementDay\":\"20260819\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:46+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":1,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Contract\":\"CAF\",\"ContractDeliveryMonth\":\"202608\",\"ContractName\":\"南亞期貨\",\"Long(lot)\":\"2884\",\"Short(lot)\":\"2884\",\"TheFinalSettlementDay\":\"20260819\"},{\"Contract\":\"CYF\",\"ContractDeliveryMonth\":\"202608\",\"ContractName\":\"南亞科期貨\",\"Long(lot)\":\"2475\",\"Short(lot)\":\"2475\",\"TheFinalSettlementDay\":\"20260819\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:45:37+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":1,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -35,7 +35,7 @@
         "_lineage": {
           "source": "TAIFEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:42:46+08:00",
+          "fetched_at": "2026-08-26T13:45:37+08:00",
           "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,

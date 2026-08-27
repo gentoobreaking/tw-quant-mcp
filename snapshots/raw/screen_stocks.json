@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"total\":1969,\"matched\":5,\"limit\":5,\"rows\":[{\"code\":\"4523\",\"name\":\"永彰\",\"market\":\"otc\",\"pe\":0.89,\"pe_available\":true,\"pb\":0.85,\"dividend_yield_pct\":11.05,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2491\",\"name\":\"吉祥全\",\"market\":\"tse\",\"pe\":1.33,\"pe_available\":true,\"pb\":0.86,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":6.549761172544658,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2911\",\"name\":\"麗嬰房\",\"market\":\"tse\",\"pe\":1.65,\"pe_available\":true,\"pb\":0.51,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":-5.359436219384196,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2102\",\"name\":\"泰豐\",\"market\":\"tse\",\"pe\":2.17,\"pe_available\":true,\"pb\":0.89,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":2.52298877131371,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"5864\",\"name\":\"致和證\",\"market\":\"otc\",\"pe\":2.41,\"pe_available\":true,\"pb\":1.18,\"dividend_yield_pct\":4.78,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:44:24+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":8,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"scatter\",\"x_axis\":{\"key\":\"pe\",\"type\":\"value\"},\"y_axis\":{\"key\":\"dividend_yield_pct\",\"title\":\"PE / 殖利率散佈\"},\"series\":[{\"key\":\"pb\",\"type\":\"bubble\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"total\":1969,\"matched\":5,\"limit\":5,\"rows\":[{\"code\":\"4523\",\"name\":\"永彰\",\"market\":\"otc\",\"pe\":0.89,\"pe_available\":true,\"pb\":0.85,\"dividend_yield_pct\":11.05,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2491\",\"name\":\"吉祥全\",\"market\":\"tse\",\"pe\":1.33,\"pe_available\":true,\"pb\":0.86,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":6.549761172544658,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2911\",\"name\":\"麗嬰房\",\"market\":\"tse\",\"pe\":1.65,\"pe_available\":true,\"pb\":0.51,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":-5.359436219384196,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"2102\",\"name\":\"泰豐\",\"market\":\"tse\",\"pe\":2.17,\"pe_available\":true,\"pb\":0.89,\"dividend_yield_pct\":0,\"dividend_per_share\":0,\"revenue_growth_pct\":2.52298877131371,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null},{\"code\":\"5864\",\"name\":\"致和證\",\"market\":\"otc\",\"pe\":2.41,\"pe_available\":true,\"pb\":1.18,\"dividend_yield_pct\":4.78,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":null}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:46:43+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":7,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"scatter\",\"x_axis\":{\"key\":\"pe\",\"type\":\"value\"},\"y_axis\":{\"key\":\"dividend_yield_pct\",\"title\":\"PE / 殖利率散佈\"},\"series\":[{\"key\":\"pb\",\"type\":\"bubble\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -93,12 +93,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:44:24+08:00",
+          "fetched_at": "2026-08-26T13:46:43+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 8,
+          "latency_ms": 7,
           "grade": "AVAILABLE"
         },
         "_chart_meta": {

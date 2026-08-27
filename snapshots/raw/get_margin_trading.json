@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"code\":\"2330\",\"name\":\"台積電\",\"margin_buy\":289000,\"margin_sell\":205000,\"margin_cash_redeem\":17000,\"margin_prev_balance\":27902000,\"margin_balance\":27969000,\"margin_limit\":6483092000,\"short_buy\":1000,\"short_sell\":4000,\"short_cash_redeem\":0,\"short_prev_balance\":31000,\"short_balance\":33000,\"short_limit\":6483092000,\"offset\":3000},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:41:10+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":421,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"code\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"margin_balance\"],\"title\":\"融資融券餘額\"},\"series\":[{\"key\":\"margin_balance\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"code\":\"2330\",\"name\":\"台積電\",\"margin_buy\":289000,\"margin_sell\":205000,\"margin_cash_redeem\":17000,\"margin_prev_balance\":27902000,\"margin_balance\":27969000,\"margin_limit\":6483092000,\"short_buy\":1000,\"short_sell\":4000,\"short_cash_redeem\":0,\"short_prev_balance\":31000,\"short_balance\":33000,\"short_limit\":6483092000,\"offset\":3000},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:44:45+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":640,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"code\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"margin_balance\"],\"title\":\"融資融券餘額\"},\"series\":[{\"key\":\"margin_balance\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -33,12 +33,12 @@
         "_lineage": {
           "source": "TWSE_WEB",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:41:10+08:00",
+          "fetched_at": "2026-08-26T13:44:45+08:00",
           "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 421,
+          "latency_ms": 640,
           "grade": "AVAILABLE"
         },
         "_chart_meta": {

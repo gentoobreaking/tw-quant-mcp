@@ -10,7 +10,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Change\":\"0.63\",\"Date\":\"1150825\",\"Index\":\"396.93\",\"Name\":\"櫃買公司治理指數\"},{\"Change\":\"0.63\",\"Date\":\"1150825\",\"Index\":\"603.38\",\"Name\":\"櫃買公司治理報酬指數\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:54+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":590,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Change\":\"0.63\",\"Date\":\"1150825\",\"Index\":\"396.93\",\"Name\":\"櫃買公司治理指數\"},{\"Change\":\"0.63\",\"Date\":\"1150825\",\"Index\":\"603.38\",\"Name\":\"櫃買公司治理報酬指數\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:44:30+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":571,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -31,12 +31,12 @@
         "_lineage": {
           "source": "TPEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:40:54+08:00",
+          "fetched_at": "2026-08-26T13:44:30+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 590,
+          "latency_ms": 571,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

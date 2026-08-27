@@ -7,7 +7,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"ClearingMargin\":\"34000\",\"Contract\":\"GBF\",\"Date\":\"20190911\",\"InitialMargin\":\"46000\",\"MaintenanceMargin\":\"36000\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:41:05+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"ClearingMargin\":\"34000\",\"Contract\":\"GBF\",\"Date\":\"20190911\",\"InitialMargin\":\"46000\",\"MaintenanceMargin\":\"36000\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:44:41+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -23,7 +23,7 @@
         "_lineage": {
           "source": "TAIFEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:41:05+08:00",
+          "fetched_at": "2026-08-26T13:44:41+08:00",
           "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,

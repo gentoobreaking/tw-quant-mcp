@@ -13,34 +13,10 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"count\":3,\"sampling_sec\":8,\"status\":\"ok\",\"symbols\":[\"2317\",\"2330\",\"2454\"]},\"_lineage\":{\"source\":\"TWSE_MIS\",\"source_role\":\"SEMI_OFFICIAL_REALTIME\",\"fetched_at\":\"2026-08-26T12:39:30+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"REALTIME_INTRADAY\",\"sampling_sec\":8,\"is_cached\":false,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "非交易時段（13:43:02）無法提供盤中資料"
         }
       ],
-      "structuredContent": {
-        "data": {
-          "count": 3,
-          "sampling_sec": 8,
-          "status": "ok",
-          "symbols": [
-            "2317",
-            "2330",
-            "2454"
-          ]
-        },
-        "_lineage": {
-          "source": "TWSE_MIS",
-          "source_role": "SEMI_OFFICIAL_REALTIME",
-          "fetched_at": "2026-08-26T12:39:30+08:00",
-          "data_date": "2026-08-26",
-          "freshness": "REALTIME_INTRADAY",
-          "sampling_sec": 8,
-          "is_cached": false,
-          "latency_ms": 0,
-          "grade": "AVAILABLE"
-        },
-        "http_calls": 0,
-        "disclaimer": "僅供研究參考，不構成投資建議"
-      }
+      "isError": true
     }
   }
 }

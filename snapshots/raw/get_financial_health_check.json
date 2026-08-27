@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"code\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"scoring_version\":\"v1\",\"date\":\"2026-08-26\",\"profit\":{\"score\":100,\"available\":true,\"note\":\"毛利率 67.0%（滿分 40%）、營益率 59.3%、純益率 53.2%\"},\"growth\":{\"score\":0,\"available\":false,\"note\":\"無 2025Q2 去年同期財報（僅 2026Q2），成長性暫不計\"},\"structure\":{\"score\":100,\"available\":true,\"note\":\"負債比 30.9%（門檻 40%–80%）；營業現金流為正\"},\"dividend\":{\"score\":72,\"available\":true,\"note\":\"連年配息 3 年（滿分基準 5 年）、有配息 3/3 年度、殖利率 0.92%\"},\"governance\":{\"score\":100,\"available\":true,\"note\":\"具 ESG、公司治理規程 揭露\"},\"total\":75.8,\"note\":\"評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）\"},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:42+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":8,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"radar\",\"y_axis\":{\"title\":\"財務健康五面向\"},\"axes\":[\"profit\",\"growth\",\"structure\",\"dividend\",\"governance\"],\"series\":[{\"type\":\"radar\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"code\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"scoring_version\":\"v1\",\"date\":\"2026-08-26\",\"profit\":{\"score\":100,\"available\":true,\"note\":\"毛利率 67.0%（滿分 40%）、營益率 59.3%、純益率 53.2%\"},\"growth\":{\"score\":0,\"available\":false,\"note\":\"無 2025Q2 去年同期財報（僅 2026Q2），成長性暫不計\"},\"structure\":{\"score\":100,\"available\":true,\"note\":\"負債比 30.9%（門檻 40%–80%）；營業現金流為正\"},\"dividend\":{\"score\":72,\"available\":true,\"note\":\"連年配息 3 年（滿分基準 5 年）、有配息 3/3 年度、殖利率 0.92%\"},\"governance\":{\"score\":100,\"available\":true,\"note\":\"具 ESG、公司治理規程 揭露\"},\"total\":75.8,\"note\":\"評分輸入來自 T014 已快取之官方資料（MOPS 財報/TWSE 估值・股利・ESG/TPEx 估值）\"},\"_lineage\":{\"source\":\"MOPS\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:44:15+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":19,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"radar\",\"y_axis\":{\"title\":\"財務健康五面向\"},\"axes\":[\"profit\",\"growth\",\"structure\",\"dividend\",\"governance\"],\"series\":[{\"type\":\"radar\"}]},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -50,12 +50,12 @@
         "_lineage": {
           "source": "MOPS",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:40:42+08:00",
+          "fetched_at": "2026-08-26T13:44:15+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 8,
+          "latency_ms": 19,
           "grade": "AVAILABLE"
         },
         "_chart_meta": {

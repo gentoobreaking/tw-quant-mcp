@@ -7,7 +7,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"code\":\"1101\",\"name\":\"台泥\",\"volume\":9,\"transaction\":6,\"amount\":221400,\"price\":24.6,\"bid_volume\":29,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1101B\",\"name\":\"台泥乙特\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":43.2,\"bid_volume\":0,\"ask_volume\":1,\"date\":\"2026-08-25\"},{\"code\":\"1102\",\"name\":\"亞泥\",\"volume\":1,\"transaction\":1,\"amount\":34900,\"price\":34.9,\"bid_volume\":0,\"ask_volume\":9,\"date\":\"2026-08-25\"},{\"code\":\"1103\",\"name\":\"嘉泥\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":13.25,\"bid_volume\":0,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1104\",\"name\":\"環泥\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":26.65,\"bid_volume\":52,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1108\",\"name\":\"幸福\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":11.7,\"bid_volume\":5,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1109\",\"name\":\"信大\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":13.5,\"bid_volume\":0,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1110\",\"name\":\"東泥\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":15.95,\"bid_volume\":0,\"ask_volume\":0,\"date\":\"2026-08-25\"}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:39:32+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":172,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"code\":\"1101\",\"name\":\"台泥\",\"volume\":9,\"transaction\":6,\"amount\":221400,\"price\":24.6,\"bid_volume\":29,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1101B\",\"name\":\"台泥乙特\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":43.2,\"bid_volume\":0,\"ask_volume\":1,\"date\":\"2026-08-25\"},{\"code\":\"1102\",\"name\":\"亞泥\",\"volume\":1,\"transaction\":1,\"amount\":34900,\"price\":34.9,\"bid_volume\":0,\"ask_volume\":9,\"date\":\"2026-08-25\"},{\"code\":\"1103\",\"name\":\"嘉泥\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":13.25,\"bid_volume\":0,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1104\",\"name\":\"環泥\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":26.65,\"bid_volume\":52,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1108\",\"name\":\"幸福\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":11.7,\"bid_volume\":5,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1109\",\"name\":\"信大\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":13.5,\"bid_volume\":0,\"ask_volume\":0,\"date\":\"2026-08-25\"},{\"code\":\"1110\",\"name\":\"東泥\",\"volume\":0,\"transaction\":0,\"amount\":0,\"price\":15.95,\"bid_volume\":0,\"ask_volume\":0,\"date\":\"2026-08-25\"}],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:43:05+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":503,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -104,12 +104,12 @@
         "_lineage": {
           "source": "TWSE_WEB",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:39:32+08:00",
+          "fetched_at": "2026-08-26T13:43:05+08:00",
           "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 172,
+          "latency_ms": 503,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

@@ -7,7 +7,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"ClosingPrice\":\"0\",\"Code\":\"\",\"Date\":\"\",\"Name\":\"\",\"Number\":\"0\",\"NumberOfAnnouncement\":\"0\",\"PE\":\"0\",\"TradingInfoForAttention\":\"\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:44:13+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":48,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"ClosingPrice\":\"0\",\"Code\":\"\",\"Date\":\"\",\"Name\":\"\",\"Number\":\"0\",\"NumberOfAnnouncement\":\"0\",\"PE\":\"0\",\"TradingInfoForAttention\":\"\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:46:33+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":206,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -26,12 +26,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:44:13+08:00",
+          "fetched_at": "2026-08-26T13:46:33+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 48,
+          "latency_ms": 206,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

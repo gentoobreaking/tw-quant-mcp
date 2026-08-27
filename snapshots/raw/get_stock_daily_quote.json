@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"date\":\"2026-08-25\",\"open\":2355,\"high\":2400,\"low\":2350,\"close\":2400,\"volume\":13538447,\"amount\":32130079305,\"indicators\":{\"ma20\":2368.5,\"ma60\":2382.25,\"rsi14\":52.05296025535314,\"macd\":{\"macd\":5.32602908973513,\"signal\":5.249094970005045,\"hist\":0.07693411973008502}}},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:52+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":6493,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"close\"],\"title\":\"收盤價 (元)\"}},\"http_calls\":3,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"date\":\"2026-08-25\",\"open\":2355,\"high\":2400,\"low\":2350,\"close\":2400,\"volume\":13538447,\"amount\":32130079305,\"indicators\":{\"ma20\":2368.5,\"ma60\":2382.25,\"rsi14\":52.05296025535314,\"macd\":{\"macd\":5.32602908973513,\"signal\":5.249094970005045,\"hist\":0.07693411973008502}}},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:45:42+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":5664,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"line\",\"x_axis\":{\"key\":\"date\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"close\"],\"title\":\"收盤價 (元)\"}},\"http_calls\":3,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -38,12 +38,12 @@
         "_lineage": {
           "source": "TWSE_WEB",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:42:52+08:00",
+          "fetched_at": "2026-08-26T13:45:42+08:00",
           "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 6493,
+          "latency_ms": 5664,
           "grade": "AVAILABLE"
         },
         "_chart_meta": {

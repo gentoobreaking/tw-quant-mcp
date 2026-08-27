@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:43:20+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1955,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[],\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:46:09+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1107,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -17,12 +17,12 @@
         "_lineage": {
           "source": "TWSE_WEB",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:43:20+08:00",
+          "fetched_at": "2026-08-26T13:46:09+08:00",
           "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 1955,
+          "latency_ms": 1107,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

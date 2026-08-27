@@ -5,6 +5,7 @@
 ARGS 僅存放人工調校的測試參數（覆寫自動產生值），
 未列入者依 schema 自動產生最小合法參數。
 """
+
 import datetime
 import json
 import os
@@ -67,17 +68,37 @@ ARGS = {
     "get_symbol_list": {"market": "tse"},
     # ── TAIFEX ──
     "get_futures_daily_ohlc": {"contract": "TX"},
-    "get_futures_history": {"contract": "TX", "start": "2026-07-28", "end": "2026-07-31"},
+    "get_futures_history": {
+        "contract": "TX",
+        "start": "2026-07-28",
+        "end": "2026-07-31",
+    },
     "get_institutional_futures_history": {"start": "2026-07-28", "end": "2026-07-31"},
     # ── 歷史查詢（schema 未標 required 但 handler 必填 start/end，T240 教訓）──
     "get_futures_daily_history": {"start": _recent(14), "end": _recent(1)},
     "get_options_daily_history": {"start": _recent(14), "end": _recent(1)},
     "get_institutional_total_history": {"start": _recent(14), "end": _recent(1)},
-    "get_institutional_fut_opt_split_history": {"start": _recent(14), "end": _recent(1)},
-    "get_institutional_traders_by_futures_history": {"start": _recent(14), "end": _recent(1)},
-    "get_options_institutional_by_contract_history": {"start": _recent(14), "end": _recent(1)},
-    "get_options_institutional_calls_puts_history": {"start": _recent(14), "end": _recent(1)},
-    "get_large_traders_futures_history": {"contract": "TX", "start": _recent(14), "end": _recent(1)},
+    "get_institutional_fut_opt_split_history": {
+        "start": _recent(14),
+        "end": _recent(1),
+    },
+    "get_institutional_traders_by_futures_history": {
+        "start": _recent(14),
+        "end": _recent(1),
+    },
+    "get_options_institutional_by_contract_history": {
+        "start": _recent(14),
+        "end": _recent(1),
+    },
+    "get_options_institutional_calls_puts_history": {
+        "start": _recent(14),
+        "end": _recent(1),
+    },
+    "get_large_traders_futures_history": {
+        "contract": "TX",
+        "start": _recent(14),
+        "end": _recent(1),
+    },
     # ── T237 上櫃治理（kind 無預設值）──
     "get_otc_governance": {"kind": "major_shareholders"},
     # ── 鉅額交易（date 必填，用最近交易日）──
@@ -135,7 +156,11 @@ def sample_value(tool: str, prop_name: str, spec) -> object:
     if prop_name == "symbols":
         return ["2330"]
     if prop_name in SYMBOL_FIELDS:
-        return "0050" if "etf" in tool else ("0050" if "etf" in str(spec.get("description", "")) else "2330")
+        return (
+            "0050"
+            if "etf" in tool
+            else ("0050" if "etf" in str(spec.get("description", "")) else "2330")
+        )
     if prop_name == "contract":
         return "TX"
     if prop_name in DATE_FIELDS:
@@ -167,6 +192,7 @@ try:
     def gen_args(tool_name: str, schema: dict) -> dict:
         return _endpoint_build_args(tool_name, schema)
 except ImportError:  # 後備：僅填 required 欄位
+
     def gen_args(tool_name: str, schema: dict) -> dict:
         args = {}
         for pname in schema.get("required", []):
@@ -233,16 +259,27 @@ def main():
     print(f"tools/list 回傳 {len(tools)} 個工具", flush=True)
 
     # 盤中引擎工具需先設定 watchlist
-    if any(t["name"].startswith("get_intraday") or t["name"] == "detect_volume_surge" for t in tools):
+    if any(
+        t["name"].startswith("get_intraday") or t["name"] == "detect_volume_surge"
+        for t in tools
+    ):
         wl = ARGS.get("set_active_watchlist", {"symbols": ["2330"]})
         print(f"前置：set_active_watchlist {wl['symbols']}", flush=True)
-        r = send_recv(proc, {
-            "jsonrpc": "2.0", "id": 5, "method": "tools/call",
-            "params": {"name": "set_active_watchlist", "arguments": wl},
-        }, 5)
+        r = send_recv(
+            proc,
+            {
+                "jsonrpc": "2.0",
+                "id": 5,
+                "method": "tools/call",
+                "params": {"name": "set_active_watchlist", "arguments": wl},
+            },
+            5,
+        )
         try:
             with open(os.path.join(RAW_DIR, "set_active_watchlist.json"), "w") as f:
-                json.dump({"arguments": wl, "response": r}, f, ensure_ascii=False, indent=2)
+                json.dump(
+                    {"arguments": wl, "response": r}, f, ensure_ascii=False, indent=2
+                )
         except OSError as e:
             print(f"寫檔失敗: {e}", file=sys.stderr)
 
@@ -256,11 +293,17 @@ def main():
         schema = t.get("inputSchema", {})
         args = dict(gen_args(name, schema))
         args.update(ARGS.get(name, {}))  # 人工調校覆寫
-        print(f"[{i+1}/{len(tools)}] 呼叫 {name} ...", flush=True)
-        resp = send_recv(proc, {
-            "jsonrpc": "2.0", "id": msg_id, "method": "tools/call",
-            "params": {"name": name, "arguments": args},
-        }, msg_id)
+        print(f"[{i + 1}/{len(tools)}] 呼叫 {name} ...", flush=True)
+        resp = send_recv(
+            proc,
+            {
+                "jsonrpc": "2.0",
+                "id": msg_id,
+                "method": "tools/call",
+                "params": {"name": name, "arguments": args},
+            },
+            msg_id,
+        )
         is_err = resp.get("result", {}).get("isError", False)
         has_err = "error" in resp
         if is_err or has_err:
@@ -270,7 +313,12 @@ def main():
             ok += 1
         try:
             with open(os.path.join(RAW_DIR, f"{name}.json"), "w") as f:
-                json.dump({"arguments": args, "response": resp}, f, ensure_ascii=False, indent=2)
+                json.dump(
+                    {"arguments": args, "response": resp},
+                    f,
+                    ensure_ascii=False,
+                    indent=2,
+                )
         except OSError as e:
             print(f"寫檔失敗: {e}", file=sys.stderr)
         msg_id += 1

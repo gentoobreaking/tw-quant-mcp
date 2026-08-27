@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d6a023cc7101a0382747dd0024\",\"No\":\"1\",\"Title\":\"2026年上市公司辦理法人說明會(9月1日至9月30日)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69fc76da0019ff9c1bba600fd\",\"No\":\"2\",\"Title\":\"115年「SEMICON Taiwan」主題式業績發表會及產業講座（9月3日）\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69ef76943019f88b16b3b0205\",\"No\":\"3\",\"Title\":\"2026年上市公司辦理法人說明會(8月1日至8月31日)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019ef38be77f02b6\",\"No\":\"4\",\"Title\":\"2026年上市公司辦理法人說明會(7月1日至7月31日)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019eab67b25401bd\",\"No\":\"5\",\"Title\":\"「創新引領未來:多元技術與市場拓展之路」創新板公司法人說明會\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019e811b818600b2\",\"No\":\"6\",\"Title\":\"2026年上市公司辦理法人說明會(6月1日至6月30日)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019e672a61bf000e\",\"No\":\"7\",\"Title\":\"115年投資講座（6月8日至12月7日）\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e2f5671019e4d58eda90083\",\"No\":\"8\",\"Title\":\"115年度第二季證券承銷商業務宣導會(115.6.16)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e2f5671019e3f5e560a0042\",\"No\":\"9\",\"Title\":\"115年度證券商結算交割、錯帳違約申報及申購競拍業務宣導說明會\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69dbea9fd019dfc4a9c0f0104\",\"No\":\"10\",\"Title\":\"115年「璞玉指數」主題式業績發表會及產業講座（5月20日到5月22日）\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:44:13+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":524,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d6a023cc7101a0382747dd0024\",\"No\":\"1\",\"Title\":\"2026年上市公司辦理法人說明會(9月1日至9月30日)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69fc76da0019ff9c1bba600fd\",\"No\":\"2\",\"Title\":\"115年「SEMICON Taiwan」主題式業績發表會及產業講座（9月3日）\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69ef76943019f88b16b3b0205\",\"No\":\"3\",\"Title\":\"2026年上市公司辦理法人說明會(8月1日至8月31日)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019ef38be77f02b6\",\"No\":\"4\",\"Title\":\"2026年上市公司辦理法人說明會(7月1日至7月31日)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019eab67b25401bd\",\"No\":\"5\",\"Title\":\"「創新引領未來:多元技術與市場拓展之路」創新板公司法人說明會\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019e811b818600b2\",\"No\":\"6\",\"Title\":\"2026年上市公司辦理法人說明會(6月1日至6月30日)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e6379f4019e672a61bf000e\",\"No\":\"7\",\"Title\":\"115年投資講座（6月8日至12月7日）\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e2f5671019e4d58eda90083\",\"No\":\"8\",\"Title\":\"115年度第二季證券承銷商業務宣導會(115.6.16)\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69e2f5671019e3f5e560a0042\",\"No\":\"9\",\"Title\":\"115年度證券商結算交割、錯帳違約申報及申購競拍業務宣導說明會\"},{\"Details\":\"https://www.twse.com.tw/zh/about/news/event/content.html?8a8216d69dbea9fd019dfc4a9c0f0104\",\"No\":\"10\",\"Title\":\"115年「璞玉指數」主題式業績發表會及產業講座（5月20日到5月22日）\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:46:34+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":367,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -68,12 +68,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:44:13+08:00",
+          "fetched_at": "2026-08-26T13:46:34+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 524,
+          "latency_ms": 367,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

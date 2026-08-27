@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"取得驗證\":\"GRI 準則\",\"用水密集度-單位\":\"公升/十二吋晶圓當量-光罩數\",\"用水密集度-密集度(公噸/單位) \":\"153.3000\",\"用水量(公噸)\":\"127121673.0000\",\"資料範圍\":\"台灣廠區及部分子公司\\n用水量：天然水\\n總取水量、總耗水量：天然水+再生水\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:20+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":3,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"取得驗證\":\"GRI 準則\",\"用水密集度-單位\":\"公升/十二吋晶圓當量-光罩數\",\"用水密集度-密集度(公噸/單位) \":\"153.3000\",\"用水量(公噸)\":\"127121673.0000\",\"資料範圍\":\"台灣廠區及部分子公司\\n用水量：天然水\\n總取水量、總耗水量：天然水+再生水\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:43:53+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":6,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -29,12 +29,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:40:20+08:00",
+          "fetched_at": "2026-08-26T13:43:53+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 3,
+          "latency_ms": 6,
           "grade": "AVAILABLE"
         },
         "http_calls": 0,

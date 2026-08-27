@@ -6,15 +6,23 @@
 #   ./scripts/run_all.sh --call-only # 只呼叫工具（不渲染）
 #   ./scripts/run_all.sh --render-only # 只渲染截圖（用現有 raw JSON）
 set -euo pipefail
-cd "$(dirname "$0")/.."   # 專案根目錄
+cd "$(dirname "$0")/.." # 專案根目錄
 
-BUILD=1; CALL=1; RENDER=1
+BUILD=1
+CALL=1
+RENDER=1
 for arg in "$@"; do
   case "$arg" in
-    --no-build)   BUILD=0 ;;
-    --call-only)  RENDER=0 ;;
-    --render-only) BUILD=0; CALL=0 ;;
-    *) echo "未知參數: $arg"; exit 1 ;;
+  --no-build) BUILD=0 ;;
+  --call-only) RENDER=0 ;;
+  --render-only)
+    BUILD=0
+    CALL=0
+    ;;
+  *)
+    echo "未知參數: $arg"
+    exit 1
+    ;;
   esac
 done
 

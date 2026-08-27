@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"女性董事席次及比率-席\":\"2\",\"女性董事席次及比率-比率\":\"20.00%\",\"獨立董事席次(席)\":\"7\",\"董事出席董事會出席率\":\"100.00%\",\"董事席次(含獨立董事)(席)\":\"10\",\"董監事進修時數符合進修要點比率\":\"30.00%\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:39:55+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":3,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"女性董事席次及比率-席\":\"2\",\"女性董事席次及比率-比率\":\"20.00%\",\"獨立董事席次(席)\":\"7\",\"董事出席董事會出席率\":\"100.00%\",\"董事席次(含獨立董事)(席)\":\"10\",\"董監事進修時數符合進修要點比率\":\"30.00%\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:43:28+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":5,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -30,12 +30,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:39:55+08:00",
+          "fetched_at": "2026-08-26T13:43:28+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 3,
+          "latency_ms": 5,
           "grade": "AVAILABLE"
         },
         "http_calls": 0,

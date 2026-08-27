@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"公司代號\":\"2330\",\"公司名稱\":\"台積電\",\"出具本次財務報告審查報告書之監察人姓名\":\"註\",\"出表日期\":\"1150824\",\"是否設置審計委員會\":\"是\",\"監察人實際在任席次\":\"註\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:03+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":2,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"公司代號\":\"2330\",\"公司名稱\":\"台積電\",\"出具本次財務報告審查報告書之監察人姓名\":\"註\",\"出表日期\":\"1150824\",\"是否設置審計委員會\":\"是\",\"監察人實際在任席次\":\"註\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:43:37+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":3,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -26,12 +26,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:40:03+08:00",
+          "fetched_at": "2026-08-26T13:43:37+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 2,
+          "latency_ms": 3,
           "grade": "AVAILABLE"
         },
         "http_calls": 0,

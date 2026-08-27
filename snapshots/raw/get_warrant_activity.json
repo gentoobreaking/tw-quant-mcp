@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"date\":\"2026-08-25\",\"amount_top\":[{\"trade_date\":\"2026-08-25\",\"code\":\"055952\",\"name\":\"緯穎元富62購01\",\"amount\":15000800000,\"volume\":2938000000},{\"trade_date\":\"2026-08-25\",\"code\":\"03732B\",\"name\":\"臺股指元大61熊24\",\"amount\":14330450000,\"volume\":20545000000},{\"trade_date\":\"2026-08-25\",\"code\":\"078988\",\"name\":\"奇鋐群益62購03\",\"amount\":7727330000,\"volume\":4059000000},{\"trade_date\":\"2026-08-25\",\"code\":\"035245\",\"name\":\"大立光元富59購01\",\"amount\":7460500000,\"volume\":255000000},{\"trade_date\":\"2026-08-25\",\"code\":\"03735B\",\"name\":\"臺股指元大5B熊28\",\"amount\":7414650000,\"volume\":10353000000}],\"volume_top\":[{\"trade_date\":\"2026-08-25\",\"code\":\"03732B\",\"name\":\"臺股指元大61熊24\",\"amount\":14330450000,\"volume\":20545000000},{\"trade_date\":\"2026-08-25\",\"code\":\"03735B\",\"name\":\"臺股指元大5B熊28\",\"amount\":7414650000,\"volume\":10353000000},{\"trade_date\":\"2026-08-25\",\"code\":\"063344\",\"name\":\"台達電中信62購01\",\"amount\":2726300000,\"volume\":8095000000},{\"trade_date\":\"2026-08-25\",\"code\":\"069852\",\"name\":\"力積電凱基61購03\",\"amount\":1091480000,\"volume\":7964000000},{\"trade_date\":\"2026-08-25\",\"code\":\"067300\",\"name\":\"T50反1凱基5B購05\",\"amount\":2342730000,\"volume\":6069000000}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:44:19+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":820,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"code\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"amount\"],\"title\":\"權證成交金額 (元)\"},\"series\":[{\"key\":\"amount\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"date\":\"2026-08-25\",\"amount_top\":[{\"trade_date\":\"2026-08-25\",\"code\":\"055952\",\"name\":\"緯穎元富62購01\",\"amount\":15000800000,\"volume\":2938000000},{\"trade_date\":\"2026-08-25\",\"code\":\"03732B\",\"name\":\"臺股指元大61熊24\",\"amount\":14330450000,\"volume\":20545000000},{\"trade_date\":\"2026-08-25\",\"code\":\"078988\",\"name\":\"奇鋐群益62購03\",\"amount\":7727330000,\"volume\":4059000000},{\"trade_date\":\"2026-08-25\",\"code\":\"035245\",\"name\":\"大立光元富59購01\",\"amount\":7460500000,\"volume\":255000000},{\"trade_date\":\"2026-08-25\",\"code\":\"03735B\",\"name\":\"臺股指元大5B熊28\",\"amount\":7414650000,\"volume\":10353000000}],\"volume_top\":[{\"trade_date\":\"2026-08-25\",\"code\":\"03732B\",\"name\":\"臺股指元大61熊24\",\"amount\":14330450000,\"volume\":20545000000},{\"trade_date\":\"2026-08-25\",\"code\":\"03735B\",\"name\":\"臺股指元大5B熊28\",\"amount\":7414650000,\"volume\":10353000000},{\"trade_date\":\"2026-08-25\",\"code\":\"063344\",\"name\":\"台達電中信62購01\",\"amount\":2726300000,\"volume\":8095000000},{\"trade_date\":\"2026-08-25\",\"code\":\"069852\",\"name\":\"力積電凱基61購03\",\"amount\":1091480000,\"volume\":7964000000},{\"trade_date\":\"2026-08-25\",\"code\":\"067300\",\"name\":\"T50反1凱基5B購05\",\"amount\":2342730000,\"volume\":6069000000}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:46:37+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":1568,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"code\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"amount\"],\"title\":\"權證成交金額 (元)\"},\"series\":[{\"key\":\"amount\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -93,12 +93,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:44:19+08:00",
+          "fetched_at": "2026-08-26T13:46:37+08:00",
           "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 820,
+          "latency_ms": 1568,
           "grade": "AVAILABLE"
         },
         "_chart_meta": {

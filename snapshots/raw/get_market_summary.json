@@ -7,17 +7,17 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"date\":\"2026-08-25\",\"tse\":{\"advancers\":4021,\"decliners\":7595,\"unchanged\":21397,\"limit_up\":114,\"limit_down\":0,\"total_volume\":8831346453,\"total_amount\":724257400256},\"otc\":{\"advancers\":470,\"decliners\":400,\"unchanged\":111,\"limit_up\":1,\"limit_down\":0,\"total_volume\":834185000,\"total_amount\":0}},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:41:17+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":5506,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"tse|otc\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"advancers\"],\"title\":\"漲跌家數\"},\"series\":[{\"key\":\"advancers\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"date\":\"2026-08-25\",\"tse\":{\"advancers\":0,\"decliners\":0,\"unchanged\":33013,\"limit_up\":0,\"limit_down\":0,\"total_volume\":8831346453,\"total_amount\":724257400256},\"otc\":{\"advancers\":470,\"decliners\":400,\"unchanged\":111,\"limit_up\":1,\"limit_down\":0,\"total_volume\":834185000,\"total_amount\":0}},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:44:54+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"STALE_FALLBACK\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":1022,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"bar\",\"x_axis\":{\"key\":\"tse|otc\",\"type\":\"category\"},\"y_axis\":{\"keys\":[\"advancers\"],\"title\":\"漲跌家數\"},\"series\":[{\"key\":\"advancers\",\"type\":\"bar\",\"style\":\"diverging\"}]},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
         "data": {
           "date": "2026-08-25",
           "tse": {
-            "advancers": 4021,
-            "decliners": 7595,
-            "unchanged": 21397,
-            "limit_up": 114,
+            "advancers": 0,
+            "decliners": 0,
+            "unchanged": 33013,
+            "limit_up": 0,
             "limit_down": 0,
             "total_volume": 8831346453,
             "total_amount": 724257400256
@@ -35,12 +35,12 @@
         "_lineage": {
           "source": "TWSE_WEB",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:41:17+08:00",
+          "fetched_at": "2026-08-26T13:44:54+08:00",
           "data_date": "2026-08-25",
-          "freshness": "POST_MARKET",
+          "freshness": "STALE_FALLBACK",
           "sampling_sec": 0,
-          "is_cached": false,
-          "latency_ms": 5506,
+          "is_cached": true,
+          "latency_ms": 1022,
           "grade": "AVAILABLE"
         },
         "_chart_meta": {

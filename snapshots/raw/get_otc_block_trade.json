@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Code\":\"6903\",\"Date\":\"1150825\",\"Name\":\"巨漢\",\"NumberOfSharesTraded\":\"300000\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"299.00\",\"TradeValue\":\"89700000\",\"TradingTime\":\"104500\",\"TransactionType\":\"逐筆交易-單一型\"},{\"Code\":\"6147\",\"Date\":\"1150825\",\"Name\":\"頎邦\",\"NumberOfSharesTraded\":\"122000\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"153.75\",\"TradeValue\":\"18757500\",\"TradingTime\":\"114500\",\"TransactionType\":\"配對交易-單一型\"},{\"Code\":\"6223\",\"Date\":\"1150825\",\"Name\":\"旺矽\",\"NumberOfSharesTraded\":\"2820\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"5525.47\",\"TradeValue\":\"15581825\",\"TradingTime\":\"134400\",\"TransactionType\":\"配對交易-單一型\"},{\"Code\":\"6223\",\"Date\":\"1150825\",\"Name\":\"旺矽\",\"NumberOfSharesTraded\":\"3180\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"5525.42\",\"TradeValue\":\"17570835\",\"TradingTime\":\"134500\",\"TransactionType\":\"配對交易-單一型\"},{\"Code\":\"6510\",\"Date\":\"1150825\",\"Name\":\"精測\",\"NumberOfSharesTraded\":\"7000\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"2620.00\",\"TradeValue\":\"18340000\",\"TradingTime\":\"114600\",\"TransactionType\":\"配對交易-單一型\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:41:56+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":332,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Code\":\"6903\",\"Date\":\"1150825\",\"Name\":\"巨漢\",\"NumberOfSharesTraded\":\"300000\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"299.00\",\"TradeValue\":\"89700000\",\"TradingTime\":\"104500\",\"TransactionType\":\"逐筆交易-單一型\"},{\"Code\":\"6147\",\"Date\":\"1150825\",\"Name\":\"頎邦\",\"NumberOfSharesTraded\":\"122000\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"153.75\",\"TradeValue\":\"18757500\",\"TradingTime\":\"114500\",\"TransactionType\":\"配對交易-單一型\"},{\"Code\":\"6223\",\"Date\":\"1150825\",\"Name\":\"旺矽\",\"NumberOfSharesTraded\":\"2820\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"5525.47\",\"TradeValue\":\"15581825\",\"TradingTime\":\"134400\",\"TransactionType\":\"配對交易-單一型\"},{\"Code\":\"6223\",\"Date\":\"1150825\",\"Name\":\"旺矽\",\"NumberOfSharesTraded\":\"3180\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"5525.42\",\"TradeValue\":\"17570835\",\"TradingTime\":\"134500\",\"TransactionType\":\"配對交易-單一型\"},{\"Code\":\"6510\",\"Date\":\"1150825\",\"Name\":\"精測\",\"NumberOfSharesTraded\":\"7000\",\"SettlementPeriod\":\"T+2日交割\",\"TradePrice\":\"2620.00\",\"TradeValue\":\"18340000\",\"TradingTime\":\"114600\",\"TransactionType\":\"配對交易-單一型\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:45:06+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":183,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -73,12 +73,12 @@
         "_lineage": {
           "source": "TPEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:41:56+08:00",
+          "fetched_at": "2026-08-26T13:45:06+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 332,
+          "latency_ms": 183,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

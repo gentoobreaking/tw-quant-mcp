@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"公司代號\":\"2330\",\"公司名稱\":\"台積電\",\"出表日期\":\"1150825\",\"季別\":\"2\",\"年度\":\"115\",\"毛利率(%)(營業毛利)/(營業收入)\":\"67.03\",\"營業利益率(%)(營業利益)/(營業收入)\":\"59.29\",\"營業收入(百萬元)\":\"2404483.69\",\"稅前純益率(%)(稅前純益)/(營業收入)\":\"64.47\",\"稅後純益率(%)(稅後純益)/(營業收入)\":\"53.22\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:13+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":3,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"公司代號\":\"2330\",\"公司名稱\":\"台積電\",\"出表日期\":\"1150825\",\"季別\":\"2\",\"年度\":\"115\",\"毛利率(%)(營業毛利)/(營業收入)\":\"67.03\",\"營業利益率(%)(營業利益)/(營業收入)\":\"59.29\",\"營業收入(百萬元)\":\"2404483.69\",\"稅前純益率(%)(稅前純益)/(營業收入)\":\"64.47\",\"稅後純益率(%)(稅後純益)/(營業收入)\":\"53.22\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:43:46+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":8,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -30,12 +30,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:40:13+08:00",
+          "fetched_at": "2026-08-26T13:43:46+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 3,
+          "latency_ms": 8,
           "grade": "AVAILABLE"
         },
         "http_calls": 0,

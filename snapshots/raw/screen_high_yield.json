@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"total\":1969,\"matched\":5,\"limit\":5,\"rows\":[{\"code\":\"6596\",\"name\":\"寬宏藝術\",\"market\":\"otc\",\"pe\":4.82,\"pe_available\":true,\"pb\":2.97,\"dividend_yield_pct\":19.42,\"dividend_per_share\":18.7,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"6186\",\"name\":\"新潤\",\"market\":\"otc\",\"pe\":6.64,\"pe_available\":true,\"pb\":1.43,\"dividend_yield_pct\":14.88,\"dividend_per_share\":5.01,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"2528\",\"name\":\"皇普\",\"market\":\"tse\",\"pe\":8.33,\"pe_available\":true,\"pb\":1.19,\"dividend_yield_pct\":14.63,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"2442\",\"name\":\"新美齊\",\"market\":\"tse\",\"pe\":3.87,\"pe_available\":true,\"pb\":0.92,\"dividend_yield_pct\":13.74,\"dividend_per_share\":2,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"5519\",\"name\":\"隆大\",\"market\":\"tse\",\"pe\":5.58,\"pe_available\":true,\"pb\":1.07,\"dividend_yield_pct\":13.67,\"dividend_per_share\":3.3,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:44:23+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":269,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"scatter\",\"x_axis\":{\"key\":\"pe\",\"type\":\"value\"},\"y_axis\":{\"key\":\"dividend_yield_pct\",\"title\":\"殖利率 / PE 散佈\"},\"series\":[{\"key\":\"dividend_per_share\",\"type\":\"bubble\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"total\":1969,\"matched\":5,\"limit\":5,\"rows\":[{\"code\":\"6596\",\"name\":\"寬宏藝術\",\"market\":\"otc\",\"pe\":4.82,\"pe_available\":true,\"pb\":2.97,\"dividend_yield_pct\":19.42,\"dividend_per_share\":18.7,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"6186\",\"name\":\"新潤\",\"market\":\"otc\",\"pe\":6.64,\"pe_available\":true,\"pb\":1.43,\"dividend_yield_pct\":14.88,\"dividend_per_share\":5.01,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"2528\",\"name\":\"皇普\",\"market\":\"tse\",\"pe\":8.33,\"pe_available\":true,\"pb\":1.19,\"dividend_yield_pct\":14.63,\"dividend_per_share\":0,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":0,\"matched\":[\"高殖利率\"]},{\"code\":\"2442\",\"name\":\"新美齊\",\"market\":\"tse\",\"pe\":3.87,\"pe_available\":true,\"pb\":0.92,\"dividend_yield_pct\":13.74,\"dividend_per_share\":2,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]},{\"code\":\"5519\",\"name\":\"隆大\",\"market\":\"tse\",\"pe\":5.58,\"pe_available\":true,\"pb\":1.07,\"dividend_yield_pct\":13.67,\"dividend_per_share\":3.3,\"revenue_growth_pct\":0,\"profit_growth_pct\":0,\"consecutive_years\":1,\"matched\":[\"高殖利率\"]}]},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:46:42+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":103,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"scatter\",\"x_axis\":{\"key\":\"pe\",\"type\":\"value\"},\"y_axis\":{\"key\":\"dividend_yield_pct\",\"title\":\"殖利率 / PE 散佈\"},\"series\":[{\"key\":\"dividend_per_share\",\"type\":\"bubble\"}]},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -103,12 +103,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:44:23+08:00",
+          "fetched_at": "2026-08-26T13:46:42+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 269,
+          "latency_ms": 103,
           "grade": "AVAILABLE"
         },
         "_chart_meta": {

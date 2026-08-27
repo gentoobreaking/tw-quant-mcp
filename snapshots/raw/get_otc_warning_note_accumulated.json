@@ -7,7 +7,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"AccumulationSituation\":\"115年08月20日至115年08月25日連續四次115年08月13日至115年08月25日等九個營業日已有五次\",\"CompanyName\":\"先進光\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"3362\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"三圓\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"4416\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"世紀*\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"5314\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"良維十\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"629010\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"精測元大5C購01\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"702281\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"穩懋凱基59購06\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"704696\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"聖暉*統一61購01\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"706038\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"世紀*群益5A購01\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"706958\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"世紀*凱基5A購01\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"706967\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:22+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":561,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"AccumulationSituation\":\"115年08月20日至115年08月25日連續四次115年08月13日至115年08月25日等九個營業日已有五次\",\"CompanyName\":\"先進光\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"3362\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"三圓\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"4416\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"世紀*\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"5314\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"良維十\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"629010\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"精測元大5C購01\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"702281\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"穩懋凱基59購06\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"704696\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"聖暉*統一61購01\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"706038\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"世紀*群益5A購01\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"706958\"},{\"AccumulationSituation\":\"115年08月24日至115年08月25日連續二次\",\"CompanyName\":\"世紀*凱基5A購01\",\"Date\":\"20260825\",\"SecuritiesCompanyCode\":\"706967\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:45:23+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":511,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -70,12 +70,12 @@
         "_lineage": {
           "source": "TPEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:42:22+08:00",
+          "fetched_at": "2026-08-26T13:45:23+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 561,
+          "latency_ms": 511,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

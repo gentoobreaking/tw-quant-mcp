@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"產品生命週期管理之揭露：含報廢產品及電子廢棄物之再循環之百分比\":\"N/A\",\"產品生命週期管理之揭露：報廢產品及電子廢棄物之重量(公噸(t))\":\"N/A\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:12+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":1,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"code\":\"2330\",\"fields\":{\"產品生命週期管理之揭露：含報廢產品及電子廢棄物之再循環之百分比\":\"N/A\",\"產品生命週期管理之揭露：報廢產品及電子廢棄物之重量(公噸(t))\":\"N/A\"},\"name\":\"台積電\",\"report_date\":\"2026-08-25\",\"year\":\"114\"},\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:43:45+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":2,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -26,12 +26,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:40:12+08:00",
+          "fetched_at": "2026-08-26T13:43:45+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 1,
+          "latency_ms": 2,
           "grade": "AVAILABLE"
         },
         "http_calls": 0,

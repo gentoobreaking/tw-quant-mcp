@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"market\":\"tse\",\"name\":\"台積電\",\"symbol\":\"2330\",\"topics\":null},\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:12+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":50,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"market\":\"tse\",\"name\":\"台積電\",\"symbol\":\"2330\",\"topics\":null},\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:45:13+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":57,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -22,12 +22,12 @@
         "_lineage": {
           "source": "TPEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:42:12+08:00",
+          "fetched_at": "2026-08-26T13:45:13+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 50,
+          "latency_ms": 57,
           "grade": "AVAILABLE"
         },
         "http_calls": 0,

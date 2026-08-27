@@ -13,7 +13,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"symbol\":\"0056\",\"name\":\"元大高股息\",\"market\":\"tse\",\"start\":\"2026-08-19\",\"end\":\"2026-08-26\",\"points\":[{\"date\":\"2026-08-25\",\"nav\":52.77,\"market\":52.55,\"premium_discount\":-0.42},{\"date\":\"2026-08-24\",\"nav\":52.23,\"market\":52.3,\"premium_discount\":0.13},{\"date\":\"2026-08-21\",\"nav\":52.58,\"market\":52.4,\"premium_discount\":-0.34},{\"date\":\"2026-08-20\",\"nav\":52.11,\"market\":52.05,\"premium_discount\":-0.12},{\"date\":\"2026-08-19\",\"nav\":52.06,\"market\":52,\"premium_discount\":-0.12}]},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"FALLBACK\",\"fetched_at\":\"2026-08-26T12:40:34+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":2347,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":{\"symbol\":\"0056\",\"name\":\"元大高股息\",\"market\":\"tse\",\"start\":\"2026-08-19\",\"end\":\"2026-08-26\",\"points\":[{\"date\":\"2026-08-25\",\"nav\":52.77,\"market\":52.55,\"premium_discount\":-0.42},{\"date\":\"2026-08-24\",\"nav\":52.23,\"market\":52.3,\"premium_discount\":0.13},{\"date\":\"2026-08-21\",\"nav\":52.58,\"market\":52.4,\"premium_discount\":-0.34},{\"date\":\"2026-08-20\",\"nav\":52.11,\"market\":52.05,\"premium_discount\":-0.12},{\"date\":\"2026-08-19\",\"nav\":52.06,\"market\":52,\"premium_discount\":-0.12}]},\"_lineage\":{\"source\":\"TWSE_WEB\",\"source_role\":\"FALLBACK\",\"fetched_at\":\"2026-08-26T13:44:07+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":2837,\"grade\":\"AVAILABLE\"},\"http_calls\":2,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -59,12 +59,12 @@
         "_lineage": {
           "source": "TWSE_WEB",
           "source_role": "FALLBACK",
-          "fetched_at": "2026-08-26T12:40:34+08:00",
+          "fetched_at": "2026-08-26T13:44:07+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 2347,
+          "latency_ms": 2837,
           "grade": "AVAILABLE"
         },
         "http_calls": 2,

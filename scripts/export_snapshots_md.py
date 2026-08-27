@@ -7,6 +7,7 @@
 輸出預設: snapshots/REPORT.md
 可與 make snapshots 搭配：先呼叫工具 → 再匯出報告。
 """
+
 import json
 import os
 import sys
@@ -31,13 +32,13 @@ def fmt_value(v, depth=0):
     if isinstance(v, dict):
         if depth >= 2 or len(json.dumps(v, ensure_ascii=False)) > 200:
             return f"`{json.dumps(v, ensure_ascii=False)[:180]}…`"
-        return ", ".join(f"{k}={fmt_value(x, depth+1)}" for k, x in v.items())
+        return ", ".join(f"{k}={fmt_value(x, depth + 1)}" for k, x in v.items())
     if isinstance(v, list):
         if len(v) == 0:
             return "`[]`"
         if len(v) == 1:
-            return fmt_value(v[0], depth+1)
-        return f"`[{len(v)} 筆] 例: {fmt_value(v[0], depth+1)[:120]}…`"
+            return fmt_value(v[0], depth + 1)
+        return f"`[{len(v)} 筆] 例: {fmt_value(v[0], depth + 1)[:120]}…`"
     if isinstance(v, str):
         s = v if len(v) <= 80 else v[:80] + "…"
         return s
@@ -155,7 +156,9 @@ def main():
         print(f"無法讀取快照目錄 {RAW_DIR}: {e}", file=sys.stderr)
         sys.exit(1)
     if not files:
-        print(f"❌ {RAW_DIR} 沒有 JSON 結果，請先執行 make snapshots 或 make snapshots-call")
+        print(
+            f"❌ {RAW_DIR} 沒有 JSON 結果，請先執行 make snapshots 或 make snapshots-call"
+        )
         sys.exit(1)
     report = build_report(files)
     try:

@@ -7,7 +7,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"date\":\"2026-08-25\",\"investor\":\"自營商\",\"long_volume\":183047,\"long_value\":85167,\"short_volume\":191944,\"short_value\":84045,\"net_volume\":-8897,\"net_value\":1122,\"oi_long\":141344,\"oi_long_value\":91330,\"oi_short\":376084,\"oi_short_value\":259735,\"oi_net\":-234740,\"oi_net_value\":-168405},{\"date\":\"2026-08-25\",\"investor\":\"投信\",\"long_volume\":549,\"long_value\":4620,\"short_volume\":309,\"short_value\":160,\"net_volume\":240,\"net_value\":4460,\"oi_long\":94186,\"oi_long_value\":735985,\"oi_short\":7914,\"oi_short_value\":30614,\"oi_net\":86272,\"oi_net_value\":705371},{\"date\":\"2026-08-25\",\"investor\":\"外資及陸資\",\"long_volume\":716362,\"long_value\":904701,\"short_volume\":707904,\"short_value\":917090,\"net_volume\":8458,\"net_value\":-12389,\"oi_long\":202779,\"oi_long_value\":200124,\"oi_short\":674604,\"oi_short_value\":1157599,\"oi_net\":-471825,\"oi_net_value\":-957475}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:59+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"date\":\"2026-08-25\",\"investor\":\"自營商\",\"long_volume\":183047,\"long_value\":85167,\"short_volume\":191944,\"short_value\":84045,\"net_volume\":-8897,\"net_value\":1122,\"oi_long\":141344,\"oi_long_value\":91330,\"oi_short\":376084,\"oi_short_value\":259735,\"oi_net\":-234740,\"oi_net_value\":-168405},{\"date\":\"2026-08-25\",\"investor\":\"投信\",\"long_volume\":549,\"long_value\":4620,\"short_volume\":309,\"short_value\":160,\"net_volume\":240,\"net_value\":4460,\"oi_long\":94186,\"oi_long_value\":735985,\"oi_short\":7914,\"oi_short_value\":30614,\"oi_net\":86272,\"oi_net_value\":705371},{\"date\":\"2026-08-25\",\"investor\":\"外資及陸資\",\"long_volume\":716362,\"long_value\":904701,\"short_volume\":707904,\"short_value\":917090,\"net_volume\":8458,\"net_value\":-12389,\"oi_long\":202779,\"oi_long_value\":200124,\"oi_short\":674604,\"oi_short_value\":1157599,\"oi_net\":-471825,\"oi_net_value\":-957475}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:44:34+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -64,7 +64,7 @@
         "_lineage": {
           "source": "TAIFEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:40:59+08:00",
+          "fetched_at": "2026-08-26T13:44:34+08:00",
           "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,

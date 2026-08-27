@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"amount\":32130079305,\"change\":25,\"close\":2400,\"code\":\"2330\",\"date\":\"2026-08-25\",\"high\":2400,\"low\":2350,\"name\":\"台積電\",\"open\":2355,\"transaction\":57334,\"volume\":13538447}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:42:59+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":445,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"amount\":32130079305,\"change\":25,\"close\":2400,\"code\":\"2330\",\"date\":\"2026-08-25\",\"high\":2400,\"low\":2350,\"name\":\"台積電\",\"open\":2355,\"transaction\":57334,\"volume\":13538447}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:45:48+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":221,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -31,12 +31,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:42:59+08:00",
+          "fetched_at": "2026-08-26T13:45:48+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 445,
+          "latency_ms": 221,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

@@ -9,7 +9,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"contract_month\":\"202608F4\"},{\"contract_month\":\"202608W4\"},{\"contract_month\":\"202609\"},{\"contract_month\":\"202609F1\"},{\"contract_month\":\"202609W1\"},{\"contract_month\":\"202610\"},{\"contract_month\":\"202611\"},{\"contract_month\":\"202612\"},{\"contract_month\":\"202703\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:41:28+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":24,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"contract_month\":\"202608F4\"},{\"contract_month\":\"202608W4\"},{\"contract_month\":\"202609\"},{\"contract_month\":\"202609F1\"},{\"contract_month\":\"202609W1\"},{\"contract_month\":\"202610\"},{\"contract_month\":\"202611\"},{\"contract_month\":\"202612\"},{\"contract_month\":\"202703\"}],\"_lineage\":{\"source\":\"TAIFEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:45:00+08:00\",\"data_date\":\"2026-08-25\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":true,\"latency_ms\":26,\"grade\":\"AVAILABLE\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -45,12 +45,12 @@
         "_lineage": {
           "source": "TAIFEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:41:28+08:00",
+          "fetched_at": "2026-08-26T13:45:00+08:00",
           "data_date": "2026-08-25",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": true,
-          "latency_ms": 24,
+          "latency_ms": 26,
           "grade": "AVAILABLE"
         },
         "http_calls": 0,

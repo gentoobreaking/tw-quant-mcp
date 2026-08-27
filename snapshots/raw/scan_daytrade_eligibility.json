@@ -9,83 +9,10 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":{\"symbol\":\"2330\",\"name\":\"台積電\",\"market\":\"tse\",\"date\":\"2026-08-26\",\"is_attention\":false,\"is_disposition\":false,\"daytrade_allowed\":true,\"margin_suspended\":false,\"short_suspended\":false,\"summary\":null},\"_lineage\":{\"source\":\"TWSE_MIS\",\"source_role\":\"SEMI_OFFICIAL_REALTIME\",\"fetched_at\":\"2026-08-26T12:44:23+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"REALTIME_INTRADAY\",\"sampling_sec\":8,\"is_cached\":false,\"latency_ms\":0,\"grade\":\"AVAILABLE\"},\"_chart_meta\":{\"recommended_type\":\"table\",\"series\":[{\"type\":\"table\"}],\"columns\":[{\"key\":\"symbol\",\"label\":\"代碼\"},{\"key\":\"name\",\"label\":\"名稱\"},{\"key\":\"date\",\"label\":\"名單日期\"},{\"key\":\"daytrade_allowed\",\"label\":\"當沖允許\"},{\"key\":\"is_attention\",\"label\":\"注意股\"},{\"key\":\"is_disposition\",\"label\":\"處置股\"},{\"key\":\"margin_suspended\",\"label\":\"停資\"},{\"key\":\"short_suspended\",\"label\":\"停券\"},{\"key\":\"summary\",\"label\":\"風險摘要\"}],\"note\":\"單一標的之風險旗標比對（對應 v2.1 §9.9 get_risk_flags）\"},\"http_calls\":0,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "非交易時段（13:46:42）無法提供盤中資料"
         }
       ],
-      "structuredContent": {
-        "data": {
-          "symbol": "2330",
-          "name": "台積電",
-          "market": "tse",
-          "date": "2026-08-26",
-          "is_attention": false,
-          "is_disposition": false,
-          "daytrade_allowed": true,
-          "margin_suspended": false,
-          "short_suspended": false,
-          "summary": null
-        },
-        "_lineage": {
-          "source": "TWSE_MIS",
-          "source_role": "SEMI_OFFICIAL_REALTIME",
-          "fetched_at": "2026-08-26T12:44:23+08:00",
-          "data_date": "2026-08-26",
-          "freshness": "REALTIME_INTRADAY",
-          "sampling_sec": 8,
-          "is_cached": false,
-          "latency_ms": 0,
-          "grade": "AVAILABLE"
-        },
-        "_chart_meta": {
-          "recommended_type": "table",
-          "series": [
-            {
-              "type": "table"
-            }
-          ],
-          "columns": [
-            {
-              "key": "symbol",
-              "label": "代碼"
-            },
-            {
-              "key": "name",
-              "label": "名稱"
-            },
-            {
-              "key": "date",
-              "label": "名單日期"
-            },
-            {
-              "key": "daytrade_allowed",
-              "label": "當沖允許"
-            },
-            {
-              "key": "is_attention",
-              "label": "注意股"
-            },
-            {
-              "key": "is_disposition",
-              "label": "處置股"
-            },
-            {
-              "key": "margin_suspended",
-              "label": "停資"
-            },
-            {
-              "key": "short_suspended",
-              "label": "停券"
-            },
-            {
-              "key": "summary",
-              "label": "風險摘要"
-            }
-          ],
-          "note": "單一標的之風險旗標比對（對應 v2.1 §9.9 get_risk_flags）"
-        },
-        "http_calls": 0,
-        "disclaimer": "僅供研究參考，不構成投資建議"
-      }
+      "isError": true
     }
   }
 }

@@ -10,7 +10,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"指數\":\"富櫃200報酬指數\",\"收盤指數\":\"22,668.81\",\"漲跌\":\"+\",\"漲跌百分比\":\"1.19\",\"漲跌點數\":\"267.63\",\"資料日期\":\"1150825\"},{\"指數\":\"富櫃200指數\",\"收盤指數\":\"17,939.87\",\"漲跌\":\"+\",\"漲跌百分比\":\"1.19\",\"漲跌點數\":\"211.71\",\"資料日期\":\"1150825\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:44:11+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":227,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"指數\":\"富櫃200報酬指數\",\"收盤指數\":\"22,668.81\",\"漲跌\":\"+\",\"漲跌百分比\":\"1.19\",\"漲跌點數\":\"267.63\",\"資料日期\":\"1150825\"},{\"指數\":\"富櫃200指數\",\"收盤指數\":\"17,939.87\",\"漲跌\":\"+\",\"漲跌百分比\":\"1.19\",\"漲跌點數\":\"211.71\",\"資料日期\":\"1150825\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:46:32+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":21,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -35,12 +35,12 @@
         "_lineage": {
           "source": "TPEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:44:11+08:00",
+          "fetched_at": "2026-08-26T13:46:32+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 227,
+          "latency_ms": 21,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

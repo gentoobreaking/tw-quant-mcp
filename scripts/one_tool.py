@@ -12,6 +12,7 @@
 若省略參數，會嘗試從 call_tw_quant_tools.py 的 ARGS 表自動帶入。
 輸出: snapshots/raw/<工具名>.json（格式與批次腳本一致，可被 render_tool_snapshots.py 渲染）
 """
+
 import json
 import os
 import subprocess
@@ -73,7 +74,9 @@ def main():
             sys.exit(1)
     else:
         args = DEFAULT_ARGS.get(tool_name, {})
-        print(f"（未提供參數，使用 ARGS 表預設: {json.dumps(args, ensure_ascii=False)}）")
+        print(
+            f"（未提供參數，使用 ARGS 表預設: {json.dumps(args, ensure_ascii=False)}）"
+        )
 
     if not os.path.exists(BIN):
         print(f"執行檔不存在: {BIN}\n請先執行 make build 或 make snapshots")
@@ -122,11 +125,18 @@ def main():
     # 判斷結果（MCP 錯誤 vs 工具錯誤）
     if "error" in resp:
         print(f"❌ MCP 錯誤: {resp['error'].get('message')}")
-        result_obj = {"isError": True, "content": [{"type": "text", "text": json.dumps(resp["error"])}]}
+        result_obj = {
+            "isError": True,
+            "content": [{"type": "text", "text": json.dumps(resp["error"])}],
+        }
     else:
         result = resp.get("result", {})
         is_err = result.get("isError", False)
-        texts = [c.get("text", "") for c in result.get("content", []) if c.get("type") == "text"]
+        texts = [
+            c.get("text", "")
+            for c in result.get("content", [])
+            if c.get("type") == "text"
+        ]
         text = "\n".join(texts)
         status = "❌ 工具錯誤" if is_err else "✅ 成功"
         print(f"{status} (isError={is_err})")
@@ -135,7 +145,9 @@ def main():
         else:
             try:
                 parsed = json.loads(text)
-                print(f"data 摘要: {json.dumps(parsed.get('data'), ensure_ascii=False)[:300]}")
+                print(
+                    f"data 摘要: {json.dumps(parsed.get('data'), ensure_ascii=False)[:300]}"
+                )
                 print(f"_lineage.source: {parsed.get('_lineage', {}).get('source')}")
             except Exception:
                 print(f"回應前 300 字: {text[:300]}")

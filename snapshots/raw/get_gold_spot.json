@@ -10,7 +10,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Date\":\"1150825\",\"GoldCode\":\"AU9901\",\"GoldShortName\":\"臺銀金\",\"QuotedBuyingB.Price\":\"17808\",\"QuotedBuyingB.Qty.\":\"2999\",\"QuotedBuyingChange\":\"-0.20734099187447466\",\"QuotedBuyingPrePrice\":\"17845\",\"QuotedSellingChange\":\"-0.2066115702479339\",\"QuotedSellingPrePrice\":\"17908\",\"QuotedSellingS.Price\":\"17871\",\"QuotedSellingS.Qty.\":\"2993\",\"Time\":\"163004\",\"TradingAvg.\":\"17915.6\",\"TradingHighest\":\"18042\",\"TradingLatestTradingInfo.LatestPrice\":\"17871\",\"TradingLatestTradingInfo.Type\":\"B\",\"TradingLatestTradingInfo.Volume\":\"1\",\"TradingLowest\":\"17774\",\"TradingPreAvg.\":\"17805.1\",\"TradingTransaction\":\"465\",\"TradingVolume\":\"2769\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:40:54+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":43,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Date\":\"1150825\",\"GoldCode\":\"AU9901\",\"GoldShortName\":\"臺銀金\",\"QuotedBuyingB.Price\":\"17808\",\"QuotedBuyingB.Qty.\":\"2999\",\"QuotedBuyingChange\":\"-0.20734099187447466\",\"QuotedBuyingPrePrice\":\"17845\",\"QuotedSellingChange\":\"-0.2066115702479339\",\"QuotedSellingPrePrice\":\"17908\",\"QuotedSellingS.Price\":\"17871\",\"QuotedSellingS.Qty.\":\"2993\",\"Time\":\"163004\",\"TradingAvg.\":\"17915.6\",\"TradingHighest\":\"18042\",\"TradingLatestTradingInfo.LatestPrice\":\"17871\",\"TradingLatestTradingInfo.Type\":\"B\",\"TradingLatestTradingInfo.Volume\":\"1\",\"TradingLowest\":\"17774\",\"TradingPreAvg.\":\"17805.1\",\"TradingTransaction\":\"465\",\"TradingVolume\":\"2769\"}],\"_lineage\":{\"source\":\"TPEX_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:44:29+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":31,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -42,12 +42,12 @@
         "_lineage": {
           "source": "TPEX_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:40:54+08:00",
+          "fetched_at": "2026-08-26T13:44:29+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 43,
+          "latency_ms": 31,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,

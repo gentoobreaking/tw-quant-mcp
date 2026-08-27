@@ -7,7 +7,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"data\":[{\"Code\":\"067782\",\"Name\":\"國巨中信65購03\",\"RecentlyMetAttentionSecuritiesCriteria\":\"115年8月24日至115年8月25日連續二次\"},{\"Code\":\"2486\",\"Name\":\"一詮\",\"RecentlyMetAttentionSecuritiesCriteria\":\"115年8月20日至115年8月25日連續四次\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T12:39:30+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":155,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
+          "text": "{\"data\":[{\"Code\":\"067782\",\"Name\":\"國巨中信65購03\",\"RecentlyMetAttentionSecuritiesCriteria\":\"115年8月24日至115年8月25日連續二次\"},{\"Code\":\"2486\",\"Name\":\"一詮\",\"RecentlyMetAttentionSecuritiesCriteria\":\"115年8月20日至115年8月25日連續四次\"}],\"_lineage\":{\"source\":\"TWSE_API\",\"source_role\":\"CANONICAL\",\"fetched_at\":\"2026-08-26T13:43:03+08:00\",\"data_date\":\"2026-08-26\",\"freshness\":\"POST_MARKET\",\"sampling_sec\":0,\"is_cached\":false,\"latency_ms\":104,\"grade\":\"AVAILABLE\"},\"http_calls\":1,\"disclaimer\":\"僅供研究參考，不構成投資建議\"}"
         }
       ],
       "structuredContent": {
@@ -26,12 +26,12 @@
         "_lineage": {
           "source": "TWSE_API",
           "source_role": "CANONICAL",
-          "fetched_at": "2026-08-26T12:39:30+08:00",
+          "fetched_at": "2026-08-26T13:43:03+08:00",
           "data_date": "2026-08-26",
           "freshness": "POST_MARKET",
           "sampling_sec": 0,
           "is_cached": false,
-          "latency_ms": 155,
+          "latency_ms": 104,
           "grade": "AVAILABLE"
         },
         "http_calls": 1,
