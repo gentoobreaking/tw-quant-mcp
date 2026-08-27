@@ -97,6 +97,7 @@
  ```
 
  若不想用 make release，也可手動等價操作（版本號取自 tag，須與 VERSION 檔一致）：
+
  ```bash
    git tag v$(cat VERSION)
    git push origin v$(cat VERSION)
