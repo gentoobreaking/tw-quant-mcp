@@ -5,7 +5,7 @@
 #   git tag v2.1.0 && git push origin v2.1.0
 #   或 Actions 頁面手動 Run workflow（重跑發佈/tap 更新）
 #
-# 版本號注入：ldflags -X main.version=<tag>（與 Makefile VERSION 機制一致）。
+# 版本號注入：ldflags -X main.version=<tag 去 v 前綴>（與根目錄 VERSION 檔/local build 一致）。
 ---
 name: Release
 
@@ -87,7 +87,7 @@ jobs:
         with:
           go-version-file: go.mod
 
-      - name: Compile（CGO_ENABLED=0，版本號 = tag）
+      - name: Compile（CGO_ENABLED=0，版本號 = tag 去 v 前綴，與 VERSION 檔一致）
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
@@ -96,7 +96,7 @@ jobs:
           EXT=""
           if [ "$GOOS" = "windows" ]; then EXT=".exe"; fi
           CGO_ENABLED=0 go build -trimpath \
-            -ldflags "-s -w -X main.version=${TAG}" \
+            -ldflags "-s -w -X main.version=${TAG#v}" \
             -o "dist/tw-quant-mcp_${TAG}_${GOOS}_${GOARCH}${EXT}" \
             ./cmd/mcp-server
 

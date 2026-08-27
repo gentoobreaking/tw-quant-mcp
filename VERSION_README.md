@@ -108,8 +108,10 @@
  │ GitHub Actions Release workflow │ Git tag（${{ github.ref_name }}，如 v2.2.0） │
  └─────────────────────────────────┴──────────────────────────────────────────────┘
 
- │ ⚠️ 注意：GitHub Actions 的 build 步驟用的是 tag 名稱（含 v 前綴），會直接注入 main.version=v2.2.0。如果你希望二進制裡的版本號不
- │ 含 v，需修改 workflow 的 -ldflags 為 -X main.version=${TAG#v}。
+│ ✅ GitHub Actions 的 build 步驟已改為 -ldflags "-X main.version=${TAG#v}"，
+│ 二進制版本號不含 v（如 2.2.0），與本地 make build（取自 VERSION 檔）
+│ 及 Homebrew tap（VERSION=${TAG#v}）三方完全一致；tag 仍保留 v 前綴
+│（v2.2.0）僅用於 artifact 檔名與 GitHub Release 標題。
 
  ────────────────────────────────────────────────────────────────────────────────
 
