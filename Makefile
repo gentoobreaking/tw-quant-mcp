@@ -2,7 +2,7 @@ BINARY := bin/tw-quant-mcp
 VERSION := $(shell cat VERSION 2>/dev/null || echo 2.1.0)
 LDFLAGS := -ldflags "-X main.version=$(VERSION)"
 
-.PHONY: build test test-race test-live loadtest fixtures lint vet fmt check run clean snapshots snapshots-call snapshots-render snapshots-report
+.PHONY: build test test-race test-live loadtest fixtures lint vet fmt check run clean snapshots snapshots-call snapshots-render snapshots-report release build-release release-check
 
 build:
 	go build $(LDFLAGS) -o $(BINARY) ./cmd/mcp-server
@@ -58,9 +58,14 @@ e2e:
 soak:
 	TW_QUANT_SOAK=1 go test -tags=soak ./pkg/mcp/ -run TestSoakContinuousRun -v
 
-# 發布檢查：CGO-free 建置 + tools/list 37 工具
+# 發布檢查：CGO-free 建置 + initialize 握手 + tools/list 工具數守門（現 252）
 release-check:
 	./scripts/release_check.sh $(VERSION)
+
+# 發布：先通過 release-check，再打 v<VERSION> tag 並推送（觸發 GitHub Actions 自動發布）
+# 前置：工作區須乾淨（已 commit）、VERSION 檔非空白、tag 尚不存在。
+release: release-check
+	@bash -c 'V="$(VERSION)"; if [ -z "$$V" ]; then echo "✗ VERSION 檔為空或不存在"; exit 1; fi; if ! git diff --quiet || ! git diff --cached --quiet; then echo "✗ 工作區有未提交變更，請先 git commit 再發布"; exit 1; fi; if git rev-parse "v$$V" >/dev/null 2>&1; then echo "✗ tag v$$V 已存在，請先升版 VERSION 檔"; exit 1; fi; git tag "v$$V" && git push origin "v$$V" && echo "✓ 已推送 tag v$$V，GitHub Actions 將自動建置並發布"'
 
 # T020：全部工具（252+）真實呼叫 + 截圖（一鍵：重建→呼叫→渲染）
 # 子流程與參數說明見 scripts/README-snapshots.md
