@@ -13,7 +13,7 @@
 
  版本號在建置時透過 -ldflags "-X main.version=$(VERSION)" 注入；
  $(VERSION) 預設來自根目錄 VERSION 檔，故所有 make 指令（build /
- build-release / release-check）皆自動吃到正確版本，毋須每次手動打 VERSION=。
+ build-release / release-check / release）皆自動吃到正確版本，毋須每次手動打 VERSION=。
 
  ────────────────────────────────────────────────────────────────────────────────
 
@@ -77,21 +77,29 @@
 
  ────────────────────────────────────────────────────────────────────────────────
 
- 正確的發布流程
+ 正確的發布流程（推薦：make release 一鍵完成）
 
  ```bash
-   # 1. 確認 main.go 與 Makefile 的版本號一致（或只靠 tag 覆寫）
-   #    目前 main.go 是 2.1.0，Makefile 預設 2.1.0
+   # 1. 升版：只改根目錄 VERSION 檔（唯一來源），並 commit
+   echo 2.3.0 > VERSION
+   git commit -am "chore: 升版 2.3.0"
 
-   # 2. 建立並推送 tag（版本號取自 tag，而非 Makefile）
-   git tag v2.2.0
-   git push origin v2.2.0
+   # 2. 一鍵發布：先過 release-check（CGO-free 建置 + initialize 握手 + 工具數守門），
+   #    再守門檢查（工作區乾淨 / VERSION 非空白 / tag 不存在），
+   #    全過才打 v<VERSION> tag 並推送，觸發 GitHub Actions 自動發布
+   make release
 
    # 3. GitHub Actions 自動執行：
-   #    - test → build（多平台，ldflags 注入 ${TAG} 即 "v2.2.0"）
-   #    - 建立 GitHub Release（標題 "tw-quant-mcp v2.2.0"）
+   #    - test → build（多平台，ldflags 注入 ${TAG#v} 即 "2.3.0"）
+   #    - 建立 GitHub Release（標題 "tw-quant-mcp v2.3.0"）
    #    - 上傳 5 平台 artifacts + checksums.txt
    #    - （可選）更新 Homebrew tap（需 TAP_TOKEN secret）
+ ```
+
+ 若不想用 make release，也可手動等價操作（版本號取自 tag，須與 VERSION 檔一致）：
+ ```bash
+   git tag v$(cat VERSION)
+   git push origin v$(cat VERSION)
  ```
 
  ────────────────────────────────────────────────────────────────────────────────
@@ -127,4 +135,4 @@
  │ git tag v2.2.0 && git push origin v2.2.0 │ ❌ 否（除非你在 CI 環境 build） │ ✅ 是（唯一觸發方式） │
  └──────────────────────────────────────────┴─────────────────────────────────┴───────────────────────┘
 
- 要發布新版，只需推 tag；本地修改版本號僅供開發/測試用。
+ 要發布新版，只需 `make release`（或等價手動打 v 開頭 tag 並推送，版本號取自 VERSION 檔）；本地修改版本號僅供開發/測試用。
