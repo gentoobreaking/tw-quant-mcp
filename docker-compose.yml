@@ -3,12 +3,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: tw-quant-mcp:latest
     container_name: tw-quant-mcp
     ports:
       - 8000:8000
     environment:
       - MCP_TRANSPORT=streamable-http
       - MCP_HTTP_ADDR=0.0.0.0:8000
+      #- MCP_HTTP_ADDR=mcp:8000
+      - MCP_CALL_TIMEOUT=120
       - LOG_LEVEL=INFO
       - TZ=Asia/Taipei
       - DATA_DIR=/app/data
@@ -17,10 +20,11 @@ services:
       - ./data:/app/data
     healthcheck:
       test:
-        - CMD
-        - curl
-        - -f
-        - http://localhost:8000/health
+      - CMD
+      - sh
+      - -c
+      - 'curl -f -X POST -H ''Content-Type: application/json'' -d ''{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"healthcheck","version":"1.0"}}}''
+        http://localhost:8000'
       interval: 30s
       timeout: 10s
       retries: 3
@@ -31,4 +35,5 @@ services:
 
 networks:
   tw-quant-network:
-    driver: bridge
+    name: tw-quant-network
+    external: true
