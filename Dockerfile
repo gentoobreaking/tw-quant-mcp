@@ -14,7 +14,7 @@ RUN apk add --no-cache ca-certificates curl tzdata \
     && adduser -D -u 10001 appuser
 
 ENV MCP_TRANSPORT=streamable-http
-ENV MCP_HTTP_ADDR=0.0.0.0:8000
+ENV MCP_HTTP_ADDR=0.0.0.0:8888
 ENV LOG_LEVEL=INFO
 ENV TZ=Asia/Taipei
 ENV DATA_DIR=/app/data
@@ -25,5 +25,5 @@ COPY --from=mcp-builder /app/bin/tw-quant-mcp /app/bin/tw-quant-mcp
 
 USER appuser
 
-EXPOSE 8000
+EXPOSE 8888
 CMD ["/app/bin/tw-quant-mcp"]

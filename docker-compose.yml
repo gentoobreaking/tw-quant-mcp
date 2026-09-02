@@ -1,16 +1,17 @@
 services:
-  mcp:
+  tw-quant-mcp:
     build:
       context: .
       dockerfile: Dockerfile
     image: tw-quant-mcp:latest
     container_name: tw-quant-mcp
+    hostname: tw-quant-mcp
     ports:
-      - 8000:8000
+      - 8888:8888
     environment:
       - MCP_TRANSPORT=streamable-http
-      - MCP_HTTP_ADDR=0.0.0.0:8000
-      #- MCP_HTTP_ADDR=mcp:8000
+      - MCP_HTTP_ADDR=0.0.0.0:8888
+      #- MCP_HTTP_ADDR=tw-quant-mcp:8888
       - MCP_CALL_TIMEOUT=120
       - LOG_LEVEL=INFO
       - TZ=Asia/Taipei
@@ -24,7 +25,7 @@ services:
       - sh
       - -c
       - 'curl -f -X POST -H ''Content-Type: application/json'' -d ''{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"healthcheck","version":"1.0"}}}''
-        http://localhost:8000'
+        http://localhost:8888'
       interval: 30s
       timeout: 10s
       retries: 3
